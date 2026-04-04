@@ -37,7 +37,8 @@ def get_model_response(question):
 def extract_final_answer(model_output):
     match = re.search(r"Final Answer:\s*(.*)", model_output, re.IGNORECASE)
     #group(1) means "No" in "Final Answer: No"
-    return match.group(1).strip() if match else model_output.strip()
+    result = match.group(1).strip() if match else model_output.strip()
+    return result.strip("\"'`")
 
 # check if the final answer matches the gold
 def score_response(model_response, gold_answer, question=""):
@@ -132,7 +133,7 @@ for split in splits:
         # append the average score on this split to the overall results
         overall_results.append({
             "dataset": split,
-            "average_score": results_df["score"].mean()
+            "average_score": round(results_df["score"].mean(), 3)
         })
     except Exception as e:
         print("Error:", e)
