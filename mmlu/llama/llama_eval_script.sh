@@ -11,8 +11,4 @@
 
 module purge
 
-eval "$(conda shell.bash hook)"
-
-conda activate /projects/p32983/pythonenvs/hai-teams
-
-python llama_eval.py
+/projects/p32983/pythonenvs/hai-teams/bin/python llama_eval.py

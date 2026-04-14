@@ -43,18 +43,36 @@ def extract_final_answer(model_output):
     result = match.group(1).strip() if match else model_output.strip()
     return result.strip("\"'`").strip()
 
-# check if the final answer matches the gold letter
-def score_response(model_response, gold_letter):
+# check if the final answer matches — accepts letter, number, or full choice text
+def score_response(model_response, gold_text, gold_letter, answer_index):
     final_answer = extract_final_answer(model_response)
-    if final_answer is None:
+    if not final_answer:
         return 0
-    # case 1: exact match "A" == "A"
-    if final_answer.upper().strip() == gold_letter.upper().strip():
+
+    fa = final_answer.strip()
+
+    # case 1: exact match with full choice text (same as openai)
+    if fa.lower() == gold_text.lower():
         return 1
-    # case 2: model says "A." or "(A)" or "A)"
-    m = re.match(r'^\(?([A-D])\)?\.?', final_answer.strip())
+
+    # case 2: letter only — "A", "(A)", "A.", "A)" — must be only a letter
+    m = re.match(r'^\(?([A-D])\)?\.?\s*$', fa, re.IGNORECASE)
     if m and m.group(1).upper() == gold_letter.upper():
         return 1
+
+    # case 3: index number — model says "2" instead of "C"
+    if fa.strip() == str(answer_index):
+        return 1
+
+    # case 4: letter + choice text — "A. Cryptocurrencies, Cheap..."
+    m = re.match(r'^\(?([A-D])\)?[.):]?\s+(.+)', fa, re.IGNORECASE | re.DOTALL)
+    if m and m.group(1).upper() == gold_letter.upper():
+        return 1
+
+    # case 5: comma/space variation of full text — "barn, damp" vs "barn damp"
+    if fa.lower().replace(",", " ").split() == gold_text.lower().replace(",", " ").split():
+        return 1
+
     return 0
 
 overall_results = []
@@ -85,16 +103,17 @@ for split in splits:
             subject = example["subject"]
             choices = example["choices"]
             answer_index = int(example["answer"])
+            gold_text = choices[answer_index]
             gold_letter = labels[answer_index]
 
             model_resp = get_model_response(q, subject, choices)
-            score = score_response(model_resp, gold_letter)
+            score = score_response(model_resp, gold_text, gold_letter, answer_index)
 
             results.append({
                 "question": q,
                 "subject": subject,
                 "choices": choices,
-                "gold_answer": gold_letter,
+                "gold_answer": gold_text,
                 "model_response": model_resp,
                 "score": score
             })
