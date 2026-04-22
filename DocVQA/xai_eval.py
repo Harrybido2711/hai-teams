@@ -8,7 +8,7 @@ import os
 import json
 
 load_dotenv()
-api_key = os.getenv('GROK_API_KEY')
+api_key = os.getenv('GROK_API_KEY') or os.getenv('XAI_API_KEY')
 client = Client(api_key=api_key, timeout=3600)
 
 DATA_PATH = "./docvqa_output/docvqa_validation.json"
