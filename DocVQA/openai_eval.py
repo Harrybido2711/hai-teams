@@ -60,6 +60,8 @@ def get_model_response(question: str, image_path: str) -> str | None:
                 max_tokens=256,
             )
             time.sleep(1.0)  # proactive rate limit: ~60 req/min
+            #base on the estimation of the retry, the time limit set is appropriate for the model to generate all the output
+            
             return completion.choices[0].message.content.strip()
         except Exception as e:
             print(f"API error (attempt {attempt+1}/3, retrying in 5s): {e}")
