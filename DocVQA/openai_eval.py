@@ -37,7 +37,7 @@ def get_model_response(question: str, image_path: str) -> str | None:
         'End your response with: "Final Answer: <your answer here>"'
     )
 
-    for attempt in range(5):
+    for attempt in range(3):
         try:
             completion = client.chat.completions.create(
                 model="gpt-4o-mini",
@@ -59,11 +59,11 @@ def get_model_response(question: str, image_path: str) -> str | None:
                 temperature=0,
                 max_tokens=256,
             )
+            time.sleep(1.0)  # proactive rate limit: ~60 req/min
             return completion.choices[0].message.content.strip()
         except Exception as e:
-            wait = 2 ** attempt
-            print(f"API error (attempt {attempt+1}/5, retrying in {wait}s): {e}")
-            time.sleep(wait)
+            print(f"API error (attempt {attempt+1}/3, retrying in 5s): {e}")
+            time.sleep(5)
     return None
 
 
