@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 from openai import OpenAI
 import re
@@ -10,6 +11,11 @@ import time
 load_dotenv()
 api_key = os.getenv('OPENAI_API_KEY')
 client = OpenAI(api_key=api_key)
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--shard", type=int, default=0, help="0-indexed shard number")
+parser.add_argument("--total-shards", type=int, default=1, help="total number of shards")
+args = parser.parse_args()
 
 DATA_PATH = "./docvqa_output/docvqa_validation.json"
 # path to the repo root so image_path resolves correctly
@@ -140,7 +146,17 @@ def score_response(model_output: str, gold_answers: list[str]) -> int:
 
 
 with open(DATA_PATH, "r") as f:
-    data = json.load(f)
+    full_data = json.load(f)
+
+# slice this shard's contiguous chunk
+total = len(full_data)
+shard_size = (total + args.total_shards - 1) // args.total_shards
+start = args.shard * shard_size
+end = min(start + shard_size, total)
+data = full_data[start:end]
+
+shard_tag = f"_shard{args.shard}of{args.total_shards}" if args.total_shards > 1 else ""
+print(f"Shard {args.shard}/{args.total_shards}: processing indices {start}–{end-1} ({len(data)} examples)")
 
 results = []
 for i, example in enumerate(data):
@@ -168,18 +184,14 @@ for i, example in enumerate(data):
     })
 
     if (i + 1) % 100 == 0:
-        print(f"[{i+1}/{len(data)}] running accuracy: {sum(r['score'] for r in results) / len(results):.3f}")
+        print(f"[shard {args.shard}] [{i+1}/{len(data)}] running accuracy: {sum(r['score'] for r in results) / len(results):.3f}")
 
 results_df = pd.DataFrame(results)
-results_df.to_csv("openai_docvqa_results.csv", index=False)
+out_csv = f"openai_docvqa_results{shard_tag}.csv"
+results_df.to_csv(out_csv, index=False)
 
 overall_accuracy = results_df["score"].mean()
 overall_anls = results_df["anls"].mean()
-print(f"\nFinal accuracy: {overall_accuracy:.4f} ({results_df['score'].sum()}/{len(results_df)})")
-print(f"Final ANLS:     {overall_anls:.4f}")
-
-pd.DataFrame([{
-    "dataset": "docvqa_validation",
-    "accuracy": overall_accuracy,
-    "anls": overall_anls,
-}]).to_csv("openai_docvqa_overall.csv", index=False)
+print(f"\n[shard {args.shard}] Final accuracy: {overall_accuracy:.4f} ({results_df['score'].sum()}/{len(results_df)})")
+print(f"[shard {args.shard}] Final ANLS:     {overall_anls:.4f}")
+print(f"[shard {args.shard}] Saved → {out_csv}")
