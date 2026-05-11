@@ -15,6 +15,7 @@ client = OpenAI(api_key=api_key)
 parser = argparse.ArgumentParser()
 parser.add_argument("--shard", type=int, default=0, help="0-indexed shard number")
 parser.add_argument("--total-shards", type=int, default=1, help="total number of shards")
+parser.add_argument("--save-every", type=int, default=50, help="save checkpoint every N examples")
 args = parser.parse_args()
 
 DATA_PATH = "./docvqa_output/docvqa_validation.json"
@@ -71,6 +72,8 @@ def get_model_response(question: str, image_path: str) -> str | None:
             return completion.choices[0].message.content.strip()
         except Exception as e:
             print(f"API error (attempt {attempt+1}/3, retrying in 5s): {e}")
+            if hasattr(e, 'code') and e.code == 'insufficient_quota':
+                raise SystemExit("OpenAI quota exhausted — top up billing at platform.openai.com and retry.")
             time.sleep(5)
     return None
 
@@ -156,11 +159,27 @@ end = min(start + shard_size, total)
 data = full_data[start:end]
 
 shard_tag = f"_shard{args.shard}of{args.total_shards}" if args.total_shards > 1 else ""
+out_csv = f"openai_docvqa_results{shard_tag}.csv"
 print(f"Shard {args.shard}/{args.total_shards}: processing indices {start}–{end-1} ({len(data)} examples)")
 
+# Resume: load already-finished questionIds from existing checkpoint
+done_ids = set()
 results = []
+if os.path.exists(out_csv):
+    existing = pd.read_csv(out_csv)
+    existing = existing[existing["model_response"].notna() & (existing["model_response"] != "")]
+    done_ids = set(existing["questionId"].tolist())
+    results = existing.to_dict("records")
+    print(f"[shard {args.shard}] Resuming — {len(done_ids)} already done, {len(data) - len(done_ids)} remaining")
+
+def save_checkpoint(rows):
+    pd.DataFrame(rows).to_csv(out_csv, index=False)
+
 for i, example in enumerate(data):
     qid = example["questionId"]
+    if qid in done_ids:
+        continue
+
     question = example["question"]
     gold_answers = example["answers"]
     image_path = example["image_path"]
@@ -183,13 +202,14 @@ for i, example in enumerate(data):
         "anls": anls,
     })
 
-    if (i + 1) % 100 == 0:
-        print(f"[shard {args.shard}] [{i+1}/{len(data)}] running accuracy: {sum(r['score'] for r in results) / len(results):.3f}")
+    completed = len(results)
+    if completed % args.save_every == 0:
+        save_checkpoint(results)
+        acc = sum(r["score"] for r in results) / completed
+        print(f"[shard {args.shard}] [{completed}/{len(data)}] acc={acc:.3f} — checkpoint saved")
 
+save_checkpoint(results)
 results_df = pd.DataFrame(results)
-out_csv = f"openai_docvqa_results{shard_tag}.csv"
-results_df.to_csv(out_csv, index=False)
-
 overall_accuracy = results_df["score"].mean()
 overall_anls = results_df["anls"].mean()
 print(f"\n[shard {args.shard}] Final accuracy: {overall_accuracy:.4f} ({results_df['score'].sum()}/{len(results_df)})")

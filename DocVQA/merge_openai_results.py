@@ -4,7 +4,7 @@ import glob
 import pandas as pd
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--total-shards", type=int, default=5)
+parser.add_argument("--total-shards", type=int, default=10)
 args = parser.parse_args()
 
 pattern = f"openai_docvqa_results_shard*of{args.total_shards}.csv"
