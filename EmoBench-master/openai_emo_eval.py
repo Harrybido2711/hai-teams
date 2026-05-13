@@ -20,15 +20,20 @@ LETTERS = string.ascii_uppercase
 # ── helpers ──────────────────────────────────────────────────────────────────
 
 def load_yaml(path):
+    """Load a YAML config file and return its contents as a dict."""
     with open(path) as f:
         return yaml.safe_load(f)
 
 
 def rank_choices(choices):
+    """Convert a list of choices into a lettered string, e.g. ['Yes', 'No'] → 'A) Yes\nB) No'."""
     return "\n".join(f"{LETTERS[i]}) {c}" for i, c in enumerate(choices))
 
 
 def build_system_prompt(task, lang):
+    """Build the system prompt for the given task and language.
+    Combines the instruction text from prompts.yaml with the required JSON
+    output format from response.yaml."""
     prompts = load_yaml("src/configs/prompts.yaml")
     response = load_yaml("src/configs/response.yaml")
     statement = response["base"][lang]
@@ -38,6 +43,8 @@ def build_system_prompt(task, lang):
 
 
 def build_user_prompt(task, lang, sample):
+    """Build the per-sample user prompt by filling in the scenario, subject,
+    and lettered choices into the task template from prompts.yaml."""
     template = load_yaml("src/configs/prompts.yaml")[task][lang]
     if task == "EU":
         return template.format(
@@ -56,6 +63,8 @@ def build_user_prompt(task, lang, sample):
 
 
 def parse_json(text):
+    """Extract and parse the JSON block from the model's raw response.
+    Handles both plain JSON and markdown-fenced ```json blocks."""
     try:
         if "```json" in text:
             text = re.search(r"```json\s*([\s\S]*?)```", text).group(1)
@@ -67,6 +76,9 @@ def parse_json(text):
 # ── API call with retry ───────────────────────────────────────────────────────
 
 def call_api(messages, model, max_retries=3):
+    """Send a chat request to the OpenAI API with automatic retry and backoff.
+    Sleeps 2s after each successful call to stay under RPM/TPM rate limits.
+    Returns the response text, or None if all retries fail or quota is exhausted."""
     for attempt in range(max_retries):
         try:
             resp = client.chat.completions.create(
@@ -99,6 +111,13 @@ def call_api(messages, model, max_retries=3):
 # ── evaluation + CSV output ───────────────────────────────────────────────────
 
 def evaluate(results, task, lang, model_name, shard_tag=""):
+    """Score all results and save two CSV files:
+    - per-sample CSV: one row per question with a score column (0 or 1)
+    - overall CSV: per-category accuracy + Overall
+
+    Scoring follows the original EmoBench authors' logic (src/data.py):
+    - EA: score=1 if answer matches label
+    - EU: score=1 only if BOTH emotion and cause answers are correct"""
     if not results:
         return
 
@@ -142,6 +161,9 @@ def evaluate(results, task, lang, model_name, shard_tag=""):
 # ── main loop ─────────────────────────────────────────────────────────────────
 
 def run_task(task, lang, model, shard, total_shards, save_every):
+    """Run generation + evaluation for one task/language combination.
+    Supports sharding (splitting data across parallel Quest jobs) and
+    checkpoint/resume (skips already-completed samples on restart)."""
     # Load + filter by language
     data = []
     with open(f"data/{task}.jsonl", encoding="utf-8") as f:
