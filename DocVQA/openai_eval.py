@@ -76,7 +76,7 @@ def get_model_response(question: str, image_path: str) -> str | None:
                 raise SystemExit("OpenAI quota exhausted — top up billing at platform.openai.com and retry.")
             if 'requests per day' in err:
                 print("RPD limit exhausted — stopping to preserve quota for resume.")
-                return None  # 不重试，直接返回，留给下次 resume
+                return None  # Do not retry, directly go back
             wait = 5
             m = re.search(r'try again in ([\d.]+)(ms|s)', err)
             if m:

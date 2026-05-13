@@ -42,6 +42,127 @@ No duplicate questionIds, no cross-shard contamination — only the empty respon
 
 ---
 
+## Key Problems Encountered & How They Were Solved
+
+### Problem 1 — API Daily Quota (RPD) Exhaustion
+
+**What happened:**
+OpenAI Tier 1 accounts have a hard limit of 10,000 requests/day (RPD). With 5 shards running
+in parallel and the old retry logic retrying every failure 3 times, the quota was consumed
+much faster than expected — each failed question wasted 3 RPD instead of 1.
+
+**Symptoms:**
+- Very regular pattern in CSV: 1 answered question followed by ~6 empty ones, repeating
+- Empty responses started appearing from question 3 onwards (quota already nearly gone)
+
+**Fix:**
+- Detect RPD errors by string-matching `'requests per day'` in the exception message
+- Return `None` immediately without any retry — preserves remaining quota for the next run
+- Wait for quota reset at 00:00 UTC before re-submitting
+
+```python
+if 'requests per day' in err:
+    return None  # no retry — preserve daily quota
+```
+
+---
+
+### Problem 2 — Rate Limits Causing Questions to Be Skipped (RPM / TPM)
+
+**What happened:**
+Two types of rate limits caused questions to be silently skipped:
+- **RPM** (requests per minute): exceeded when too many shards ran simultaneously
+- **TPM** (tokens per minute): each document image costs ~850 input tokens with `detail="high"`;
+  10 parallel shards × 850 tokens × 30 req/min ≈ 255,000 TPM, exceeding the 200,000 TPM limit
+
+The old code retried on these errors but the retries themselves consumed more quota, causing
+a compounding failure cascade.
+
+**Fix:**
+- Reduced parallel shards from 10 to 5: `--array=0-9` → `--array=0-4`
+- Increased sleep between requests from 1.0s → 2.5s to reduce combined TPM
+- Combined TPM after fix: 5 shards × 1050 tokens / 2.5s × 60s ≈ 126,000 TPM (safely under limit)
+- Added resume logic so skipped questions are retried on the next run rather than lost permanently
+
+**How resume prevents permanent skips:**
+The CSV only counts a question as "done" if `model_response` is non-empty. Any empty row is
+automatically retried next time `sbatch` is submitted — no manual intervention needed.
+
+---
+
+### Problem 3 — Hanging Requests / Timeout Issues & Shard Design
+
+**What happened:**
+The OpenAI SDK has a default timeout of 600 seconds (10 minutes). A single hung request would
+freeze an entire shard for up to 10 minutes, blocking all subsequent questions in that shard.
+Without sharding, one hung request near the start could delay thousands of questions.
+
+**Fix — Timeout:**
+Set `timeout=60` on every API call. Document images take longer than plain text (upload +
+decode + inference), so 60s is a safer ceiling than the original 30s.
+
+```python
+completion = client.chat.completions.create(
+    ...
+    timeout=60,  # images take longer; prevents 10-min hangs
+)
+```
+
+**Fix — Sharding:**
+Split the 5,349-question dataset into N independent shards, each processed by a separate
+SLURM array job. Benefits:
+- A hang or failure in one shard does not affect others
+- Each shard writes to its own CSV file — no file conflicts
+- Failed shards can be rerun individually without touching completed shards
+- Checkpoint saves every 50 questions within each shard, so partial progress is never lost
+
+Shard size calculation (5 shards, 5349 questions):
+```
+shard 0: questions   0 – 1069  (1070 q)
+shard 1: questions 1070 – 2139  (1070 q)
+shard 2: questions 2140 – 3209  (1070 q)
+shard 3: questions 3210 – 4279  (1070 q)
+shard 4: questions 4280 – 5348  (1069 q)
+```
+
+---
+
+### Problem 4 — Improving Model Response Quality
+
+**What happened:**
+Early runs returned verbose model outputs that were hard to parse for scoring. The model
+sometimes gave multi-sentence explanations instead of a direct answer, making exact-match
+scoring unreliable.
+
+**Fix — Structured prompt:**
+The prompt explicitly instructs the model to end with a parseable tag:
+
+```
+"Give a short, direct answer — a word, number, or brief phrase.
+End your response with: 'Final Answer: <your answer here>'"
+```
+
+**Fix — Answer extraction:**
+`extract_final_answer()` uses regex to pull out only the tagged answer, discarding surrounding
+explanation text before scoring.
+
+**Fix — Multi-level scoring:**
+`score_response()` applies four levels of matching in order, handling common surface variations
+without penalizing correct answers:
+
+| Level | Example |
+|-------|---------|
+| Exact match (case/whitespace insensitive) | `"California"` = `"california"` |
+| Comma/space variation | `"barn, damp"` = `"barn damp"` |
+| Punctuation stripped | `"st. louis"` = `"st louis"` |
+| Substring containment | `"california"` matches `"University of California"` |
+
+**Metric:**
+In addition to binary accuracy, ANLS (Average Normalized Levenshtein Similarity) is computed
+as the official DocVQA metric — it gives partial credit for near-correct answers.
+
+---
+
 ## Fix Applied
 
 ### 1. Stop retrying on RPD errors (`openai_eval.py`)
