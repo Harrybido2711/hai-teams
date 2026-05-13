@@ -11,4 +11,4 @@
 
 module purge
 
-/projects/p32983/pythonenvs/hai-teams/bin/python merge_openai_results.py --total-shards 10
+/projects/p32983/pythonenvs/hai-teams/bin/python merge_openai_results.py --total-shards 5

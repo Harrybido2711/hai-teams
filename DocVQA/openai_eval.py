@@ -34,7 +34,7 @@ def get_model_response(question: str, image_path: str) -> str | None:
         b64 = encode_image(image_path)
     except FileNotFoundError:
         print(f"Image not found: {image_path}")
-        return None
+        return "IMAGE_NOT_FOUND"
 
     prompt = (
         "You are reading a document image. Answer the question below using only "
@@ -65,16 +65,25 @@ def get_model_response(question: str, image_path: str) -> str | None:
                 ],
                 temperature=0,
                 max_tokens=256,
+                timeout=30,
             )
-            time.sleep(1.0)  # proactive rate limit: ~60 req/min
-            #base on the estimation of the retry, the time limit set is appropriate for the model to generate all the output
-            
+            time.sleep(2.0)  # 10 shards × 1req/2s = 300 RPM，低于500 RPM限制
             return completion.choices[0].message.content.strip()
         except Exception as e:
-            print(f"API error (attempt {attempt+1}/3, retrying in 5s): {e}")
-            if hasattr(e, 'code') and e.code == 'insufficient_quota':
+            err = str(e)
+            print(f"API error (attempt {attempt+1}/3): {e}")
+            if 'insufficient_quota' in err:
                 raise SystemExit("OpenAI quota exhausted — top up billing at platform.openai.com and retry.")
-            time.sleep(5)
+            if 'requests per day' in err:
+                print("RPD limit exhausted — stopping to preserve quota for resume.")
+                return None  # 不重试，直接返回，留给下次 resume
+            wait = 5
+            m = re.search(r'try again in ([\d.]+)(ms|s)', err)
+            if m:
+                wait = float(m.group(1)) / 1000 if m.group(2) == 'ms' else float(m.group(1))
+                wait = max(wait + 1, 1)
+            print(f"Retrying in {wait:.1f}s...")
+            time.sleep(wait)
     return None
 
 
@@ -167,8 +176,8 @@ done_ids = set()
 results = []
 if os.path.exists(out_csv):
     existing = pd.read_csv(out_csv)
-    existing = existing[existing["model_response"].notna() & (existing["model_response"] != "")]
-    done_ids = set(existing["questionId"].tolist())
+    existing = existing[existing["model_response"].notna() & (existing["model_response"].astype(str).str.strip() != "")]
+    done_ids = set(str(x) for x in existing["questionId"].tolist())
     results = existing.to_dict("records")
     print(f"[shard {args.shard}] Resuming — {len(done_ids)} already done, {len(data) - len(done_ids)} remaining")
 
@@ -177,7 +186,7 @@ def save_checkpoint(rows):
 
 for i, example in enumerate(data):
     qid = example["questionId"]
-    if qid in done_ids:
+    if str(qid) in done_ids:
         continue
 
     question = example["question"]

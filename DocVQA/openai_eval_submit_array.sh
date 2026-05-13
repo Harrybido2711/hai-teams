@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --account=p32983
 #SBATCH --partition=long
-#SBATCH --array=0-9
+#SBATCH --array=0-4
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=8GB
@@ -14,5 +14,5 @@ module purge
 
 /projects/p32983/pythonenvs/hai-teams/bin/python openai_eval.py \
     --shard "$SLURM_ARRAY_TASK_ID" \
-    --total-shards 10 \
+    --total-shards 5 \
     --save-every 50
