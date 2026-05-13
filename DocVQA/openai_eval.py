@@ -65,9 +65,9 @@ def get_model_response(question: str, image_path: str) -> str | None:
                 ],
                 temperature=0,
                 max_tokens=256,
-                timeout=30,
+                timeout=60,  # images take longer to process; 30s was too tight
             )
-            time.sleep(2.0)  # 10 shards × 1req/2s = 300 RPM，低于500 RPM限制
+            time.sleep(2.5)  # 5 shards × 1050 tokens / 2.5s ≈ 126k TPM, safely under 200k limit
             return completion.choices[0].message.content.strip()
         except Exception as e:
             err = str(e)
