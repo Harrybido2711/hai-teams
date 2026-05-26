@@ -11,11 +11,10 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-load_dotenv()
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(ROOT, ".env"))
 api_key = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
-
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LETTERS = string.ascii_uppercase
 
 

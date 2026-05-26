@@ -11,11 +11,10 @@ from dotenv import load_dotenv
 from xai_sdk import Client
 from xai_sdk.chat import user as xai_user, system as xai_system
 
-load_dotenv()
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(ROOT, ".env"))
 api_key = os.getenv("GROK_API_KEY")
 client = Client(api_key=api_key, timeout=3600)
-
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LETTERS = string.ascii_uppercase
 
 

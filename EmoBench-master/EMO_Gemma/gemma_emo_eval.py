@@ -10,11 +10,10 @@ import yaml
 from dotenv import load_dotenv
 from together import Together
 
-load_dotenv()
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(ROOT, ".env"))
 api_key = os.getenv("TOGETHER_API_KEY")
 client = Together(api_key=api_key)
-
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LETTERS = string.ascii_uppercase
 
 

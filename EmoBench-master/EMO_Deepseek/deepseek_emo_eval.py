@@ -10,11 +10,10 @@ import yaml
 from dotenv import load_dotenv
 from openai import OpenAI
 
-load_dotenv()
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(ROOT, ".env"))
 api_key = os.getenv("DEEPSEEK_API_KEY")
 client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com", timeout=7200)
-
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LETTERS = string.ascii_uppercase
 
 
