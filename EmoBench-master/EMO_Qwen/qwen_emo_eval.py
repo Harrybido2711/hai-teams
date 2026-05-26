@@ -73,7 +73,6 @@ def call_api(messages, model, max_retries=3):
                 model=model,
                 messages=messages,
                 temperature=0.6,
-                max_tokens=256,
                 stream=False,
             )
             time.sleep(2.0)

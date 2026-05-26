@@ -76,7 +76,6 @@ def call_api(sys_prompt, user_prompt, model, max_retries=3):
                 config=types.GenerateContentConfig(
                     system_instruction=sys_prompt,
                     temperature=0.6,
-                    max_output_tokens=256,
                 ),
             )
             time.sleep(2.0)

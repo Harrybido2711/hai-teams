@@ -185,3 +185,23 @@ EmoBench-master/
 - **Gemma empty responses**: Together AI occasionally returns an empty string for Gemma; the script retries up to 5 times and only moves on if the response is non-empty.
 - **DeepSeek temperature**: set to `0` (not `0.6`) because `deepseek-reasoner` is a reasoning model and deterministic output is preferred.
 - **SLURM**: all `.sh` files use `--array=0-3` (4 shards), `--partition=long`, `--time=24:00:00`, and the same Quest Python environment as the OpenAI script.
+
+---
+
+## 5. Initial Results (English only, EA + EU)
+
+| Model | EA | EU | Status |
+|-------|----|----|--------|
+| XAI (grok-3-mini) | 0.72 | 0.86 | ✓ Complete |
+| DeepSeek (deepseek-reasoner) | 0.56 | 0.24 | ✓ Running — EU low, likely model performance |
+| Gemma (google/gemma-4-31B-it) | 0.18 | 0.0 | ✗ Needs re-run — Together AI returning empty responses |
+| Gemini (gemini-2.5-flash) | 0.0 | 0.0 | ✗ Needs re-run — response truncated by max_output_tokens=256 |
+| Qwen (Qwen3.5-9B) | 0.0 | 0.0 | ✗ Needs re-run — max_tokens=256 cut off before answer |
+
+**Root causes identified:**
+- **Gemini**: `max_output_tokens=256` truncated the response mid-JSON — fix applied (limit removed).
+- **Qwen**: `max_tokens=256` exhausted during `<think>` block, leaving no tokens for the actual answer — fix applied (limit removed).
+- **Gemma**: Together AI consistently returns empty strings for `google/gemma-4-31B-it` across all 5 retry attempts — model availability issue on Together AI.
+- **DeepSeek EU**: `personal_beliefs_and_experiences` category scores 0.0 — model performance, not a code bug.
+
+**Fix applied (2026-05-26):** removed `max_tokens` / `max_output_tokens` limits from all 5 scripts. Gemini, Qwen, and Gemma need to be re-run with existing result files cleared.

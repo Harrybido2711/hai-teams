@@ -73,11 +73,19 @@ def call_api(messages, model, max_retries=3):
                 model=model,
                 messages=messages,
                 temperature=0,
-                max_tokens=256,
                 stream=False,
             )
             time.sleep(2.0)
-            return resp.choices[0].message.content.strip()
+            msg = resp.choices[0].message
+            content = (msg.content or "").strip()
+            # deepseek-reasoner sometimes returns empty content — fall back to reasoning_content
+            if not content and hasattr(msg, "reasoning_content") and msg.reasoning_content:
+                content = msg.reasoning_content.strip()
+            if not content:
+                print(f"Empty response on attempt {attempt+1}, retrying...")
+                time.sleep(5)
+                continue
+            return content
         except Exception as e:
             err = str(e)
             print(f"API error (attempt {attempt+1}/{max_retries}): {e}")
