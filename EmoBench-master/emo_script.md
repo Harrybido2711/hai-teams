@@ -9,13 +9,11 @@ All BBH eval scripts share the same structure: load an API key from `.env`, iter
 | `openai_eval.py` | `gpt-4o-mini-2024-07-18` | `openai.OpenAI` |
 | `gemini_eval.py` | `gemini-2.5-flash` | `google.genai.Client` |
 | `deepseek_eval.py` | `deepseek-reasoner` | `openai.OpenAI` with `base_url="https://api.deepseek.com"` and `timeout=7200` |
-| `llama_eval.py` | `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | `together.Together` |
 | `qwen_eval.py` | `Qwen/Qwen3.5-9B` | `together.Together` with `timeout=18000` |
 | `xai_eval.py` | `grok-3-mini` | `xai_sdk.Client` — uses its own API: `client.chat.create(model=...)` then `chat.append(user(prompt))` then `chat.sample()` |
-| `kimi_eval.py` | `kimi-k2.5` | `openai.OpenAI` with `base_url="https://api.moonshot.ai/v1"` and `timeout=7200` |
 | `gemma_eval.py` | `google/gemma-4-31B-it` | `together.Together` |
 
-**Key pattern:** DeepSeek and Kimi both reuse the OpenAI SDK by swapping `base_url` — no separate SDK needed. xAI is the only model with its own SDK and a different call pattern. Gemma, Llama, and Qwen all go through Together AI.
+**Key pattern:** DeepSeek reuses the OpenAI SDK by swapping `base_url` — no separate SDK needed. xAI is the only model with its own SDK and a different call pattern. Gemma and Qwen both go through Together AI.
 
 ---
 
@@ -123,3 +121,67 @@ python openai_emo_eval.py \
 ```
 
 `$SLURM_ARRAY_TASK_ID` is automatically 0, 1, 2, or 3 for each job. The script slices the dataset into 4 equal chunks and each job processes its own chunk. Results are saved to separate shard files (e.g., `gpt-4o-mini_en_shard1of4.jsonl`) and then merged after all jobs finish.
+
+---
+
+## 4. EmoBench — New Model Evaluation Scripts
+
+Five independent evaluation folders were created under `EmoBench-master/`, one per model. Each folder contains a Python eval script and a SLURM shell script. Results are saved inside the folder itself.
+
+### Folder structure
+
+```
+EmoBench-master/
+├── EMO_Gemini/
+│   ├── gemini_emo_eval.py
+│   ├── run_emobench.sh
+│   └── results/
+│       ├── EA/
+│       └── EU/
+├── EMO_XAI/
+│   ├── xai_emo_eval.py
+│   ├── run_emobench.sh
+│   └── results/
+│       ├── EA/
+│       └── EU/
+├── EMO_Qwen/
+│   ├── qwen_emo_eval.py
+│   ├── run_emobench.sh
+│   └── results/
+│       ├── EA/
+│       └── EU/
+├── EMO_Gemma/
+│   ├── gemma_emo_eval.py
+│   ├── run_emobench.sh
+│   └── results/
+│       ├── EA/
+│       └── EU/
+└── EMO_Deepseek/
+    ├── deepseek_emo_eval.py
+    ├── run_emobench.sh
+    └── results/
+        ├── EA/
+        └── EU/
+```
+
+### Model details
+
+| Folder | Script | Model | SDK / Client |
+|--------|--------|-------|-------------|
+| `EMO_Gemini` | `gemini_emo_eval.py` | `gemini-2.5-flash` | `google.genai.Client` with `GenerateContentConfig(system_instruction=...)` |
+| `EMO_XAI` | `xai_emo_eval.py` | `grok-3-mini` | `xai_sdk.Client` — `xai_system()` + `xai_user()` objects |
+| `EMO_Qwen` | `qwen_emo_eval.py` | `Qwen/Qwen3.5-9B` | `together.Together` with `timeout=18000` |
+| `EMO_Gemma` | `gemma_emo_eval.py` | `google/gemma-4-31B-it` | `together.Together` with empty-response retry (max 5 attempts) |
+| `EMO_Deepseek` | `deepseek_emo_eval.py` | `deepseek-reasoner` | `openai.OpenAI` with `base_url="https://api.deepseek.com"`, `temperature=0` |
+
+### Design decisions
+
+- **English only**: all scripts filter `language == "en"` from the data — no `--lang` argument.
+- **Both tasks**: `--task all` (default) runs EA then EU in sequence within each shard job.
+- **Path resolution**: each script uses `ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))` to find `EmoBench-master/` and load `data/` and `src/configs/` regardless of where it is run from.
+- **Results location**: saved to `<folder>/results/<task>/` using absolute paths derived from the script's own location.
+- **Gemini system prompt**: Gemini's SDK does not accept a `system` role in the messages list — system instructions are passed via `GenerateContentConfig(system_instruction=...)` instead.
+- **XAI messages**: the `xai_sdk` does not use message dicts — system and user content are appended as `xai_system()` and `xai_user()` objects before calling `chat.sample()`.
+- **Gemma empty responses**: Together AI occasionally returns an empty string for Gemma; the script retries up to 5 times and only moves on if the response is non-empty.
+- **DeepSeek temperature**: set to `0` (not `0.6`) because `deepseek-reasoner` is a reasoning model and deterministic output is preferred.
+- **SLURM**: all `.sh` files use `--array=0-3` (4 shards), `--partition=long`, `--time=24:00:00`, and the same Quest Python environment as the OpenAI script.
