@@ -99,7 +99,7 @@ def call_api(sys_prompt, user_prompt, model, max_retries=3):
 
 # ── evaluation + CSV output ───────────────────────────────────────────────────
 
-def evaluate(results, task, model_name, shard_tag=""):
+def evaluate(results, task, model_name):
     if not results:
         return
 
@@ -119,7 +119,7 @@ def evaluate(results, task, model_name, shard_tag=""):
         cat_acc = df.groupby("coarse_category")["score"].mean()
         overall = df["score"].mean()
 
-    csv_path = os.path.join(out_dir, f"{model_name}_en{shard_tag}.csv")
+    csv_path = os.path.join(out_dir, f"{model_name}_en.csv")
     df.to_csv(csv_path, index=False)
 
     overall_path = os.path.join(out_dir, f"{model_name}_en_overall.csv")
@@ -139,7 +139,7 @@ def evaluate(results, task, model_name, shard_tag=""):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, shard, total_shards, save_every):
+def run_task(task, model, save_every):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -148,15 +148,9 @@ def run_task(task, model, shard, total_shards, save_every):
             if s["language"] == "en":
                 data.append(s)
 
-    shard_size = (len(data) + total_shards - 1) // total_shards
-    start = shard * shard_size
-    end = min(start + shard_size, len(data))
-    data = data[start:end]
-
     model_name = model.replace(".", "_").replace("/", "-")
-    shard_tag = f"_shard{shard}of{total_shards}" if total_shards > 1 else ""
     results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", task)
-    out_path = os.path.join(results_dir, f"{model_name}_en{shard_tag}.jsonl")
+    out_path = os.path.join(results_dir, f"{model_name}_en.jsonl")
 
     done_ids, results = set(), []
     if os.path.exists(out_path):
@@ -165,9 +159,9 @@ def run_task(task, model, shard, total_shards, save_every):
                 r = json.loads(line)
                 done_ids.add(str(r["qid"]))
                 results.append(r)
-        print(f"[{task}-en shard {shard}] Resuming — {len(done_ids)} done, {len(data)-len(done_ids)} remaining")
+        print(f"[{task}-en] Resuming — {len(done_ids)} done, {len(data)-len(done_ids)} remaining")
     else:
-        print(f"[{task}-en shard {shard}] Processing indices {start}–{end-1} ({len(data)} samples)")
+        print(f"[{task}-en] Processing {len(data)} samples")
 
     sys_prompt = build_system_prompt(task)
 
@@ -218,11 +212,11 @@ def run_task(task, model, shard, total_shards, save_every):
 
         if len(results) % save_every == 0:
             save_checkpoint()
-            print(f"[{task}-en shard {shard}] [{len(results)}/{len(data)}] checkpoint saved")
+            print(f"[{task}-en] [{len(results)}/{len(data)}] checkpoint saved")
 
     save_checkpoint()
-    print(f"[{task}-en shard {shard}] Done → {out_path}")
-    evaluate(results, task, model_name, shard_tag)
+    print(f"[{task}-en] Done → {out_path}")
+    evaluate(results, task, model_name)
 
 
 # ── entry point ───────────────────────────────────────────────────────────────
@@ -231,11 +225,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, default="gemini-2.5-flash")
     parser.add_argument("--task", type=str, default="all", choices=["EU", "EA", "all"])
-    parser.add_argument("--shard", type=int, default=0)
-    parser.add_argument("--total-shards", type=int, default=1)
     parser.add_argument("--save-every", type=int, default=20)
     args = parser.parse_args()
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
-        run_task(task, args.model, args.shard, args.total_shards, args.save_every)
+        run_task(task, args.model, args.save_every)

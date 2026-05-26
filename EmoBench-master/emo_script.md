@@ -188,7 +188,29 @@ EmoBench-master/
 
 ---
 
-## 5. Initial Results (English only, EA + EU)
+## 5. Dataset Category Structure
+
+### EA (Emotional Application) — 4 categories
+Divided by Relationship type × Problem type:
+- **Personal-Self**
+- **Personal-Others**
+- **Social-Self**
+- **Social-Others**
+
+Each shard (0–3) contains exactly one category (50 samples each), since the dataset is ordered by category.
+
+### EU (Emotional Understanding) — 4 categories
+- **Complex Emotions**
+- **Emotional Cues**
+- **Personal Beliefs and Experiences**
+- **Perspective-taking**
+
+### Implication for evaluation
+The `_en_overall.csv` is written per-shard without a shard tag, so each shard overwrites the previous file. The final overall CSV only reflects whichever shard finished last — missing the other categories. A merge script is needed to combine all 4 shard `.jsonl` files and compute true per-category and overall accuracy.
+
+---
+
+## 6. Initial Results (English only, EA + EU)
 
 | Model | EA | EU | Status |
 |-------|----|----|--------|
