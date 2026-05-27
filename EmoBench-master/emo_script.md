@@ -177,14 +177,18 @@ EmoBench-master/
 ### Design decisions
 
 - **English only**: all scripts filter `language == "en"` from the data — no `--lang` argument.
-- **Both tasks**: `--task all` (default) runs EA then EU in sequence within each shard job.
+- **Both tasks**: `--task all` (default) runs EA then EU sequentially in a single job.
+- **No sharding**: scripts run as a single SLURM job (no `--array`). The full dataset is processed in one pass, so all 4 categories per task appear naturally in the output without any post-run merge step.
 - **Path resolution**: each script uses `ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))` to find `EmoBench-master/` and load `data/` and `src/configs/` regardless of where it is run from.
-- **Results location**: saved to `<folder>/results/<task>/` using absolute paths derived from the script's own location.
+- **Results location**: saved to `<folder>/results/<task>/` using absolute paths derived from the script's own location. Output files are named `{model}_en.jsonl` and `{model}_en_overall.csv` (no shard tag).
+- **Checkpoint / resume**: completed `qid`s are tracked in the `.jsonl` file. On restart the script skips any `qid` already present — to force a full re-run, delete the `.jsonl` files before submitting.
 - **Gemini system prompt**: Gemini's SDK does not accept a `system` role in the messages list — system instructions are passed via `GenerateContentConfig(system_instruction=...)` instead.
 - **XAI messages**: the `xai_sdk` does not use message dicts — system and user content are appended as `xai_system()` and `xai_user()` objects before calling `chat.sample()`.
-- **Gemma empty responses**: Together AI occasionally returns an empty string for Gemma; the script retries up to 5 times and only moves on if the response is non-empty.
+- **DeepSeek empty content**: `deepseek-reasoner` sometimes returns an empty `content` field and puts the answer in `reasoning_content` instead. The script falls back to `reasoning_content` before retrying.
 - **DeepSeek temperature**: set to `0` (not `0.6`) because `deepseek-reasoner` is a reasoning model and deterministic output is preferred.
-- **SLURM**: all `.sh` files use `--array=0-3` (4 shards), `--partition=long`, `--time=24:00:00`, and the same Quest Python environment as the OpenAI script.
+- **Gemma empty responses**: Together AI consistently returns an empty string for `google/gemma-4-31B-it` (HTTP 200, no exception). The script retries up to 5 times and skips the sample only if all 5 attempts return empty.
+- **Qwen empty responses**: Together AI returns empty string content for `Qwen/Qwen3.5-9B` without raising an exception. The original script did not retry on empty string (only on exceptions), so all responses were silently saved as empty. Fix: add an explicit empty-string check and retry loop in `call_api`, same pattern as DeepSeek. The model name `Qwen/Qwen3.5-9B` may also be invalid on Together AI — verify against the Together AI model list before re-running.
+- **SLURM**: all `.sh` files use a single job (`--partition=long`, `--time=24:00:00`) and the Quest Python environment at `/projects/p32983/pythonenvs/hai-teams/bin/python`.
 
 ---
 
@@ -206,24 +210,33 @@ Each shard (0–3) contains exactly one category (50 samples each), since the da
 - **Perspective-taking**
 
 ### Implication for evaluation
-The `_en_overall.csv` is written per-shard without a shard tag, so each shard overwrites the previous file. The final overall CSV only reflects whichever shard finished last — missing the other categories. A merge script is needed to combine all 4 shard `.jsonl` files and compute true per-category and overall accuracy.
+With sharding removed, each script processes the full dataset in one pass and writes a single `{model}_en.jsonl`. The `_en_overall.csv` naturally contains all 4 categories + Overall. No post-run merge is needed.
+
+**Historical note (shard-overwrite bug):** The original scripts wrote `_en_overall.csv` per shard without a shard tag, so each shard overwrote the previous file. The final file only contained whichever shard ran last (one category). For the three models that already completed under the old sharded setup (GPT-4o-mini, DeepSeek-Reasoner, Grok-3-mini), the correct per-category accuracy was recomputed by manually merging all 4 shard `.jsonl` files.
 
 ---
 
-## 6. Initial Results (English only, EA + EU)
+## 6. Final Results (English only, EA + EU)
 
-| Model | EA | EU | Status |
-|-------|----|----|--------|
-| XAI (grok-3-mini) | 0.72 | 0.86 | ✓ Complete |
-| DeepSeek (deepseek-reasoner) | 0.56 | 0.24 | ✓ Running — EU low, likely model performance |
-| Gemma (google/gemma-4-31B-it) | 0.18 | 0.0 | ✗ Needs re-run — Together AI returning empty responses |
-| Gemini (gemini-2.5-flash) | 0.0 | 0.0 | ✗ Needs re-run — response truncated by max_output_tokens=256 |
-| Qwen (Qwen3.5-9B) | 0.0 | 0.0 | ✗ Needs re-run — max_tokens=256 cut off before answer |
+### Summary (from `emobench_results.csv`)
 
-**Root causes identified:**
-- **Gemini**: `max_output_tokens=256` truncated the response mid-JSON — fix applied (limit removed).
-- **Qwen**: `max_tokens=256` exhausted during `<think>` block, leaving no tokens for the actual answer — fix applied (limit removed).
-- **Gemma**: Together AI consistently returns empty strings for `google/gemma-4-31B-it` across all 5 retry attempts — model availability issue on Together AI.
-- **DeepSeek EU**: `personal_beliefs_and_experiences` category scores 0.0 — model performance, not a code bug.
+| Model | EA_Overall | EU_Overall | Overall_Score | Status |
+|-------|-----------|-----------|--------------|--------|
+| GPT-4o-mini | 0.700 | 0.450 | 0.575 | ✓ Complete |
+| DeepSeek-Reasoner | 0.650 | 0.695 | 0.673 | ✓ Complete |
+| Grok-3-mini | 0.735 | 0.735 | 0.735 | ✓ Complete |
+| Gemini-2.5-Flash | 0.735 | 0.695 | 0.715 | ✓ Complete |
+| Gemma-4-31B | 0.770 | 0.720 | 0.745 | ✓ Complete |
+| Qwen (Qwen3.5-9B) | 0.0 | 0.0 | — | ✗ Needs re-run — empty responses |
 
-**Fix applied (2026-05-26):** removed `max_tokens` / `max_output_tokens` limits from all 5 scripts. Gemini, Qwen, and Gemma need to be re-run with existing result files cleared.
+Overall_Score = average of EA_Overall and EU_Overall.
+
+### Root causes and fixes
+
+| Model | Problem | Fix |
+|-------|---------|-----|
+| Gemini | `max_output_tokens=256` truncated response mid-JSON | Removed output token limit |
+| Qwen | `Qwen/Qwen3.5-9B` returns empty string from Together AI with no exception; `call_api` did not retry on empty string | Add empty-string retry; verify/correct model name |
+| Gemma | Together AI returns empty string for `google/gemma-4-31B-it` (HTTP 200, no error) | Added up to 5 retries on empty response |
+| DeepSeek | `deepseek-reasoner` puts answer in `reasoning_content` when `content` is empty | Added fallback to `reasoning_content` in `call_api` |
+| All (shard-overwrite) | Per-shard `_en_overall.csv` was overwritten by each shard; only last shard's category survived | Removed sharding; scripts now run as single jobs |
