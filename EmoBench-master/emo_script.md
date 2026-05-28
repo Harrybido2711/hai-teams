@@ -187,7 +187,15 @@ EmoBench-master/
 - **DeepSeek empty content**: `deepseek-reasoner` sometimes returns an empty `content` field and puts the answer in `reasoning_content` instead. The script falls back to `reasoning_content` before retrying.
 - **DeepSeek temperature**: set to `0` (not `0.6`) because `deepseek-reasoner` is a reasoning model and deterministic output is preferred.
 - **Gemma empty responses**: Together AI consistently returns an empty string for `google/gemma-4-31B-it` (HTTP 200, no exception). The script retries up to 5 times and skips the sample only if all 5 attempts return empty.
-- **Qwen empty responses**: Together AI returns empty string content for `Qwen/Qwen3.5-9B` without raising an exception. The original script did not retry on empty string (only on exceptions), so all responses were silently saved as empty. Fix: add an explicit empty-string check and retry loop in `call_api`, same pattern as DeepSeek. The model name `Qwen/Qwen3.5-9B` may also be invalid on Together AI — verify against the Together AI model list before re-running.
+- **Qwen empty responses**: `Qwen/Qwen3.5-9B` is a thinking model — it generates a long `<think>...</think>` block before producing the actual answer. Without an explicit `max_tokens` limit, Together AI defaults to a very small value that is exhausted during the thinking phase, returning empty string content (HTTP 200, no exception). The original script had `max_tokens=256` which was too small, and was later removed entirely — but removing it causes the same problem because the default is also too small. **Fix: set `max_tokens=8192`** (matching the BBH benchmark script which worked correctly). Also added an explicit empty-string retry in `call_api` as a safety net:
+  ```python
+  content = (resp.choices[0].message.content or "").strip()
+  if not content:
+      print(f"Empty response on attempt {attempt+1}, retrying...")
+      time.sleep(5)
+      continue
+  ```
+  Root cause confirmed by comparing with the BBH Qwen script: BBH had `max_tokens=8192` and produced valid responses; EmoBench had no limit and got all empty responses.
 - **SLURM**: all `.sh` files use a single job (`--partition=long`, `--time=24:00:00`) and the Quest Python environment at `/projects/p32983/pythonenvs/hai-teams/bin/python`.
 
 ---
@@ -222,12 +230,12 @@ With sharding removed, each script processes the full dataset in one pass and wr
 
 | Model | EA_Overall | EU_Overall | Overall_Score | Status |
 |-------|-----------|-----------|--------------|--------|
-| GPT-4o-mini | 0.700 | 0.450 | 0.575 | ✓ Complete |
-| DeepSeek-Reasoner | 0.650 | 0.695 | 0.673 | ✓ Complete |
-| Grok-3-mini | 0.735 | 0.735 | 0.735 | ✓ Complete |
 | Gemini-2.5-Flash | 0.735 | 0.695 | 0.715 | ✓ Complete |
+| GPT-4o-mini | 0.700 | 0.450 | 0.575 | ✓ Complete |
+| Grok-3-mini | 0.735 | 0.735 | 0.735 | ✓ Complete |
+| Qwen3.5-9B | 0.690 | 0.580 | 0.635 | ✓ Complete |
 | Gemma-4-31B | 0.770 | 0.720 | 0.745 | ✓ Complete |
-| Qwen (Qwen3.5-9B) | 0.0 | 0.0 | — | ✗ Needs re-run — empty responses |
+| DeepSeek-Reasoner | 0.650 | 0.695 | 0.673 | ✓ Complete |
 
 Overall_Score = average of EA_Overall and EU_Overall.
 
@@ -236,7 +244,7 @@ Overall_Score = average of EA_Overall and EU_Overall.
 | Model | Problem | Fix |
 |-------|---------|-----|
 | Gemini | `max_output_tokens=256` truncated response mid-JSON | Removed output token limit |
-| Qwen | `Qwen/Qwen3.5-9B` returns empty string from Together AI with no exception; `call_api` did not retry on empty string | Add empty-string retry; verify/correct model name |
+| Qwen | Thinking model exhausts token budget during `<think>` block when no `max_tokens` is set — Together AI returns empty string (HTTP 200, no exception); `call_api` did not retry on empty string | Set `max_tokens=8192`; add explicit empty-string retry in `call_api` |
 | Gemma | Together AI returns empty string for `google/gemma-4-31B-it` (HTTP 200, no error) | Added up to 5 retries on empty response |
 | DeepSeek | `deepseek-reasoner` puts answer in `reasoning_content` when `content` is empty | Added fallback to `reasoning_content` in `call_api` |
 | All (shard-overwrite) | Per-shard `_en_overall.csv` was overwritten by each shard; only last shard's category survived | Removed sharding; scripts now run as single jobs |
