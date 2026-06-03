@@ -49,23 +49,29 @@ Multi-label classification of the intent behind a specified utterance.
 
 ---
 
-## Script Design (NEG_GPT/openai_neg_eval.py)
+## Script Design
 
-### Model and SDK
+### Files
 
-| File | Model | SDK |
-|------|-------|-----|
-| `NEG_GPT/openai_neg_eval.py` | `gpt-4o-mini` | `openai.OpenAI` |
+| File | Purpose |
+|------|---------|
+| `NEG_GPT/openai_neg_eval.py` | Full evaluation — all 2,380 samples, all 3 tasks, with sharding |
+| `NEG_GPT/openai_neg_pilot.py` | Pilot — 50 random samples, prints cost/time projection |
+| `NEG_GPT/merge_shards.py` | Post-run — merges shard outputs and computes final scores |
+| `NEG_GPT/run_negotiation.sh` | SLURM job: `--array=0-4`, 5 shards × all tasks |
+| `NEG_GPT/run_pilot.sh` | SLURM job: single job, 50 samples |
+| `NEG_GPT/run_merge.sh` | Runs `merge_shards.py` after all array jobs finish |
 
-Same pattern as EmoBench: load API key from `.env`, iterate over samples, call model with JSON-structured output prompt, save per-task CSVs plus an overall results CSV.
+Model: `gpt-4o-mini` via `openai.OpenAI`. API key loaded from `.env`.
 
 ---
 
 ### Data Loading
 
-- Dataset is password-protected: extract with `unzip -P "NegotiationToM" NegotiationToM.zip`
-- Script expects the extracted `NegotiationToM.json` (2,380 samples)
-- Each sample: `dialogue_id` (e.g. `"0-5"` = dialogue 0, turn cutoff 5), full `dialogue` list, ground truth desire/belief/intent labels
+- Password-protected zip: extract with `unzip -P "NegotiationToM" NegotiationToM.zip`
+- Scripts expect the extracted `NegotiationToM.json` (2,380 samples)
+- `dialogue_id` format: `"<dialogue>-<turn_cutoff>"` (e.g. `"0-5"` = dialogue 0, 5 turns visible)
+- Each sample carries ground-truth desire, belief, and intent labels for both agents
 
 ---
 
@@ -73,63 +79,99 @@ Same pattern as EmoBench: load API key from `.env`, iterate over samples, call m
 
 #### 1. Desire (`--task desire`)
 
-One API call per agent per sample (2 calls/sample → 4,760 total).
+2 API calls per sample (one per agent) → **4,760 total calls**
 
-**System prompt:** Instructs the model to assign exactly one of High / Medium / Low to each of Food, Water, Firewood. Reply in JSON `{"high": "<item>", "medium": "<item>", "low": "<item>"}`.
+**System prompt:** Assigns exactly one of High / Medium / Low to each item. JSON format: `{"high": "<item>", "medium": "<item>", "low": "<item>"}`.
 
-**User prompt:** Provides the full dialogue and asks for the specified agent's priorities.
+**User prompt:** Full dialogue + ask for `agent_X`'s priorities over Food, Water, Firewood.
 
-**Scoring — Exact Match:** All three slots (high/medium/low) must match the ground truth simultaneously. Single-slot errors score 0.
+**Scoring — Exact Match:** All three slots must match simultaneously. Any single wrong slot → score 0.
 
 #### 2. Belief (`--task belief`)
 
-One API call per agent per sample (2 calls/sample → 4,760 total).
+2 API calls per sample (agent_1's belief about agent_2, and vice versa) → **4,760 total calls**
 
-**System prompt:** Same structure as Desire but allows `"Not Given"` for slots where the belief cannot be inferred from the dialogue.
+**System prompt:** Same structure as Desire but `"Not Given"` is valid when a belief cannot be inferred from the dialogue.
 
-**User prompt:** Provides the dialogue and asks what `agent_X` believes about `agent_Y`'s priorities.
+**User prompt:** Full dialogue + ask what `agent_X` believes about `agent_Y`'s priorities.
 
-**Scoring — Exact Match:** Same strict three-slot rule. `"Not Given"` is a valid answer and must match the gold label exactly.
+**Scoring — Exact Match:** Same strict three-slot rule. `"Not Given"` must match the gold label exactly.
 
 #### 3. Intention (`--task intention`)
 
-Two API calls per sample (one per the last two utterances → up to 4,760 total).
+2 API calls per sample (second-to-last utterance + last utterance) → **up to 4,760 total calls**
 
-**System prompt:** Instructs the model to select one or more intents from the 9-label set. Reply in JSON `{"intents": ["label1", "label2"]}`.
+**System prompt:** Select one or more intents from the 9-label set. JSON format: `{"intents": ["label1", "label2"]}`.
 
-**User prompt:** Provides the full dialogue plus the target utterance highlighted separately.
+**User prompt:** Full dialogue + target utterance highlighted separately.
 
-**Scoring — Micro F1 + Macro F1:** Predictions are binarized against the 9-label set and scored with `sklearn.metrics.f1_score`. Partial credit is given for partially correct label sets.
+**Scoring — Micro F1 + Macro F1:** Labels binarized against the 9-label set; scored with `sklearn.metrics.f1_score`. Partial credit for partially correct sets.
 
 **9 intent labels:** `Build-Rapport`, `Callout-Fairness`, `Describe-Need`, `Discover-Preference`, `No-Intention`, `No-Need`, `Promote-Coordination`, `Show-Empathy`, `Undermine-Requirements`
 
 ---
 
-### Retry and Rate-Limit Logic
+### API Call and Retry Logic
 
-Mirrors EmoBench's `call_api()`:
+Two-layer retry system:
+
+**Layer 1 — `call_api()`** (mirrors EmoBench):
 - Up to 3 attempts per call
+- Retries on empty string response (`if not text: continue`)
 - `time.sleep(2.0)` after every successful call to stay under RPM/TPM limits
-- Parses `"try again in X(ms|s)"` from rate-limit errors for dynamic backoff
-- Hard stops on `insufficient_quota` (raises `SystemExit`) or `requests per day` (returns `None`)
+- Dynamic backoff: parses `"try again in X(ms|s)"` from rate-limit errors
+- Hard stops: `insufficient_quota` → `SystemExit`; `requests per day` → `return None`
+
+**Layer 2 — `call_and_parse()`** (wraps `call_api`):
+- Up to 3 attempts to get a valid JSON response
+- If `parse_json()` returns `None` on a non-empty response, fires a fresh `call_api` call
+- All task runners use `call_and_parse` — no bare `call_api` + `parse_json` at call sites
+- On exhausting all retries: records `raw_response` as-is, scores as 0
+
+The pilot version of `call_and_parse` additionally accumulates `prompt_tokens` + `completion_tokens` across all retry attempts for accurate cost reporting.
+
+---
+
+### Output Normalization
+
+Model outputs are normalized before scoring to handle casing, whitespace, and key-name variants:
+
+| Helper | Handles |
+|--------|---------|
+| `norm_item(s)` | `"food"` → `"Food"`, `"not given"` → `"Not Given"`, extra spaces |
+| `norm_intent(s)` | `"build-rapport"` → `"Build-Rapport"`, extra spaces |
+| `_pred_item(pred, key)` | Checks both `"high"` and `"High"` keys in the pred dict |
+| `pred_intent_bitmask(list)` | Normalizes each label before bitmask comparison |
+| `intent_bitmask(str)` | Used for gold labels only (already canonical, but normalized for safety) |
 
 ---
 
 ### Checkpoint / Resume
 
-Each task writes a `.jsonl` file to `results/<task>/`. On restart, completed UIDs are skipped. UID format: `"<dialogue_id>_<agent>_<task>"` for desire/belief, `"<dialogue_id>_utt<1|2>_intention"` for intention.
+Each task writes a `.jsonl` checkpoint to `results/<task>/`. On restart, completed UIDs are skipped.
+
+UID format:
+- Desire/Belief: `"<dialogue_id>_<agent>_<task>"` (e.g. `"0-5_agent_1_desire"`)
+- Intention: `"<dialogue_id>_utt<1|2>_intention"` (e.g. `"0-5_utt2_intention"`)
 
 ---
 
-### Sharding
+### Sharding and Merging
 
-`--shard N --total-shards M` splits the flat item list into M equal slices so multiple jobs can run in parallel. Example (4 shards):
+`--shard N --total-shards 5` splits the flat item list into 5 equal slices (~476 samples each).
+Each SLURM array job (`--array=0-4`) runs one shard across all 3 tasks.
+
+**After all 5 jobs finish**, run merge to aggregate:
 
 ```bash
-for i in 0 1 2 3; do
-  python openai_neg_eval.py --task desire --shard $i --total-shards 4 &
-done
+bash run_merge.sh
+# reads: results/<task>/gpt-4o-mini_shard{0..4}of5.jsonl
+# writes: results/<task>/gpt-4o-mini_all.jsonl
+#         results/<task>/gpt-4o-mini_all.csv
+#         results/<task>/gpt-4o-mini_final_overall.csv
 ```
+
+`merge_shards.py` deduplicates by UID (handles checkpoint overlaps) and warns on any missing shard files before computing final scores.
 
 ---
 
@@ -137,16 +179,72 @@ done
 
 ```
 NEG_GPT/results/
+  pilot/
+    pilot_desire.csv
+    pilot_belief.csv
+    pilot_intention.csv
   desire/
-    gpt-4o-mini.jsonl         # per-item results
-    gpt-4o-mini.csv           # same as JSONL but CSV
-    gpt-4o-mini_overall.csv   # {"metric": "Desire_EM", "score": ...}
+    gpt-4o-mini_shard{0..4}of5.jsonl   # per-shard raw output
+    gpt-4o-mini_all.jsonl               # merged (after run_merge.sh)
+    gpt-4o-mini_all.csv
+    gpt-4o-mini_final_overall.csv       # {"metric": "Desire_EM", "score": ...}
   belief/
     (same structure)
   intention/
-    (same structure — includes Micro F1 and Macro F1)
+    (same structure — two metrics: Micro F1 and Macro F1)
 ```
 
-Top-level `negotiation_results.csv` is filled in manually after all tasks complete, following the `emobench_results.csv` format.
+`negotiation_results.csv` (top-level) is filled in manually from the `_final_overall.csv` files, following the `emobench_results.csv` format.
+
+---
+
+## Known Concerns and Solutions
+
+### 1. Unknown cost and run time before committing to the full job
+
+**Concern:** 2,380 samples × ~6 API calls each = ~14,280 calls. Unknown token count per call and unknown GPT rate limits make it hard to estimate cost or wall time upfront.
+
+**Solution:** Run `run_pilot.sh` first (50 random samples, seed=42). The pilot script tracks actual `prompt_tokens` + `completion_tokens` via `resp.usage` on every call, computes the real pilot cost, then scales to the full 2,380-sample dataset and prints:
+- Estimated total cost (USD)
+- Estimated wall time (single-threaded)
+- Per-task breakdown
+
+Decide whether to proceed and which partition/time limit to request on Quest only after seeing the pilot output in `log_pilot.txt`.
+
+---
+
+### 2. Quest parallel job limit (≤ 5 simultaneous)
+
+**Concern:** With ~14,280 total API calls and a 2s sleep between each, a single-threaded run would take ~8 hours. Need parallelism, but Quest caps array jobs at 5 simultaneous.
+
+**Solution:** Split into 5 shards (`--array=0-4`, ~476 samples/shard). Each job runs all 3 tasks for its shard. 5 jobs fit exactly within Quest's limit in one `sbatch` submission. After all finish, run `run_merge.sh` to aggregate results.
+
+If the dataset or model changes and more shards are needed (e.g., 10), submit in two batches of 5: `--array=0-4` then `--array=5-9`.
+
+---
+
+### 3. Empty or unparseable model responses
+
+**Concern:** GPT occasionally returns an empty string or a response that cannot be parsed as JSON (e.g., plain text explanation instead of `{"high": "Food", ...}`). Without handling this, the sample silently scores 0 even though a valid answer might be obtainable on retry.
+
+**Solution:** Two-layer retry in `call_and_parse()`:
+- `call_api()` already retries up to 3× on exceptions and network errors
+- `call_and_parse()` adds a second loop (also up to 3 attempts): if `parse_json()` returns `None` on a non-empty response, the entire API call is retried with the same prompt
+- Only after exhausting all parse retries does the sample record `pred=None` and score 0
+- The `raw_response` field is always saved so failed responses can be inspected manually
+
+---
+
+### 4. Case and whitespace inconsistency in model outputs
+
+**Concern:** Gold labels use canonical casing (`"Food"`, `"Not Given"`, `"Build-Rapport"`). Model outputs may return `"food"`, `"not given"`, `"build-rapport"`, `" Food "`, or capitalize dict keys differently (`"High"` vs `"high"`). Direct string equality would silently mark correct predictions as wrong.
+
+**Solution:** Normalization layer applied to all model outputs before scoring:
+- `norm_item()`: lowercases and looks up in a canonical map (`"food"` → `"Food"`, `"not given"` → `"Not Given"`); falls back to `.title()` for unknown values
+- `norm_intent()`: same pattern for the 9 intent labels (`"build-rapport"` → `"Build-Rapport"`)
+- `_pred_item()`: checks both `"high"` and `"High"` key variants in the pred dict before normalizing the value
+- `pred_intent_bitmask()`: normalizes each predicted intent label before bitmask comparison (kept separate from `intent_bitmask()` which handles gold labels)
+
+Gold labels are never modified — normalization is applied only to model outputs.
 
 ---
