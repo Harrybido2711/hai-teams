@@ -20,6 +20,27 @@ INTENT_LABELS = [
     "No-Intention", "No-Need", "Promote-Coordination", "Show-Empathy", "Undermine-Requirements",
 ]
 
+# canonical lowercase → canonical form (handles any model casing/spacing variation)
+_ITEM_NORM = {
+    "food": "Food", "water": "Water", "firewood": "Firewood",
+    "not given": "Not Given", "none": "None",
+}
+_INTENT_NORM = {lbl.lower(): lbl for lbl in INTENT_LABELS}
+
+
+def norm_item(s):
+    """Normalize a model-output item value: strip, lowercase-lookup, else title-case."""
+    if not isinstance(s, str):
+        return ""
+    return _ITEM_NORM.get(s.strip().lower(), s.strip().title())
+
+
+def norm_intent(s):
+    """Normalize a model-output intent label: strip, lowercase-lookup, else as-is."""
+    if not isinstance(s, str):
+        return ""
+    return _INTENT_NORM.get(s.strip().lower(), s.strip())
+
 
 # ── prompt builders ───────────────────────────────────────────────────────────
 
@@ -93,7 +114,11 @@ def call_api(messages, model, max_retries=3):
                 timeout=60,
             )
             time.sleep(2.0)
-            return resp.choices[0].message.content.strip()
+            text = resp.choices[0].message.content.strip()
+            if not text:
+                print(f"Empty response (attempt {attempt+1}/{max_retries}), retrying...")
+                continue
+            return text
         except Exception as e:
             err = str(e)
             print(f"API error (attempt {attempt+1}/{max_retries}): {e}")
@@ -112,16 +137,38 @@ def call_api(messages, model, max_retries=3):
     return None
 
 
+def call_and_parse(messages, model, max_parse_retries=3):
+    """Call API and parse JSON response; retries the full call if parse fails or response is empty."""
+    last_raw = None
+    for attempt in range(max_parse_retries):
+        raw = call_api(messages, model)
+        if raw is None:
+            return None, None  # hard stop (quota exhausted or RPD limit)
+        last_raw = raw
+        parsed = parse_json(raw)
+        if parsed is not None:
+            return raw, parsed
+        print(f"JSON parse failed (attempt {attempt+1}/{max_parse_retries}), retrying call...")
+    print("Max parse retries reached — recording as unparseable (score 0).")
+    return last_raw, None
+
+
 # ── scoring helpers ───────────────────────────────────────────────────────────
+
+def _pred_item(pred, key):
+    """Get a normalized item value from pred, checking both lower and title-case keys."""
+    val = pred.get(key) or pred.get(key.title()) or ""
+    return norm_item(val)
+
 
 def desire_em(pred, gold_desire):
     """Exact match: all 3 priority slots must be correct simultaneously."""
     if not pred:
         return 0
     return int(
-        pred.get("high", "").strip() == gold_desire.get("High", "") and
-        pred.get("medium", "").strip() == gold_desire.get("Medium", "") and
-        pred.get("low", "").strip() == gold_desire.get("Low", "")
+        _pred_item(pred, "high")   == gold_desire.get("High", "") and
+        _pred_item(pred, "medium") == gold_desire.get("Medium", "") and
+        _pred_item(pred, "low")    == gold_desire.get("Low", "")
     )
 
 
@@ -130,15 +177,22 @@ def belief_em(pred, gold_high, gold_med, gold_low):
     if not pred:
         return 0
     return int(
-        pred.get("high", "").strip() == gold_high and
-        pred.get("medium", "").strip() == gold_med and
-        pred.get("low", "").strip() == gold_low
+        _pred_item(pred, "high")   == gold_high and
+        _pred_item(pred, "medium") == gold_med and
+        _pred_item(pred, "low")    == gold_low
     )
 
 
 def intent_bitmask(intent_str):
-    labels = {l.strip() for l in intent_str.split(",") if l.strip()}
+    """Bitmask for a gold intent string like 'Build-Rapport,Describe-Need'."""
+    labels = {norm_intent(l) for l in intent_str.split(",") if l.strip()}
     return [1 if lbl in labels else 0 for lbl in INTENT_LABELS]
+
+
+def pred_intent_bitmask(pred_intents):
+    """Bitmask for model-output intent list; handles casing/spacing variants."""
+    normalized = {norm_intent(i) for i in (pred_intents or [])}
+    return [1 if lbl in normalized else 0 for lbl in INTENT_LABELS]
 
 
 # ── evaluate + save ───────────────────────────────────────────────────────────
@@ -229,8 +283,7 @@ def run_desire(data, model, shard, total_shards, save_every):
         uid = f"{item['dialogue_id']}_{item['agent']}_desire"
         if uid in done:
             continue
-        raw = call_api(build_desire_messages(item["dialogue"], item["agent"]), model)
-        pred = parse_json(raw) if raw else None
+        raw, pred = call_and_parse(build_desire_messages(item["dialogue"], item["agent"]), model)
         results.append({
             "uid": uid,
             "dialogue_id": item["dialogue_id"],
@@ -280,8 +333,7 @@ def run_belief(data, model, shard, total_shards, save_every):
         uid = f"{item['dialogue_id']}_{item['agent']}_belief"
         if uid in done:
             continue
-        raw = call_api(build_belief_messages(item["dialogue"], item["agent"], item["opponent"]), model)
-        pred = parse_json(raw) if raw else None
+        raw, pred = call_and_parse(build_belief_messages(item["dialogue"], item["agent"], item["opponent"]), model)
         results.append({
             "uid": uid,
             "dialogue_id": item["dialogue_id"],
@@ -330,8 +382,7 @@ def run_intention(data, model, shard, total_shards, save_every):
         uid = f"{item['dialogue_id']}_utt{item['utt_idx']}_intention"
         if uid in done:
             continue
-        raw = call_api(build_intention_messages(item["dialogue"], item["target"]), model)
-        pred = parse_json(raw) if raw else None
+        raw, pred = call_and_parse(build_intention_messages(item["dialogue"], item["target"]), model)
         pred_intents = (pred or {}).get("intents", [])
         results.append({
             "uid": uid,
@@ -341,7 +392,7 @@ def run_intention(data, model, shard, total_shards, save_every):
             "gold_intent": item["gold_intent"],
             "gold_bitmask": intent_bitmask(item["gold_intent"]),
             "pred_intents": pred_intents,
-            "pred_bitmask": [1 if lbl in pred_intents else 0 for lbl in INTENT_LABELS],
+            "pred_bitmask": pred_intent_bitmask(pred_intents),
             "raw_response": raw or "",
         })
         done.add(uid)
