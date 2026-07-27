@@ -74,7 +74,35 @@ def merge_task(results_root, task, model_slug, total_shards):
     pd.DataFrame(metrics, columns=["metric", "score"]).to_csv(
         os.path.join(task_dir, f"{model_slug}_all_overall.csv"), index=False
     )
-    return metrics
+    return metrics, scored
+
+
+def all_em(scored_by_task):
+    """All (Exact Match): a dialogue counts only if desire, belief and intention are ALL correct.
+
+    The information unit is the dialogue_id — one turn-cutoff sample. Desire and belief contribute
+    two rows each (one per agent) and intention one or two, and every one of them must be right,
+    so this is AND logic over the whole unit rather than an average of the three task scores.
+
+    A dialogue is skipped when any task has no scorable row for it (i.e. it was one of the
+    unannotated samples), keeping this consistent with the per-task exclusion rule.
+    """
+    per_dialogue = {}
+    for task, rows in scored_by_task.items():
+        flag = {"desire": "desire_em", "belief": "belief_em"}.get(task)
+        for row in rows:
+            entry = per_dialogue.setdefault(row["dialogue_id"], {})
+            if flag:
+                ok = bool(row[flag])
+            else:
+                ok = row["gold_bitmask"] == row["pred_bitmask"]
+            entry[task] = entry.get(task, True) and ok
+
+    complete = [v for v in per_dialogue.values() if len(v) == 3]
+    if not complete:
+        return 0.0, 0
+    correct = sum(1 for v in complete if all(v.values()))
+    return correct / len(complete), len(complete)
 
 
 def main():
@@ -85,8 +113,17 @@ def main():
     args = parser.parse_args()
     slug = args.model.split("/")[-1].replace(".", "_").replace("/", "-")
     metrics = []
+    scored_by_task = {}
     for task in ("desire", "belief", "intention"):
-        metrics.extend(merge_task(args.results_root, task, slug, args.total_shards))
+        task_metrics, scored = merge_task(args.results_root, task, slug, args.total_shards)
+        metrics.extend(task_metrics)
+        scored_by_task[task] = scored
+
+    score, n = all_em(scored_by_task)
+    print(f"[all] All_EM over {n} dialogues where all three tasks are scorable")
+    metrics.append({"metric": "All_EM", "score": score})
+    metrics.append({"metric": "All_EM_dialogues", "score": n})
+
     output = os.path.join(args.results_root, f"{slug}_negotiation_overall.csv")
     pd.DataFrame(metrics, columns=["metric", "score"]).to_csv(output, index=False)
     print(f"Merged output written to {output}")
