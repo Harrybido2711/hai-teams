@@ -1,5 +1,8 @@
 # NegotiationToM Benchmark Notes
 
+> Repo-wide eval script conventions (folder layout, retry contract, checkpointing, SLURM) are in
+> `../CLAUDE.md`. This file records NegotiationToM-specific findings.
+
 ## Dataset Overview
 
 - Total samples: 2,380

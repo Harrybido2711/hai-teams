@@ -1,5 +1,8 @@
 # Script Analysis Notes
 
+> Repo-wide eval script conventions (folder layout, retry contract, checkpointing, SLURM) are in
+> `../CLAUDE.md`. This file records EmoBench-specific findings.
+
 ## 1. BBH — Models and How They Are Called
 
 All BBH eval scripts share the same structure: load an API key from `.env`, iterate over task splits, call the model with a `"Final Answer: <answer>"` prompt, and save per-split CSVs plus an overall results CSV.

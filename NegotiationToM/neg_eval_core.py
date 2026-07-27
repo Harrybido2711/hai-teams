@@ -1,0 +1,322 @@
+"""Shared objective evaluator for the six NegotiationToM model runners."""
+
+import argparse
+import json
+import os
+import re
+import time
+
+import pandas as pd
+from sklearn.metrics import f1_score
+
+
+ITEM_NORM = {
+    "food": "Food", "water": "Water", "firewood": "Firewood",
+    "not given": "Not Given", "none": "None",
+}
+INTENT_LABELS = [
+    "Build-Rapport", "Callout-Fairness", "Describe-Need", "Discover-Preference",
+    "No-Intention", "No-Need", "Promote-Coordination", "Show-Empathy",
+    "Undermine-Requirements",
+]
+INTENT_NORM = {label.lower(): label for label in INTENT_LABELS}
+
+
+def parse_json(text):
+    """Parse bare or fenced JSON; return None instead of raising."""
+    if not text:
+        return None
+    match = re.search(r"```(?:json)?\s*([\s\S]*?)```", text, re.IGNORECASE)
+    candidate = match.group(1) if match else text
+    try:
+        return json.loads(candidate.strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def retry_delay(error, default=5.0):
+    match = re.search(r"try again in ([\d.]+)(ms|s)", str(error), re.IGNORECASE)
+    if not match:
+        return default
+    delay = float(match.group(1))
+    if match.group(2).lower() == "ms":
+        delay /= 1000
+    return max(delay + 1, 1)
+
+
+def call_and_parse(call_api, messages, model, max_parse_retries=3):
+    last_raw = None
+    for attempt in range(max_parse_retries):
+        raw = call_api(messages, model)
+        if raw is None:
+            return None, None
+        last_raw = raw
+        parsed = parse_json(raw)
+        if isinstance(parsed, dict):
+            return raw, parsed
+        print(f"JSON parse failed ({attempt + 1}/{max_parse_retries}); calling again")
+    return last_raw, None
+
+
+def format_dialogue(turns):
+    return "\n".join(turns)
+
+
+def desire_messages(dialogue, agent):
+    system = (
+        "Infer an agent's desires in a negotiation over Food, Water, and Firewood. "
+        "Each priority level maps to exactly one item. Return only valid JSON with no markdown: "
+        '{"high":"<item>","medium":"<item>","low":"<item>"}'
+    )
+    user = (
+        f"Negotiation dialogue:\n{format_dialogue(dialogue)}\n\n"
+        f"What are {agent}'s High, Medium, and Low item preferences?"
+    )
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def belief_messages(dialogue, agent, opponent):
+    system = (
+        "Infer one negotiator's belief about the other negotiator's preferences over Food, "
+        "Water, and Firewood. Use 'Not Given' when a priority is not revealed. Return only "
+        'valid JSON with no markdown: {"high":"<item or Not Given>",'
+        '"medium":"<item or Not Given>","low":"<item or Not Given>"}'
+    )
+    user = (
+        f"Negotiation dialogue:\n{format_dialogue(dialogue)}\n\n"
+        f"What does {agent} believe about {opponent}'s High, Medium, and Low preferences?"
+    )
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def intention_messages(dialogue, target):
+    labels = "\n".join(f"- {label}" for label in INTENT_LABELS)
+    system = (
+        "Classify all intents expressed by the target negotiation utterance. Return only valid "
+        'JSON with no markdown: {"intents":["label1","label2"]}'
+    )
+    user = (
+        f"Negotiation dialogue:\n{format_dialogue(dialogue)}\n\n"
+        f"Target utterance: {target}\n\nChoose one or more labels:\n{labels}"
+    )
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
+
+
+def norm_item(value):
+    if not isinstance(value, str):
+        return ""
+    value = value.strip()
+    return ITEM_NORM.get(value.lower(), value.title())
+
+
+def pred_item(prediction, key):
+    if not isinstance(prediction, dict):
+        return ""
+    return norm_item(prediction.get(key) or prediction.get(key.title()) or "")
+
+
+def desire_em(prediction, gold):
+    return int(bool(prediction) and all(
+        pred_item(prediction, key.lower()) == gold.get(key, "")
+        for key in ("High", "Medium", "Low")
+    ))
+
+
+def belief_em(prediction, high, medium, low):
+    return int(bool(prediction) and (
+        pred_item(prediction, "high") == high
+        and pred_item(prediction, "medium") == medium
+        and pred_item(prediction, "low") == low
+    ))
+
+
+def intent_bitmask(labels):
+    if isinstance(labels, str):
+        labels = labels.split(",")
+    normalized = {
+        INTENT_NORM.get(label.strip().lower(), label.strip())
+        for label in (labels or []) if isinstance(label, str) and label.strip()
+    }
+    return [int(label in normalized) for label in INTENT_LABELS]
+
+
+def model_slug(model):
+    return model.split("/")[-1].replace(".", "_").replace("/", "-")
+
+
+def shard_slice(rows, shard, total_shards):
+    size = (len(rows) + total_shards - 1) // total_shards
+    return rows[shard * size:min((shard + 1) * size, len(rows))]
+
+
+def load_checkpoint(path):
+    done, rows = set(), []
+    if not os.path.exists(path):
+        return done, rows
+    with open(path, encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            done.add(row["uid"])
+            rows.append(row)
+    return done, rows
+
+
+def save_checkpoint(path, rows):
+    with open(path, "w", encoding="utf-8") as handle:
+        for row in rows:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
+def output_paths(script_dir, task, model, shard, total_shards):
+    out_dir = os.path.join(script_dir, "results", task)
+    os.makedirs(out_dir, exist_ok=True)
+    tag = f"_shard{shard}of{total_shards}" if total_shards > 1 else ""
+    stem = model_slug(model) + tag
+    return out_dir, stem, os.path.join(out_dir, stem + ".jsonl")
+
+
+def write_task_outputs(task, rows, out_dir, stem):
+    """Write columns in exactly the same order as Output_template."""
+    df = pd.DataFrame(rows)
+    if task == "desire":
+        columns = ["uid", "dialogue_id", "agent", "gold_desire", "pred", "raw_response", "desire_em"]
+        metrics = [{"metric": "Desire_EM", "score": df["desire_em"].mean()}]
+    elif task == "belief":
+        columns = ["uid", "dialogue_id", "agent", "opponent", "gold_high", "gold_med",
+                   "gold_low", "pred", "belief_em", "raw_response"]
+        metrics = [{"metric": "Belief_EM", "score": df["belief_em"].mean()}]
+    else:
+        columns = ["uid", "dialogue_id", "utt_idx", "target_utterance", "gold_intent",
+                   "gold_bitmask", "pred_intents", "pred_bitmask", "raw_response"]
+        gold = list(df["gold_bitmask"])
+        pred = list(df["pred_bitmask"])
+        metrics = [
+            {"metric": "Intent_Micro_F1", "score": f1_score(gold, pred, average="micro", zero_division=0)},
+            {"metric": "Intent_Macro_F1", "score": f1_score(gold, pred, average="macro", zero_division=0)},
+        ]
+    df.reindex(columns=columns).to_csv(os.path.join(out_dir, stem + ".csv"), index=False)
+    pd.DataFrame(metrics, columns=["metric", "score"]).to_csv(
+        os.path.join(out_dir, stem + "_overall.csv"), index=False
+    )
+
+
+def run_desire(data, call_api, model, script_dir, shard, total_shards, save_every):
+    rows = []
+    for sample in data:
+        for agent, gold_key in (("agent_1", "agent1_desire"), ("agent_2", "agent2_desire")):
+            rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": sample["dialogue"],
+                         "agent": agent, "gold_desire": sample[gold_key]})
+    rows = shard_slice(rows, shard, total_shards)
+    out_dir, stem, checkpoint = output_paths(script_dir, "desire", model, shard, total_shards)
+    done, results = load_checkpoint(checkpoint)
+    for item in rows:
+        uid = f"{item['dialogue_id']}_{item['agent']}_desire"
+        if uid in done:
+            continue
+        raw, pred = call_and_parse(call_api, desire_messages(item["dialogue"], item["agent"]), model)
+        results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
+                        "gold_desire": item["gold_desire"], "pred": pred,
+                        "raw_response": raw or "", "desire_em": desire_em(pred, item["gold_desire"])})
+        done.add(uid)
+        if len(results) % save_every == 0:
+            save_checkpoint(checkpoint, results)
+    save_checkpoint(checkpoint, results)
+    write_task_outputs("desire", results, out_dir, stem)
+
+
+def run_belief(data, call_api, model, script_dir, shard, total_shards, save_every):
+    rows = []
+    for sample in data:
+        for agent, opponent, prefix in (
+            ("agent_1", "agent_2", "agent1_belief"), ("agent_2", "agent_1", "agent2_belief")
+        ):
+            rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": sample["dialogue"],
+                         "agent": agent, "opponent": opponent,
+                         "gold_high": sample[prefix + "_high"],
+                         "gold_med": sample[prefix + "_medium"],
+                         "gold_low": sample[prefix + "_low"]})
+    rows = shard_slice(rows, shard, total_shards)
+    out_dir, stem, checkpoint = output_paths(script_dir, "belief", model, shard, total_shards)
+    done, results = load_checkpoint(checkpoint)
+    for item in rows:
+        uid = f"{item['dialogue_id']}_{item['agent']}_belief"
+        if uid in done:
+            continue
+        messages = belief_messages(item["dialogue"], item["agent"], item["opponent"])
+        raw, pred = call_and_parse(call_api, messages, model)
+        results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
+                        "opponent": item["opponent"], "gold_high": item["gold_high"],
+                        "gold_med": item["gold_med"], "gold_low": item["gold_low"], "pred": pred,
+                        "belief_em": belief_em(pred, item["gold_high"], item["gold_med"], item["gold_low"]),
+                        "raw_response": raw or ""})
+        done.add(uid)
+        if len(results) % save_every == 0:
+            save_checkpoint(checkpoint, results)
+    save_checkpoint(checkpoint, results)
+    write_task_outputs("belief", results, out_dir, stem)
+
+
+def run_intention(data, call_api, model, script_dir, shard, total_shards, save_every):
+    rows = []
+    for sample in data:
+        turns = sample["dialogue"]
+        if len(turns) >= 2:
+            rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": turns, "utt_idx": 1,
+                         "target": turns[-2], "gold_intent": sample["utterance1_intent"]})
+        rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": turns, "utt_idx": 2,
+                     "target": turns[-1], "gold_intent": sample["utterance2_intent"]})
+    rows = shard_slice(rows, shard, total_shards)
+    out_dir, stem, checkpoint = output_paths(script_dir, "intention", model, shard, total_shards)
+    done, results = load_checkpoint(checkpoint)
+    for item in rows:
+        uid = f"{item['dialogue_id']}_utt{item['utt_idx']}_intention"
+        if uid in done:
+            continue
+        raw, pred = call_and_parse(call_api, intention_messages(item["dialogue"], item["target"]), model)
+        pred_intents = (pred or {}).get("intents", [])
+        if isinstance(pred_intents, str):
+            pred_intents = [part.strip() for part in pred_intents.split(",") if part.strip()]
+        results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "utt_idx": item["utt_idx"],
+                        "target_utterance": item["target"], "gold_intent": item["gold_intent"],
+                        "gold_bitmask": intent_bitmask(item["gold_intent"]),
+                        "pred_intents": pred_intents, "pred_bitmask": intent_bitmask(pred_intents),
+                        "raw_response": raw or ""})
+        done.add(uid)
+        if len(results) % save_every == 0:
+            save_checkpoint(checkpoint, results)
+    save_checkpoint(checkpoint, results)
+    write_task_outputs("intention", results, out_dir, stem)
+
+
+def run_cli(call_api, default_model, script_file):
+    script_dir = os.path.dirname(os.path.abspath(script_file))
+    benchmark_root = os.path.dirname(script_dir)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model", default=default_model)
+    parser.add_argument("--task", default="all", choices=["desire", "belief", "intention", "all"])
+    parser.add_argument("--data", default=os.path.join(benchmark_root, "NegotiationToM.json"))
+    parser.add_argument("--shard", type=int, default=0)
+    parser.add_argument("--total-shards", type=int, default=1)
+    parser.add_argument("--save-every", type=int, default=20)
+    args = parser.parse_args()
+    if not 0 <= args.shard < args.total_shards:
+        parser.error("--shard must be in [0, --total-shards)")
+    with open(args.data, encoding="utf-8") as handle:
+        data = json.load(handle)
+    tasks = ["desire", "belief", "intention"] if args.task == "all" else [args.task]
+    for task in tasks:
+        globals()[f"run_{task}"](
+            data, call_api, args.model, script_dir, args.shard, args.total_shards, args.save_every
+        )
+    if args.task == "all":
+        tag = f"_shard{args.shard}of{args.total_shards}" if args.total_shards > 1 else ""
+        stem = model_slug(args.model) + tag
+        summary = []
+        for task in ("desire", "belief", "intention"):
+            path = os.path.join(script_dir, "results", task, stem + "_overall.csv")
+            if os.path.exists(path):
+                summary.extend(pd.read_csv(path).to_dict("records"))
+        summary_path = os.path.join(script_dir, "results", stem + "_negotiation_overall.csv")
+        pd.DataFrame(summary, columns=["metric", "score"]).to_csv(summary_path, index=False)
