@@ -114,10 +114,9 @@ def desire_messages(dialogue, agent):
     # both, otherwise the model can never match those labels.
     system = (
         "Infer an agent's desires in a negotiation over Food, Water, and Firewood, using only "
-        "what the dialogue so far reveals. Use 'Not Given' when a priority has not been revealed, "
-        "and 'None' when the agent has no item at that priority. Return only valid JSON with no "
-        'markdown: {"high":"<item or Not Given or None>",'
-        '"medium":"<item or Not Given or None>","low":"<item or Not Given or None>"}'
+        "what the dialogue so far reveals. Use 'Not Given' when a priority has not been revealed. "
+        "Return only valid JSON with no markdown: {\"high\":\"<item or Not Given>\","
+        '"medium":"<item or Not Given>","low":"<item or Not Given>"}'
     )
     user = (
         f"Negotiation dialogue:\n{format_dialogue(dialogue)}\n\n"
@@ -164,6 +163,18 @@ def pred_item(prediction, key):
     if not isinstance(prediction, dict):
         return ""
     return norm_item(prediction.get(key) or prediction.get(key.title()) or "")
+
+
+def is_unannotated(values):
+    """True when every priority slot is the sentinel string "None".
+
+    The dataset writes "None" in all three slots at once — 84 samples for agent_1 and 72 for
+    agent_2, identically in the desire and belief fields, and never mixed with a real label — while
+    the agent{N}_desire dict still holds real values. So "None" marks an unannotated sample rather
+    than "the agent wants nothing", exactly like utterance2_intent == "None" on the intention side.
+    Such rows are unanswerable and are excluded from the metrics (the rows are still written out).
+    """
+    return all(str(v).strip() == "None" for v in values)
 
 
 def desire_em(prediction, gold):
@@ -230,25 +241,48 @@ def output_paths(script_dir, task, model, shard, total_shards, pilot=False):
     return out_dir, stem, os.path.join(out_dir, stem + ".jsonl")
 
 
+def scorable(task, rows):
+    """Drop rows the dataset never annotated — they are unanswerable, not wrong answers.
+
+    See is_unannotated(). Returns (kept_rows, dropped_count).
+    """
+    if task == "desire":
+        keep = [r for r in rows if not is_unannotated((r["gold_desire"] or {}).values())]
+    elif task == "belief":
+        keep = [r for r in rows
+                if not is_unannotated((r["gold_high"], r["gold_med"], r["gold_low"]))]
+    else:
+        keep = rows
+    return keep, len(rows) - len(keep)
+
+
 def write_task_outputs(task, rows, out_dir, stem):
     """Write columns in exactly the same order as Output_template."""
     df = pd.DataFrame(rows)
+    scored, dropped = scorable(task, rows)
+    if dropped:
+        print(f"[{task}] excluded {dropped}/{len(rows)} unannotated rows from the metrics",
+              flush=True)
+    sdf = pd.DataFrame(scored)
+
     if task == "desire":
         columns = ["uid", "dialogue_id", "agent", "gold_desire", "pred", "raw_response", "desire_em"]
-        metrics = [{"metric": "Desire_EM", "score": df["desire_em"].mean()}]
+        metrics = [{"metric": "Desire_EM", "score": sdf["desire_em"].mean()}]
     elif task == "belief":
         columns = ["uid", "dialogue_id", "agent", "opponent", "gold_high", "gold_med",
                    "gold_low", "pred", "belief_em", "raw_response"]
-        metrics = [{"metric": "Belief_EM", "score": df["belief_em"].mean()}]
+        metrics = [{"metric": "Belief_EM", "score": sdf["belief_em"].mean()}]
     else:
         columns = ["uid", "dialogue_id", "utt_idx", "target_utterance", "gold_intent",
                    "gold_bitmask", "pred_intents", "pred_bitmask", "raw_response"]
-        gold = list(df["gold_bitmask"])
-        pred = list(df["pred_bitmask"])
+        gold = list(sdf["gold_bitmask"])
+        pred = list(sdf["pred_bitmask"])
         metrics = [
             {"metric": "Intent_Micro_F1", "score": f1_score(gold, pred, average="micro", zero_division=0)},
             {"metric": "Intent_Macro_F1", "score": f1_score(gold, pred, average="macro", zero_division=0)},
         ]
+    metrics.append({"metric": f"{task}_scored_rows", "score": len(scored)})
+    # every row is still written out; only the metrics exclude the unannotated ones
     df.reindex(columns=columns).to_csv(os.path.join(out_dir, stem + ".csv"), index=False)
     pd.DataFrame(metrics, columns=["metric", "score"]).to_csv(
         os.path.join(out_dir, stem + "_overall.csv"), index=False

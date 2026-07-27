@@ -3,9 +3,13 @@
 import argparse
 import json
 import os
+import sys
 
 import pandas as pd
 from sklearn.metrics import f1_score
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from neg_eval_core import scorable  # noqa: E402
 
 
 TEMPLATE_COLUMNS = {
@@ -49,17 +53,24 @@ def merge_task(results_root, task, model_slug, total_shards):
     frame.reindex(columns=TEMPLATE_COLUMNS[task]).to_csv(
         os.path.join(task_dir, f"{model_slug}_all.csv"), index=False
     )
+    # Same exclusion rule as neg_eval_core.write_task_outputs: unannotated rows (all slots the
+    # sentinel string "None") are unanswerable and must not count as wrong answers.
+    scored, dropped = scorable(task, rows)
+    if dropped:
+        print(f"[{task}] excluded {dropped}/{len(rows)} unannotated rows from the metrics")
+    sframe = pd.DataFrame(scored)
     if task == "desire":
-        metrics = [{"metric": "Desire_EM", "score": frame["desire_em"].mean()}]
+        metrics = [{"metric": "Desire_EM", "score": sframe["desire_em"].mean()}]
     elif task == "belief":
-        metrics = [{"metric": "Belief_EM", "score": frame["belief_em"].mean()}]
+        metrics = [{"metric": "Belief_EM", "score": sframe["belief_em"].mean()}]
     else:
-        gold = list(frame["gold_bitmask"])
-        pred = list(frame["pred_bitmask"])
+        gold = list(sframe["gold_bitmask"])
+        pred = list(sframe["pred_bitmask"])
         metrics = [
             {"metric": "Intent_Micro_F1", "score": f1_score(gold, pred, average="micro", zero_division=0)},
             {"metric": "Intent_Macro_F1", "score": f1_score(gold, pred, average="macro", zero_division=0)},
         ]
+    metrics.append({"metric": f"{task}_scored_rows", "score": len(scored)})
     pd.DataFrame(metrics, columns=["metric", "score"]).to_csv(
         os.path.join(task_dir, f"{model_slug}_all_overall.csv"), index=False
     )
