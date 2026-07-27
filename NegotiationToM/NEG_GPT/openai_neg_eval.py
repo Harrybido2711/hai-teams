@@ -6,10 +6,10 @@ import time
 
 import pandas as pd
 from sklearn.metrics import f1_score
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from openai import OpenAI
 
-load_dotenv()
+load_dotenv(find_dotenv())
 api_key = os.getenv("OPENAI_API_KEY") or os.getenv("API_KEY")
 client = OpenAI(api_key=api_key)
 

@@ -22,6 +22,27 @@ INTENT_LABELS = [
     "No-Intention", "No-Need", "Promote-Coordination", "Show-Empathy", "Undermine-Requirements",
 ]
 
+_ITEM_NORM = {
+    "food": "Food", "water": "Water", "firewood": "Firewood",
+    "not given": "Not Given", "none": "None",
+}
+
+
+def _norm_item(s):
+    if not isinstance(s, str):
+        return ""
+    return _ITEM_NORM.get(s.strip().lower(), s.strip().title())
+
+
+def _pred_tuple(pred):
+    """Return normalized (high, medium, low) from a pred dict for consistency checks."""
+    if not pred or not isinstance(pred, dict):
+        return ("", "", "")
+    def get(key):
+        val = pred.get(key) or pred.get(key.title()) or ""
+        return _norm_item(val)
+    return (get("high"), get("medium"), get("low"))
+
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -131,31 +152,96 @@ def merge_task(task, model_name, total_shards, results_root):
     return df
 
 
+# ── composite metrics ─────────────────────────────────────────────────────────
+
+def compute_all_em(df_desire, df_belief, df_intention):
+    """All_EM: desire + belief + intention all correct for the same dialogue_id.
+    - desire:    both agents must have desire_em=1
+    - belief:    both agents must have belief_em=1
+    - intention: both utterances must exactly match (pred_bitmask == gold_bitmask)
+    """
+    desire_ok   = df_desire.groupby("dialogue_id")["desire_em"].min()
+    belief_ok   = df_belief.groupby("dialogue_id")["belief_em"].min()
+
+    df_i = df_intention.copy()
+    df_i["intent_em"] = df_i.apply(
+        lambda r: int(list(r["pred_bitmask"]) == list(r["gold_bitmask"])), axis=1
+    )
+    intention_ok = df_i.groupby("dialogue_id")["intent_em"].min()
+
+    common = set(desire_ok.index) & set(belief_ok.index) & set(intention_ok.index)
+    if not common:
+        return 0.0
+
+    scores = [
+        int(desire_ok[did] == 1 and belief_ok[did] == 1 and intention_ok[did] == 1)
+        for did in common
+    ]
+    return sum(scores) / len(scores)
+
+
+def compute_consistency(df):
+    """Consistency: fraction of (dialogue, agent) groups whose predictions are
+    identical across ALL turn cutoffs of the same dialogue."""
+    df = df.copy()
+    df["dialogue"] = df["dialogue_id"].str.split("-").str[0]
+    df["pred_tuple"] = df["pred"].apply(_pred_tuple)
+
+    consistent = total = 0
+    for _, group in df.groupby(["dialogue", "agent"]):
+        tuples = group["pred_tuple"].tolist()
+        if len(set(tuples)) == 1:
+            consistent += 1
+        total += 1
+
+    return consistent / total if total > 0 else 0.0
+
+
 # ── summary ───────────────────────────────────────────────────────────────────
 
+def _collect_scores(dfs):
+    """Compute all metrics from merged DataFrames and return as a dict."""
+    scores = {}
+    have_desire    = "desire"    in dfs and dfs["desire"]    is not None
+    have_belief    = "belief"    in dfs and dfs["belief"]    is not None
+    have_intention = "intention" in dfs and dfs["intention"] is not None
+
+    if have_desire:
+        scores["Desire_EM"] = round(dfs["desire"]["desire_em"].mean(), 4)
+        scores["Consistency_Desire"] = round(compute_consistency(dfs["desire"]), 4)
+
+    if have_belief:
+        scores["Belief_EM"] = round(dfs["belief"]["belief_em"].mean(), 4)
+        scores["Consistency_Belief"] = round(compute_consistency(dfs["belief"]), 4)
+
+    if have_intention:
+        golds = list(dfs["intention"]["gold_bitmask"])
+        preds = list(dfs["intention"]["pred_bitmask"])
+        scores["Intent_Micro_F1"] = round(f1_score(golds, preds, average="micro", zero_division=0), 4)
+        scores["Intent_Macro_F1"] = round(f1_score(golds, preds, average="macro", zero_division=0), 4)
+
+    if have_desire and have_belief and have_intention:
+        scores["All_EM"] = round(compute_all_em(dfs["desire"], dfs["belief"], dfs["intention"]), 4)
+
+    return scores
+
+
 def print_summary(dfs, model_name):
+    scores = _collect_scores(dfs)
     print(f"\n{'='*55}")
     print(f"FINAL SCORES — {model_name}")
     print(f"{'='*55}")
-
-    if "desire" in dfs and dfs["desire"] is not None:
-        df = dfs["desire"]
-        print(f"  Desire EM:       {df['desire_em'].mean():.4f}  ({df['desire_em'].sum()}/{len(df)})")
-
-    if "belief" in dfs and dfs["belief"] is not None:
-        df = dfs["belief"]
-        print(f"  Belief EM:       {df['belief_em'].mean():.4f}  ({df['belief_em'].sum()}/{len(df)})")
-
-    if "intention" in dfs and dfs["intention"] is not None:
-        df = dfs["intention"]
-        golds = list(df["gold_bitmask"])
-        preds = list(df["pred_bitmask"])
-        micro = f1_score(golds, preds, average="micro", zero_division=0)
-        macro = f1_score(golds, preds, average="macro", zero_division=0)
-        print(f"  Intent Micro F1: {micro:.4f}")
-        print(f"  Intent Macro F1: {macro:.4f}")
-
+    for metric, val in scores.items():
+        print(f"  {metric:<25} {val:.4f}")
     print(f"{'='*55}\n")
+
+
+def write_results_csv(dfs, model_name, results_root):
+    scores = _collect_scores(dfs)
+    rows = [{"Score": k, model_name: v} for k, v in scores.items()]
+    out_path = os.path.join(results_root, f"negotiation_{model_name}_results.csv")
+    pd.DataFrame(rows).to_csv(out_path, index=False)
+    print(f"Summary CSV saved → {out_path}")
 
 
 # ── entry point ───────────────────────────────────────────────────────────────
@@ -178,3 +264,4 @@ if __name__ == "__main__":
 
     if args.task == "all":
         print_summary(dfs, model_name)
+        write_results_csv(dfs, model_name, args.results_root)

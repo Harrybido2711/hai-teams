@@ -169,6 +169,7 @@ bash run_merge.sh
 # writes: results/<task>/gpt-4o-mini_all.jsonl
 #         results/<task>/gpt-4o-mini_all.csv
 #         results/<task>/gpt-4o-mini_final_overall.csv
+#         results/negotiation_gpt-4o-mini_results.csv   ← summary
 ```
 
 `merge_shards.py` deduplicates by UID (handles checkpoint overlaps) and warns on any missing shard files before computing final scores.
@@ -192,9 +193,56 @@ NEG_GPT/results/
     (same structure)
   intention/
     (same structure — two metrics: Micro F1 and Macro F1)
+  negotiation_gpt-4o-mini_results.csv   # ← auto-generated summary (Score, GPT-4o-mini)
 ```
 
-`negotiation_results.csv` (top-level) is filled in manually from the `_final_overall.csv` files, following the `emobench_results.csv` format.
+---
+
+## Quest Run Workflow
+
+### Step 1 — Pilot (50 samples, ~5% of dataset)
+
+```bash
+sbatch run_pilot.sh
+```
+
+- Runs 50 random samples (seed=42) across all 3 tasks
+- Output: `results/pilot/pilot_desire.csv`, `pilot_belief.csv`, `pilot_intention.csv`
+- Log: `log_pilot.txt` — check for errors and the printed cost/time projection
+- Decide whether to proceed and which partition/time limit to use
+
+### Step 2 — Full Run (2,380 samples, 5 shards)
+
+```bash
+sbatch run_negotiation.sh
+```
+
+- Submits 5 array jobs (`--array=0-4`), each processing ~476 samples across all 3 tasks
+- Checkpoints saved every 20 items to `results/<task>/gpt-4o-mini_shard{N}of5.jsonl`
+- Monitor progress: `squeue -u $USER` and `wc -l results/desire/*.jsonl`
+
+### Step 3 — Merge and Score
+
+```bash
+bash run_merge.sh
+```
+
+- Merges all 5 shards per task, deduplicates by UID
+- Computes final scores and writes `results/negotiation_gpt-4o-mini_results.csv`
+
+---
+
+### Shard Correctness (verified)
+
+Sharding uses ceiling division: `size = ceil(total_items / total_shards)`. For 5 shards:
+
+| Task | Total items | Items/shard |
+|------|------------|-------------|
+| Desire | 4,760 (2,380 × 2 agents) | 952 |
+| Belief | 4,760 (2,380 × 2 agents) | 952 |
+| Intention | ~4,760 (most samples have 2 utterances) | ~952 |
+
+UIDs are consistent between `openai_neg_eval.py` and `merge_shards.py`, so checkpoint deduplication and merging work correctly across shards.
 
 ---
 
