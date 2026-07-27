@@ -5,21 +5,18 @@
 #SBATCH --ntasks=1
 #SBATCH --mem=8GB
 #SBATCH --time=04:00:00
-#SBATCH --job-name=negpilot_gpt
+#SBATCH --job-name=negpilot_xai
 #SBATCH --output=log_pilot.txt
 #SBATCH --error=log_pilot.err
 
 # Pilot: 10% of dialogues (238/2380), all three tasks, ~1,414 API calls.
 # Writes to results/pilot/ so a full run's output is never touched.
-#
-# Replaces the older pilot that drove openai_neg_pilot.py, so all six model folders share one
-# entry point. openai_neg_pilot.py is kept locally for reference but is no longer used.
 module purge
 
 export PYTHONUNBUFFERED=1
 
-/projects/p32983/pythonenvs/hai-teams/bin/python gpt_neg_eval.py \
-    --model gpt-4o-mini \
+/projects/p32983/pythonenvs/hai-teams/bin/python xai_neg_eval.py \
+    --model grok-3-mini \
     --task all \
     --pilot \
     --pilot-frac 0.10 \

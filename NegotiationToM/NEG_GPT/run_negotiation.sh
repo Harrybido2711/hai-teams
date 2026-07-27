@@ -5,26 +5,24 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=8GB
-#SBATCH --time=24:00:00
-#SBATCH --job-name=openai_negotiation
+#SBATCH --time=7-00:00:00
+#SBATCH --job-name=neg_gpt
 #SBATCH --output=log_shard%a.txt
 #SBATCH --error=log_shard%a.err
 
-# Full NegotiationToM run: 2380 samples split into 5 shards (~476 each).
-# Quest allows max 5 parallel jobs — all 5 fit in one submission.
+# Full NegotiationToM run: 2380 dialogues split into 5 shards.
+# Quest allows at most 5 parallel array jobs, so all 5 fit in one submission.
 # Each job runs all 3 tasks (desire + belief + intention) for its shard.
 #
-# Before submitting:
-#   1. Extract the dataset: unzip -P "NegotiationToM" ../NegotiationToM.zip -d ../
-#   2. Set OPENAI_API_KEY in your .env file
-#   3. Submit: sbatch run_negotiation.sh
-
+# Run run_pilot.sh first and check log_pilot.txt before submitting this.
+# After all 5 shards finish: bash run_merge.sh
 module purge
 
-/projects/p32983/pythonenvs/hai-teams/bin/python openai_neg_eval.py \
+export PYTHONUNBUFFERED=1
+
+/projects/p32983/pythonenvs/hai-teams/bin/python gpt_neg_eval.py \
     --model gpt-4o-mini \
     --task all \
-    --data ../NegotiationToM.json \
     --shard "$SLURM_ARRAY_TASK_ID" \
     --total-shards 5 \
     --save-every 20

@@ -8,7 +8,9 @@ from openai import OpenAI
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
-from neg_eval_core import retry_delay, run_cli  # noqa: E402
+from neg_eval_core import (  # noqa: E402
+    record_call, record_empty, record_error, retry_delay, run_cli, usage_from,
+)
 
 load_dotenv(os.path.join(ROOT, ".env"))
 client = OpenAI(
@@ -24,21 +26,33 @@ def call_api(messages, model, max_retries=3):
             )
             message = response.choices[0].message
             content = (message.content or "").strip()
+            # deepseek-reasoner sometimes leaves content empty and puts the answer in
+            # reasoning_content instead.
             if not content:
                 content = (getattr(message, "reasoning_content", None) or "").strip()
+                if content:
+                    print(f"[{model}] content empty, fell back to reasoning_content", flush=True)
             if not content:
+                record_empty()
+                print(f"[{model}] empty response ({attempt + 1}/{max_retries}), retrying", flush=True)
                 time.sleep(5)
                 continue
+            record_call(*usage_from(response))
             time.sleep(2)
             return content
         except Exception as error:
+            record_error()
             text = str(error).lower()
+            print(f"[{model}] API error ({attempt + 1}/{max_retries}): "
+                  f"{type(error).__name__}: {error}", flush=True)
             if "insufficient_quota" in text:
                 raise SystemExit("DeepSeek quota exhausted") from error
             if "requests per day" in text:
+                print(f"[{model}] daily request quota exhausted", flush=True)
                 return None
             if attempt + 1 < max_retries:
                 time.sleep(retry_delay(error))
+    print(f"[{model}] all {max_retries} attempts failed, giving up on this item", flush=True)
     return None
 
 

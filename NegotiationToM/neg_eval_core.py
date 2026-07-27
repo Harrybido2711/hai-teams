@@ -3,11 +3,56 @@
 import argparse
 import json
 import os
+import random
 import re
 import time
 
 import pandas as pd
 from sklearn.metrics import f1_score
+
+
+# Per-1M-token USD prices, filled in by whoever runs the pilot. Left empty on purpose so the
+# pilot never reports an invented cost — with no entry it reports token counts only.
+PRICE_PER_1M = {
+    # "gpt-4o-mini": {"in": 0.0, "out": 0.0},
+}
+
+# Runtime counters, reported by the pilot. Runners update these through record_* below.
+STATS = {
+    "calls": 0, "empty": 0, "errors": 0, "parse_fail": 0,
+    "prompt_tokens": 0, "completion_tokens": 0, "usage_seen": 0,
+}
+
+
+def record_call(prompt_tokens=0, completion_tokens=0, usage_seen=False):
+    """Called by each runner after a successful API call."""
+    STATS["calls"] += 1
+    STATS["prompt_tokens"] += prompt_tokens or 0
+    STATS["completion_tokens"] += completion_tokens or 0
+    if usage_seen:
+        STATS["usage_seen"] += 1
+
+
+def record_empty():
+    STATS["empty"] += 1
+
+
+def record_error():
+    STATS["errors"] += 1
+
+
+def usage_from(response):
+    """Best-effort token extraction; SDKs disagree on the shape, so tolerate all of them."""
+    usage = getattr(response, "usage", None) or getattr(response, "usage_metadata", None)
+    if usage is None:
+        return 0, 0, False
+    prompt = (getattr(usage, "prompt_tokens", None)
+              or getattr(usage, "prompt_token_count", None)
+              or getattr(usage, "input_tokens", None) or 0)
+    completion = (getattr(usage, "completion_tokens", None)
+                  or getattr(usage, "candidates_token_count", None)
+                  or getattr(usage, "output_tokens", None) or 0)
+    return prompt, completion, True
 
 
 ITEM_NORM = {
@@ -55,6 +100,7 @@ def call_and_parse(call_api, messages, model, max_parse_retries=3):
         if isinstance(parsed, dict):
             return raw, parsed
         print(f"JSON parse failed ({attempt + 1}/{max_parse_retries}); calling again")
+    STATS["parse_fail"] += 1
     return last_raw, None
 
 
@@ -63,10 +109,15 @@ def format_dialogue(turns):
 
 
 def desire_messages(dialogue, agent):
+    # Gold labels are cutoff-aware: a priority the dialogue has not revealed yet is "Not Given",
+    # and "None" means the agent expressed no preference at that level. The prompt has to offer
+    # both, otherwise the model can never match those labels.
     system = (
-        "Infer an agent's desires in a negotiation over Food, Water, and Firewood. "
-        "Each priority level maps to exactly one item. Return only valid JSON with no markdown: "
-        '{"high":"<item>","medium":"<item>","low":"<item>"}'
+        "Infer an agent's desires in a negotiation over Food, Water, and Firewood, using only "
+        "what the dialogue so far reveals. Use 'Not Given' when a priority has not been revealed, "
+        "and 'None' when the agent has no item at that priority. Return only valid JSON with no "
+        'markdown: {"high":"<item or Not Given or None>",'
+        '"medium":"<item or Not Given or None>","low":"<item or Not Given or None>"}'
     )
     user = (
         f"Negotiation dialogue:\n{format_dialogue(dialogue)}\n\n"
@@ -169,8 +220,10 @@ def save_checkpoint(path, rows):
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
-def output_paths(script_dir, task, model, shard, total_shards):
-    out_dir = os.path.join(script_dir, "results", task)
+def output_paths(script_dir, task, model, shard, total_shards, pilot=False):
+    # Pilot output is kept under results/pilot/ so it can never overwrite a full run.
+    parts = [script_dir, "results"] + (["pilot"] if pilot else []) + [task]
+    out_dir = os.path.join(*parts)
     os.makedirs(out_dir, exist_ok=True)
     tag = f"_shard{shard}of{total_shards}" if total_shards > 1 else ""
     stem = model_slug(model) + tag
@@ -202,14 +255,22 @@ def write_task_outputs(task, rows, out_dir, stem):
     )
 
 
-def run_desire(data, call_api, model, script_dir, shard, total_shards, save_every):
+def run_desire(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False):
     rows = []
     for sample in data:
-        for agent, gold_key in (("agent_1", "agent1_desire"), ("agent_2", "agent2_desire")):
+        for agent, prefix in (("agent_1", "agent1_desire"), ("agent_2", "agent2_desire")):
+            # Use the cutoff-aware flat fields, not the sample["agent{N}_desire"] dict: the dict is
+            # always a complete Food/Water/Firewood permutation, so it can never express the
+            # "Not Given" / "None" labels the benchmark's Desire label set requires.
+            gold_desire = {
+                "High": sample[prefix + "_high"],
+                "Medium": sample[prefix + "_medium"],
+                "Low": sample[prefix + "_low"],
+            }
             rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": sample["dialogue"],
-                         "agent": agent, "gold_desire": sample[gold_key]})
+                         "agent": agent, "gold_desire": gold_desire})
     rows = shard_slice(rows, shard, total_shards)
-    out_dir, stem, checkpoint = output_paths(script_dir, "desire", model, shard, total_shards)
+    out_dir, stem, checkpoint = output_paths(script_dir, "desire", model, shard, total_shards, pilot)
     done, results = load_checkpoint(checkpoint)
     for item in rows:
         uid = f"{item['dialogue_id']}_{item['agent']}_desire"
@@ -226,7 +287,7 @@ def run_desire(data, call_api, model, script_dir, shard, total_shards, save_ever
     write_task_outputs("desire", results, out_dir, stem)
 
 
-def run_belief(data, call_api, model, script_dir, shard, total_shards, save_every):
+def run_belief(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False):
     rows = []
     for sample in data:
         for agent, opponent, prefix in (
@@ -238,7 +299,7 @@ def run_belief(data, call_api, model, script_dir, shard, total_shards, save_ever
                          "gold_med": sample[prefix + "_medium"],
                          "gold_low": sample[prefix + "_low"]})
     rows = shard_slice(rows, shard, total_shards)
-    out_dir, stem, checkpoint = output_paths(script_dir, "belief", model, shard, total_shards)
+    out_dir, stem, checkpoint = output_paths(script_dir, "belief", model, shard, total_shards, pilot)
     done, results = load_checkpoint(checkpoint)
     for item in rows:
         uid = f"{item['dialogue_id']}_{item['agent']}_belief"
@@ -258,17 +319,24 @@ def run_belief(data, call_api, model, script_dir, shard, total_shards, save_ever
     write_task_outputs("belief", results, out_dir, stem)
 
 
-def run_intention(data, call_api, model, script_dir, shard, total_shards, save_every):
+def run_intention(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False):
     rows = []
     for sample in data:
         turns = sample["dialogue"]
-        if len(turns) >= 2:
+        # Only even-length dialogues end on a complete exchange and carry two annotated targets.
+        # Odd-length ones (the final, uncut sample of a dialogue) annotate the last utterance only
+        # and set utterance2_intent to the string "None" — which is not one of the 9 labels, so
+        # scoring it would silently produce an all-zero gold bitmask.
+        if sample["utterance2_intent"] == "None":
+            rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": turns, "utt_idx": 1,
+                         "target": turns[-1], "gold_intent": sample["utterance1_intent"]})
+        else:
             rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": turns, "utt_idx": 1,
                          "target": turns[-2], "gold_intent": sample["utterance1_intent"]})
-        rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": turns, "utt_idx": 2,
-                     "target": turns[-1], "gold_intent": sample["utterance2_intent"]})
+            rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": turns, "utt_idx": 2,
+                         "target": turns[-1], "gold_intent": sample["utterance2_intent"]})
     rows = shard_slice(rows, shard, total_shards)
-    out_dir, stem, checkpoint = output_paths(script_dir, "intention", model, shard, total_shards)
+    out_dir, stem, checkpoint = output_paths(script_dir, "intention", model, shard, total_shards, pilot)
     done, results = load_checkpoint(checkpoint)
     for item in rows:
         uid = f"{item['dialogue_id']}_utt{item['utt_idx']}_intention"
@@ -290,6 +358,54 @@ def run_intention(data, call_api, model, script_dir, shard, total_shards, save_e
     write_task_outputs("intention", results, out_dir, stem)
 
 
+def pilot_report(model, tasks, script_dir, stem, n_samples, n_full, elapsed):
+    """Print the go/no-go summary for a pilot run: health counters, scores, and projections."""
+    line = "=" * 68
+    print(f"\n{line}\n PILOT REPORT — {model}\n{line}")
+
+    print(f"\n[sample]  {n_samples} / {n_full} dialogues "
+          f"({n_samples / n_full * 100:.1f}%), seed-fixed so every model sees the same subset")
+
+    calls = STATS["calls"]
+    print(f"\n[health]  successful calls : {calls}")
+    print(f"          empty responses  : {STATS['empty']}")
+    print(f"          API errors       : {STATS['errors']}")
+    print(f"          JSON parse fails : {STATS['parse_fail']}")
+    if calls == 0:
+        print("\n  *** NO SUCCESSFUL CALLS — check the key name, SDK and model id before scaling up.")
+    else:
+        bad = STATS["empty"] + STATS["errors"] + STATS["parse_fail"]
+        rate = bad / (calls + bad) * 100
+        verdict = "looks healthy" if rate < 5 else "HIGH FAILURE RATE — investigate before scaling"
+        print(f"          failure rate     : {rate:.1f}%  ({verdict})")
+
+    print("\n[scores]")
+    for task in tasks:
+        path = os.path.join(script_dir, "results", "pilot", task, stem + "_overall.csv")
+        if os.path.exists(path):
+            for row in pd.read_csv(path).to_dict("records"):
+                print(f"          {row['metric']:<18} {row['score']:.4f}")
+
+    scale = n_full / n_samples if n_samples else 0
+    print(f"\n[cost]    elapsed          : {elapsed / 60:.1f} min for {calls} calls")
+    print(f"          projected full   : {elapsed * scale / 3600:.1f} h single-threaded, "
+          f"{elapsed * scale / 3600 / 5:.1f} h across 5 shards")
+    if STATS["usage_seen"]:
+        pin, pout = STATS["prompt_tokens"], STATS["completion_tokens"]
+        print(f"          tokens           : {pin:,} in / {pout:,} out "
+              f"({STATS['usage_seen']}/{calls} calls reported usage)")
+        print(f"          projected full   : {pin * scale:,.0f} in / {pout * scale:,.0f} out")
+        price = PRICE_PER_1M.get(model)
+        if price:
+            cost = (pin * price["in"] + pout * price["out"]) / 1e6
+            print(f"          projected cost   : ${cost * scale:.2f} USD")
+        else:
+            print(f"          projected cost   : add '{model}' to PRICE_PER_1M to get a figure")
+    else:
+        print("          tokens           : this SDK did not report usage")
+    print(f"{line}\n")
+
+
 def run_cli(call_api, default_model, script_file):
     script_dir = os.path.dirname(os.path.abspath(script_file))
     benchmark_root = os.path.dirname(script_dir)
@@ -300,23 +416,50 @@ def run_cli(call_api, default_model, script_file):
     parser.add_argument("--shard", type=int, default=0)
     parser.add_argument("--total-shards", type=int, default=1)
     parser.add_argument("--save-every", type=int, default=20)
+    parser.add_argument("--pilot", action="store_true",
+                        help="run a fraction of the data, write to results/pilot/, print a report")
+    parser.add_argument("--pilot-frac", type=float, default=0.10)
+    parser.add_argument("--pilot-seed", type=int, default=42)
     args = parser.parse_args()
     if not 0 <= args.shard < args.total_shards:
         parser.error("--shard must be in [0, --total-shards)")
+    if args.pilot and not 0 < args.pilot_frac <= 1:
+        parser.error("--pilot-frac must be in (0, 1]")
+
     with open(args.data, encoding="utf-8") as handle:
         data = json.load(handle)
+    n_full = len(data)
+
+    if args.pilot:
+        k = max(1, round(n_full * args.pilot_frac))
+        # Shuffle once with a fixed seed, then take a prefix — so a smaller --pilot-frac yields a
+        # strict subset of a larger one. (random.sample would return an unrelated set instead,
+        # making a cheaper pilot for a slow model incomparable with the others.)
+        order = list(range(n_full))
+        random.Random(args.pilot_seed).shuffle(order)
+        data = [data[i] for i in order[:k]]
+        print(f"[pilot] {k}/{n_full} dialogues ({k / n_full * 100:.1f}%), seed={args.pilot_seed}")
+
     tasks = ["desire", "belief", "intention"] if args.task == "all" else [args.task]
+    started = time.time()
     for task in tasks:
         globals()[f"run_{task}"](
-            data, call_api, args.model, script_dir, args.shard, args.total_shards, args.save_every
+            data, call_api, args.model, script_dir, args.shard, args.total_shards,
+            args.save_every, args.pilot,
         )
+    elapsed = time.time() - started
+
+    tag = f"_shard{args.shard}of{args.total_shards}" if args.total_shards > 1 else ""
+    stem = model_slug(args.model) + tag
     if args.task == "all":
-        tag = f"_shard{args.shard}of{args.total_shards}" if args.total_shards > 1 else ""
-        stem = model_slug(args.model) + tag
+        results_root = os.path.join(script_dir, "results", "pilot" if args.pilot else "")
         summary = []
         for task in ("desire", "belief", "intention"):
-            path = os.path.join(script_dir, "results", task, stem + "_overall.csv")
+            path = os.path.join(results_root, task, stem + "_overall.csv")
             if os.path.exists(path):
                 summary.extend(pd.read_csv(path).to_dict("records"))
-        summary_path = os.path.join(script_dir, "results", stem + "_negotiation_overall.csv")
+        summary_path = os.path.join(results_root, stem + "_negotiation_overall.csv")
         pd.DataFrame(summary, columns=["metric", "score"]).to_csv(summary_path, index=False)
+
+    if args.pilot:
+        pilot_report(args.model, tasks, script_dir, stem, len(data), n_full, elapsed)
