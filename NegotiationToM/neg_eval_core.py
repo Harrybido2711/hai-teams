@@ -102,8 +102,15 @@ def retry_delay(error, default=5.0):
     return max(delay + 1, 1)
 
 
-class CallTimeout(Exception):
-    pass
+class CallTimeout(BaseException):
+    """Derives from BaseException on purpose, like KeyboardInterrupt and SystemExit.
+
+    Every runner's call_api ends in `except Exception`, which would otherwise swallow the watchdog
+    and treat it as an ordinary API error. The alarm has already fired and been cleared by then, so
+    the remaining attempts inside that same call_api run with no watchdog at all — the protection
+    silently evaporates after its first use. Deriving from BaseException lets it propagate past
+    those handlers to call_and_parse, which retries deliberately.
+    """
 
 
 # Hard ceiling on one call_api invocation, enforced with SIGALRM so it does not depend on the SDK
