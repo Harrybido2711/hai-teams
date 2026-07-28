@@ -1,0 +1,27 @@
+[pilot] 71/2380 dialogues (3.0%), seed=42
+
+====================================================================
+ PILOT REPORT — deepseek-reasoner
+====================================================================
+
+[sample]  71 / 2380 dialogues (3.0%), seed-fixed so every model sees the same subset
+
+[health]  successful calls : 422
+          empty responses  : 0
+          API errors       : 0
+          JSON parse fails : 0
+          failure rate     : 0.0%  (looks healthy)
+
+[scores]
+          Desire_EM          0.5915
+          Belief_EM          0.6408
+          Intent_Micro_F1    0.4213
+          Intent_Macro_F1    0.3543
+
+[cost]    elapsed          : 52.7 min for 422 calls
+          projected full   : 29.4 h single-threaded, 5.9 h across 5 shards
+          tokens           : 114,786 in / 196,523 out (422/422 calls reported usage)
+          projected full   : 3,847,756 in / 6,587,672 out
+          projected cost   : add 'deepseek-reasoner' to PRICE_PER_1M to get a figure
+====================================================================
+

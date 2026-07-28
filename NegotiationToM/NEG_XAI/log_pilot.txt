@@ -1,0 +1,27 @@
+[pilot] 238/2380 dialogues (10.0%), seed=42
+
+====================================================================
+ PILOT REPORT — grok-3-mini
+====================================================================
+
+[sample]  238 / 2380 dialogues (10.0%), seed-fixed so every model sees the same subset
+
+[health]  successful calls : 1416
+          empty responses  : 0
+          API errors       : 0
+          JSON parse fails : 0
+          failure rate     : 0.0%  (looks healthy)
+
+[scores]
+          Desire_EM          0.4832
+          Belief_EM          0.5126
+          Intent_Micro_F1    0.5324
+          Intent_Macro_F1    0.5240
+
+[cost]    elapsed          : 190.7 min for 1416 calls
+          projected full   : 31.8 h single-threaded, 6.4 h across 5 shards
+          tokens           : 664,897 in / 19,532 out (1416/1416 calls reported usage)
+          projected full   : 6,648,970 in / 195,320 out
+          projected cost   : add 'grok-3-mini' to PRICE_PER_1M to get a figure
+====================================================================
+

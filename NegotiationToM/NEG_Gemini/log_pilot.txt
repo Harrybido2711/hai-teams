@@ -1,0 +1,27 @@
+[pilot] 238/2380 dialogues (10.0%), seed=42
+
+====================================================================
+ PILOT REPORT — gemini-2.5-flash
+====================================================================
+
+[sample]  238 / 2380 dialogues (10.0%), seed-fixed so every model sees the same subset
+
+[health]  successful calls : 1416
+          empty responses  : 0
+          API errors       : 0
+          JSON parse fails : 0
+          failure rate     : 0.0%  (looks healthy)
+
+[scores]
+          Desire_EM          0.5651
+          Belief_EM          0.5861
+          Intent_Micro_F1    0.4957
+          Intent_Macro_F1    0.4672
+
+[cost]    elapsed          : 158.5 min for 1416 calls
+          projected full   : 26.4 h single-threaded, 5.3 h across 5 shards
+          tokens           : 414,757 in / 20,117 out (1416/1416 calls reported usage)
+          projected full   : 4,147,570 in / 201,170 out
+          projected cost   : add 'gemini-2.5-flash' to PRICE_PER_1M to get a figure
+====================================================================
+
