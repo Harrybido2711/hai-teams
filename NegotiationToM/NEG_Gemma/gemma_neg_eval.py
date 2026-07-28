@@ -13,7 +13,10 @@ from neg_eval_core import (  # noqa: E402
 )
 
 load_dotenv(os.path.join(ROOT, ".env"))
-client = Together(api_key=os.getenv("TOGETHER_API_KEY"), timeout=18000)
+# Short per-request timeout: with the inherited 18000s the first pilot hung inside a single call
+# for over 2 hours, still reported as RUNNING by SLURM and with nothing in the log. A stuck request
+# must fail fast so the retry loop can do its job.
+client = Together(api_key=os.getenv("TOGETHER_API_KEY"), timeout=300)
 
 
 # Together returns an empty string for this model intermittently at HTTP 200, so the retry budget

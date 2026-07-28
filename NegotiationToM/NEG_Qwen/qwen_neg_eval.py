@@ -13,21 +13,23 @@ from neg_eval_core import (  # noqa: E402
 )
 
 load_dotenv(os.path.join(ROOT, ".env"))
-client = Together(api_key=os.getenv("TOGETHER_API_KEY"), timeout=18000)
+# A short per-request timeout is essential here, not a nicety. Qwen3.5 intermittently falls into an
+# unbounded thinking loop: measured on real prompts, 3 of 4 calls finished in 10-70s using at most
+# 5,615 output tokens, while the fourth burned the entire 32,768-token budget over 429s and still
+# returned empty content. Without a short timeout those runaways dominate the wall clock — the first
+# pilot managed 60 rows in 7 hours. 18000s, inherited from the EmoBench scripts, is far too long.
+client = Together(api_key=os.getenv("TOGETHER_API_KEY"), timeout=180)
 
 
 def call_api(messages, model, max_retries=5):
     for attempt in range(max_retries):
         try:
-            # Qwen3.5 is a thinking model and its reasoning length is highly variable: measured on
-            # NegotiationToM prompts it ranged over 25k-53k characters for the *same* prompt at
-            # temperature=0. Whenever the budget runs out mid-thought, Together returns
-            # finish_reason=Length with an empty `content` (the thinking sits in `reasoning`).
-            # 8192 — which is enough for the short BBH prompts — truncates most calls here, so the
-            # budget is 32768. A successful call typically spends only ~7k tokens; the headroom is
-            # there for the long tail, not the average.
+            # 16384 covers every successful call observed (at most 5,615 output tokens) with room
+            # to spare. Raising the budget does not rescue the runaway cases — they do not converge
+            # at any budget — it only makes each failure slower. Failing fast and retrying is
+            # cheaper, because the behaviour is stochastic and a retry usually succeeds.
             response = client.chat.completions.create(
-                model=model, messages=messages, temperature=0, max_tokens=32768
+                model=model, messages=messages, temperature=0, max_tokens=16384
             )
             content = (response.choices[0].message.content or "").strip()
             if not content:
