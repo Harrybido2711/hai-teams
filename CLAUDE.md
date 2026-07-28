@@ -13,6 +13,57 @@ Append to those after every run: new model rows, root cause → fix pairs, final
 
 ---
 
+# Agent workflow
+
+Work on this project is split between a planner and five specialist subagents, defined in
+`.claude/agents/`.
+
+## The planner is the main session, not a subagent
+
+**A subagent cannot spawn another subagent** — only the top-level session can. So the planner role
+is how the main session behaves, not a file in `.claude/agents/`:
+
+- Decide what needs doing and in what order; delegate the doing.
+- Do not read the repo widely in the main context — that is `summarizer`'s job, and its findings
+  come back as a summary instead of filling the main context with file contents.
+- Hold the decisions, the constraints and the open questions. Subagents start cold every time and
+  only know what they are told, so a delegation must carry the *decision*, not the problem.
+- Keep the user's open questions visible and unblock them early.
+
+## The five subagents
+
+| Agent | Does | Never |
+|---|---|---|
+| `summarizer` | Reads widely, returns conclusions — layout, what a script does, how two implementations differ | Changes anything |
+| `executor` | Writes and fixes scripts, transfers to Quest, submits/cancels jobs, runs verification | Re-opens a decision |
+| `watcher` | Reports live job state, progress, errors, stalls, quota | Fixes or resubmits |
+| `evaluator` | Judges whether results are trustworthy, what they mean, what to do next; audits token cost | Changes code or jobs |
+| `tracker` | Records problems, rejected attempts and shipped fixes | Invents entries it did not verify |
+
+## The loop
+
+```
+planner ──▶ summarizer   (what is the current state?)
+        ──▶ executor     (make this decided change / submit this run)
+        ──▶ watcher      (how is it going?)  ──▶ evaluator
+                                                   │
+            planner ◀── recommendation ────────────┘
+        ──▶ tracker      (record what broke and what fixed it)
+```
+
+`watcher` observes but does not judge; `evaluator` judges but does not act; `executor` acts but does
+not decide. Keeping those separate is what stops a monitoring signal turning into an unreviewed fix.
+
+## Cost
+
+`python3 .claude/scripts/token_report.py [--top N]` reports per-task input / output / cache tokens
+and USD, parsed from Claude Code's own transcripts. A task is one user turn plus the work that
+followed it. Cache reads dominate (~97% of billed tokens measured here) and grow with conversation
+length — which is the concrete reason to send wide file reading to `summarizer` rather than doing it
+in the main context.
+
+---
+
 ## 1. Folder layout
 
 Every benchmark uses **one folder per model**, containing a Python eval script, a SLURM `.sh`,
