@@ -5,6 +5,7 @@ import json
 import os
 import random
 import re
+import signal
 import time
 
 import pandas as pd
@@ -101,17 +102,55 @@ def retry_delay(error, default=5.0):
     return max(delay + 1, 1)
 
 
+class CallTimeout(Exception):
+    pass
+
+
+# Hard ceiling on one call_api invocation, enforced with SIGALRM so it does not depend on the SDK
+# honouring its own timeout= argument. Together's client did not: Gemma sat inside a single request
+# for over two hours with timeout=18000, and again produced nothing for ~70 minutes with
+# timeout=300, in both cases with SLURM still reporting RUNNING and an empty log. SIGALRM
+# interrupts the blocking read regardless of what the library does.
+# Generous enough for the slowest legitimate call seen (deepseek-reasoner, tens of seconds).
+HARD_CALL_TIMEOUT = 420
+
+
+def _raise_timeout(signum, frame):
+    raise CallTimeout(f"call exceeded {HARD_CALL_TIMEOUT}s hard limit")
+
+
+def guarded_call(call_api, messages, model):
+    """Run call_api under a SIGALRM watchdog. Raises CallTimeout if it overruns."""
+    if not hasattr(signal, "SIGALRM"):
+        return call_api(messages, model)          # not POSIX; fall back
+    previous = signal.signal(signal.SIGALRM, _raise_timeout)
+    signal.alarm(HARD_CALL_TIMEOUT)
+    try:
+        return call_api(messages, model)
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, previous)
+
+
 def call_and_parse(call_api, messages, model, max_parse_retries=3):
     last_raw = None
     for attempt in range(max_parse_retries):
-        raw = call_api(messages, model)
+        try:
+            raw = guarded_call(call_api, messages, model)
+        except CallTimeout as error:
+            # A hang is usually transient, so it is worth another attempt rather than losing the
+            # item — unlike call_api returning None, which means its own retries are exhausted.
+            record_error()
+            print(f"[{model}] {error} ({attempt + 1}/{max_parse_retries}), retrying", flush=True)
+            continue
         if raw is None:
             return None, None
         last_raw = raw
         parsed = parse_json(raw)
         if isinstance(parsed, dict):
             return raw, parsed
-        print(f"JSON parse failed ({attempt + 1}/{max_parse_retries}); calling again")
+        print(f"[{model}] JSON parse failed ({attempt + 1}/{max_parse_retries}); calling again",
+              flush=True)
     STATS["parse_fail"] += 1
     return last_raw, None
 
