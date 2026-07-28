@@ -55,10 +55,9 @@ evidence for it. Say plainly when you cannot tell yet and what observation would
 
 ## Shared context
 
-These are committed, so they are available from a clone and stay in sync as the project moves —
-prefer them over anything remembered from a previous session:
+Committed, so they come with a clone and stay in sync as the project moves — prefer them over
+anything remembered from a previous session:
 
-- `CLAUDE.md` — conventions, provider gotchas, SLURM setup, the agent workflow
 - `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, plus the
   false alarms recorded so they are not investigated twice
 - `NegotiationToM/DATA_NOTES.md` — dataset traps: cutoff tiling, the `"None"` sentinel, which gold

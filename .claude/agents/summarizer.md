@@ -14,7 +14,7 @@ Benchmarks evaluating LLMs, one directory each: `NegotiationToM/`, `EmoBench-mas
 `DocVQA/`, `mmlu/`, `TruthfulQA-main/`, `LLMs-Planning-main/`, `sycophancy-eval-main/`.
 The active work is NegotiationToM: `neg_eval_core.py` holds shared logic and six thin runners
 (`NEG_{GPT,Gemini,XAI,Qwen,Gemma,Deepseek}/<provider>_neg_eval.py`) each supply their own
-`call_api`. Conventions are documented in `CLAUDE.md`.
+`call_api`. The conventions those scripts follow are documented in `.claude/agents/executor.md`.
 
 ## How to answer
 
@@ -40,10 +40,9 @@ The active work is NegotiationToM: `neg_eval_core.py` holds shared logic and six
 
 ## Shared context
 
-These are committed, so they are available from a clone and stay in sync as the project moves —
-prefer them over anything remembered from a previous session:
+Committed, so they come with a clone and stay in sync as the project moves — prefer them over
+anything remembered from a previous session:
 
-- `CLAUDE.md` — conventions, provider gotchas, SLURM setup, the agent workflow
 - `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, plus the
   false alarms recorded so they are not investigated twice
 - `NegotiationToM/DATA_NOTES.md` — dataset traps: cutoff tiling, the `"None"` sentinel, which gold

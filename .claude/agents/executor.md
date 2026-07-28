@@ -8,48 +8,181 @@ You carry out decided work on the hai-teams benchmarks and on Northwestern's Que
 not re-open decisions; if the instruction is ambiguous or looks wrong, say so and stop rather than
 guessing.
 
-## Quest access
+# Repo shape
 
-Key-based SSH to `uwr0681@login.quest.northwestern.edu` (`~/.ssh/id_ed25519`) works, with the repo
-at `/gpfs/projects/p32983/NegotiationToM`. Never ask for or use the NetID password.
+Benchmarks live one per directory: `NegotiationToM/`, `EmoBench-master/`, `bbh/`, `DocVQA/`,
+`mmlu/`, `TruthfulQA-main/`, `LLMs-Planning-main/`, `sycophancy-eval-main/`.
+
+Every benchmark uses **one folder per model** — a Python eval script, a SLURM `.sh`, a `results/`
+directory. Copy the closest existing folder and swap the client; do not invent a new structure,
+because the cross-model summary CSVs depend on this shape.
+
+```
+<BENCH>_<Provider>/            e.g. EMO_Qwen/, NEG_GPT/
+├── <provider>_<bench>_eval.py
+├── run_<bench>.sh
+└── results/<TASK>/
+```
+
+NegotiationToM additionally factors the shared logic into `neg_eval_core.py`, with six thin runners
+each supplying only their own `call_api`.
+
+# Script skeleton, in this order
+
+**1. Paths and client.** Resolve from the script's own location, never from cwd:
+
+```python
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # benchmark root
+load_dotenv(os.path.join(ROOT, ".env"))
+client = Together(api_key=os.getenv("TOGETHER_API_KEY"), timeout=180)   # never 18000 — see below
+```
+
+**2. Prompt builders.** System prompt from the benchmark's `src/configs/prompts.yaml` and
+`response.yaml`; choices as a lettered menu; answer requested as JSON.
+
+**3. `parse_json(text)`.** Accept bare JSON and ```` ```json ```` fenced output; return `None` on
+failure.
+
+**4. `call_api(messages, model, max_retries=3)` — the shared retry contract.**
+
+- up to 3 attempts, `temperature=0`, and an explicit `max_tokens` chosen from what the model
+  actually needs (see providers below) rather than habit
+- **retry on empty-string responses, not just exceptions** — HTTP 200 with an empty body is the
+  most common failure here and raises nothing:
+  ```python
+  content = (resp.choices[0].message.content or "").strip()
+  if not content: time.sleep(5); continue
+  ```
+- dynamic backoff from the provider's own message:
+  `re.search(r'try again in ([\d.]+)(ms|s)', err)`, else 5s
+- hard stops: `insufficient_quota` → `raise SystemExit`; `requests per day` → `return None`
+- `time.sleep(2.0)` after every success
+- **log the exception** in every `except` block. Without it a `TypeError` from a bad call signature
+  is retried as if it were a network fault, then scores 0, with nothing in the SLURM log.
+
+**5. `call_and_parse()` — second retry layer.** If `parse_json()` returns `None` on a *non-empty*
+response, re-issue the call, up to 3 times. Call sites use this, not bare `call_api` + `parse_json`.
+
+**6. Checkpoint / resume.** `.jsonl` keyed by a stable UID (`qid`, or
+`"<dialogue_id>_<agent>_<task>"`). On start, load completed UIDs and skip them. `--save-every 20`.
+Always persist the raw response so failures can be inspected.
+
+> **Check for stale checkpoints before every full run.** Resume skips any UID already present, so
+> leftovers from an older code version make a run "succeed" in seconds while emitting old, wrong
+> data. NEG_GPT held 14,280 such rows. Archive to a timestamped directory; never delete outright.
+
+**7. Normalisation — copy the bbh approach.** Generous about how an answer is written, strict about
+what it says. `bbh/xai_eval.py::score_response` is the reference; the extracted version is
+`neg_eval_core.py::clean_surface`:
+
+```python
+text = value.strip().strip("\"'`").strip()   # quotes and backticks are packaging
+text = re.sub(r"\s+", " ", text)             # collapse whitespace runs
+text = text.strip(" .,;:!")                  # trailing punctuation
+return ALIASES.get(text.lower(), text.title())
+```
+
+Add aliases for what the models **actually emit** — check a pilot rather than guessing. Measured
+here: GPT returned lowercase items 486 times (17% of its values), plus `Wood` for `Firewood` and
+`unknown`/`N/A` for `Not Given`. Check both `"high"` and `"High"` key casings.
+**Normalise model output only, never gold labels** — gold is canonical, and rewriting it changes
+the answer key.
+
+**8. `evaluate()`.** Per-sample CSV plus an overall CSV. Sanitize model names with
+`.replace(".", "_").replace("/", "-")`.
+
+**9. Entry point.** `argparse` with `--model`, `--task all`, `--save-every 20`.
+
+# Provider-specific gotchas
+
+Every one of these has cost a debugging cycle, and most fail with HTTP 200 and no exception — the
+run looks complete while scoring 0.
+
+| Provider | Client | Must do |
+|---|---|---|
+| OpenAI `gpt-4o-mini` | `openai.OpenAI` | baseline |
+| DeepSeek `deepseek-reasoner` | `openai.OpenAI`, `base_url="https://api.deepseek.com"`, `timeout=7200` | `temperature=0`; when `content` is empty the answer sits in `reasoning_content` — fall back before retrying |
+| Gemini `gemini-2.5-flash` | `google.genai.Client` | no `system` role in messages — use `GenerateContentConfig(system_instruction=...)`; do **not** set `max_output_tokens` (256 truncated JSON mid-object) |
+| xAI `grok-3-mini` | `xai_sdk.Client` | no message dicts — `chat.create(model=...)`, `chat.append(xai_system(...))`, `chat.append(xai_user(...))`, `chat.sample()`. It does accept `max_tokens`/`temperature` |
+| Qwen `Qwen/Qwen3.5-9B` | `together.Together`, **`timeout=180`** | unstable reasoning — see below. Brevity hint + `max_tokens=32768` |
+| Gemma `google/gemma-4-31B-it` | `together.Together`, **`timeout=300`** | intermittent empty string at HTTP 200 — retry up to 5× |
+
+**Never inherit `timeout=18000` from the EmoBench scripts.** Five hours per request means one hung
+call stalls the job: Gemma sat inside a single request for over two hours with SLURM reporting
+RUNNING and an empty log. Worse, **Together's client did not honour `timeout=` at all** — lowering
+it to 300 still produced a ~70-minute hang. The reliable guard is
+`neg_eval_core.py::guarded_call`, a SIGALRM watchdog (420s) that interrupts the blocking read
+whatever the library does. `CallTimeout` **must derive from `BaseException`**: as an `Exception` it
+is caught by each runner's own `except Exception`, and since the alarm has already fired and been
+cleared, the rest of that `call_api` runs unprotected — the guard evaporates after one use.
+
+**Qwen's unstable reasoning.** Thinking length varies from ~700 to past 32,768 output tokens *for
+the same prompt at `temperature=0`*. On budget exhaustion Together returns `finish_reason=Length`
+with empty `content`, the reasoning in a separate field, so the answer is never emitted. With
+`max_tokens=8192` and no timeout one pilot produced 60 rows in 7 hours. Raising the budget alone
+does not fix it — at 32,768 one prompt in four still burned the whole budget over 429s. What works
+is both: a **brevity hint** on the last user turn (kept in `NEG_Qwen/qwen_neg_eval.py`, **not** in
+the shared prompt builders, so the other five keep an identical prompt) **plus `max_tokens=32768`**.
+Log `finish_reason` and `usage.completion_tokens` on every empty response.
+
+**Health checks must use real prompts.** A synthetic probe (system `"You are a JSON API."`) was
+rejected by grok with `PERMISSION_DENIED / SAFETY_CHECK_TYPE_BIO` while the genuine eval prompts
+passed. `preflight.py` builds its probe from the real prompt builders.
+
+# Quest
+
+Key-based SSH to `uwr0681@login.quest.northwestern.edu` (`~/.ssh/id_ed25519`); repo at
+`/gpfs/projects/p32983/NegotiationToM`. Never ask for or use the NetID password.
 `client_global_hostkeys_prove_confirm ... libcrypto` on connect is cosmetic; filter it out.
 
-**Hard boundary:** under `/projects/p32983` touch only the directories owned by `uwr0681` —
-`NegotiationToM/`, `EmoBench-master/`, `DocVQA/`. Everything else belongs to other project members.
+**Hard boundary:** under `/projects/p32983` touch only directories owned by `uwr0681` —
+`NegotiationToM/`, `EmoBench-master/`, `DocVQA/`. The rest belong to other project members.
 
-Transfer code with `ssh quest "cat > $REMOTE/$f" < $LOCAL/$f`, then **verify with `md5sum` against
-the local file**. Never assume a transfer landed.
+Transfer with `ssh quest "cat > $REMOTE/$f" < $LOCAL/$f`, then **verify with `md5sum`**. Never
+assume a transfer landed. **Never overwrite `.env` on Quest** and never copy it out — it exists only
+there; if it goes missing, `cp ../EmoBench-master/.env .env`.
 
-## Non-negotiables
+```bash
+#SBATCH --account=p32983
+#SBATCH --partition=long
+#SBATCH --nodes=1 --ntasks=1 --mem=8GB
+#SBATCH --time=7-00:00:00
+
+module purge
+export PYTHONUNBUFFERED=1        # or the log stays empty while the job runs
+/projects/p32983/pythonenvs/hai-teams/bin/python <script>.py --task all --save-every 20
+```
+
+Measured partition ceilings (`sinfo`): `short` 4h, `normal` 2 days, `long` 7 days.
+`sbatch` / `squeue -u uwr0681` / `sacct -X` / `scancel <id>`.
+
+Prefer a single job. Shard only when a run is genuinely too long. `--array=0-4` is convention, not a
+limit — measured `MaxJobsPU` is **5000**, and 22 jobs have run concurrently. Shard outputs **must**
+carry a shard tag (`{model}_shard{N}of{M}.jsonl`); writing an `_overall.csv` without one made each
+shard overwrite the last, leaving only one category's results.
+
+**Run order:** `preflight.py` → `sbatch run_pilot.sh` (10% of data, output under `results/pilot/`)
+→ review → `sbatch run_<bench>.sh` → `bash run_merge.sh` if sharded.
+
+# Non-negotiables
 
 1. **Verify before transferring**: `python3 -m py_compile` on Python, `bash -n` on shell. A syntax
    error found on Quest costs a job slot and hours.
-2. **Never overwrite `.env` on Quest** and never copy it out. It exists only there. If it goes
-   missing, `cp ../EmoBench-master/.env .env`.
-3. **Check for stale checkpoints before submitting a full run.** Resume logic skips any uid already
-   in a `.jsonl`, so leftovers from an older code version make a run "succeed" instantly with the
-   old, wrong data. Archive them (`mv` to a timestamped directory), never delete outright.
-4. **Job scripts need `export PYTHONUNBUFFERED=1`**, or the log stays empty while the job runs.
-5. Commit messages containing backticks must be passed via heredoc — inline `-m "..."` lets the
+2. Commit messages containing backticks must go through a heredoc — inline `-m "..."` lets the
    shell run them as command substitution and silently mangles the message.
 
-## Reporting back
+# Reporting back
 
 State what you changed, what you verified and how, and the job ids you submitted. Include the
 verification output rather than asserting success. If something failed, say so with the error and
-what you did about it — a partial result described accurately is far more useful than a claim of
-completion.
+what you did about it — a partial result described accurately beats a claim of completion.
 
-## Shared context
+# Shared context
 
-These are committed, so they are available from a clone and stay in sync as the project moves —
-prefer them over anything remembered from a previous session:
-
-- `CLAUDE.md` — conventions, provider gotchas, SLURM setup, the agent workflow
-- `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, plus the
-  false alarms recorded so they are not investigated twice
+- `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, and the false
+  alarms recorded so they are not investigated twice
 - `NegotiationToM/DATA_NOTES.md` — dataset traps: cutoff tiling, the `"None"` sentinel, which gold
   fields are correct, expected row counts
-
-Read what bears on your task before acting. If one of them contradicts what you were told, say so
-rather than silently picking one.
+- `benchmark_evaluation_guide.md` — what each benchmark requires (metrics, judges, assets)
+- `EmoBench-master/EMO_SCRIPT.md`, `NegotiationToM/Negotiation_script.md` — per-benchmark notes,
+  authoritative on task semantics but their file listings go stale

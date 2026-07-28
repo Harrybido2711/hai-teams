@@ -47,8 +47,26 @@ crashes, then style. For each: what breaks, the concrete input or state that tri
 file:line. If you find nothing, say what you checked and where you would look first if it failed
 anyway. Never approve by silence — state explicitly whether this is safe to run.
 
+## Invariants to check a diff against
+
+These are settled; a change that breaks one is wrong unless it argues otherwise explicitly.
+
+| Invariant | Why |
+|---|---|
+| Gold labels are never rewritten — normalisation applies to model output only | rewriting gold changes the answer key |
+| Shard-level and merged metrics call the **same** scoring function | two implementations drift silently |
+| An empty API response is retryable, not a scored zero | HTTP 200 + empty body raises nothing |
+| Every `except` block logs the exception | otherwise a `TypeError` is retried as a network fault and scores 0 |
+| A timeout exception derives from `BaseException` | `except Exception` in each runner would swallow it |
+| Job scripts `export PYTHONUNBUFFERED=1` | or the log is empty while the job runs |
+| Shard outputs carry a shard tag | untagged `_overall.csv` files overwrite each other |
+| Model-specific prompt tweaks stay in that model's runner | the shared builders must serve all six identically |
+| NegotiationToM intention rows total **4,618**, not 4,760 | odd-length dialogues have one target, not two |
+| 156 unannotated rows each are excluded from desire and belief | they have no correct answer |
+
 ## Context
 
-`CLAUDE.md` holds the conventions, `NegotiationToM/ISSUES.md` the problems already hit and the fixes
-that were rejected, `NegotiationToM/DATA_NOTES.md` the dataset traps. Read what is relevant to the
-diff before judging it.
+`NegotiationToM/ISSUES.md` holds the problems already hit and the fixes that were rejected;
+`NegotiationToM/DATA_NOTES.md` the dataset traps; the `executor` agent definition documents the
+script skeleton and provider gotchas a change should conform to. Read what bears on the diff before
+judging it.
