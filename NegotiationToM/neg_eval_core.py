@@ -55,9 +55,21 @@ def usage_from(response):
     return prompt, completion, True
 
 
+# Surface-form aliases, in the spirit of bbh/xai_eval.py::score_response: be generous about how an
+# answer is written, strict about what it says. Keys are matched after the cleanup in norm_item().
 ITEM_NORM = {
-    "food": "Food", "water": "Water", "firewood": "Firewood",
-    "not given": "Not Given", "none": "None",
+    "food": "Food", "foods": "Food",
+    "water": "Water", "waters": "Water",
+    "firewood": "Firewood", "fire wood": "Firewood", "fire-wood": "Firewood",
+    "wood": "Firewood", "woods": "Firewood",
+    # "not revealed yet" — the model has several ways of saying it
+    "not given": "Not Given", "notgiven": "Not Given", "not_given": "Not Given",
+    "not-given": "Not Given", "not specified": "Not Given", "unspecified": "Not Given",
+    "unknown": "Not Given", "n/a": "Not Given", "na": "Not Given",
+    # The sentinel. In gold it marks an unannotated sample and those rows are excluded from the
+    # metrics, so in any scored row gold is one of Food/Water/Firewood/Not Given and a model
+    # answering "None" is simply wrong — which is correct, since the prompt no longer offers it.
+    "none": "None", "null": "None",
 }
 INTENT_LABELS = [
     "Build-Rapport", "Callout-Fairness", "Describe-Need", "Discover-Preference",
@@ -152,11 +164,34 @@ def intention_messages(dialogue, target):
     return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
 
-def norm_item(value):
+def clean_surface(value):
+    """Strip the packaging a model puts around an answer, following the bbh scripts.
+
+    Quotes and backticks (`.strip("\\"'`")` in bbh/xai_eval.py), runs of whitespace, and trailing
+    punctuation are all noise. Applied to model output only — gold labels are already canonical and
+    must never be rewritten.
+    """
     if not isinstance(value, str):
         return ""
-    value = value.strip()
-    return ITEM_NORM.get(value.lower(), value.title())
+    text = value.strip().strip("\"'`").strip()
+    text = re.sub(r"\s+", " ", text)          # "Fire   wood" -> "Fire wood"
+    return text.strip(" .,;:!")
+
+
+def norm_item(value):
+    text = clean_surface(value)
+    if not text:
+        return ""
+    return ITEM_NORM.get(text.lower(), text.title())
+
+
+def norm_intent(value):
+    """Normalise one intent label: surface cleanup, then space/underscore -> hyphen."""
+    text = clean_surface(value)
+    if not text:
+        return ""
+    key = re.sub(r"[\s_]+", "-", text.lower())
+    return INTENT_NORM.get(key, text)
 
 
 def pred_item(prediction, key):
@@ -196,7 +231,7 @@ def intent_bitmask(labels):
     if isinstance(labels, str):
         labels = labels.split(",")
     normalized = {
-        INTENT_NORM.get(label.strip().lower(), label.strip())
+        norm_intent(label)
         for label in (labels or []) if isinstance(label, str) and label.strip()
     }
     return [int(label in normalized) for label in INTENT_LABELS]
