@@ -37,3 +37,17 @@ The active work is NegotiationToM: `neg_eval_core.py` holds shared logic and six
   the code's, and say so when they disagree.
 - The per-benchmark markdown notes (`EMO_SCRIPT.md`, `Negotiation_script.md`) are authoritative on
   task semantics but their file listings go stale — verify listings against the tree.
+
+## Shared context
+
+These are committed, so they are available from a clone and stay in sync as the project moves —
+prefer them over anything remembered from a previous session:
+
+- `CLAUDE.md` — conventions, provider gotchas, SLURM setup, the agent workflow
+- `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, plus the
+  false alarms recorded so they are not investigated twice
+- `NegotiationToM/DATA_NOTES.md` — dataset traps: cutoff tiling, the `"None"` sentinel, which gold
+  fields are correct, expected row counts
+
+Read what bears on your task before acting. If one of them contradicts what you were told, say so
+rather than silently picking one.
