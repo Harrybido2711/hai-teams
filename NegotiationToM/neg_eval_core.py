@@ -341,11 +341,17 @@ def write_task_outputs(task, rows, out_dir, stem):
 
     if task == "desire":
         columns = ["uid", "dialogue_id", "agent", "gold_desire", "pred", "raw_response", "desire_em"]
-        metrics = [{"metric": "Desire_EM", "score": sdf["desire_em"].mean()}]
+        # Desire_EM is the headline number and excludes unannotated rows. Desire_EM_all keeps them
+        # (where the model scores 0 by construction) purely so the figure can be lined up against a
+        # published table that may have used the other convention. Both come from the same rows —
+        # no extra API calls, and the raw output is unchanged either way.
+        metrics = [{"metric": "Desire_EM", "score": sdf["desire_em"].mean()},
+                   {"metric": "Desire_EM_all", "score": df["desire_em"].mean()}]
     elif task == "belief":
         columns = ["uid", "dialogue_id", "agent", "opponent", "gold_high", "gold_med",
                    "gold_low", "pred", "belief_em", "raw_response"]
-        metrics = [{"metric": "Belief_EM", "score": sdf["belief_em"].mean()}]
+        metrics = [{"metric": "Belief_EM", "score": sdf["belief_em"].mean()},
+                   {"metric": "Belief_EM_all", "score": df["belief_em"].mean()}]
     else:
         columns = ["uid", "dialogue_id", "utt_idx", "target_utterance", "gold_intent",
                    "gold_bitmask", "pred_intents", "pred_bitmask", "raw_response"]

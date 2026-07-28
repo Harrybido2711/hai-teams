@@ -60,9 +60,13 @@ def merge_task(results_root, task, model_slug, total_shards):
         print(f"[{task}] excluded {dropped}/{len(rows)} unannotated rows from the metrics")
     sframe = pd.DataFrame(scored)
     if task == "desire":
-        metrics = [{"metric": "Desire_EM", "score": sframe["desire_em"].mean()}]
+        # Headline metric excludes unannotated rows; the _all variant keeps them, for lining up
+        # against a published table that may have scored them.
+        metrics = [{"metric": "Desire_EM", "score": sframe["desire_em"].mean()},
+                   {"metric": "Desire_EM_all", "score": frame["desire_em"].mean()}]
     elif task == "belief":
-        metrics = [{"metric": "Belief_EM", "score": sframe["belief_em"].mean()}]
+        metrics = [{"metric": "Belief_EM", "score": sframe["belief_em"].mean()},
+                   {"metric": "Belief_EM_all", "score": frame["belief_em"].mean()}]
     else:
         gold = list(sframe["gold_bitmask"])
         pred = list(sframe["pred_bitmask"])
