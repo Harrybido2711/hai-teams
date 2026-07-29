@@ -55,7 +55,12 @@ failure.
   ```
 - dynamic backoff from the provider's own message:
   `re.search(r'try again in ([\d.]+)(ms|s)', err)`, else 5s
-- hard stops: `insufficient_quota` → `raise SystemExit`; `requests per day` → `return None`
+- **every `except` block must call `halt_on_billing(error, model, SCRIPT_DIR)` first.** It is the
+  shared classifier in `neg_eval_core.py`: a billing refusal or an exhausted *daily* cap stops the
+  run at the first occurrence and writes `BILLING_HALT.txt` / `QUOTA_HALT.txt`; everything else
+  returns and the normal retry continues. Do not hand-roll `if "insufficient_quota" in text` — that
+  narrow test is exactly what let xAI write 9,378 empty rows, because its wording is "used all
+  available credits or reached its monthly spending limit"
 - `time.sleep(2.0)` after every success
 - **log the exception** in every `except` block. Without it a `TypeError` from a bad call signature
   is retried as if it were a network fault, then scores 0, with nothing in the SLURM log.

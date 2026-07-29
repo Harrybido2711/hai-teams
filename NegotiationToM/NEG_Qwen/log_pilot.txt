@@ -1,1 +1,35 @@
 [pilot] 238/2380 dialogues (10.0%), seed=42
+[desire] excluded 13/476 unannotated rows from the metrics
+[belief] excluded 13/476 unannotated rows from the metrics
+
+====================================================================
+ PILOT REPORT — Qwen/Qwen3.5-9B
+====================================================================
+
+[sample]  238 / 2380 dialogues (10.0%), seed-fixed so every model sees the same subset
+
+[health]  successful calls : 1121
+          empty responses  : 0
+          API errors       : 0
+          JSON parse fails : 0
+          failure rate     : 0.0%  (looks healthy)
+
+[scores]
+          Desire_EM          0.5896
+          Desire_EM_all      0.5735
+          desire_scored_rows 463.0000
+          Belief_EM          0.5443
+          Belief_EM_all      0.5294
+          belief_scored_rows 463.0000
+          Intent_Micro_F1    0.4836
+          Intent_Macro_F1    0.3852
+          intention_scored_rows 464.0000
+
+[cost]    elapsed          : 47.0 min for 1121 calls
+          projected full   : 7.8 h single-threaded, 1.6 h across 5 shards
+          tokens           : 340,107 in / 15,804 out (1121 API responses reported usage)
+          output/response  : 14.1 tokens average
+          projected full   : 3,401,070 in / 158,040 out
+          projected cost   : add 'Qwen/Qwen3.5-9B' to PRICE_PER_1M to get a figure
+====================================================================
+

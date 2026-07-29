@@ -1,6 +1,7 @@
 """Shared objective evaluator for the six NegotiationToM model runners."""
 
 import argparse
+import collections
 import json
 import os
 import random
@@ -72,6 +73,14 @@ def record_error():
 CONSECUTIVE_FAILURE_LIMIT = 10
 _consecutive_failures = 0
 
+# The consecutive counter only catches a provider that fails *continuously*. A rolling window is
+# what catches one that fails intermittently — the shape that produces a full-length result set
+# quietly stuffed with zeros. 50% of the last 50 items is far above any healthy run measured here
+# (Qwen's fixed pilot: 0 of 1,121) and far below the rates that ruined the xAI and Gemini runs.
+FAILURE_WINDOW = 50
+FAILURE_WINDOW_LIMIT = 0.5
+_recent_outcomes = collections.deque(maxlen=FAILURE_WINDOW)
+
 # Only wordings that unambiguously mean *money*.
 #
 # The bare word "billing" is deliberately NOT here, and that is the whole subtlety. Gemini's
@@ -86,6 +95,9 @@ _consecutive_failures = 0
 BILLING_SIGNATURES = (
     "insufficient_quota",          # OpenAI — billing, despite arriving as a 429
     "insufficient balance",        # DeepSeek
+    "insufficient credits",        # Together
+    "out of credits",              # Together
+    "monthly budget",              # Together
     "used all available credits",  # xAI
     "spending limit",              # xAI
     "credit balance",
@@ -93,9 +105,16 @@ BILLING_SIGNATURES = (
     "arrears",
 )
 
-# Throughput limits and transient refusals. These must never halt a run: they clear by themselves,
-# and `retry_delay` already backs off on them. Checked first so a message that mentions both loses
-# to the transient reading — a wrong halt costs a whole run, a wrong retry costs seconds.
+# Throughput limits, kept for documentation and for `retry_delay`. They are deliberately NOT used to
+# veto a billing match any more, and removing that veto was a correctness fix, not a simplification.
+#
+# The veto existed only to stop the bare word "billing" matching Gemini's rate-limit boilerplate
+# ("check your plan and billing details"). Once that word was dropped from BILLING_SIGNATURES, none
+# of the messages below match a billing signature on their own, so the veto protected nothing — but
+# it did break the provider it was written for. xai_sdk raises grpc errors unwrapped, and grpc's
+# str() always embeds `status = StatusCode.<CODE>`; a credit refusal arriving as RESOURCE_EXHAUSTED
+# or UNAVAILABLE would have been vetoed before "used all available credits" was ever tested,
+# reproducing the eight-hour, 9,378-empty-row incident exactly.
 TRANSIENT_SIGNATURES = (
     "resource_exhausted",
     "rate limit",
@@ -124,23 +143,112 @@ DAILY_QUOTA_SIGNATURES = (
     "daily quota",
 )
 
+# Wording alone cannot separate a daily cap from an ordinary rolling-window limit — both say
+# "requests per day". OpenAI's healthy RPD throttle reads
+#     ... on requests per day (RPD): Limit 10000, Used 10000. Please try again in 8.64s.
+# and Gemini's exhausted daily cap reads
+#     ... generate_requests_per_model_per_day, limit: 10000. Please retry in 18h7m17s.
+# The discriminator is the wait the provider itself asks for: seconds means wait, hours means stop.
+# Matching on the phrase alone would hard-stop every healthy GPT run that ever touches its RPD.
+DAILY_HALT_THRESHOLD_SECONDS = 600
+
+_RETRY_PHRASE = re.compile(r"(?:try again|retry|available again)\s+in\s+([0-9hms.\s]+)", re.I)
+_DURATION_TOKEN = re.compile(r"(\d+(?:\.\d+)?)\s*(ms|s|m|h)", re.I)
+_UNIT_SECONDS = {"ms": 0.001, "s": 1.0, "m": 60.0, "h": 3600.0}
+
+
+def retry_after_seconds(error):
+    """How long the provider asked us to wait, in seconds, or None if it did not say.
+
+    Handles both shapes seen in practice: a single token ("8.64s", "20ms") and a compound one
+    ("18h7m17.167193977s").
+    """
+    match = _RETRY_PHRASE.search(str(error))
+    if not match:
+        return None
+    total, found = 0.0, False
+    for value, unit in _DURATION_TOKEN.findall(match.group(1)):
+        total += float(value) * _UNIT_SECONDS[unit.lower()]
+        found = True
+    return total if found else None
+
 
 def is_daily_quota_failure(error):
-    """True when the provider says the *daily* allowance is gone."""
-    return any(sig in str(error).lower() for sig in DAILY_QUOTA_SIGNATURES)
+    """True when the provider says the *daily* allowance is gone and will not return soon."""
+    if not any(sig in str(error).lower() for sig in DAILY_QUOTA_SIGNATURES):
+        return False
+    wait = retry_after_seconds(error)
+    if wait is None:
+        return True  # named a daily cap but gave no ETA; assume it is the cap, not a throttle
+    return wait >= DAILY_HALT_THRESHOLD_SECONDS
 
 
 def is_billing_failure(error):
     """True when the provider is refusing over money rather than over throughput.
 
-    Order matters: a transient signature vetoes a billing one. Gemini burned 1,963 rows on 429s
-    whose text contains "billing", and treating those as terminal would have been a worse bug than
-    the one this function exists to fix.
+    Every signature here names money explicitly, so no transient veto is applied — see the note on
+    TRANSIENT_SIGNATURES for why adding one silently disarmed the guard for xAI.
     """
     text = str(error).lower()
-    if any(sig in text for sig in TRANSIENT_SIGNATURES):
-        return False
     return any(sig in text for sig in BILLING_SIGNATURES)
+
+
+# run_cli fills this in so the halt paths can name the model and put their marker in the model's own
+# folder. Without it `note_outcome` — which has no arguments — could only exit silently, leaving the
+# two abort paths with different evidence.
+_RUN_CONTEXT = {"model": "unknown", "script_dir": "."}
+
+
+def set_run_context(model, script_dir):
+    _RUN_CONTEXT["model"] = model
+    _RUN_CONTEXT["script_dir"] = script_dir
+
+
+def clear_stale_halt_markers(script_dir):
+    """Remove markers from a previous run so a fresh start never inherits an old verdict.
+
+    A marker that is never cleared claims a halt that no longer applies, and the next operator (or
+    watcher) reads it as current.
+    """
+    for name in ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt"):
+        path = os.path.join(script_dir, name)
+        if os.path.exists(path):
+            try:
+                os.remove(path)
+                print(f"[startup] cleared stale {name}", flush=True)
+            except OSError as error:
+                print(f"[startup] could not clear {name}: {error}", flush=True)
+
+
+def _prune_advice():
+    """Tell the operator to prune only when rows really were written empty before this halt.
+
+    Saying "nothing needs pruning" unconditionally was wrong: any earlier item that exhausted its
+    retries on a *different* error already persisted a row with an empty raw_response and a zero
+    score, and `load_checkpoint` would skip it forever on resume.
+    """
+    spoiled = STATS["empty"] + STATS["errors"] + STATS["parse_fail"]
+    if spoiled:
+        return (f"{spoiled} earlier call(s) already failed, so rows may have been written empty — "
+                "run prune_failed_rows.py before resubmitting, or resume will skip them forever.")
+    return "No failed rows were written before this point, so a plain resume is safe."
+
+
+def _halt(kind, marker_name, detail, advice):
+    """Write the marker, say why on both streams, then exit. Shared by every abort path."""
+    model = _RUN_CONTEXT["model"]
+    marker = os.path.join(_RUN_CONTEXT["script_dir"], marker_name)
+    stamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        with open(marker, "w") as fh:
+            fh.write(f"{stamp}  model={model}  reason={kind}\n{detail}\n\n{advice}\n")
+    except OSError as error:
+        # Logged, not swallowed: a silent bookkeeping failure is how the last incident stayed
+        # invisible. The halt itself still happens.
+        print(f"[{model}] could not write {marker}: {error}", flush=True)
+    print(f"\n!!! {kind} HALT [{model}] {stamp}\n{detail}\n", file=sys.stderr, flush=True)
+    print(f"[{model}] {kind} HALT — stopping immediately, marker at {marker}", flush=True)
+    raise SystemExit(f"aborting: {model} stopped on {kind.lower()}. {advice}")
 
 
 def halt_on_billing(error, model, script_dir):
@@ -152,52 +260,56 @@ def halt_on_billing(error, model, script_dir):
         spending limit" — matched neither `insufficient_quota` nor `requests per day`, the only two
         strings every runner checked, so it fell through to the generic retry path and the run
         spent eight hours writing empty rows.
-      * **Daily quota.** Gemini's cap is 10,000 requests/day against a 14,138-request run. Once hit,
-        it returns "Please retry in 18h7m" — which `retry_delay` does not even parse, because its
-        regex looks for "try again in". Every remaining item then failed three times in ~15s and
-        was written as an empty row. Stopping instead leaves those items untouched for a resubmit
-        after the quota resets, and resume picks them up.
-
-    The marker file matters as much as the exit: it names the reason in one place a watcher can
-    read, rather than requiring a grep through five shard logs.
+      * **Daily quota.** Gemini's cap is 10,000 requests/day against a 14,138-request run. Once hit
+        it returns "Please retry in 18h7m", and every remaining item failed three times in ~15s and
+        was written as an empty row. Stopping leaves those items untouched for a resubmit after the
+        quota resets, and resume picks them up.
     """
+    set_run_context(model, script_dir)
+    detail = f"{type(error).__name__}: {error}"
     if is_daily_quota_failure(error):
-        kind, marker_name = "DAILY QUOTA", "QUOTA_HALT.txt"
-        advice = ("The daily allowance is gone. Wait for the provider's reset window, then "
-                  "resubmit — resume continues from the checkpoint. Nothing needs pruning, "
-                  "because stopping here means no empty rows were written.")
-    elif is_billing_failure(error):
-        kind, marker_name = "BILLING", "BILLING_HALT.txt"
-        advice = ("Top the account up, then prune the failed rows with prune_failed_rows.py "
-                  "before resubmitting — a plain resume would skip them.")
-    else:
-        return
-
-    marker = os.path.join(script_dir, marker_name)
-    stamp = time.strftime("%Y-%m-%d %H:%M:%S")
-    try:
-        with open(marker, "w") as fh:
-            fh.write(f"{stamp}  model={model}  reason={kind}\n{type(error).__name__}: {error}\n")
-    except OSError:
-        pass  # never let bookkeeping mask the real failure
-    print(f"\n!!! {kind} HALT [{model}] {stamp}\n{error}\n", file=sys.stderr, flush=True)
-    print(f"[{model}] {kind} HALT — stopping immediately, marker at {marker}", flush=True)
-    raise SystemExit(f"aborting: {model} stopped on {kind.lower()}. {advice}")
+        _halt("DAILY QUOTA", "QUOTA_HALT.txt", detail,
+              "The daily allowance is gone. Wait for the provider's reset window, then resubmit. "
+              + _prune_advice())
+    if is_billing_failure(error):
+        _halt("BILLING", "BILLING_HALT.txt", detail,
+              "Top the account up, then resubmit. " + _prune_advice())
 
 
 def note_outcome(ok):
-    """Track consecutive total failures; abort the run when the provider is clearly not serving."""
+    """Abort when the provider stops serving — by a run of failures OR by a bad enough rate.
+
+    The consecutive counter alone was not enough, and that gap is the whole reason this function
+    was revisited. `record_empty(); continue` in every runner means an HTTP-200-with-empty-body
+    never reaches `halt_on_billing`, so this is the only defence on that path — and a counter that
+    resets on *any* success never fires against an intermittent failure. At a 50% empty rate the run
+    would finish with a perfect 14,138 rows, half of them scored zero, and exit COMPLETED: exactly
+    the original incident with a smaller constant.
+
+    The rolling window closes it. It also catches late-onset failure — a quota wall two thirds of
+    the way through — which a cumulative rate would dilute below any sane threshold.
+    """
     global _consecutive_failures
+    _recent_outcomes.append(bool(ok))
     if ok:
         _consecutive_failures = 0
-        return
-    _consecutive_failures += 1
-    if _consecutive_failures >= CONSECUTIVE_FAILURE_LIMIT:
-        raise SystemExit(
-            f"aborting: {_consecutive_failures} consecutive items returned nothing. "
-            "The provider is almost certainly refusing every call (credits, quota or an outage). "
-            "Fix that, prune the failed rows with prune_failed_rows.py, then resubmit."
-        )
+    else:
+        _consecutive_failures += 1
+        if _consecutive_failures >= CONSECUTIVE_FAILURE_LIMIT:
+            _halt("CONSECUTIVE FAILURE", "FAILURE_HALT.txt",
+                  f"{_consecutive_failures} consecutive items returned nothing. The provider is "
+                  "almost certainly refusing every call (credits, quota or an outage).",
+                  _prune_advice())
+
+    if len(_recent_outcomes) >= FAILURE_WINDOW:
+        failed = sum(1 for outcome in _recent_outcomes if not outcome)
+        rate = failed / len(_recent_outcomes)
+        if rate >= FAILURE_WINDOW_LIMIT:
+            _halt("FAILURE RATE", "FAILURE_HALT.txt",
+                  f"{failed} of the last {len(_recent_outcomes)} items returned nothing "
+                  f"({rate:.0%}). The provider is failing intermittently, which produces a "
+                  "full-length result set full of zeros rather than an obvious crash.",
+                  _prune_advice())
 
 
 def usage_from(response):
@@ -578,18 +690,22 @@ def run_desire(data, call_api, model, script_dir, shard, total_shards, save_ever
     rows = shard_slice(rows, shard, total_shards)
     out_dir, stem, checkpoint = output_paths(script_dir, "desire", model, shard, total_shards, pilot)
     done, results = load_checkpoint(checkpoint)
-    for item in rows:
-        uid = f"{item['dialogue_id']}_{item['agent']}_desire"
-        if uid in done:
-            continue
-        raw, pred = call_and_parse(call_api, desire_messages(item["dialogue"], item["agent"]), model)
-        results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
-                        "gold_desire": item["gold_desire"], "pred": pred,
-                        "raw_response": raw or "", "desire_em": desire_em(pred, item["gold_desire"])})
-        done.add(uid)
-        if len(results) % save_every == 0:
-            save_checkpoint(checkpoint, results)
-    save_checkpoint(checkpoint, results)
+    try:
+        for item in rows:
+            uid = f"{item['dialogue_id']}_{item['agent']}_desire"
+            if uid in done:
+                continue
+            raw, pred = call_and_parse(call_api, desire_messages(item["dialogue"], item["agent"]), model)
+            results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
+                            "gold_desire": item["gold_desire"], "pred": pred,
+                            "raw_response": raw or "", "desire_em": desire_em(pred, item["gold_desire"])})
+            done.add(uid)
+            if len(results) % save_every == 0:
+                save_checkpoint(checkpoint, results)
+    finally:
+        # Runs even when a halt raises SystemExit mid-loop, so an abort never
+        # discards the up-to-save_every-1 items completed since the last write.
+        save_checkpoint(checkpoint, results)
     write_task_outputs("desire", results, out_dir, stem)
 
 
@@ -607,21 +723,25 @@ def run_belief(data, call_api, model, script_dir, shard, total_shards, save_ever
     rows = shard_slice(rows, shard, total_shards)
     out_dir, stem, checkpoint = output_paths(script_dir, "belief", model, shard, total_shards, pilot)
     done, results = load_checkpoint(checkpoint)
-    for item in rows:
-        uid = f"{item['dialogue_id']}_{item['agent']}_belief"
-        if uid in done:
-            continue
-        messages = belief_messages(item["dialogue"], item["agent"], item["opponent"])
-        raw, pred = call_and_parse(call_api, messages, model)
-        results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
-                        "opponent": item["opponent"], "gold_high": item["gold_high"],
-                        "gold_med": item["gold_med"], "gold_low": item["gold_low"], "pred": pred,
-                        "belief_em": belief_em(pred, item["gold_high"], item["gold_med"], item["gold_low"]),
-                        "raw_response": raw or ""})
-        done.add(uid)
-        if len(results) % save_every == 0:
-            save_checkpoint(checkpoint, results)
-    save_checkpoint(checkpoint, results)
+    try:
+        for item in rows:
+            uid = f"{item['dialogue_id']}_{item['agent']}_belief"
+            if uid in done:
+                continue
+            messages = belief_messages(item["dialogue"], item["agent"], item["opponent"])
+            raw, pred = call_and_parse(call_api, messages, model)
+            results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
+                            "opponent": item["opponent"], "gold_high": item["gold_high"],
+                            "gold_med": item["gold_med"], "gold_low": item["gold_low"], "pred": pred,
+                            "belief_em": belief_em(pred, item["gold_high"], item["gold_med"], item["gold_low"]),
+                            "raw_response": raw or ""})
+            done.add(uid)
+            if len(results) % save_every == 0:
+                save_checkpoint(checkpoint, results)
+    finally:
+        # Runs even when a halt raises SystemExit mid-loop, so an abort never
+        # discards the up-to-save_every-1 items completed since the last write.
+        save_checkpoint(checkpoint, results)
     write_task_outputs("belief", results, out_dir, stem)
 
 
@@ -644,23 +764,27 @@ def run_intention(data, call_api, model, script_dir, shard, total_shards, save_e
     rows = shard_slice(rows, shard, total_shards)
     out_dir, stem, checkpoint = output_paths(script_dir, "intention", model, shard, total_shards, pilot)
     done, results = load_checkpoint(checkpoint)
-    for item in rows:
-        uid = f"{item['dialogue_id']}_utt{item['utt_idx']}_intention"
-        if uid in done:
-            continue
-        raw, pred = call_and_parse(call_api, intention_messages(item["dialogue"], item["target"]), model)
-        pred_intents = (pred or {}).get("intents", [])
-        if isinstance(pred_intents, str):
-            pred_intents = [part.strip() for part in pred_intents.split(",") if part.strip()]
-        results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "utt_idx": item["utt_idx"],
-                        "target_utterance": item["target"], "gold_intent": item["gold_intent"],
-                        "gold_bitmask": intent_bitmask(item["gold_intent"]),
-                        "pred_intents": pred_intents, "pred_bitmask": intent_bitmask(pred_intents),
-                        "raw_response": raw or ""})
-        done.add(uid)
-        if len(results) % save_every == 0:
-            save_checkpoint(checkpoint, results)
-    save_checkpoint(checkpoint, results)
+    try:
+        for item in rows:
+            uid = f"{item['dialogue_id']}_utt{item['utt_idx']}_intention"
+            if uid in done:
+                continue
+            raw, pred = call_and_parse(call_api, intention_messages(item["dialogue"], item["target"]), model)
+            pred_intents = (pred or {}).get("intents", [])
+            if isinstance(pred_intents, str):
+                pred_intents = [part.strip() for part in pred_intents.split(",") if part.strip()]
+            results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "utt_idx": item["utt_idx"],
+                            "target_utterance": item["target"], "gold_intent": item["gold_intent"],
+                            "gold_bitmask": intent_bitmask(item["gold_intent"]),
+                            "pred_intents": pred_intents, "pred_bitmask": intent_bitmask(pred_intents),
+                            "raw_response": raw or ""})
+            done.add(uid)
+            if len(results) % save_every == 0:
+                save_checkpoint(checkpoint, results)
+    finally:
+        # Runs even when a halt raises SystemExit mid-loop, so an abort never
+        # discards the up-to-save_every-1 items completed since the last write.
+        save_checkpoint(checkpoint, results)
     write_task_outputs("intention", results, out_dir, stem)
 
 
@@ -746,6 +870,11 @@ def run_cli(call_api, default_model, script_file):
         random.Random(args.pilot_seed).shuffle(order)
         data = [data[i] for i in order[:k]]
         print(f"[pilot] {k}/{n_full} dialogues ({k / n_full * 100:.1f}%), seed={args.pilot_seed}")
+
+    # Name the run before any call can fail, so every halt path can write its marker into this
+    # model's own folder, and drop any marker left by a previous run rather than inheriting it.
+    set_run_context(args.model, script_dir)
+    clear_stale_halt_markers(script_dir)
 
     tasks = ["desire", "belief", "intention"] if args.task == "all" else [args.task]
     started = time.time()

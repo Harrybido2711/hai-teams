@@ -117,7 +117,12 @@ Every one of these produced a job that reported success.
 **Quota exhaustion looks like a finished run.** Grok's credits ran out mid-run; the job continued
 for five more hours, wrote 9,378 empty rows, and all five shards exited `COMPLETED` with `0:0`.
 Row counts were a perfect 14,138. `Belief_EM = 0.0` was an unpaid invoice, not a result.
-`CONSECUTIVE_FAILURE_LIMIT = 40` now aborts such a run.
+Three guards now abort such a run, and they cover different shapes:
+`halt_on_billing` stops at the *first* billing refusal or exhausted daily cap and writes a marker
+file; `CONSECUTIVE_FAILURE_LIMIT = 10` catches a provider failing continuously; and a rolling window
+(`FAILURE_WINDOW = 50`, `FAILURE_WINDOW_LIMIT = 0.5`) catches one failing *intermittently* — the
+consecutive counter resets on any success, so at a 50% failure rate it never fires and the run still
+ends with full row counts and half the scores zero.
 
 **Billing patterns must match how providers really word it.** The original set
 (`insufficient_quota`, `requests per day`, `billing`, `rate_limit`) missed both real failures: xAI

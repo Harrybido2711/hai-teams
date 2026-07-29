@@ -40,6 +40,15 @@ whatever the queue says. Report it as a suspicion with the evidence, not as a ce
 
 ## Also check every time
 
+- **Halt markers first — they are the cheapest signal there is.** A run that stopped itself leaves
+  one file naming the reason, so check for it before grepping any log:
+  ```bash
+  ls NEG_*/BILLING_HALT.txt NEG_*/QUOTA_HALT.txt NEG_*/FAILURE_HALT.txt 2>/dev/null
+  ```
+  `BILLING_HALT` needs a human to top the account up; `QUOTA_HALT` clears when the provider's daily
+  window resets; `FAILURE_HALT` means the provider was failing outright or intermittently. Each file
+  says whether the checkpoint needs pruning before a resubmit — quote that line rather than guessing.
+  Markers are cleared at the start of every run, so one that exists is always about the current run.
 - `grep -cE "empty response|API error|hard limit|JSON parse failed" <log>` per model
 - **Quota**: `grep -lE "insufficient_quota|requests per day|billing|rate_limit" NEG_*/log_*.txt` —
   an exhausted account keeps "running" while producing nothing, and is invisible otherwise

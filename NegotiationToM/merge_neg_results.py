@@ -21,12 +21,17 @@ TEMPLATE_COLUMNS = {
 }
 
 
+# Full-run row counts on the real data. desire and belief are 2 x 2,380 dialogues; intention is
+# 4,618 rather than 4,760 because odd-length dialogues annotate one target utterance, not two.
+EXPECTED_ROWS = {"desire": 4760, "belief": 4760, "intention": 4618}
+
+
 def load_jsonl(path):
     with open(path, encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
 
 
-def merge_task(results_root, task, model_slug, total_shards):
+def merge_task(results_root, task, model_slug, total_shards, allow_partial=False):
     task_dir = os.path.join(results_root, task)
     rows, seen = [], set()
     missing = []
@@ -43,6 +48,19 @@ def merge_task(results_root, task, model_slug, total_shards):
         raise FileNotFoundError("Missing shard files:\n" + "\n".join(missing))
     if not rows:
         raise RuntimeError(f"No rows found for {task}")
+
+    # A present-but-short shard is the failure shape the halt guards created. Before them, a broken
+    # run was full-length and scored zero — obvious. Now a run that stops itself part-way leaves a
+    # well-formed shorter .jsonl, and every metric below would be computed over it without a word.
+    # Only the file's absence was ever checked, so assert the count too.
+    expected = None if allow_partial else EXPECTED_ROWS.get(task)
+    if expected is not None and len(rows) != expected:
+        raise RuntimeError(
+            f"{task}: merged {len(rows)} rows but expected {expected}. A shard stopped early — "
+            f"check NEG_*/BILLING_HALT.txt, QUOTA_HALT.txt and FAILURE_HALT.txt for the reason, "
+            f"resume the run, and merge again. Refusing to publish a partial result as a complete "
+            f"one. Pass --allow-partial if a short merge is genuinely what you want."
+        )
 
     merged_jsonl = os.path.join(task_dir, f"{model_slug}_all.jsonl")
     with open(merged_jsonl, "w", encoding="utf-8") as handle:
@@ -114,12 +132,20 @@ def main():
     parser.add_argument("--model", required=True)
     parser.add_argument("--total-shards", type=int, default=5)
     parser.add_argument("--results-root", required=True)
+    parser.add_argument("--allow-partial", action="store_true",
+                        help="merge even when a task is short of its expected row count")
     args = parser.parse_args()
+    # A pilot merges a seeded 10% subset, so the full-run counts do not apply to it.
+    is_pilot = os.path.basename(os.path.normpath(args.results_root)) == "pilot"
+    allow_partial = args.allow_partial or is_pilot
+    if is_pilot:
+        print("[merge] pilot results root — skipping the full-run row-count assertion")
     slug = args.model.split("/")[-1].replace(".", "_").replace("/", "-")
     metrics = []
     scored_by_task = {}
     for task in ("desire", "belief", "intention"):
-        task_metrics, scored = merge_task(args.results_root, task, slug, args.total_shards)
+        task_metrics, scored = merge_task(
+            args.results_root, task, slug, args.total_shards, allow_partial)
         metrics.extend(task_metrics)
         scored_by_task[task] = scored
 

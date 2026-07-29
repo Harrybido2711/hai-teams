@@ -160,6 +160,86 @@ invalidates a checkpoint even when the schema is unchanged.
 host, so every documented `ssh quest "..."` command failed with `Host key verification failed`; the
 config block existed only as a recommendation inside a note. Installed and verified 2026-07-29.
 
+**Outcome** — once the transfer was fixed and the sync check in place, xAI resumed after a top-up
+(see "Two different refusals, both mistaken for retryable errors" below) and Gemini restarted with
+thinking disabled, both as sharded full runs. The Qwen pilot itself went from 320 rows with 105
+empties in 3h37m to 476 desire rows with 0 empties in about 12 minutes.
+
+---
+
+### An unattended watcher fought the operator   2026-07-29  open
+
+**Symptom** — `watch.sh`, left running by an earlier session (23h11m uptime), resubmitted jobs
+whenever one left the queue and auto-committed and pushed to both remotes every hour. When a
+correction workflow cancelled the Qwen pilot, the watcher cancelled and resubmitted both Qwen and
+Gemma. Killing the process was not enough: the originating Claude Code session relaunched it, and
+the relaunched copy cancelled both jobs again 13 minutes later. It also committed unreviewed work as
+`NegotiationToM: watcher checkpoint 2026-07-29 13:43` (commit `39dace6`, containing CLAUDE.md and
+ISSUES.md) and pushed it to origin and backup.
+
+**Root cause** — the watcher both *observed* queue state and *acted* on it (resubmit-on-exit), with
+no way to distinguish "job left the queue because an operator cancelled it on purpose" from "job
+left the queue because it finished or crashed". Its restart lived inside the session that spawned
+it rather than anywhere independent of it, so killing the process removed the symptom but not the
+thing that kept bringing it back. Its hourly commit staged whatever was dirty in the working tree,
+with no check for whether the watcher itself had produced it.
+
+**Tried and rejected**
+  - `kill <pid>` on the watcher process → stopped the loop for a moment → the parent Claude Code
+    session relaunched it, and the new copy repeated the identical cancel/resubmit within 13
+    minutes, so the process, not the session, was the wrong thing to kill.
+
+**Fix** — not yet shipped; contained only by manually killing both the watcher and the session that
+owned it. Still needed: a watcher stoppable by a signal external to its own session (e.g. a
+kill-file it checks every loop iteration, so a relaunch inherits the stop state), and an auto-commit
+restricted to a fixed allow-list of the paths it itself writes, never a blanket `git add`.
+
+**How it was verified** — not verified; this is an incident record, not a shipped fix. Re-open when
+a watcher is (re)designed, and confirm an external stop signal survives a session restart and that
+its commits touch only its own output paths.
+
+---
+
+### Two different refusals, both mistaken for retryable errors   2026-07-29  fixed
+
+**Symptom** — two independent full runs went largely empty for two different unretryable reasons,
+both of which the failure classifier treated as ordinary transient errors.
+- **xAI**: credits ran out mid-run. The error text — "has either used all available credits or
+  reached its monthly spending limit" — matched neither string the runners checked
+  (`insufficient_quota`, `requests per day`), so the run kept retrying to exhaustion: 12,040 of
+  15,554 rows were written empty (belief and intention 100% empty, desire 55.9%).
+- **Gemini**: `gemini-2.5-flash`'s daily cap of 10,000 requests/day was 41% below the 14,138 rows the
+  run needed — mathematically impossible to finish in a day at Paid Tier 1 (the tier upgrade needs
+  $250 cumulative spend; the account was at ~$36). Retries count against the same daily cap, so the
+  roughly 5,900 failed attempts alone consumed about 60% of that day's allowance, leaving 1,963 rows
+  empty. `retry_delay` could not even parse Google's own backoff hint, "Please retry in 18h7m",
+  because its regex looked for the string "try again in".
+
+**Root cause** — the halt guard matched only the wording seen in earlier incidents (the original
+`billing`/`rate_limit`/`insufficient_quota`/`requests per day` set), not either of these two exact
+strings. The `CONSECUTIVE_FAILURE_LIMIT` guard that would otherwise have caught the runaway xAI
+retries was written 2026-07-29 11:01 — about 30 hours *after* that xAI run had already ended.
+
+**Tried and rejected**
+  - Matching the bare word "billing" → it also appears inside Gemini's ordinary rate-limit
+    boilerplate → would have hard-stopped healthy, merely rate-limited Gemini runs, not just genuine
+    billing failures.
+  - Expecting `thinking_budget=0` to help Gemini's cap → thinking tokens dropped but request volume
+    did not → the 10,000/day limit counts requests, not tokens, so it does nothing to the quota math.
+
+**Fix** — a three-way classification in `neg_eval_core.py`: DAILY QUOTA and BILLING each halt on
+their first occurrence and write a `QUOTA_HALT.txt` / `BILLING_HALT.txt` marker; a set of transient
+signatures vetoes the billing match so Gemini's ordinary 429 boilerplate (which happens to contain
+the word "billing") stays retryable, while xAI/OpenAI's `insufficient_quota` — also delivered as a
+429 — still halts. `CONSECUTIVE_FAILURE_LIMIT` lowered from 40 to 10.
+
+**How it was verified** — both providers' captured error strings were replayed against the new
+classifier and landed in the correct bucket: xAI's spending-limit message and Gemini's daily-quota
+message each trip BILLING/DAILY QUOTA and halt on first occurrence, while Gemini's ordinary 429
+rate-limit text, despite containing "billing", is vetoed back to transient and keeps retrying. Both
+runs resumed after the fix shipped — see the outcome appended to "Quest ran code that had never been
+transferred" above.
+
 ---
 
 ### A hung SDK call stalled a whole job   2026-07-28  fixed
