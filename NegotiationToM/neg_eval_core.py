@@ -34,6 +34,19 @@ def record_call(prompt_tokens=0, completion_tokens=0, usage_seen=False):
         STATS["usage_seen"] += 1
 
 
+def record_usage(prompt_tokens=0, completion_tokens=0, usage_seen=False):
+    """Record billed tokens from an API response that did not yield a usable answer.
+
+    Empty responses are especially expensive for reasoning models: Qwen can consume its entire
+    output budget and return empty content. They must count toward cost without being reported as
+    successful calls.
+    """
+    STATS["prompt_tokens"] += prompt_tokens or 0
+    STATS["completion_tokens"] += completion_tokens or 0
+    if usage_seen:
+        STATS["usage_seen"] += 1
+
+
 def record_empty():
     STATS["empty"] += 1
 
@@ -80,16 +93,19 @@ def usage_from(response):
     prompt = (getattr(usage, "prompt_tokens", None)
               or getattr(usage, "prompt_token_count", None)
               or getattr(usage, "input_tokens", None) or 0)
-    completion = (getattr(usage, "completion_tokens", None)
-                  or getattr(usage, "candidates_token_count", None)
-                  or getattr(usage, "output_tokens", None) or 0)
-    # Gemini: thoughts_token_count. Others expose reasoning counts under their own names; sum any
-    # that are present rather than guessing which SDK this is.
-    for field in ("thoughts_token_count", "reasoning_tokens", "reasoning_token_count"):
-        completion += getattr(usage, field, None) or 0
-    details = getattr(usage, "completion_tokens_details", None)
-    if details is not None:
-        completion += getattr(details, "reasoning_tokens", None) or 0
+    completion_total = (getattr(usage, "completion_tokens", None)
+                        or getattr(usage, "output_tokens", None))
+    if completion_total is not None:
+        # OpenAI-compatible APIs include reasoning tokens inside completion_tokens. Their
+        # completion_tokens_details.reasoning_tokens value is a subset, not an additional charge.
+        completion = completion_total
+    else:
+        # Gemini reports visible candidates and hidden thoughts separately.
+        completion = getattr(usage, "candidates_token_count", None) or 0
+        completion += getattr(usage, "thoughts_token_count", None) or 0
+        if not completion:
+            completion = (getattr(usage, "reasoning_tokens", None)
+                          or getattr(usage, "reasoning_token_count", None) or 0)
     return prompt, completion, True
 
 
@@ -561,7 +577,8 @@ def pilot_report(model, tasks, script_dir, stem, n_samples, n_full, elapsed):
     if STATS["usage_seen"]:
         pin, pout = STATS["prompt_tokens"], STATS["completion_tokens"]
         print(f"          tokens           : {pin:,} in / {pout:,} out "
-              f"({STATS['usage_seen']}/{calls} calls reported usage)")
+              f"({STATS['usage_seen']} API responses reported usage)")
+        print(f"          output/response  : {pout / STATS['usage_seen']:.1f} tokens average")
         print(f"          projected full   : {pin * scale:,.0f} in / {pout * scale:,.0f} out")
         price = PRICE_PER_1M.get(model)
         if price:

@@ -5,6 +5,30 @@ Rejected attempts are kept on purpose: they are what stops the same road being w
 
 ---
 
+### Reasoning tokens caused disproportionate cost   2026-07-29  fixed locally
+
+**Symptom** — GPT, Gemini and xAI pilots used roughly 14–15 output tokens per successful call, but
+DeepSeek Reasoner averaged about 466. Qwen repeatedly consumed all 8,192 tokens and returned empty
+content, then retried. Empty responses were not included in the token totals, so the Qwen report
+substantially understated its actual cost.
+
+**Root cause** — reasoning was enabled for simple fixed-label classification. Qwen3.5-9B is a
+hybrid model but was treated as reasoning-only; Gemini retained a 256-token thinking allowance;
+the retired `deepseek-reasoner` alias selected V4 Flash thinking mode. Usage was recorded only after
+non-empty content, excluding billed failed attempts.
+
+**Fix** — disable reasoning through provider controls: Together
+`reasoning={"enabled": False}` for Qwen, Gemini `thinking_budget=0`, and DeepSeek V4 Flash
+`thinking: disabled`. Keep the visible output ceiling at 8,192 where already requested so valid JSON
+is not truncated. Record usage from empty HTTP-success responses separately from successful calls.
+GPT, xAI and Gemma remain unchanged because their pilots did not show reasoning-token inflation.
+
+**Gate before full run** — archive stale checkpoints, run `preflight.py`, then rerun equal-size
+pilots. Verify Qwen has no `finish=Length tokens=8192` loop and compare output tokens per API
+response, not only per successful row.
+
+---
+
 ### Intention rows paired with the wrong utterance   2026-07-27  fixed
 
 **Symptom** — 4,760 intention rows where 4,618 were expected. 142 rows had an all-zero gold bitmask,
@@ -58,7 +82,7 @@ table may have scored them. Spread between conventions: 0.009–0.019.
 
 ---
 
-### Qwen returned empty on nearly every call   2026-07-28  fixed (partial)
+### Qwen returned empty on nearly every call   2026-07-28  superseded 2026-07-29
 
 **Symptom** — 60 rows in 7 hours. `content` empty, HTTP 200, no exception.
 
@@ -88,8 +112,9 @@ cleanly at 8192 using 4,665 tokens, then burned all 16,384 on the identical prom
 given, so the budget shapes how much work it does rather than providing headroom for a fixed
 amount.
 
-**Status** — partial. Per-attempt success is ~40%, which across `call_api`'s 5 attempts gives ~92%
-per item. Qwen remains the slowest of the six; watch the empty-response rate.
+**Status** — superseded. Together documents Qwen3.5-9B as a hybrid model, so the 2026-07-29 fix
+uses `reasoning={"enabled": False}` instead. The brevity-plus-budget workaround is retained here
+only as rejected history.
 
 ---
 

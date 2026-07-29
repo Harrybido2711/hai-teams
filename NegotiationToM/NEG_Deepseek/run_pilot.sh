@@ -9,10 +9,8 @@
 #SBATCH --output=log_pilot.txt
 #SBATCH --error=log_pilot.err
 
-# deepseek-reasoner is a reasoning model and can take tens of seconds per call, so this pilot uses
-# 3% (71 dialogues, ~420 calls) instead of 10% and runs on the 'normal' partition.
-# The sampler shuffles with a fixed seed and takes a prefix, so these 71 dialogues are a strict
-# subset of the 238 the other five models see — the scores stay comparable.
+# DeepSeek V4 Flash runs with thinking explicitly disabled for this classification benchmark.
+# Use the same fixed 10% subset as the other models so accuracy and token cost are comparable.
 module purge
 
 export PYTHONUNBUFFERED=1
@@ -21,5 +19,5 @@ export PYTHONUNBUFFERED=1
     --model deepseek-reasoner \
     --task all \
     --pilot \
-    --pilot-frac 0.03 \
+    --pilot-frac 0.10 \
     --save-every 10

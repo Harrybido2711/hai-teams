@@ -9,7 +9,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
 from neg_eval_core import (  # noqa: E402
-    record_call, record_empty, record_error, retry_delay, run_cli, usage_from,
+    record_call, record_empty, record_error, record_usage, retry_delay, run_cli, usage_from,
 )
 
 load_dotenv(os.path.join(ROOT, ".env"))
@@ -29,6 +29,7 @@ def call_api(messages, model, max_retries=5):
             )
             content = (response.choices[0].message.content or "").strip()
             if not content:
+                record_usage(*usage_from(response))
                 record_empty()
                 print(f"[{model}] empty response ({attempt + 1}/{max_retries}), retrying", flush=True)
                 time.sleep(5)

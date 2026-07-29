@@ -10,26 +10,18 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
 from neg_eval_core import (  # noqa: E402
-    record_call, record_empty, record_error, retry_delay, run_cli, usage_from,
+    record_call, record_empty, record_error, record_usage, retry_delay, run_cli, usage_from,
 )
 
 load_dotenv(os.path.join(ROOT, ".env"))
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"))
 
 
-# Thinking is billed at the output rate but reported separately, so leaving it unbounded is an
-# open cheque. Every answer this benchmark asks for is a fixed-shape JSON object of roughly 20
-# tokens, so the budget is set as a multiple of that rather than an arbitrary number: thinking may
-# cost several times the answer, not hundreds of times it.
-#
-# Measured on 15 belief items: thinking off scored 7/15 at 15 output tokens per call, and a 512
-# budget scored the same 7/15 at 396 — identical accuracy for 26x the tokens. Unbounded, a single
-# call was observed spending 1,165 thinking tokens on a 14-token answer, i.e. 98.8% of the billed
-# output discarded. 256 sits well above the point where accuracy stopped improving while capping
-# the tail that produced the surprise invoice.
-ANSWER_TOKENS = 32          # a 3-field JSON object, with slack
-THINKING_MULTIPLE = 8
-THINKING_BUDGET = ANSWER_TOKENS * THINKING_MULTIPLE      # 256
+# Gemini 2.5 Flash supports a true thinking-off mode. On 15 real belief items, thinking off and a
+# 512-token thinking budget both scored 7/15, while billed output fell from 396 to 15 tokens/call.
+# This benchmark asks for fixed-shape classification JSON, so hidden CoT adds cost without measured
+# benefit. Keep max_output_tokens unset so the visible JSON itself is never truncated.
+THINKING_BUDGET = 0
 
 
 def call_api(messages, model, max_retries=3):
@@ -53,6 +45,7 @@ def call_api(messages, model, max_retries=3):
             )
             content = (response.text or "").strip()
             if not content:
+                record_usage(*usage_from(response))
                 record_empty()
                 print(f"[{model}] empty response ({attempt + 1}/{max_retries}), retrying", flush=True)
                 time.sleep(5)

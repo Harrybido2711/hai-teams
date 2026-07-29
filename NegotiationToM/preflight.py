@@ -66,17 +66,27 @@ def probe_gpt(api_key, model):
     return probe_openai_compatible(api_key, model)
 
 
-def probe_together(api_key, model):
+def probe_together(api_key, model, reasoning=None):
     from together import Together
     client = Together(api_key=api_key, timeout=120)
-    resp = client.chat.completions.create(
-        model=model, messages=probe_messages(), temperature=0, max_tokens=8192,
-    )
+    kwargs = dict(model=model, messages=probe_messages(), temperature=0, max_tokens=8192)
+    if reasoning is not None:
+        kwargs["reasoning"] = reasoning
+    resp = client.chat.completions.create(**kwargs)
     return (resp.choices[0].message.content or "").strip()
 
 
 def probe_deepseek(api_key, model):
-    return probe_openai_compatible(api_key, model, base_url="https://api.deepseek.com", timeout=300)
+    from openai import OpenAI
+    client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com", timeout=300)
+    response = client.chat.completions.create(
+        model=model,
+        messages=probe_messages(),
+        temperature=0,
+        max_tokens=8192,
+        extra_body={"thinking": {"type": "disabled"}},
+    )
+    return (response.choices[0].message.content or "").strip()
 
 
 def probe_gemini(api_key, model):
@@ -90,6 +100,7 @@ def probe_gemini(api_key, model):
             system_instruction=system,
             temperature=0,
             response_mime_type="application/json",
+            thinking_config=types.ThinkingConfig(thinking_budget=0),
         ),
     )
     return (resp.text or "").strip()
@@ -115,7 +126,7 @@ register("gemini", "NEG_Gemini", ["GEMINI_API_KEY", "GOOGLE_API_KEY"], "gemini-2
 register("xai", "NEG_XAI", ["GROK_API_KEY", "XAI_API_KEY"], "grok-3-mini",
          ["xai_sdk"], probe_xai)
 register("qwen", "NEG_Qwen", ["TOGETHER_API_KEY"], "Qwen/Qwen3.5-9B",
-         ["together"], probe_together)
+         ["together"], lambda key, model: probe_together(key, model, {"enabled": False}))
 register("gemma", "NEG_Gemma", ["TOGETHER_API_KEY"], "google/gemma-4-31B-it",
          ["together"], probe_together)
 register("deepseek", "NEG_Deepseek", ["DEEPSEEK_API_KEY"], "deepseek-reasoner",
