@@ -101,10 +101,10 @@ run looks complete while scoring 0.
 | Provider | Client | Must do |
 |---|---|---|
 | OpenAI `gpt-4o-mini` | `openai.OpenAI` | baseline |
-| DeepSeek `deepseek-reasoner` | `openai.OpenAI`, `base_url="https://api.deepseek.com"`, `timeout=7200` | `temperature=0`; when `content` is empty the answer sits in `reasoning_content` — fall back before retrying |
-| Gemini `gemini-2.5-flash` | `google.genai.Client` | no `system` role in messages — use `GenerateContentConfig(system_instruction=...)`; do **not** set `max_output_tokens` (256 truncated JSON mid-object) |
+| DeepSeek `deepseek-v4-flash` | `openai.OpenAI`, `base_url="https://api.deepseek.com"`, `timeout=7200` | legacy `deepseek-reasoner` retired 2026-07-24; pass `extra_body={"thinking":{"type":"disabled"}}` for this classification benchmark |
+| Gemini `gemini-2.5-flash` | `google.genai.Client` | no `system` role in messages; use `thinking_budget=0`; do **not** set `max_output_tokens` (256 truncated JSON mid-object) |
 | xAI `grok-3-mini` | `xai_sdk.Client` | no message dicts — `chat.create(model=...)`, `chat.append(xai_system(...))`, `chat.append(xai_user(...))`, `chat.sample()`. It does accept `max_tokens`/`temperature` |
-| Qwen `Qwen/Qwen3.5-9B` | `together.Together`, **`timeout=180`** | unstable reasoning — see below. Brevity hint + `max_tokens=32768` |
+| Qwen `Qwen/Qwen3.5-9B` | `together.Together`, **`timeout=180`** | hybrid model: pass `reasoning={"enabled": False}`; retain `max_tokens=8192` for visible JSON headroom |
 | Gemma `google/gemma-4-31B-it` | `together.Together`, **`timeout=300`** | intermittent empty string at HTTP 200 — retry up to 5× |
 
 **Never inherit `timeout=18000` from the EmoBench scripts.** Five hours per request means one hung
@@ -116,14 +116,11 @@ whatever the library does. `CallTimeout` **must derive from `BaseException`**: a
 is caught by each runner's own `except Exception`, and since the alarm has already fired and been
 cleared, the rest of that `call_api` runs unprotected — the guard evaporates after one use.
 
-**Qwen's unstable reasoning.** Thinking length varies from ~700 to past 32,768 output tokens *for
-the same prompt at `temperature=0`*. On budget exhaustion Together returns `finish_reason=Length`
-with empty `content`, the reasoning in a separate field, so the answer is never emitted. With
-`max_tokens=8192` and no timeout one pilot produced 60 rows in 7 hours. Raising the budget alone
-does not fix it — at 32,768 one prompt in four still burned the whole budget over 429s. What works
-is both: a **brevity hint** on the last user turn (kept in `NEG_Qwen/qwen_neg_eval.py`, **not** in
-the shared prompt builders, so the other five keep an identical prompt) **plus `max_tokens=32768`**.
-Log `finish_reason` and `usage.completion_tokens` on every empty response.
+**Qwen's unstable reasoning.** Thinking length varied from ~700 to past 32,768 output tokens for
+the same prompt at `temperature=0`; one pilot produced 60 rows in 7 hours. Qwen3.5-9B is a Together
+hybrid model, so the shipped fix is the provider control `reasoning={"enabled": False}`, not prompt
+wording or a larger token budget. Keep the shared prompt identical across models. Log
+`finish_reason` and usage on every empty response, including billed tokens from failed attempts.
 
 **Health checks must use real prompts.** A synthetic probe (system `"You are a JSON API."`) was
 rejected by grok with `PERMISSION_DENIED / SAFETY_CHECK_TYPE_BIO` while the genuine eval prompts
@@ -179,6 +176,8 @@ what you did about it — a partial result described accurately beats a claim of
 
 # Shared context
 
+- `NegotiationToM/negotiation.md` — the key findings: current results, the dataset traps that
+  silently change scores, reasoning-token cost, and the silent-failure catalogue
 - `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, and the false
   alarms recorded so they are not investigated twice
 - `NegotiationToM/DATA_NOTES.md` — dataset traps: cutoff tiling, the `"None"` sentinel, which gold

@@ -65,6 +65,8 @@ instead of hedging.
 Committed, so they come with a clone and stay in sync as the project moves — prefer them over
 anything remembered from a previous session:
 
+- `NegotiationToM/negotiation.md` — the key findings: current results, the dataset traps that
+  silently change scores, reasoning-token cost, and the silent-failure catalogue
 - `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, plus the
   false alarms recorded so they are not investigated twice
 - `NegotiationToM/DATA_NOTES.md` — dataset traps: cutoff tiling, the `"None"` sentinel, which gold

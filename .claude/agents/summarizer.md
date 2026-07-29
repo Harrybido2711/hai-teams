@@ -37,12 +37,35 @@ The active work is NegotiationToM: `neg_eval_core.py` holds shared logic and six
   the code's, and say so when they disagree.
 - The per-benchmark markdown notes (`EMO_SCRIPT.md`, `Negotiation_script.md`) are authoritative on
   task semantics but their file listings go stale — verify listings against the tree.
+- **A finished job proves nothing about whether its data is usable.** Grok's five shards all exited
+  `COMPLETED 0:0` with a perfect 14,138 rows while belief and intention were 100% empty — its
+  credits had run out. Whenever you summarise a results directory, report the **non-empty
+  `raw_response` rate and the null-`pred` count**, not just row counts.
+- **Verify from the `.jsonl`, not the `.csv`.** Reasoning models emit newlines inside
+  `raw_response`, so `cut -d, -f1` on the CSV mis-parses and can report *more* unique uids than
+  rows. That false alarm looked model-specific and nearly triggered a needless re-run.
+
+## Numbers worth knowing before you count anything (NegotiationToM)
+
+A full run is **14,138 rows**: desire 4,760 + belief 4,760 + intention **4,618**.
+
+- **intention at 4,760 means a known bug has returned** — odd-length dialogues annotate one target
+  utterance, not two.
+- `scored_rows` is **4,604** for desire and belief: 156 rows per task are excluded because their
+  gold is the sentinel `"None"`, which marks an unannotated sample rather than "wants nothing".
+- `All_EM` in the low single-digit percents is **expected**, not a defect: it ANDs all 5–6 rows of a
+  dialogue, and intention gets no partial credit there even though its F1 does.
+
+Full detail in `NegotiationToM/negotiation.md`.
 
 ## Shared context
 
 Committed, so they come with a clone and stay in sync as the project moves — prefer them over
 anything remembered from a previous session:
 
+- `NegotiationToM/negotiation.md` — **the key findings**: current results, the dataset traps that
+  silently change scores, reasoning-token cost, the silent-failure catalogue, and the conventions
+  that must not drift. Read this first for anything NegotiationToM.
 - `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, plus the
   false alarms recorded so they are not investigated twice
 - `NegotiationToM/DATA_NOTES.md` — dataset traps: cutoff tiling, the `"None"` sentinel, which gold

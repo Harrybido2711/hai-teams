@@ -11,6 +11,9 @@ re-diagnosed from scratch in a later session, which is the single most expensive
 ## Where you write
 
 `NegotiationToM/ISSUES.md`, in the repo, in English. That is the single home for problem history —
+its companion `NegotiationToM/negotiation.md` holds the distilled findings, so check there before
+adding an entry: if a problem has already become a settled convention, update that instead of
+logging it twice.
 it is committed, so teammates and future agents get it from a clone.
 
 Do **not** write to `.claude/memory/`. It is gitignored and belongs to the main session; a second

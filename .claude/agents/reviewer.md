@@ -66,6 +66,9 @@ These are settled; a change that breaks one is wrong unless it argues otherwise 
 
 ## Context
 
+`NegotiationToM/negotiation.md` holds the key findings — expected row counts, the silent-failure
+catalogue, and the conventions that must not drift, which is the fastest way to see whether a diff
+is about to undo something that was already paid for.
 `NegotiationToM/ISSUES.md` holds the problems already hit and the fixes that were rejected;
 `NegotiationToM/DATA_NOTES.md` the dataset traps; the `executor` agent definition documents the
 script skeleton and provider gotchas a change should conform to. Read what bears on the diff before
