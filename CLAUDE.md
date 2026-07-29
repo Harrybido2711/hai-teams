@@ -92,8 +92,28 @@ Two constraints the tool enforces, both of which cost a launch to discover:
 
 | Workflow | Use it when |
 |---|---|
-| `fix-broken-run` | a job is running but its output cannot be used — stale code, a config that never reached Quest, a provider refusing every call, rows arriving empty. Not for a job that is merely slow |
+| `run-model` | starting or restarting one model, end to end: check local → sync to Quest → launch → gate on the first minutes → supervise with hourly local+git sync → audit → record. This is the default |
+| `fix-broken-run` | a job is *already* running and needs killing — stale code, a provider refusing every call, rows arriving empty. Not for a job that is merely slow |
 | `verify-change` | a change meant to prevent a class of failure has been written and not yet proven wrong. Run it *before* trusting the change in a real run |
+
+### Both sync directions are steps, not habits
+
+`run-model` makes them explicit phases because each has already cost this project real work:
+
+- **local ↔ Quest.** A Qwen pilot spent 3h10m producing 315 rows and 105 empty responses because
+  the fix existed only on the laptop; a check that day found 6 of 32 files stale on Quest. Code
+  flows up (`check_quest_sync.py`), results flow down (`pull_quest_results.sh`), never the reverse.
+- **local ↔ git.** After the unattended watcher was killed, four full runs — 56,774 rows — lived
+  only on the cluster for hours, because the pull had been part of that watcher and nothing
+  replaced it. Pulling protects data and should be automatic; pushing publishes it and is a
+  deliberate step.
+
+When staging for git, stage explicit paths. Never `git add -A`: the watcher did, and swept
+unreviewed work into commits named "watcher checkpoint" that went to both remotes.
+
+The loop is meant to repeat. `run-model` returns `needs_rerun` with `proposed_fix` and
+`needs_prune` rather than retrying by itself — the fix is usually a code change, which belongs in
+front of a human before another run spends hours on it.
 
 **Improving one is editing a file, not writing a new script.** When a run exposes something a
 workflow should have caught, add the check to the workflow rather than remembering to do it by hand.
