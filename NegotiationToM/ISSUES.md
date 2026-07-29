@@ -118,6 +118,50 @@ only as rejected history.
 
 ---
 
+### Quest ran code that had never been transferred   2026-07-29  fixed
+
+**Symptom** — the Qwen pilot behaved exactly as it had *before* the 2026-07-29 fix: 3h10m elapsed,
+desire 315/476, belief 0, intention 0, 105 empty responses all `finish_reason=Length` at 8,192
+tokens, 47 timeouts. At 1.66 rows/min the 1,416-row pilot needed ~14h against a 16h wall.
+
+**Root cause** — `reasoning={"enabled": False}` existed only on the laptop. Quest was still running
+the superseded brevity-hint version. The transfer had never happened, and nothing in the loop
+checked: the queue, the logs and the row counts all look normal when the code itself is old.
+
+**Scope was wider than the model under suspicion.** A full `md5sum` comparison found **6 of 32
+files** stale on Quest — `neg_eval_core.py` plus every runner except DeepSeek. DeepSeek matched only
+because a previous session's revert happened to touch it. The gap opened when one session edited
+several runners and a later session, reverting only the DeepSeek change, assumed the rest were in
+sync.
+
+**The dependency that makes partial sync fatal** — the runners import `record_usage` from
+`neg_eval_core.py`, added 2026-07-29. Transferring a runner without the core fails at import;
+transferring the core without the runners breaks whichever runner used a changed signature. Core and
+runners must move together.
+
+**Checkpoints are not always resumable.** The 315 existing Qwen rows were produced with
+`BREVITY_HINT` appended to the user turn, which the new code removes. Resuming would mix two prompts
+in one result set, so the checkpoint must be archived rather than resumed. A config change
+invalidates a checkpoint even when the schema is unchanged.
+
+**Fix** — a `md5sum` diff of all `*.py` and `*.sh` against Quest before every submit, recorded in
+`CLAUDE.md` and `.claude/agents/executor.md`, plus standing authorisation for the planner to
+`scancel` a job found to be running wrong code instead of letting it reach the wall.
+
+**Two ways the check itself lied while being written**, both worth guarding against:
+- zsh does not word-split an unquoted `$FILES`, so `md5 -r $FILES` treated the whole list as one
+  filename. Both sides produced empty files and `diff` reported "in sync" — a false pass of exactly
+  the check meant to prevent false passes. Use a quoted array expansion.
+- `join` requires input sorted on the join field. Sorted by hash instead of filename it reported
+  every file as simultaneously missing from both sides. Sort with `-k1,1` on the name, and print
+  both row counts before believing the output.
+
+**Also found** — `ssh quest` was never a real alias. `~/.ssh/config` contained only an unrelated
+host, so every documented `ssh quest "..."` command failed with `Host key verification failed`; the
+config block existed only as a recommendation inside a note. Installed and verified 2026-07-29.
+
+---
+
 ### A hung SDK call stalled a whole job   2026-07-28  fixed
 
 **Symptom** — Gemma reported RUNNING by SLURM for over 2 hours with an empty log, no stderr and no
