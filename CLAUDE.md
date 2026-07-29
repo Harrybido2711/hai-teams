@@ -64,6 +64,48 @@ Two ways this check lies, both hit while writing it:
 
 Always print the row count of both files before trusting the comparison.
 
+## Saved workflows
+
+`.claude/workflows/*.js` holds the multi-agent procedures this project has already worked out. They
+are committed, so they survive the session that wrote them — a workflow passed inline to the tool
+does not, and is lost the moment the session ends.
+
+Invoke one by path, which always works:
+
+```
+Workflow({scriptPath: ".claude/workflows/fix-broken-run.js",
+          args: {model: "NEG_Gemma", reason: "...", pilot: true}})
+Workflow({scriptPath: ".claude/workflows/verify-change.js",
+          args: {change: "...", files: ["neg_eval_core.py"]}})
+```
+
+`{name: "fix-broken-run"}` also resolves, but only from a session that started *after* the file
+existed — the registry is built once at startup, so a workflow written mid-session is invisible to
+it until the next session. `scriptPath` has no such delay, and is the safe form when in doubt.
+
+Two constraints the tool enforces, both of which cost a launch to discover:
+
+- **`meta` must be a pure literal.** No string concatenation, no variables, no template
+  interpolation — `'a' + 'b'` in a field is rejected as a BinaryExpression.
+- **Validate `args` at the top and `return` early.** A missing argument then costs 16 ms and zero
+  agents instead of spawning a fleet that discovers the problem one at a time.
+
+| Workflow | Use it when |
+|---|---|
+| `fix-broken-run` | a job is running but its output cannot be used — stale code, a config that never reached Quest, a provider refusing every call, rows arriving empty. Not for a job that is merely slow |
+| `verify-change` | a change meant to prevent a class of failure has been written and not yet proven wrong. Run it *before* trusting the change in a real run |
+
+**Improving one is editing a file, not writing a new script.** When a run exposes something a
+workflow should have caught, add the check to the workflow rather than remembering to do it by hand.
+Two rules keep them useful:
+
+- **Every prompt carries the hard rules.** Each workflow states what its agents must not do — no
+  provider API calls, no `sbatch`/`scancel` outside the phase that owns it, no edits outside the
+  target. These are not decoration: a reviewer once wrote four probe scripts and spent real quota
+  because its prompt did not forbid it.
+- **The gate must be able to say no.** `fix-broken-run` returns without submitting when the reviewer
+  refuses. A verification phase that cannot block is a formality.
+
 ## Shared context
 
 - `NegotiationToM/negotiation.md` — current results, dataset traps, reasoning-token cost, the

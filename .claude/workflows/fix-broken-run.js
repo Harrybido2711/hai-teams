@@ -1,11 +1,7 @@
 export const meta = {
   name: 'fix-broken-run',
   description: 'Stop a job that is producing bad data, fix and resync the code, then resubmit it cleanly',
-  whenToUse:
-    'A job is running but its output cannot be used — stale code, a config that was never ' +
-    'transferred, a provider refusing every call, or rows arriving empty. Pass ' +
-    '{model, reason} and optionally {pilot, jobId}. Do NOT use it to start a run that has ' +
-    'never been submitted, and do NOT use it on a job that is merely slow.',
+  whenToUse: 'A job is running but its output cannot be used — stale code, a config that was never transferred, a provider refusing every call, or rows arriving empty. Pass {model, reason} and optionally {pilot, jobId}. Do NOT use it to start a run that has never been submitted, and do NOT use it on a job that is merely slow.',
   phases: [
     { title: 'Observe',  detail: 'watcher measures what the job is actually producing' },
     { title: 'Stop',     detail: 'executor cancels it and decides archive vs prune vs keep' },
