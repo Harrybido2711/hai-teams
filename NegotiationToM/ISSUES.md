@@ -68,18 +68,28 @@ Together returns `finish_reason=Length` with empty `content`, the reasoning sitt
 field, so the answer is never emitted.
 
 **Tried and rejected**
-- `max_tokens=8192` (the value that works for BBH's short prompts) → truncated almost every call.
+- `max_tokens=8192` *without* a brevity hint → truncated almost every call.
 - `max_tokens=32768` alone → 3 of 4 prompts fine, the fourth burned the whole budget over 429s and
-  still returned empty. Bigger budgets make failures slower, not rarer — they do not converge at
-  any budget.
+  still returned empty.
+- `max_tokens=32768` **with** the brevity hint, plus a 150s watchdog → the worst combination. At
+  ~90 tok/s a full 32,768-token generation needs ~364s, so every runaway was killed by the clock
+  before it could report `finish_reason=Length`. The diagnostic signal was destroyed and each retry
+  walked into the same wall; the pilot sat at 160 rows for over two hours.
+- Tightening the watchdog further → wrong lever. A wall-clock kill bounds nothing usefully and
+  explains nothing; `max_tokens` is server-enforced, returns promptly, and reports why.
 
-**Fix** — two measures together: a brevity hint on the last user turn asking for at most one
-sentence of reasoning, plus `max_tokens=32768` to absorb the tail. The hint lives in
-`NEG_Qwen/qwen_neg_eval.py` rather than the shared prompt builders, so the other five models keep
-answering an identical prompt.
+**Fix** — brevity hint **plus a small budget**, `max_tokens=8192`, with the watchdog at 200s acting
+only as a backstop for hung connections (above the ~110s worst case of a legitimate full-budget
+generation).
 
-**Status** — partial. Throughput is much improved but Qwen remains the slowest model; watch the
-empty-response rate.
+**The counter-intuitive part, measured:** a bigger budget makes things *worse*. Item #80 finished
+cleanly at 8192 using 4,665 tokens, then burned all 16,384 on the identical prompt at
+`temperature=0`. Success rate was 2/5 at 8192 and **0/3 at 16384**. The model spends what it is
+given, so the budget shapes how much work it does rather than providing headroom for a fixed
+amount.
+
+**Status** — partial. Per-attempt success is ~40%, which across `call_api`'s 5 attempts gives ~92%
+per item. Qwen remains the slowest of the six; watch the empty-response rate.
 
 ---
 

@@ -127,6 +127,33 @@ register("deepseek", "NEG_Deepseek", ["DEEPSEEK_API_KEY"], "deepseek-reasoner",
 failures = []
 
 
+# Patterns for "this run cannot possibly work". The obvious two were not enough: the earlier set
+# (insufficient_quota / requests per day / billing / rate_limit) missed both failures that actually
+# occurred. xAI says "used all available credits or reached its monthly spending limit" and matched
+# nothing at all, so 36,124 occurrences went unreported while a job burned five hours; Gemini says
+# "generate_requests_per_model_per_day" with underscores, which the spaced pattern missed and only
+# "billing" caught by luck. Match on how providers really word it, not on how we assume they do.
+BILLING_PATTERNS = [
+    ("credits exhausted",
+     ["used all available credits", "spending limit", "insufficient_quota",
+      "insufficient credit", "billing", "payment required", "402"]),
+    ("daily/rate quota",
+     ["requests per day", "requests_per_day", "per_model_per_day", "resource_exhausted",
+      "quota exceeded", "rate_limit", "ratelimit", "429"]),
+    ("permission denied",
+     ["permission_denied", "permissiondenied"]),
+]
+
+
+def classify_billing(error):
+    """Name the billing/quota condition in an exception, or None if it is something else."""
+    text = str(error).lower()
+    for label, needles in BILLING_PATTERNS:
+        if any(n in text for n in needles):
+            return label
+    return None
+
+
 def check(label, ok, detail="", fatal=True):
     print(f"  {'PASS' if ok else 'FAIL'}  {label}" + (f"  — {detail}" if detail else ""),
           flush=True)
@@ -251,7 +278,11 @@ def check_providers(env, selected, skip_api):
             if check("live API call returns non-empty", bool(reply)):
                 print(f"        reply: {reply[:80]}", flush=True)
         except Exception as error:
-            check("live API call", False, f"{type(error).__name__}: {error}")
+            kind = classify_billing(error)
+            if kind:
+                check(f"live API call — {kind}", False, str(error)[:160])
+            else:
+                check("live API call", False, f"{type(error).__name__}: {error}")
             traceback.print_exc(limit=2)
 
 

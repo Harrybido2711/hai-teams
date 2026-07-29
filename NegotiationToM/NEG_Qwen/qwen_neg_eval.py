@@ -31,7 +31,24 @@ BREVITY_HINT = (
     "then output the JSON object."
 )
 
-MAX_TOKENS = 32768
+# Measured on real pilot items with the brevity hint in place, at ~90 output tok/s:
+#
+#   budget   succeeded   a success costs   a failure costs
+#   8192     2 of 5      48-51s, ~3.5-4.7k tokens   ~91s, Length
+#   16384    0 of 3      —                          ~150-184s, Length
+#
+# **A larger budget makes things worse, not better** — the model tends to spend whatever it is
+# given. Item #80 is the proof: it finished cleanly at 8192 using 4,665 tokens, and burned all
+# 16,384 on the identical prompt at temperature=0. So the budget is not a safety margin for a
+# fixed amount of work; it shapes how much work the model does.
+#
+# 8192 therefore accommodates every successful call ever observed (max 5,615 tokens) while capping
+# a runaway at ~91s. Failures return promptly with finish_reason=Length, and the retry gets a fresh
+# draw — with a ~40% per-attempt success rate, call_api's 5 attempts give ~92% per item.
+#
+# (Without the brevity hint, 8192 truncated almost everything. The hint is what makes a small
+# budget viable; the two changes only work together.)
+MAX_TOKENS = 8192
 
 
 def with_brevity_hint(messages):

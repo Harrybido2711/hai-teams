@@ -42,8 +42,38 @@ def record_error():
     STATS["errors"] += 1
 
 
+# A run in which every call fails should stop, not spend hours producing empty rows that look like
+# a completed job. Grok's credits ran out mid-run and the job carried on for five more hours, wrote
+# 9,378 empty rows, and exited COMPLETED with 0:0 — Belief_EM 0.0 was an unpaid invoice, not a
+# result. Nothing in the pipeline noticed.
+CONSECUTIVE_FAILURE_LIMIT = 40
+_consecutive_failures = 0
+
+
+def note_outcome(ok):
+    """Track consecutive total failures; abort the run when the provider is clearly not serving."""
+    global _consecutive_failures
+    if ok:
+        _consecutive_failures = 0
+        return
+    _consecutive_failures += 1
+    if _consecutive_failures >= CONSECUTIVE_FAILURE_LIMIT:
+        raise SystemExit(
+            f"aborting: {_consecutive_failures} consecutive items returned nothing. "
+            "The provider is almost certainly refusing every call (credits, quota or an outage). "
+            "Fix that, prune the failed rows with prune_failed_rows.py, then resubmit."
+        )
+
+
 def usage_from(response):
-    """Best-effort token extraction; SDKs disagree on the shape, so tolerate all of them."""
+    """Best-effort token extraction; SDKs disagree on the shape, so tolerate all of them.
+
+    **Reasoning tokens must be counted as output.** They are billed at the output rate but reported
+    in a separate field, so reading only the visible-answer count understates the bill badly: one
+    measured gemini-2.5-flash call was 16 visible tokens against 143 thinking tokens — a 10x
+    undercount, which is why an early cost projection for Gemini came in an order of magnitude
+    below the actual invoice.
+    """
     usage = getattr(response, "usage", None) or getattr(response, "usage_metadata", None)
     if usage is None:
         return 0, 0, False
@@ -53,6 +83,13 @@ def usage_from(response):
     completion = (getattr(usage, "completion_tokens", None)
                   or getattr(usage, "candidates_token_count", None)
                   or getattr(usage, "output_tokens", None) or 0)
+    # Gemini: thoughts_token_count. Others expose reasoning counts under their own names; sum any
+    # that are present rather than guessing which SDK this is.
+    for field in ("thoughts_token_count", "reasoning_tokens", "reasoning_token_count"):
+        completion += getattr(usage, field, None) or 0
+    details = getattr(usage, "completion_tokens_details", None)
+    if details is not None:
+        completion += getattr(details, "reasoning_tokens", None) or 0
     return prompt, completion, True
 
 
@@ -118,8 +155,15 @@ class CallTimeout(BaseException):
 # for over two hours with timeout=18000, and again produced nothing for ~70 minutes with
 # timeout=300, in both cases with SLURM still reporting RUNNING and an empty log. SIGALRM
 # interrupts the blocking read regardless of what the library does.
-# Generous enough for the slowest legitimate call seen (deepseek-reasoner, tens of seconds).
-HARD_CALL_TIMEOUT = 420
+# This is a backstop for a hung connection, not the mechanism for bounding work. Bound work with
+# max_tokens: the server enforces it, it returns promptly, and finish_reason says what happened.
+# A wall-clock kill tells you nothing about why.
+#
+# Sizing: the ceiling must sit above the slowest *legitimate* call, or it silently truncates good
+# work. Measured worst case is a full max_tokens=8192 generation at ~90 tok/s, about 110s, so 200
+# leaves real margin. An earlier 150 was too tight against a 32768 budget — every runaway was cut
+# by the clock before it could report Length, which destroyed the diagnostic signal.
+HARD_CALL_TIMEOUT = 200
 
 
 def _raise_timeout(signum, frame):
@@ -151,14 +195,17 @@ def call_and_parse(call_api, messages, model, max_parse_retries=3):
             print(f"[{model}] {error} ({attempt + 1}/{max_parse_retries}), retrying", flush=True)
             continue
         if raw is None:
+            note_outcome(False)
             return None, None
         last_raw = raw
         parsed = parse_json(raw)
         if isinstance(parsed, dict):
+            note_outcome(True)
             return raw, parsed
         print(f"[{model}] JSON parse failed ({attempt + 1}/{max_parse_retries}); calling again",
               flush=True)
     STATS["parse_fail"] += 1
+    note_outcome(False)
     return last_raw, None
 
 
