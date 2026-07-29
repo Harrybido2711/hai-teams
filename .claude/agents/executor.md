@@ -139,6 +139,38 @@ Transfer with `ssh quest "cat > $REMOTE/$f" < $LOCAL/$f`, then **verify with `md
 assume a transfer landed. **Never overwrite `.env` on Quest** and never copy it out — it exists only
 there; if it goes missing, `cp ../EmoBench-master/.env .env`.
 
+**Replacing the code under a broken run.** When the planner hands you a job that is running the
+wrong code, the sequence is fixed: `scancel` first, then transfer, then resubmit. Do not transfer
+under a live job and hope it picks the change up — a running Python process has already imported its
+modules and will finish the run on the old code regardless of what is on disk.
+
+**Sync `neg_eval_core.py` together with the runners, always.** The runners import from it
+(`record_usage` was added there on 2026-07-29), so a runner transferred without the core dies at
+import, and a core transferred without the runners breaks whichever runner used a signature that
+changed. Check the whole set before submitting, not just the file you edited — on 2026-07-29 a check
+found 6 of 32 files stale on Quest when only Qwen was suspected:
+
+```bash
+cd NegotiationToM
+setopt null_glob
+FILES=(*.py NEG_*/*.py NEG_*/*.sh); FILES=(${(u)FILES})
+md5 -r "${FILES[@]}" | awk '{print $2, $1}' | sort -k1,1 > /tmp/l.md5
+ssh quest "cd /gpfs/projects/p32983/NegotiationToM && md5sum ${FILES[*]}" \
+  | awk 'NF==2{print $2, $1}' | sort -k1,1 > /tmp/q.md5
+join -j1 -o 0,1.2,2.2 /tmp/l.md5 /tmp/q.md5 | awk '$2!=$3{print "DIFFER  " $1}'
+```
+
+Print the row count of both `.md5` files before believing the result. This check has two silent
+failure modes, both hit in practice: zsh does not word-split an unquoted `$FILES`, so `md5 -r $FILES`
+treats the list as a single filename and both sides come back empty — which `diff` happily calls
+"in sync"; and `join` needs input sorted on the join field, so sorting by hash makes it report every
+file as missing from both sides at once.
+
+**Stale checkpoints after a config change.** If the fix altered the prompt or the decoding config,
+the rows already in the checkpoint were produced under the old one and resume will keep them. Archive
+to a timestamped directory instead — a result set holding two configurations is worse than redoing
+the rows. Say which you did and why.
+
 ```bash
 #SBATCH --account=p32983
 #SBATCH --partition=long

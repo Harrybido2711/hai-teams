@@ -9,7 +9,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
 from neg_eval_core import (  # noqa: E402
-    record_call, record_empty, record_error, record_usage, retry_delay, run_cli, usage_from,
+    halt_on_billing, record_call, record_empty, record_error, record_usage, retry_delay, run_cli, usage_from,
 )
 
 load_dotenv(os.path.join(ROOT, ".env"))
@@ -37,8 +37,7 @@ def call_api(messages, model, max_retries=3):
             message = str(error).lower()
             print(f"[{model}] API error ({attempt + 1}/{max_retries}): "
                   f"{type(error).__name__}: {error}", flush=True)
-            if "insufficient_quota" in message:
-                raise SystemExit("OpenAI quota exhausted") from error
+            halt_on_billing(error, model, SCRIPT_DIR)
             if "requests per day" in message:
                 print(f"[{model}] daily request quota exhausted", flush=True)
                 return None

@@ -6,6 +6,7 @@ import os
 import random
 import re
 import signal
+import sys
 import time
 
 import pandas as pd
@@ -59,8 +60,129 @@ def record_error():
 # a completed job. Grok's credits ran out mid-run and the job carried on for five more hours, wrote
 # 9,378 empty rows, and exited COMPLETED with 0:0 — Belief_EM 0.0 was an unpaid invoice, not a
 # result. Nothing in the pipeline noticed.
-CONSECUTIVE_FAILURE_LIMIT = 40
+#
+# Two separate mechanisms, because the two failures are not alike:
+#
+#   * A billing refusal is deterministic and clears only when a human tops the account up. Retrying
+#     it is pure waste, so `halt_on_billing` stops at the FIRST one — zero tolerance.
+#   * An unknown failure (outage, network, a model emitting garbage) might pass on the next item, so
+#     it gets a consecutive-failure budget. 40 was too generous: at ~16s per failed item that is
+#     ~11 minutes and 120 API calls. 10 costs under 3 minutes, and aborting is nearly free because
+#     the checkpoint means a resubmit resumes exactly where it stopped.
+CONSECUTIVE_FAILURE_LIMIT = 10
 _consecutive_failures = 0
+
+# Only wordings that unambiguously mean *money*.
+#
+# The bare word "billing" is deliberately NOT here, and that is the whole subtlety. Gemini's
+# ordinary rate limit reads:
+#
+#   429 RESOURCE_EXHAUSTED. You exceeded your current quota, please check your plan and billing
+#   details.
+#
+# It mentions billing while being a throughput limit that clears on its own — matching it would
+# hard-stop a perfectly healthy run. OpenAI's genuine billing refusal is *also* a 429, so the
+# status code cannot separate them either. Only the provider-specific tokens below can.
+BILLING_SIGNATURES = (
+    "insufficient_quota",          # OpenAI — billing, despite arriving as a 429
+    "insufficient balance",        # DeepSeek
+    "used all available credits",  # xAI
+    "spending limit",              # xAI
+    "credit balance",
+    "payment required",
+    "arrears",
+)
+
+# Throughput limits and transient refusals. These must never halt a run: they clear by themselves,
+# and `retry_delay` already backs off on them. Checked first so a message that mentions both loses
+# to the transient reading — a wrong halt costs a whole run, a wrong retry costs seconds.
+TRANSIENT_SIGNATURES = (
+    "resource_exhausted",
+    "rate limit",
+    "rate_limit",
+    "requests per day",
+    "requests per minute",
+    "please retry",
+    "try again",
+    "503",
+    "unavailable",
+    "overloaded",
+)
+
+
+# A daily cap is neither of the above: no human has to pay anything, but it will not clear for
+# hours, so retrying is as useless as retrying a billing refusal. Gemini's cap is 10,000
+# requests/day for gemini-2.5-flash while one full run needs 14,138 — the run cannot finish in a
+# day at that tier, and once the cap hit, the remaining items failed three times each and were
+# written as 1,963 empty rows instead of being left for tomorrow.
+DAILY_QUOTA_SIGNATURES = (
+    "per_model_per_day",
+    "requests per day",
+    "requests_per_day",
+    "per day",
+    "daily limit",
+    "daily quota",
+)
+
+
+def is_daily_quota_failure(error):
+    """True when the provider says the *daily* allowance is gone."""
+    return any(sig in str(error).lower() for sig in DAILY_QUOTA_SIGNATURES)
+
+
+def is_billing_failure(error):
+    """True when the provider is refusing over money rather than over throughput.
+
+    Order matters: a transient signature vetoes a billing one. Gemini burned 1,963 rows on 429s
+    whose text contains "billing", and treating those as terminal would have been a worse bug than
+    the one this function exists to fix.
+    """
+    text = str(error).lower()
+    if any(sig in text for sig in TRANSIENT_SIGNATURES):
+        return False
+    return any(sig in text for sig in BILLING_SIGNATURES)
+
+
+def halt_on_billing(error, model, script_dir):
+    """Stop at the first unrecoverable refusal, leaving a marker an agent can find without logs.
+
+    Two kinds qualify, and both are pointless to retry:
+
+      * **Billing.** xAI's wording — "has either used all available credits or reached its monthly
+        spending limit" — matched neither `insufficient_quota` nor `requests per day`, the only two
+        strings every runner checked, so it fell through to the generic retry path and the run
+        spent eight hours writing empty rows.
+      * **Daily quota.** Gemini's cap is 10,000 requests/day against a 14,138-request run. Once hit,
+        it returns "Please retry in 18h7m" — which `retry_delay` does not even parse, because its
+        regex looks for "try again in". Every remaining item then failed three times in ~15s and
+        was written as an empty row. Stopping instead leaves those items untouched for a resubmit
+        after the quota resets, and resume picks them up.
+
+    The marker file matters as much as the exit: it names the reason in one place a watcher can
+    read, rather than requiring a grep through five shard logs.
+    """
+    if is_daily_quota_failure(error):
+        kind, marker_name = "DAILY QUOTA", "QUOTA_HALT.txt"
+        advice = ("The daily allowance is gone. Wait for the provider's reset window, then "
+                  "resubmit — resume continues from the checkpoint. Nothing needs pruning, "
+                  "because stopping here means no empty rows were written.")
+    elif is_billing_failure(error):
+        kind, marker_name = "BILLING", "BILLING_HALT.txt"
+        advice = ("Top the account up, then prune the failed rows with prune_failed_rows.py "
+                  "before resubmitting — a plain resume would skip them.")
+    else:
+        return
+
+    marker = os.path.join(script_dir, marker_name)
+    stamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        with open(marker, "w") as fh:
+            fh.write(f"{stamp}  model={model}  reason={kind}\n{type(error).__name__}: {error}\n")
+    except OSError:
+        pass  # never let bookkeeping mask the real failure
+    print(f"\n!!! {kind} HALT [{model}] {stamp}\n{error}\n", file=sys.stderr, flush=True)
+    print(f"[{model}] {kind} HALT — stopping immediately, marker at {marker}", flush=True)
+    raise SystemExit(f"aborting: {model} stopped on {kind.lower()}. {advice}")
 
 
 def note_outcome(ok):

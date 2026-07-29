@@ -46,6 +46,12 @@ whatever the queue says. Report it as a suspicion with the evidence, not as a ce
 - Expected row counts, so silent truncation shows up: desire and belief are 2 × dialogues;
   intention is 4,618 for the full 2,380 (not 4,760 — odd-length dialogues have one target, not two)
 - Non-empty `raw_response` rate in recent rows — a run can produce rows that are all failures
+- **Whether the running job's code matches local.** A healthy-looking job can be executing a version
+  that was superseded days ago; on 2026-07-29 six files on Quest were stale, including the shared
+  `neg_eval_core.py`, and a Qwen pilot was three hours into a config whose fix had never been
+  transferred. Compare `md5sum` on Quest against the local files and report any mismatch as a
+  finding in its own right, with both mtimes — it is invisible in the queue, the logs and the row
+  counts.
 
 ## Reporting
 

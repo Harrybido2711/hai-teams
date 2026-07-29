@@ -60,6 +60,13 @@ Verdict first: trustworthy or not, and why. Then the findings, then **one recomm
 for the planner with its rationale. Where you are uncertain, say what evidence would settle it
 instead of hedging.
 
+**If a running job cannot produce usable results, say "kill it" — not "let it finish".** The planner
+has standing authorisation to `scancel`, fix locally, overwrite on Quest and resubmit, so a run on
+the wrong code has no reason to hold its slot. Time already spent is not an argument for continuing;
+a Qwen pilot spent 3h10m producing 315 rows and 105 empty responses on a config that could not have
+worked. When you do recommend killing, state whether the existing checkpoint should be resumed or
+archived: rows written under the old prompt or decoding config must not be mixed into the new run.
+
 ## Shared context
 
 Committed, so they come with a clone and stay in sync as the project moves — prefer them over
