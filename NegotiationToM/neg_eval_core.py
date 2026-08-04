@@ -21,22 +21,48 @@ PRICE_PER_1M = {
 }
 
 # Runtime counters, reported by the pilot. Runners update these through record_* below.
+#
+# The three list-valued entries exist because a *sum* cannot size a budget. `completion_tokens`
+# alone gives a mean, and setting max_tokens from a mean truncates roughly half the calls — the
+# failure mode already recorded for Gemini, where "a 256 cap once truncated the JSON mid-object".
+# Sizing needs the tail, so keep every observation and report percentiles.
 STATS = {
     "calls": 0, "empty": 0, "errors": 0, "parse_fail": 0,
     "prompt_tokens": 0, "completion_tokens": 0, "usage_seen": 0,
+    "completion_lengths": [],   # billed output tokens, one entry per response that reported usage
+    "call_seconds": [],         # wall-clock of each call that returned, hangs excluded
+    "truncated": 0,             # responses cut off by max_tokens (finish_reason == "length")
+    "timeouts": 0,              # calls killed by the SIGALRM watchdog, i.e. that never returned
+    # Counts responses whose finish_reason the runner actually passed in. Without this,
+    # "truncated: 0" is ambiguous: five of the six runners still call record_call(*usage_from(r))
+    # and never supply a finish_reason, so their zero means "never looked", not "looked and found
+    # none". Reporting never-looked as a measured zero is how a truncating run gets a clean bill —
+    # and Gemini is the model whose history is "a 256 cap truncated the JSON mid-object".
+    "finish_reason_seen": 0,
 }
 
 
-def record_call(prompt_tokens=0, completion_tokens=0, usage_seen=False):
-    """Called by each runner after a successful API call."""
+def record_call(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_reason=None):
+    """Called by each runner after a successful API call.
+
+    `finish_reason` is optional and defaults to None so the six existing runners, which call this
+    as `record_call(*usage_from(response))`, keep working untouched. Pass it to make truncation
+    visible: a response cut off at max_tokens is otherwise indistinguishable from a wrong answer,
+    which is how a too-tight budget silently lowers a score.
+    """
     STATS["calls"] += 1
     STATS["prompt_tokens"] += prompt_tokens or 0
     STATS["completion_tokens"] += completion_tokens or 0
     if usage_seen:
         STATS["usage_seen"] += 1
+        STATS["completion_lengths"].append(completion_tokens or 0)
+    if finish_reason is not None:
+        STATS["finish_reason_seen"] += 1
+        if finish_reason == "length":
+            STATS["truncated"] += 1
 
 
-def record_usage(prompt_tokens=0, completion_tokens=0, usage_seen=False):
+def record_usage(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_reason=None):
     """Record billed tokens from an API response that did not yield a usable answer.
 
     Empty responses are especially expensive for reasoning models: Qwen can consume its entire
@@ -47,6 +73,43 @@ def record_usage(prompt_tokens=0, completion_tokens=0, usage_seen=False):
     STATS["completion_tokens"] += completion_tokens or 0
     if usage_seen:
         STATS["usage_seen"] += 1
+        STATS["completion_lengths"].append(completion_tokens or 0)
+    if finish_reason is not None:
+        STATS["finish_reason_seen"] += 1
+        if finish_reason == "length":
+            STATS["truncated"] += 1
+
+
+def finish_reason_from(response):
+    """Best-effort finish_reason, normalised to lowercase. SDKs disagree on the shape."""
+    try:
+        choice = response.choices[0]
+    except (AttributeError, IndexError, TypeError):
+        candidates = getattr(response, "candidates", None)
+        if not candidates:
+            return None
+        reason = getattr(candidates[0], "finish_reason", None)
+        name = getattr(reason, "name", None) or str(reason or "")
+        # Gemini spells the same state MAX_TOKENS; normalise to the OpenAI wording.
+        return "length" if name.upper() in ("MAX_TOKENS", "LENGTH") else name.lower() or None
+    reason = getattr(choice, "finish_reason", None) or getattr(choice, "stop_reason", None)
+    if reason is None:
+        return None
+    name = getattr(reason, "name", None) or str(reason)
+    name = name.lower()
+    # Anthropic-style wording for the same state.
+    return "length" if name in ("max_tokens", "length") else name
+
+
+def percentiles(values):
+    """median / p90 / p99 / max of a list, or None if it is empty. No numpy dependency needed."""
+    if not values:
+        return None
+    ordered = sorted(values)
+    def at(q):
+        return ordered[min(len(ordered) - 1, int(q * len(ordered)))]
+    return {"median": at(0.50), "p90": at(0.90), "p99": at(0.99), "max": ordered[-1],
+            "n": len(ordered)}
 
 
 def record_empty():
@@ -416,21 +479,53 @@ class CallTimeout(BaseException):
 HARD_CALL_TIMEOUT = 200
 
 
+def set_call_timeout(seconds):
+    """Per-model override of the watchdog ceiling, called by a runner before run_cli.
+
+    The right ceiling is a property of the provider, not of the benchmark, so one shared constant
+    cannot fit all six. Sizing rule: it must sit above the slowest *legitimate* call, which is
+    max_tokens divided by the model's observed tokens/second, with margin. Below that it truncates
+    good work; far above it, every hung connection costs the full ceiling before the retry can run.
+
+    Measured on Gemma/Together 2026-08-04: successful calls returned in ~10s at ~57 tok/s while
+    roughly 9% of attempts never returned at all. At the shared 200s ceiling those hangs consumed
+    67% of the job's wall clock, which is why a run projected at 19.6h was tracking towards 97h.
+    """
+    global HARD_CALL_TIMEOUT
+    HARD_CALL_TIMEOUT = int(seconds)
+
+
 def _raise_timeout(signum, frame):
     raise CallTimeout(f"call exceeded {HARD_CALL_TIMEOUT}s hard limit")
 
 
 def guarded_call(call_api, messages, model):
-    """Run call_api under a SIGALRM watchdog. Raises CallTimeout if it overruns."""
+    """Run call_api under a SIGALRM watchdog. Raises CallTimeout if it overruns.
+
+    Also times every call. The latency distribution is what separates the two failure modes that
+    look identical from the outside: a provider that is merely slow shows a long tail of calls that
+    still return, while a provider whose connections hang shows fast successes plus a set of calls
+    that never return at all. The fixes are opposite — cap max_tokens for the first, lower the
+    ceiling for the second — so guessing between them wastes a run.
+    """
     if not hasattr(signal, "SIGALRM"):
         return call_api(messages, model)          # not POSIX; fall back
     previous = signal.signal(signal.SIGALRM, _raise_timeout)
     signal.alarm(HARD_CALL_TIMEOUT)
+    started = time.time()
     try:
-        return call_api(messages, model)
+        result = call_api(messages, model)
+        STATS["call_seconds"].append(time.time() - started)
+        return result
+    except CallTimeout:
+        STATS["timeouts"] += 1
+        raise
     finally:
         signal.alarm(0)
         signal.signal(signal.SIGALRM, previous)
+        # Pulse from here, not from save_checkpoint, so the diagnostic is driven by the clock
+        # rather than by progress — a run that completes no rows at all must still report.
+        _pulse()
 
 
 def call_and_parse(call_api, messages, model, max_parse_retries=3):
@@ -603,10 +698,53 @@ def load_checkpoint(path):
     return done, rows
 
 
+_last_pulse = [0.0]
+PULSE_EVERY = 600          # seconds between one-line progress pulses
+
+
 def save_checkpoint(path, rows):
     with open(path, "w", encoding="utf-8") as handle:
         for row in rows:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
+def _pulse():
+    """One line every PULSE_EVERY seconds: rate, hang rate, truncation, and the token tail so far.
+
+    Called from guarded_call, i.e. once per API call, NOT from save_checkpoint. Driving it from
+    checkpoints tied the diagnostic to progress: at --save-every 20 and a slow model the first line
+    would not arrive for ~22 minutes, and the slower the run — exactly when the line is most needed
+    — the later it came. Driving it from calls makes it a clock, so a run that is failing every
+    call still reports on time.
+
+    It must print with zero successful calls. An earlier version returned early when nothing had
+    succeeded yet, which made a 100%-hang run look identical to a run that had not started. That is
+    this project's dominant bug class, and reintroducing it inside the diagnostic built to catch it
+    would have been the worst place for it.
+    """
+    now = time.time()
+    if now - _last_pulse[0] < PULSE_EVERY:
+        return
+    _last_pulse[0] = now
+    secs, toks = STATS["call_seconds"], STATS["completion_lengths"]
+    done, hangs = len(secs), STATS["timeouts"]
+    attempts = done + hangs
+    if not attempts:
+        return                      # genuinely nothing has been attempted yet
+    bad = (f"{hangs}/{attempts} hung ({100 * hangs / attempts:.0f}%), "
+           f"trunc {STATS['truncated']}, empty {STATS['empty']}, err {STATS['errors']}")
+    if not done:
+        # Every attempt so far has hung. Say so loudly rather than saying nothing.
+        print(f"[pulse] *** {attempts} attempts, ZERO returned — {bad}; "
+              f"ceiling {HARD_CALL_TIMEOUT}s", flush=True)
+        return
+    mean_s = sum(secs) / done
+    # Effective seconds per completed row, hang cost included — the number that actually predicts
+    # the finish time, unlike the mean latency of the calls that happened to succeed.
+    per_row = (sum(secs) + hangs * HARD_CALL_TIMEOUT) / done
+    tail = f", tokens p99~{sorted(toks)[min(len(toks) - 1, int(0.99 * len(toks)))]}" if toks else ""
+    print(f"[pulse] {done} calls, {bad}, mean {mean_s:.1f}s, "
+          f"effective {per_row:.1f}s/row -> {60 / per_row:.2f} rows/min{tail}", flush=True)
 
 
 def output_paths(script_dir, task, model, shard, total_shards, pilot=False):
@@ -834,7 +972,91 @@ def pilot_report(model, tasks, script_dir, stem, n_samples, n_full, elapsed):
             print(f"          projected cost   : add '{model}' to PRICE_PER_1M to get a figure")
     else:
         print("          tokens           : this SDK did not report usage")
+
+    budget_report()
     print(f"{line}\n")
+
+
+def budget_report():
+    """Print what the run measured about its own token and latency budget.
+
+    Called from the pilot report and again at the end of a full run. A full run is the largest
+    sample this benchmark will ever take of a provider's behaviour, and printing it only for
+    pilots threw that away — the numbers that finally explained Gemma came from a full run's logs,
+    reconstructed by hand from row counts and timeout lines because nothing recorded them.
+    """
+    # The mean cannot size max_tokens: half of all calls exceed it by construction. Size from
+    # the tail, and size the watchdog from the observed latency of calls that actually returned.
+    tokens = percentiles(STATS["completion_lengths"])
+    seconds = percentiles(STATS["call_seconds"])
+    # Print the header unconditionally. Gating it on "did anything succeed" meant a run in which
+    # every single call hung produced no budget block at all — silence, which reads as "fine".
+    print("\n[budget]  measured, for the next run's max_tokens and call timeout")
+    if not seconds and STATS["timeouts"]:
+        print(f"          *** {STATS['timeouts']} attempts, ZERO returned. No latency or token "
+              f"distribution exists to size from. Every call hit the {HARD_CALL_TIMEOUT}s ceiling; "
+              f"the provider, the model id or the ceiling itself is wrong.")
+    if not seconds and not STATS["timeouts"]:
+        print("          no calls were made")
+    if tokens:
+        print(f"          output tokens    : median {tokens['median']}  p90 {tokens['p90']}  "
+              f"p99 {tokens['p99']}  max {tokens['max']}  (n={tokens['n']})")
+        suggested = int(tokens["p99"] * 1.5)
+        print(f"          suggested max_tokens : {suggested}  (p99 x 1.5)")
+        if STATS["truncated"]:
+            # The distribution is censored: every truncated call was cut off AT the current cap, so
+            # the true p99 is unknown and larger than what was observed. Treating the suggestion as
+            # a target rather than a lower bound would lock in the truncation it is meant to fix.
+            print(f"          truncated at the cap : {STATS['truncated']}  *** these answers were "
+                  f"cut off, so the tail above is CENSORED and the suggestion is a LOWER BOUND — "
+                  f"raise the cap and re-measure")
+        elif STATS["finish_reason_seen"]:
+            print(f"          truncated at the cap : 0 of {STATS['finish_reason_seen']} checked "
+                  f"(measured — the tail above is real)")
+        else:
+            # The distinction that stops a never-measured zero from reading as a clean bill.
+            print("          truncated at the cap : UNKNOWN — this runner never passes "
+                  "finish_reason, so truncation was never checked. The tail above may be censored. "
+                  "Pass finish_reason_from(response) to record_call to find out.")
+    if seconds:
+        print(f"          call latency (s) : median {seconds['median']:.1f}  p90 {seconds['p90']:.1f}"
+              f"  p99 {seconds['p99']:.1f}  max {seconds['max']:.1f}  (n={seconds['n']})")
+    if seconds and STATS["timeouts"]:
+        attempts = seconds["n"] + STATS["timeouts"]
+        hang_rate = STATS["timeouts"] / attempts
+        wasted = STATS["timeouts"] * HARD_CALL_TIMEOUT
+        print(f"          watchdog kills   : {STATS['timeouts']} of {attempts} attempts "
+              f"({hang_rate * 100:.1f}%), {wasted / 60:.0f} min at the {HARD_CALL_TIMEOUT}s ceiling")
+        # The diagnosis that is easy to get backwards. If the slowest call that RETURNED is far
+        # under the ceiling, the killed calls were not slow generations approaching the limit —
+        # they were connections that produced nothing. Capping max_tokens does not touch those;
+        # only a lower ceiling does. Getting this wrong costs a whole run.
+        # Latency alone cannot separate the two, and reading it that way is what produced a wrong
+        # call here once already. A run whose answers are being truncated shows FAST successes —
+        # the cap cuts them short — which looks exactly like "hung connections" if you only look
+        # at how long the survivors took. Truncation and the token tail have to be consulted too.
+        tok_rate = (sum(STATS["completion_lengths"]) / sum(STATS["call_seconds"])
+                    if STATS["call_seconds"] and STATS["completion_lengths"] else 0)
+        if tok_rate:
+            print(f"          throughput       : {tok_rate:.1f} output tok/s over calls that "
+                  f"returned — a call using the full budget takes budget/{tok_rate:.1f} s, which "
+                  f"must sit well inside the {HARD_CALL_TIMEOUT}s ceiling")
+        if STATS["truncated"]:
+            print(f"          diagnosis        : INCONCLUSIVE — {STATS['truncated']} responses "
+                  f"were truncated, so the observed latency is of shortened calls and cannot be "
+                  f"read as evidence about the killed ones. Raise max_tokens, re-measure, then "
+                  f"diagnose.")
+        elif seconds["max"] < HARD_CALL_TIMEOUT * 0.5:
+            floor = max(20, int(seconds["max"] * 2))
+            print(f"          diagnosis        : HUNG CONNECTIONS, not slow generation — the "
+                  f"slowest call that returned took {seconds['max']:.0f}s, well under the "
+                  f"{HARD_CALL_TIMEOUT}s ceiling, and nothing was truncated")
+            print(f"          suggested timeout: set_call_timeout({floor})  (2x the slowest real "
+                  f"call); at this hang rate that recovers "
+                  f"{STATS['timeouts'] * (HARD_CALL_TIMEOUT - floor) / 60:.0f} min")
+        else:
+            print("          diagnosis        : calls are genuinely running to the ceiling — cap "
+                  "max_tokens first, and only then lower the timeout")
 
 
 def run_cli(call_api, default_model, script_file):
@@ -899,3 +1121,9 @@ def run_cli(call_api, default_model, script_file):
 
     if args.pilot:
         pilot_report(args.model, tasks, script_dir, stem, len(data), n_full, elapsed)
+    else:
+        # A full run is the largest sample of provider behaviour this benchmark ever takes. Print
+        # the same budget block so the next run's max_tokens and timeout can be set from it rather
+        # than reconstructed from row counts and log lines after the fact.
+        print(f"\n[{args.model}] shard {args.shard} finished in {elapsed / 60:.1f} min")
+        budget_report()

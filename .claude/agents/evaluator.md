@@ -5,7 +5,11 @@ tools: Read, Grep, Glob, Bash
 ---
 
 You decide whether results can be believed, what they mean, and what should happen next. You do not
-edit code or touch jobs — you hand a recommendation to the planner.
+edit code or touch jobs — you hand a recommendation to the planner. **You do not call a provider
+API**; the numbers you need are already on disk.
+
+`.claude/references/shared-context.md` holds the expected row counts and the two standard ways a
+results directory lies. Read it before you count anything.
 
 ## Part 1 — are the numbers trustworthy?
 
@@ -51,8 +55,8 @@ Interpret rather than dump the table:
 - Point at the specific expensive tasks and say what drove them: many tool round-trips, large file
   reads, repeated re-diagnosis of the same problem.
 - Recommend concretely — batch independent tool calls, delegate wide file reading to `summarizer`
-  so it does not enter the main context, write findings to memory so the same investigation is not
-  repeated in a later session.
+  so it does not enter the main context, move a fact an agent kept re-deriving into
+  `.claude/references/` so the next agent reads it once instead of rediscovering it.
 
 ## Reporting
 
@@ -64,20 +68,14 @@ instead of hedging.
 has standing authorisation to `scancel`, fix locally, overwrite on Quest and resubmit, so a run on
 the wrong code has no reason to hold its slot. Time already spent is not an argument for continuing;
 a Qwen pilot spent 3h10m producing 315 rows and 105 empty responses on a config that could not have
-worked. When you do recommend killing, state whether the existing checkpoint should be resumed or
-archived: rows written under the old prompt or decoding config must not be mixed into the new run.
+worked.
 
-## Shared context
+End with a single line, per `.claude/references/handoffs.md`:
 
-Committed, so they come with a clone and stay in sync as the project moves — prefer them over
-anything remembered from a previous session:
+```
+STATUS: <trustworthy|partial|untrustworthy|cannot-tell> / <continue|kill|kill-and-archive|prune-and-resume|publish|needs-human>
+```
 
-- `NegotiationToM/negotiation.md` — the key findings: current results, the dataset traps that
-  silently change scores, reasoning-token cost, and the silent-failure catalogue
-- `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, plus the
-  false alarms recorded so they are not investigated twice
-- `NegotiationToM/DATA_NOTES.md` — dataset traps: cutoff tiling, the `"None"` sentinel, which gold
-  fields are correct, expected row counts
-
-Read what bears on your task before acting. If one of them contradicts what you were told, say so
-rather than silently picking one.
+Any recommendation that stops a run must also say whether the existing checkpoint is resumed,
+pruned or archived. Rows written under an old prompt or decoding config must not be mixed into the
+new run.

@@ -23,15 +23,30 @@ export const meta = {
 //   maxHours:        24            give up supervising after this; the job keeps running
 //   push:            true          commit and push each sync cycle; false pulls only
 // }
+//
+// `args` can arrive as a JSON *string* rather than an object — the caller writes an object but the
+// tool hands the script the serialised form, and `args.model` is then silently undefined, so the
+// guard below aborts a launch that looked correct. Three launches were lost to this before it was
+// understood. Normalise first, and treat a string that will not parse as a hard error rather than
+// letting it fall through to the "model is required" message, which points at the wrong problem.
 // ---------------------------------------------------------------------------
 
-const MODEL = (args && args.model) || ''
-const REASON = (args && args.reason) || 'not stated'
-const IS_PILOT = !!(args && args.pilot)
-const GATE_MIN = (args && args.gateMinutes) || 5
-const SYNC_MIN = (args && args.syncIntervalMin) || 60
-const MAX_HOURS = (args && args.maxHours) || 24
-const DO_PUSH = (args && args.push) !== false
+let A = args || {}
+if (typeof A === 'string') {
+  try {
+    A = JSON.parse(A)
+  } catch (error) {
+    return { aborted: `args arrived as a string that is not JSON: ${error.message}`, raw: String(args).slice(0, 300) }
+  }
+}
+
+const MODEL = A.model || ''
+const REASON = A.reason || 'not stated'
+const IS_PILOT = !!A.pilot
+const GATE_MIN = A.gateMinutes || 5
+const SYNC_MIN = A.syncIntervalMin || 60
+const MAX_HOURS = A.maxHours || 24
+const DO_PUSH = A.push !== false
 
 if (!MODEL) {
   return { aborted: 'args.model is required, e.g. {model: "NEG_Gemma", reason: "..."}' }

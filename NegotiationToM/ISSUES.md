@@ -145,7 +145,7 @@ in one result set, so the checkpoint must be archived rather than resumed. A con
 invalidates a checkpoint even when the schema is unchanged.
 
 **Fix** — a `md5sum` diff of all `*.py` and `*.sh` against Quest before every submit, recorded in
-`CLAUDE.md` and `.claude/agents/executor.md`, plus standing authorisation for the planner to
+`CLAUDE.md` and `.claude/references/quest-cluster.md`, plus standing authorisation for the planner to
 `scancel` a job found to be running wrong code instead of letting it reach the wall.
 
 **Two ways the check itself lied while being written**, both worth guarding against:
@@ -240,6 +240,52 @@ rate-limit text, despite containing "billing", is vetoed back to transient and k
 runs resumed after the fix shipped — see the outcome appended to "Quest ran code that had never been
 transferred" above.
 
+**Confirmed the guard is sufficient across a multi-day quota reset — 2026-08-04, job 8527057.**
+Since a same-day finish was already established as mathematically impossible (14,138 rows needed,
+10,000/day cap), the correct behaviour is a clean halt followed by a resume once the cap resets, not
+a retry-around-it. Full run 8178454 (2026-07-29) hit the cap again with the fix in place and halted
+exactly as designed: belief 4,760/4,760 and desire 4,760/4,760 written with 0 empty rows, intention
+stopped at 840/4,618 with 0 empty rows — no runaway empty-row retries burning quota, unlike the xAI
+incident above. The checkpoint was left alone rather than archived, since the committed runner
+(`THINKING_BUDGET=0`) had not changed since that halt. Resubmitting as job 8527057 on 2026-08-04 (six
+daily resets later) skipped the 9,520 belief/desire uids and the 840 good intention uids, wrote the
+remaining 3,778 intention rows in about 30 minutes, and reached the full 14,138 rows with 0 empty
+responses. A cohort check comparing the two halves found no discontinuity: the 840 rows written
+before the halt score Micro F1 0.5278 / Macro F1 0.5183, the 3,778 written after resume score
+0.5389 / 0.5119, and none of the 840 pre-existing uids were missing or changed by the resume.
+**The halt guard's job is not to work around the cap — it is to stop cleanly enough that a resume
+days later is safe to trust**, and this run is the first end-to-end confirmation of that for Gemini.
+
+---
+
+### Local halt markers and summary tables don't get refreshed after a fix lands   2026-08-04  open
+
+**Symptom** — found while auditing the 2026-08-04 Gemini resume (job 8527057) above: two files on
+the laptop still showed 2026-07-29 state after the run had finished cleanly on Quest.
+`NegotiationToM/NEG_Gemini/QUOTA_HALT.txt` is dated Jul 29 16:23 and describes a halt that a run six
+days later resolved. `NegotiationToM/negotiation_results.csv` is dated Jul 29 13:12 and lists only
+GPT-4o-mini and DeepSeek-Reasoner, though Qwen3.5-9B, grok-3-mini and gemini-2.5-flash have since
+published full runs — 2 of 5 models represented.
+
+**Root cause** — two gaps of the same shape. The halt marker is cleared on Quest before
+resubmission, because that is where the guard reads it, but nothing clears the identical local copy,
+so a reader checking the laptop sees a job as still halted long after it finished. `negotiation_results.csv`
+has no producer script — a `grep` for its filename across every `NegotiationToM/*.py` and `*.sh`
+returns nothing — so it is a one-time hand-built table (one commit, `7306710`, the GPT/DeepSeek
+publish) that nothing re-runs when another model's results are published; it silently drifts every
+time. Neither file is covered by the `*.py`/`*.sh` sync check in `CLAUDE.md`, which only compares
+code, not state or summary artefacts. Same failure shape as "Stale results silently accepted as
+complete" below, one level up: there it was a stale checkpoint mistaken for current data, here it is
+a stale marker/summary mistaken for current state.
+
+**Fix** — not yet shipped. Needed: (1) delete or timestamp-rotate a halt marker on the laptop
+whenever it is cleared on Quest, so the two copies cannot disagree; (2) regenerate
+`negotiation_results.csv` from the per-model `*_overall.csv` files as a step in the publish/record
+workflow, or drop it in favor of `negotiation.md`'s results table, which has been kept current.
+
+**How it was verified** — not yet fixed; this is an open finding, not a shipped fix. Re-open check
+once a regenerate/clear step exists and confirm both files' mtimes track the run they describe.
+
 ---
 
 ### A hung SDK call stalled a whole job   2026-07-28  fixed
@@ -262,6 +308,43 @@ one use.
 
 **Verified** — a hung call is interrupted at the limit and retried, a normal call is untouched, the
 alarm is always cleared, and the watchdog survives a runner's own `except Exception`.
+
+**The ceiling stopped an infinite hang but was still ruinous at sharded full-run scale — 2026-08-04,
+job 8526978.** Relaunching Gemma's full run (14,138 rows, 5 shards) hit the same hung-Together-
+connection mode this fix targets, just no longer fatal to one call — instead it dominated the whole
+job. Cancelled by the operator (SIGTERM, `sacct` batch exit `0:15`) after 4h20m with 660/14,138 rows
+(4.7%): desire 660/4,760, belief 0, intention 0 — the run never left the first task. The five shard
+logs show 314 `call exceeded 200s hard limit` lines (59–66 per shard); 314 x 200s = 62,800s, 80.4% of
+the 1,302.5 shard-minutes of wall clock. Aggregate throughput was 2.53 rows/min across all 5 shards
+(0.507/shard) versus the pilot's 2.41 rows/min on a **single** shard — sharding delivered 1.05x, not
+5x, because every extra worker pays the same 200s tax on its own hangs, so wall clock scales with the
+hang rate almost independently of shard count. The 19.6h projection was dead; the observed rate
+implied 93h against a 7-day walltime. 32 of the 660 rows (4.85%) were empty (`raw_response=""`,
+`pred=null`, `neg_eval_core.py:531-544` exhausting its 3-attempt retry budget on repeated timeouts) —
+the pilot had 0 empties. All 32 scored `desire_em=0`, pulling the figure from 0.6099 (628 non-empty
+rows) to 0.5803 (all 660); no `_overall.csv` exists for a cancelled run, so neither number is the
+pipeline's real metric and must not be quoted against the pilot's 0.650.
+
+**Root cause** — the 200s ceiling bounds one call, but was never sized against the hang *rate* at
+sharded scale. Together's ~9% hang rate on this job, multiplied by 5 parallel shards each paying the
+tax independently, turned a bounded per-call cost into a throughput collapse.
+
+**Fix, written but not yet deployed** — `NEG_Gemma/gemma_neg_eval.py:50-51` (uncommitted) drops
+`max_tokens` from 8,192 to `MAX_TOKENS = 2048` and calls `set_call_timeout(90)` — 2.5x the ~36s
+worst legitimate call at that budget — instead of the shared 200s default, sized from this job's own
+logs, not another estimate. `neg_eval_core.py` gained `budget_report()` (`:980`) and a 600s
+`_pulse()` (`:711`) driven from `guarded_call`, not from checkpoint saves, so a 100%-hang run still
+reports on a clock instead of going silent. **As of this entry both files are uncommitted locally and
+Quest still runs the pre-fix code** (`sync` check: 2 of 32 files differ — `neg_eval_core.py`,
+`NEG_Gemma/gemma_neg_eval.py`). Do not resubmit until that diff is committed, pushed, and confirmed
+clean on Quest per "Quest ran code that had never been transferred" above, and archive the 660-row
+checkpoint rather than resuming — it was written at `max_tokens=8192` and would mix two configs with
+whatever the corrected run produces.
+
+**How it was verified** — not yet; the fix has not run. Re-check by looking for the diagnosis line
+`budget_report()` prints (`HUNG CONNECTIONS, not slow generation`) versus `calls are genuinely
+running to the ceiling`, and confirm `rows_per_min_per_shard` recovers toward the pilot's per-shard
+rate once resubmitted on synced code.
 
 ---
 

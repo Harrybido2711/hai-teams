@@ -22,10 +22,21 @@ export const meta = {
 // }
 // ---------------------------------------------------------------------------
 
-const MODEL = (args && args.model) || ''
-const REASON = (args && args.reason) || 'not stated'
-const IS_PILOT = !!(args && args.pilot)
-const KNOWN_JOB = (args && args.jobId) || null
+// `args` can arrive as a JSON *string* rather than an object — see the note in run-model.js. Left
+// unhandled, every field reads as undefined and the guard below blames a missing model.
+let A = args || {}
+if (typeof A === 'string') {
+  try {
+    A = JSON.parse(A)
+  } catch (error) {
+    return { aborted: `args arrived as a string that is not JSON: ${error.message}`, raw: String(args).slice(0, 300) }
+  }
+}
+
+const MODEL = A.model || ''
+const REASON = A.reason || 'not stated'
+const IS_PILOT = !!A.pilot
+const KNOWN_JOB = A.jobId || null
 
 if (!MODEL) {
   return { aborted: 'args.model is required, e.g. {model: "NEG_Qwen", reason: "..."}' }

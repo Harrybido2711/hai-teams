@@ -53,3 +53,23 @@ The rejected attempts are the valuable part — they are what stops someone repe
 Silent failures that still report success (empty logs, wrong-but-plausible numbers); SDK behaviour
 that contradicts its own documentation; stale artefacts from earlier code versions being picked up
 as valid; and monitoring that watches the wrong signal.
+
+## When an entry belongs in a reference instead
+
+`ISSUES.md` is the history — what happened, in order, with its dead ends. `.claude/references/` is
+the standing instruction an agent reads before acting. A problem that has settled into a rule
+belongs in both: the entry here keeps the reasoning and the rejected attempts, and the rule goes
+into the matching reference so the next agent follows it without reading the history first.
+
+Say in your report when you did this, naming the reference you edited. A rule that exists only in
+`ISSUES.md` is one an agent has to go looking for.
+
+## Reporting
+
+End with a single line, per `.claude/references/handoffs.md`:
+
+```
+STATUS: added | updated | already-recorded | no-entry-needed
+```
+
+Give the entry title and, when there was one, the reference file you also updated.

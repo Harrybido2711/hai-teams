@@ -1,7 +1,8 @@
 # hai-teams — planner instructions
 
-This file is for the **main session**, which acts as the planner. Operating detail lives in
-`.claude/agents/*.md`; do not copy provider gotchas, SLURM syntax or dataset traps back here.
+This file is for the **main session**, which acts as the planner. Role and judgement live in
+`.claude/agents/*.md`; provider gotchas, SLURM syntax and dataset traps live in
+`.claude/references/*.md` and are loaded on demand. Do not copy either back here.
 
 ## Who does what
 
@@ -17,6 +18,33 @@ start a job, stay here.
 | `reviewer` | read the diff before it reaches Quest |
 | `tracker` | record a problem and its resolution in `NegotiationToM/ISSUES.md` |
 | `summarizer` | read a lot of files, return only the conclusion |
+
+Every agent ends its report with a `STATUS:` line drawn from a fixed vocabulary, so a dispatch can
+be branched on without re-reading prose. `.claude/references/handoffs.md` holds the vocabularies and
+what a dispatch has to carry; the values match the enums the workflows already use, so do not invent
+a third wording for the same state.
+
+## Detail lives in `.claude/references/`, not in the agent prompts
+
+An agent definition holds its role, its judgement, and the rules that apply to every one of its
+tasks. Provider tables, SLURM syntax, the script skeleton and the Quest sync procedure live in
+`.claude/references/`, indexed by a routing table each agent carries: *if your task involves X, read
+Y first*.
+
+The point is that cost scales with the task. `executor.md` was 13 KB and entered the context in full
+even when the job was a one-line `scancel`; now that task pays for the routing table and nothing
+else, while writing a new runner still gets every line of the provider notes.
+
+Two rules keep this from decaying:
+
+- **A fact lives in exactly one place.** When something moves into a reference, delete it from the
+  agent definition — do not leave a summary behind. Two copies drift, and the agent then has to
+  decide which is right.
+- **Adding a reference means adding its routing row**, phrased as a condition an agent can recognise
+  in its own task rather than as a topic name. A reference nothing routes to is never read.
+
+When a run exposes something an agent should have known, edit the reference. That is what makes the
+lesson reach the next session; a fact that stays in a transcript is lost when the session ends.
 
 ## A broken run gets killed, not waited out
 
@@ -89,12 +117,20 @@ Two constraints the tool enforces, both of which cost a launch to discover:
   interpolation — `'a' + 'b'` in a field is rejected as a BinaryExpression.
 - **Validate `args` at the top and `return` early.** A missing argument then costs 16 ms and zero
   agents instead of spawning a fleet that discovers the problem one at a time.
+- **`args` may arrive as a JSON string, not an object.** The caller passes an object and the script
+  receives the serialised form, so `args.model` is `undefined` and the early-return guard fires with
+  a message blaming the caller for omitting an argument they did in fact pass. Three launches were
+  lost to this on 2026-08-04 before the cause was clear. All three workflows now normalise with
+  `typeof args === 'string' ? JSON.parse(args) : args` before reading a field; keep that in any new
+  one, and treat unparseable input as its own error rather than letting it reach the missing-argument
+  message.
 
 | Workflow | Use it when |
 |---|---|
 | `run-model` | starting or restarting one model, end to end: check local → sync to Quest → launch → gate on the first minutes → supervise with hourly local+git sync → audit → record. This is the default |
 | `fix-broken-run` | a job is *already* running and needs killing — stale code, a provider refusing every call, rows arriving empty. Not for a job that is merely slow |
 | `verify-change` | a change meant to prevent a class of failure has been written and not yet proven wrong. Run it *before* trusting the change in a real run |
+| `harvest-patterns` | looking outside this repo for ideas — sweeps GitHub for Claude Code workflow/agent repos, extracts only the mechanisms that transfer to a Python/SLURM eval project, refutes them, and records adopted *and* rejected in `.claude/references/external-patterns.md`. Proposes only; it never installs a plugin or edits an agent |
 
 ### Both sync directions are steps, not habits
 
@@ -128,7 +164,20 @@ Two rules keep them useful:
 
 ## Shared context
 
+Project knowledge — what is true about the benchmarks and what has already gone wrong:
+
 - `NegotiationToM/negotiation.md` — current results, dataset traps, reasoning-token cost, the
   silent-failure catalogue
 - `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, false alarms
 - `NegotiationToM/DATA_NOTES.md` — cutoff tiling, the `"None"` sentinel, expected row counts
+
+Operating knowledge — what an agent must do before acting. Indexed in
+`.claude/references/README.md`:
+
+| Reference | Covers |
+|---|---|
+| `shared-context.md` | repo layout, which committed doc is authoritative on what, expected row counts, the two ways a results directory lies |
+| `quest-cluster.md` | SSH, transfers and `md5sum`, the sync check and its two silent failure modes, SLURM, sharding, reading live state, pulling results |
+| `provider-gotchas.md` | the six clients, timeouts and why `timeout=` is not a guard, Qwen's reasoning, halt classification |
+| `script-skeleton.md` | the nine-step runner shape, retry contract, checkpoints, normalisation, and the invariants a diff is checked against |
+| `handoffs.md` | what a dispatch must carry, the `STATUS:` vocabularies, how to rewrite an ambiguous instruction |

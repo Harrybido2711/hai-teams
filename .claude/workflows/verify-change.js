@@ -18,9 +18,20 @@ export const meta = {
 // }
 // ---------------------------------------------------------------------------
 
-const CHANGE = (args && args.change) || ''
-const FILES = (args && args.files) || []
-const PROBES = (args && args.probes) || []
+// `args` can arrive as a JSON *string* rather than an object — see the note in run-model.js. Left
+// unhandled, every field reads as undefined and the guard below blames a missing change.
+let A = args || {}
+if (typeof A === 'string') {
+  try {
+    A = JSON.parse(A)
+  } catch (error) {
+    return { aborted: `args arrived as a string that is not JSON: ${error.message}`, raw: String(args).slice(0, 300) }
+  }
+}
+
+const CHANGE = A.change || ''
+const FILES = A.files || []
+const PROBES = A.probes || []
 
 if (!CHANGE) {
   return { aborted: 'args.change is required — describe what the change is meant to guarantee' }
