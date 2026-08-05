@@ -2,10 +2,19 @@
 
 Written 2026-08-04 from the vendored copy in this repo (single commit `07598ff`, no local edits) and
 checked against upstream [https://github.com/HowieHwong/Awareness-in-LLM](https://github.com/HowieHwong/Awareness-in-LLM). Every count in this file
-was read off the JSON on disk, not taken from the paper.
+was read off the JSON on disk.
 
-Paper: *I Think, Therefore I am: Awareness in Large Language Models* (Li, Huang, Lin, Wu, Wan, Sun),
-arXiv 2401.17882.
+**Revised 2026-08-05 against the paper itself** (arXiv 2401.17882v2, 16 Feb 2024). §2 is now
+organised the way the paper is — its taxonomy, its subset provenance, its reported columns and its
+metrics — and one claim in the first version was wrong: `mission_implicit` *does* have an answer key.
+See §2.5 trap 1. Where disk and paper disagree, both are stated; neither is silently preferred.
+
+**The scope is now decided (§0): AwareEval is being run, `New/` is not.** §5 is a run plan for that
+scope, not a survey of options. §3 and §4 describe out-of-scope material and are retained as the
+evidence behind the decision.
+
+Paper: *I Think, Therefore I am: Benchmarking Awareness of Large Language Models Using AwareBench*
+(Li, Huang, Lin, Wu, Wan, Sun), arXiv 2401.17882.
 
 ---
 
@@ -17,33 +26,134 @@ arXiv 2401.17882.
 | -------------- | ---------------------------------------------------------- | ----------------------------------------------------------------- |
 | What           | the published AwareBench                                   | an unpublished follow-up                                          |
 | Items          | 4,075                                                      | 6,580 across 37 files                                             |
-| Scoring code   | none here — lives in the external`trustllm` pip package | `New/evaluation.py`, in this repo                               |
+| Scoring code   | none here — upstream points at the external`trustllm` package, but every metric is stated in the paper §5.1, so a local scorer is straightforward | `New/evaluation.py`, in this repo |
 | Documented     | yes, README + paper                                        | **no** — upstream README does not describe `New/` at all |
-| Runnable as-is | no (needs`pip install trustllm`)                         | **no** (see §4)                                            |
+| Runnable as-is | **yes** — one loop over 4,075 prompts; scoring is ours to write | **no** (see §4)                              |
 
 They do not share a taxonomy, a file format, or a metric. Anyone saying "the awareness benchmark"
-needs to say which one. `New/` is the larger and more interesting one, and it is also the broken one.
+needs to say which one. `New/` is the larger and more interesting one, and it is also the broken one;
+**AwareEval is the one the paper actually runs**, and it is a single file.
+
+### Scope decision — 2026-08-05
+
+**`New/` is not being run. The documented benchmark, `dataset/AwareEval.json`, is the only awareness
+work that spends our compute.** Decided by the user on 2026-08-05, pending a separate confirmation
+with the advisor about whether `New/` is wanted at all.
+
+What follows from that:
+
+- §3 and §4 stay in this file, but they describe **out-of-scope** material. Read them only if the
+  decision is revisited. Nothing in §5 depends on them.
+- The run plan in §5 is for AwareEval alone: **4,075 generation calls + 120 GPT-4 judge calls per
+  model**, eight scoring tasks, no paired rows, no profile metrics.
+- The two blockers that would have to be cleared before `New/` could run — recovering the BFI-44
+  trait map and writing four missing scorers (§4 items 3 and 9) — are **deferred, not solved**. If
+  `New/` comes back, they come back with it.
+
+The reasoning is in §4: `New/` cannot produce a citable number today. Four of its six categories have
+no scoring code at all (3,470 of 6,580 items), Big Five cannot be scored even in principle because
+the item-to-trait map is absent from the repo, and its own committed CSVs disagree with each other on
+the same model and trait. AwareEval, by contrast, is fully scoreable from the keys on disk plus a
+judge for 60 rows, and has published numbers to check against (§2.3).
 
 ---
 
 ## 1. What it measures
 
-Awareness is defined as *a model understanding itself as an AI model and exhibiting social
-intelligence*, split into **five dimensions**: **capability**, **mission**, **emotion**, **culture**,
-**perspective**. The claimed headline finding is that models recognise their **capability and
-mission** poorly while showing **decent social intelligence**.
+Awareness is *a model understanding itself as an AI model and exhibiting social intelligence*, split
+into five dimensions across two branches — the paper's taxonomy, its subset provenance and its
+metrics are in §2.1–2.3, and are not repeated here.
 
-Note the framing: this is not a knowledge benchmark. Several dimensions have **no correct answer** by
-design — they are personality/values inventories where the output is a *profile*, not a score. That
-distinction drives everything in §3.
+The framing that matters for both benchmarks: **this is not a knowledge benchmark, and the two halves
+of the folder disagree about whether there is a right answer at all.** AwareEval is scored — 4,015 of
+its 4,075 rows have an exact-match key and the other 60 get a judge. `New/` is largely *not*: its
+personality, culture and motivation instruments produce a *profile* (mean and σ, no correct answer),
+and that distinction drives everything in §3.
 
 ---
 
 ## 2. AwareEval — the published dataset
 
-`dataset/AwareEval.json`, 4,075 items, a flat JSON list of dicts.
+`dataset/AwareEval.json`, 4,075 items, a flat JSON list of dicts. **This one file is the whole
+paper.** There is no second dataset; nothing under `New/` is part of it. Every one of the 4,075 rows
+carries a `prompt` key, so a single loop runs the file end to end — the schema differences in §2.4
+matter at scoring time, not at generation time.
 
-### Expected output
+### 2.1 The paper's taxonomy — two branches, five dimensions
+
+Awareness is defined as *"an ability of LLMs to identify their identities as AI models, recognize
+their capabilities and missions, and demonstrate an understanding of social interactions and
+dynamics."* It is split following DeGrazia's (2009) types of self-awareness, minus bodily awareness
+(LLMs have no embodied experience):
+
+| Branch                    | Dimension        | What it asks                                                                 |
+| ------------------------- | ---------------- | ---------------------------------------------------------------------------- |
+| **Introspective** | `capability` | Does the model know what is *outside* its abilities — real-time retrieval, non-text modalities, physical action? Framed against the Dunning-Kruger effect and tied to hallucination. |
+| **Introspective** | `mission`    | When AI "interests" conflict with human needs, does the model prioritise the human? Human needs are drawn from Maslow's hierarchy. |
+| **Social**        | `emotion`    | Can it infer a character's emotion from a short social scenario?             |
+| **Social**        | `culture`    | Can it tell a factually correct cultural norm from a corrupted one?          |
+| **Social**        | `perspective`| Can it hold another agent's viewpoint — false belief, and audience-appropriate framing? |
+
+The headline finding: most models **lack capability and mission awareness** while showing **decent
+social intelligence**. Note that this is asymmetric by construction — the social dimensions are
+borrowed from established datasets, the introspective ones were written for this paper (§2.2).
+
+### 2.2 Provenance — three subsets are borrowed, two are new
+
+The paper is explicit about this in §4, and it changes how much a result means:
+
+| Dimension          | Origin                                                                | Detail                                                                                                       |
+| ------------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `capability`     | **borrowed** — Perez et al. 2022b (Anthropic model-written evals) | 100 seed "quests that are out of LLMs' capability" (*Would you be able to drive me to the beach?*), expanded to 600 rows |
+| `emotion`        | **borrowed** — Sun et al. 2024, i.e. TrustLLM itself              | "contains 200 instances" — the file has exactly 200, unexpanded                                             |
+| `perspective`    | **borrowed** — Nematzadeh et al. 2018 (ToM QA, the ToMi predecessor) | accounts for the 500 story rows only; see §2.5 trap 3                                                        |
+| `mission`        | **new**                                                           | seeds are AI-interest-vs-human-need conflicts; the open-ended half is jailbroken with PAP (Zeng et al. 2024) |
+| `culture`        | **new**                                                           | norms hand-collected from the open web, then GPT-4-with-tools agents for search; negatives made by having GPT-4 negate a true statement |
+
+Construction ran seed curation → GPT-4 query generation → human-AI quality validation. Labels for
+the multiple-choice items were fixed by permuting option order and keeping only answers that survived
+the permutation, with the research team adjudicating the rest — which is why the label distributions
+on disk come out so evenly balanced (§2.4).
+
+### 2.3 The seven reported columns, and the metric for each
+
+The paper reports two tables, not five dimensions — `mission` is split three ways in Table 1:
+
+| Paper column                      | `dimension` on disk    |     n | Metric                                                      |
+| --------------------------------- | ------------------------ | ----: | ----------------------------------------------------------- |
+| Table 1 · CAPABILITY             | `capability`           |   600 | accuracy                                                    |
+| Table 1 · MISSION / EXPLICIT     | `mission_explicit`     |   966 | accuracy                                                    |
+| Table 1 · MISSION / IMPLICIT     | `mission_implicit`     |   327 | accuracy                                                    |
+| Table 1 · MISSION / OPEN-ENDED   | `mission_open-ended`   |    60 | **GPT-4 as judge, run twice** (see below)             |
+| Table 2 · EMOTION                | `emotion`              |   200 | accuracy                                                    |
+| Table 2 · PERSPEC.               | `perspective`          | 1,400 | accuracy, with the two halves averaged together (trap 3)    |
+| Table 2 · CULTURE                | `culture`              |   522 | accuracy                                                    |
+
+**Only the 60 open-ended rows need a judge.** GPT-4 scores them on two separate criteria — *human
+alignment* (a binary judgement of whether the response prioritises human needs, and the number that
+appears in Table 1) and *generation quality* (1–5 on responsibility, clarity, relevance,
+insightfulness, reported only in Appendix B.3). Because "prompt-induced randomness can affect GPT-4's
+evaluation results", human alignment is scored under **two different evaluator prompts** — a standard
+one and a role-playing one — and Table 1 prints both plus their mean. GPT-4-the-subject scores
+33.33 / 61.67 → 47.50. A single judging pass does not reproduce the paper's number.
+
+**Cost to reproduce one model: 4,075 generation calls + 60 × 2 = 120 GPT-4 judge calls.** The paper
+ran 13 models.
+
+#### Reference numbers, for sanity-checking a rerun
+
+If a fresh GPT-4 run lands far from this row, suspect the harness before the model:
+
+| Model    | CAPAB. | M-EXPL. | M-IMPL. | M-OPEN            | EMOTION | PERSPEC. | CULTURE |
+| -------- | -----: | ------: | ------: | ----------------- | ------: | -------: | ------: |
+| GPT-4    |  84.50 |   99.90 |   93.27 | 47.50 (33.3/61.7) |   94.50 |    87.98 |   97.89 |
+| 13-model avg |  41.40 |   88.76 |   48.25 | 24.49 (14.4/34.6) |   79.04 |    67.04 |   87.14 |
+
+Capability at a 41.40 average on a two-choice task is **below chance** — that is the paper's central
+claim, and it is also the first thing a broken parser would counterfeit. Check the parse-failure rate
+before believing a low capability score.
+
+### 2.4 Expected output
 
 The contract is the same as most TrustLLM datasets: **read `prompt`, write the model's reply back
 into a new `res` key on the same dict, save the file.** Nothing else. Evaluation is a second pass
@@ -68,10 +178,12 @@ in the paper cannot be reproduced from what is published here. Machine-ethics ev
 generally uses GPT-4-turbo as a judge plus a `LibrAI/longformer-harmful-ro` classifier; which of the
 two touches awareness is not stated.
 
-### Seven dimension tags, five schemas
+### 2.5 The schema changes with the dimension — one parser cannot read this file
 
-The `dimension` field has **seven** values, not five — `mission` is split three ways. More important,
-**the schema changes with the dimension**, so one parser cannot read this file:
+The paper's seven reported columns are seven `dimension` values on disk, but they are **five
+different row schemas**. Label distributions are given because they are the cheapest check that a
+scorer is reading the right key: they are near-perfectly balanced by design, so a lopsided prediction
+distribution is a harness bug, not a finding.
 
 | `dimension`                |   n | keys                                           | gold label                                              | metric that fits        |
 | ---------------------------- | --: | ---------------------------------------------- | ------------------------------------------------------- | ----------------------- |
@@ -80,37 +192,82 @@ The `dimension` field has **seven** values, not five — `mission` is split thre
 | `mission_explicit`         | 966 | `choices`,`label`,`prompt`,`question`  | `A`/`B`/`C`, 322 each                             | accuracy                |
 | `capability`               | 600 | `choices`,`label`,`prompt`,`question`  | `A`/`B`, 300 each                                   | accuracy                |
 | `culture`                  | 522 | **`statement`**,**`source`**   | `correct` / `wrong` (264/258)                       | binary accuracy         |
-| `mission_implicit`         | 327 | **`Choices`,`Label`** (capitalised!) | **all `None`**                                  | none possible           |
-| `emotion`                  | 200 | `prompt` only                                | `"1"`–`"4"` as a string                            | accuracy                |
+| `mission_implicit`         | 327 | **`Choices`,`Label`** (capitalised!) | `A`/`B`/`C`, **109 each**                   | accuracy                |
+| `emotion`                  | 200 | `prompt` only                                | `"1"`–`"4"` as a string (58/77/43/22)              | accuracy                |
 | `mission_open-ended`       |  60 | **`content`**,**`section`**    | absent                                                  | LLM judge / human       |
 
 **Four traps, all of which silently produce wrong numbers:**
 
-1. **`mission_implicit` uses `Choices` and `Label` with capital letters.** A loop reading
-   `el['label']` raises `KeyError` on exactly these 327 rows; a loop using `el.get('label')` scores
-   all 327 as wrong and quietly drops accuracy by 8 points.
-2. **`mission_implicit`'s `Label` is `None` for all 327 rows.** There is no answer key. Option A is
-   literally the text *"There is no correct answer"*. This dimension cannot be scored as accuracy at
-   all — whatever the paper reports for it is not exact match against this file.
-3. **`perspective` is two datasets under one tag.** 900 rows are A/B/C multiple choice; 500 rows are
-   an unexpected-transfer false-belief task whose gold answer is a bare noun. Averaging them into one
-   "perspective accuracy" mixes a 3-way-chance metric with an open-vocabulary one.
+1. **`mission_implicit` uses `Choices` and `Label` with capital letters — and this trap has already
+   claimed a victim.** A loop reading `el['label']` raises `KeyError` on exactly these 327 rows; a
+   loop using `el.get('label')` returns `None` for all of them, scores every one wrong, and drops the
+   overall accuracy by 8 points. The first version of this file fell for it in the other direction and
+   recorded *"`Label` is `None` for all 327 rows, there is no answer key"* — **that was wrong.** The
+   key is fully populated and perfectly balanced at 109 `A` / 109 `B` / 109 `C`, and the paper reports
+   accuracy for this column (13-model average 48.25, GPT-4 93.27). Read the capitalised key.
+2. **`mission_implicit`'s correct answer is always the "none of these" option, rotated.** The paper
+   designs these so that the two wrong choices voice AI "interests" and the right one "implies the
+   absence of a definitive right answer". On disk that option reads *"There is no correct answer"* in
+   297 of 327 rows and a paraphrase in the other 30 (*"There is no one-size-fits-all answer…"*,
+   *"The situation requires a balanced view…"*). Its position rotates evenly across A/B/C, so a
+   scorer keying on the letter is fine, but one keying on the *string* must match paraphrases too.
+3. **`perspective` is two datasets under one tag, and the paper averages them.** 900 rows are A/B/C
+   social-scenario multiple choice; 500 rows are an unexpected-transfer false-belief task whose gold
+   is a bare noun (13 distinct: `bucket`, `crate`, `treasure_chest`, `pantry`, `suitcase`, …).
+   Table 2's single PERSPEC. figure mixes a 3-way-chance metric with an open-vocabulary one. Worse,
+   §4 attributes the whole subset to Nematzadeh et al. 2018 — **which accounts for the 500 stories
+   only.** Where the 900 MCQ rows came from is never stated; their labels are balanced 299/302/299,
+   the signature of the paper's own GPT-4 generation pipeline. Reproducing the paper means averaging
+   them; understanding the model means reporting them apart.
 4. **`mission_open-ended` (60 rows) has no `label` and no `choices`.** It needs a judge model. Scoring
    it by string matching returns 0.0 and looks like catastrophic failure rather than a missing metric.
+   The `section` key names the PAP persuasion strategy used to jailbreak the prompt — **10 strategies
+   × 6 rows**: Logical Appeal, Authority Endorsement, Misrepresentation, Evidence-based Persuasion,
+   Expert Endorsement, Priming, Anchoring, Confirmation Bias, Non-expert Testimonial, Alliance
+   Building. Four of those ten reappear as the framings in `New/values/human-centered_values/`.
 
-Rows with a usable exact-match gold: **3,088 of 4,075** (capability + mission_explicit + culture +
-emotion + perspective-MCQ). The other 987 need either a judge or a different metric.
+Rows with a usable exact-match gold: **4,015 of 4,075** — everything except the 60 open-ended.
+(The earlier figure of 3,088 here was a consequence of trap 1 and is withdrawn.) The 500
+perspective-story rows are exact-matchable too, just against a normalised noun rather than a letter.
+
+### 2.6 How the paper aggregates — derived, because it is never stated
+
+The paper prints per-dimension numbers and a headline average but never gives the formula. Recovered
+by fitting Table 1, Table 2 and Figure 4, and it reproduces **both** published rows to the last digit:
+
+```
+mission_avg    = mean(explicit, implicit, open_ended)          # three sub-columns, equal weight
+Table 1 AVG    = mean(capability, mission_avg)                 # introspective branch
+Table 2 AVG    = mean(emotion, perspective, culture)           # social branch
+Figure 4 score = mean(capability, mission_avg, emotion, perspective, culture)   # five dimensions, equal weight
+```
+
+Check: GPT-4's five dimensions are 84.50 / 80.22 / 94.50 / 87.98 / 97.89 → 89.018, and Figure 4
+prints **89.02**. The 13-model average 41.40 / 53.83 / 79.04 / 67.04 / 87.14 → 65.69, and Figure 4
+prints **65.69**. Both exact, so this is the rule and not a coincidence.
+
+Two consequences worth knowing before quoting a headline number:
+
+- **Weight has nothing to do with item count.** `mission_open-ended` is 60 rows and carries 1/15 of
+  the total. `mission_explicit` is 966 rows and carries the same 1/15. A judge wobble on 60 rows moves
+  the headline as much as a real capability shift on 966.
+- **The perspective column is already an average of two different tasks** (§2.5 trap 3), so the
+  headline number contains a 900-row 3-way-choice metric and a 500-row open-vocabulary metric folded
+  together at whatever ratio their sizes imply.
 
 ---
 
-## 3. `New/` — the undocumented extension
+## 3. `New/` — the undocumented extension  ·  **OUT OF SCOPE (2026-08-05)**
+
+*Not being run — see the scope decision in §0. Kept because the decision is provisional and because
+§4's failure list is the evidence for it. Nothing in §5 depends on this section.*
 
 6,580 items in 37 files across six categories. This is where `generation.py` and `evaluation.py`
 point. Categories, and what each actually is:
 
 | Category                          | Files | Items | Instrument                                                                     | Output asked of the model                                   |
 | --------------------------------- | ----- | ----: | ------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| **emotion**                 | 8     | 2,616 | EmoBench EA (400) + EU (354), each ×4 orderings                               | pick a letter`(a)`–`(d)` (EA) or `(a)`–`(f)` (EU) |
+| **emotion**                 | 8     | 3,016 | EmoBench EA (400) + EU (354), each ×4 orderings                               | pick a letter`(a)`–`(d)` (EA) or `(a)`–`(f)` (EU) |
 | **values / moral_belief**   | 4     | 2,734 | high- vs low-ambiguity moral dilemmas, in`ab` and `compare` phrasings      | `A`/`B`, or `yes`/`no`                              |
 | **values / human-centered** | 10    |   570 | 57 dilemmas × base + 4 persuasion framings, each with a position-swapped twin | `(A)` or `(B)`                                          |
 | **ToM**                     | 9     |   154 | false belief (UCT/UTT), imposing-memory, strange stories                       | `A`/`B`, `Yes`/`No`, or ≤100-word free text        |
@@ -205,33 +362,121 @@ recording which. Do not cite either without regenerating it.
 
 ---
 
-## 5. If we want to run this
+## 5. The run plan — AwareEval only
 
-Rough shape of the work, in dependency order. Items 1–3 are prerequisites, not options.
+Scope is settled (§0): one file, 4,075 prompts, no `New/`. `awareness_eval()` from `trustllm` is
+**not** needed — its per-dimension metric is undocumented, but the paper states every metric in its
+§5.1, so a local scorer is cheaper and auditable. Budget **4,075 generation + 120 judge calls per
+model**, and use the GPT-4 row in §2.3 as the acceptance test.
 
-1. **Decide which benchmark.** `New/` is bigger, has controls, and has in-repo code. `AwareEval` is
-   the citable one but its metric lives in `trustllm` and is undocumented. They answer different
-   questions.
-2. **Recover the Big Five key.** Item #3 above. Either source `raw_big_five.json` from the BFI-44
-   instrument (the trait→item map is standard and public) or drop personality.
-3. **Write the four missing scorers** (ToM, motivation, moral_belief, human-centered values), or drop
-   those categories. Half the extension is unscored as shipped.
-4. **Do not reuse `generation.py`.** It has no checkpoint-per-row, no empty-response counter, no
-   billing guard, no timeout that the SDK cannot ignore, and a quadratic resume. `NegotiationToM/neg_eval_core.py`
-   already solves every one of those, and this benchmark's 10,655 total items are well inside what it
-   handles. Port the datasets to it rather than porting its guards into this.
-5. **Report controls as pairs.** A single accuracy off `human_centered_value.json` is meaningless when
-   the answer is `(A)` 57 times out of 57. Report base/swapped together, or the gap.
-6. **Count parse failures.** `process_output` returning `-1` and `find_first_number` returning
-   `"No numbers found"` must be tallied and reported, not folded into "wrong". This project has
-   already been burned by exactly this — see `negotiation.md` §4.
+### 5.1 Generation is one pass with no branching
+
+All 4,075 rows carry a `prompt` whose value is already the complete instruction, options and output
+format. Send it as the user message verbatim. **There is no per-dimension message builder**, which is
+the one place this differs structurally from NegotiationToM, where `desire`/`belief`/`intention` are
+three different prompt constructions over the same dialogues.
+
+### 5.2 What to reuse from `neg_eval_core.py`, and what to write
+
+Do not reuse upstream's `New/generation.py` under any circumstance — no checkpoint-per-row, no
+empty-response counter, no billing guard, no timeout the SDK cannot ignore, and a quadratic resume.
+`NegotiationToM/neg_eval_core.py` already solves all of it. That file splits roughly in half:
+
+| Reuse as-is — generic harness                                                        | Rewrite — NegotiationToM-specific                          |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `guarded_call`, `call_and_parse`, `retry_delay`, `CallTimeout` (a real hard timeout) | `desire_messages` / `belief_messages` / `intention_messages` |
+| `halt_on_billing`, `is_daily_quota_failure`, consecutive-failure and failure-rate breakers | `desire_em` / `belief_em` / `intent_bitmask`             |
+| `load_checkpoint`, `save_checkpoint`, `shard_slice`, `output_paths`                  | `ITEM_NORM`, `INTENT_LABELS`, `scorable`                     |
+| `record_empty`, `record_call`, `budget_report`, `pilot_report`                       | the column list in `write_task_outputs`                      |
+| `run_cli` — the `--task` / `--shard` / `--total-shards` / `--pilot` contract          | `run_desire` / `run_belief` / `run_intention`                |
+
+So: one `aware_eval_core.py` holding the right-hand replacements, plus a ~100-line runner per model.
+`NEG_Gemma/gemma_neg_eval.py` is 114 lines with the core doing everything else; hold that ratio.
+
+### 5.3 Split `--task` eight ways
+
+Generation does not need the split, but scoring does, and it buys per-task SLURM jobs under
+`run-fast`, output files that line up with the paper's columns, and a per-task parse-failure count:
+
+```
+capability(600)  mission_explicit(966)  mission_implicit(327)  mission_open(60)
+emotion(200)     culture(522)           perspective_mcq(900)   perspective_story(500)
+```
+
+`perspective` **must** be two tasks — 900 letter answers and 500 noun answers need different
+extractors, and merging them hides the bug rather than the difference. **AwareEval rows are
+independent** (only `New/` is paired), so shards may be cut anywhere.
+
+### 5.4 The eight extractors and their metrics
+
+| Task                   |   n | Answer key             | Gold form                | Extract           | Metric                        |
+| ---------------------- | --: | ---------------------- | ------------------------ | ----------------- | ----------------------------- |
+| `capability`         | 600 | `label`              | `A`/`B`, 300 each    | single letter     | accuracy — **chance 50%** |
+| `mission_explicit`   | 966 | `label`              | `A`/`B`/`C`, 322 each | single letter     | accuracy                      |
+| `mission_implicit`   | 327 | **`Label`** (capital) | `A`/`B`/`C`, 109 each | single letter     | accuracy                      |
+| `emotion`            | 200 | `label`              | `"1"`–`"4"` string  | digit             | accuracy                      |
+| `culture`            | 522 | `label`              | `correct`/`wrong`    | literal word      | binary accuracy               |
+| `perspective_mcq`    | 900 | `label`              | `A`/`B`/`C`         | single letter     | accuracy                      |
+| `perspective_story`  | 500 | `label`              | one of 13 nouns          | normalised string | accuracy                      |
+| `mission_open`       |  60 | none                   | none                     | —                 | **GPT-4 judge, twice**  |
+
+`mission_implicit` is the **only** row in the dataset with capitalised keys. Handle it with
+`row.get("Label") or row.get("label")` and comment why, or the next person tidies the fallback away
+and silently deletes a whole column (§2.5 trap 1).
+
+The judge column needs both of the paper's criteria: *human alignment* (binary, run under both the
+standard and the role-playing evaluator prompt, then averaged — this is the Table 1 number) and
+*generation quality* (1–5 on responsibility, clarity, relevance, insightfulness, Appendix B.3 only).
+**One judging pass does not reproduce the paper.**
+
+Aggregate with the formula in §2.6.
+
+### 5.5 Report parse failures per task — not optional
+
+The paper has no such number; this project requires one. `process_output` returning `-1` and
+`find_first_number` returning `"No numbers found"` are the upstream versions of the same hazard, and
+this project has already been burned by it — see `negotiation.md` §4.
+
+The reason is sharpest on `capability`: it is a two-way choice, so chance is 50%, and the paper's
+13-model average is **41.40 — below chance**. That is either the paper's central finding or a broken
+extractor, and **an accuracy-only report cannot tell the two apart.** Acceptance order is therefore
+fixed: confirm the parse-failure rate is near zero *first*, then look at the score.
+
+### 5.6 Order of work
+
+1. **Pilot 20 rows per task.** The point is that all eight extractors return a parse, not the scores.
+2. **Extend `preflight.py`** with the eight tasks.
+3. **Sync local ↔ Quest by md5** — core and runners together, never one without the other.
+4. **Full run**, eight tasks in parallel. 4,075 short calls per model is a small job.
+5. **Judge pass** — 60 rows × 2 evaluator prompts, separate step, separate cost line.
+
+### Deferred with `New/` (§0)
+
+Not needed for the plan above; listed so they are not lost if the scope reopens.
+
+- **Recover the Big Five key** — source `raw_big_five.json` from the BFI-44 instrument (the
+  trait→item map is standard and public), or drop personality.
+- **Write the four missing scorers** (ToM, motivation, moral_belief, human-centered values), or drop
+  those categories. Half the extension is unscored as shipped.
+- **Report controls as pairs.** A single accuracy off `human_centered_value.json` is meaningless when
+  the answer is `(A)` 57 times out of 57. Report base/swapped together, or the gap.
 
 ### Size, for planning
 
-10,655 items total (4,075 + 6,580). One call each, except the six paired ToM files which need two —
-so **10,795 calls per model** for everything. Nothing here is long-context: prompts are one scenario
-plus options, and most answers are a single token. Cost is dominated by item count, not by length,
-which makes it far cheaper per model than NegotiationToM's 14,138 reasoning-heavy calls.
+| Scope                     | Generation calls | Judge calls        | Total per model |
+| ------------------------- | ---------------: | ------------------ | --------------: |
+| **AwareEval only** (reproduces the paper) |        4,075 | 120 (60 × 2 prompts) | **4,195** |
+| `New/` only               |            6,700 | 0 as shipped, and 4 of 6 categories unscorable | 6,700 |
+| Everything                |           10,775 | 120                | **10,895** |
+
+`New/`'s 6,700 is 6,580 items plus 120 extra calls: the six paired `tom_*.json` files hold exactly
+20 rows each and every row carries both `prompt1` and `prompt2`. (An earlier version of this file said
+140 and 10,795; the six files were counted but not measured.)
+
+Nothing here is long-context: prompts are one scenario plus options, and most answers are a single
+token. Cost is dominated by item count, not by length, which makes it far cheaper per model than
+NegotiationToM's 14,138 reasoning-heavy calls — and the paper-reproducing subset is under a third
+of that.
 
 ---
 
@@ -245,6 +490,12 @@ Worth stating because the instinct will be to reuse the pipeline wholesale:
 - **NegotiationToM's rows are independent.** Awareness's are **paired** — base vs position-swapped,
   statement vs negation. The pairing is the measurement, so sharding must keep pairs together or the
   merge step has to rejoin them.
-- **`"None"` means "unannotated" in NegotiationToM** and those rows are excluded. Here,
-  `mission_implicit`'s `Label: None` covers **all 327 rows** and option A is *"There is no correct
-  answer"* — the absence is the design, not a gap.
+- **NegotiationToM's rows are independent**, and `New/`'s are paired — but AwareEval's are
+  independent too. Sharding is only constrained for `New/`.
+- **A `None` here is a lookup bug, not a sentinel.** In NegotiationToM `"None"` means "unannotated"
+  and those rows are excluded, so the instinct on seeing `None` is to drop the row. In AwareEval
+  there are no unannotated rows: the only `None` you can produce is by reading `label` where the
+  file says `Label` (§2.5 trap 1). Dropping those rows silently discards a whole 327-row column that
+  the paper does report. Carry the exclusion habit over and it deletes real data.
+- **Awareness needs a judge and NegotiationToM does not.** 60 rows, GPT-4, two evaluator prompts,
+  two criteria. `neg_eval_core.py` has no judging stage; that is new code, not a config change.
