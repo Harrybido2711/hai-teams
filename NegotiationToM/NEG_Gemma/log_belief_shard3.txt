@@ -1,0 +1,36 @@
+[pulse] 1 calls, 0/1 hung (0%), trunc 0, empty 0, err 0, mean 3.1s, effective 3.1s/row -> 19.57 rows/min, tokens p99~16, latency p90 3s p99 3s max 3s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[pulse] 51 calls, 1/52 hung (2%), trunc 0, empty 0, err 1, mean 10.9s, effective 13.2s/row -> 4.54 rows/min, tokens p99~17, latency p90 30s p99 97s max 97s (ceiling 120s)
+[pulse] 117 calls, 2/119 hung (2%), trunc 0, empty 0, err 1, mean 9.6s, effective 11.6s/row -> 5.16 rows/min, tokens p99~17, latency p90 28s p99 48s max 97s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[pulse] 191 calls, 3/194 hung (2%), trunc 0, empty 0, err 3, mean 8.7s, effective 10.6s/row -> 5.65 rows/min, tokens p99~17, latency p90 27s p99 75s max 97s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[google/gemma-4-31B-it] call exceeded 120s hard limit (2/3), retrying
+[pulse] 226 calls, 5/231 hung (2%), trunc 0, empty 0, err 5, mean 9.0s, effective 11.6s/row -> 5.16 rows/min, tokens p99~17, latency p90 27s p99 75s max 97s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[pulse] 303 calls, 6/309 hung (2%), trunc 0, empty 0, err 6, mean 8.3s, effective 10.7s/row -> 5.63 rows/min, tokens p99~17, latency p90 25s p99 53s max 97s (ceiling 120s)
+[pulse] 462 calls, 6/468 hung (1%), trunc 0, empty 0, err 6, mean 6.7s, effective 8.3s/row -> 7.24 rows/min, tokens p99~17, latency p90 24s p99 50s max 97s (ceiling 120s)
+[pulse] 577 calls, 6/583 hung (1%), trunc 0, empty 0, err 6, mean 6.4s, effective 7.7s/row -> 7.82 rows/min, tokens p99~18, latency p90 24s p99 48s max 97s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[pulse] 646 calls, 7/653 hung (1%), trunc 0, empty 0, err 7, mean 6.6s, effective 7.9s/row -> 7.62 rows/min, tokens p99~17, latency p90 24s p99 48s max 97s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[pulse] 738 calls, 8/746 hung (1%), trunc 0, empty 0, err 8, mean 6.4s, effective 7.7s/row -> 7.78 rows/min, tokens p99~17, latency p90 24s p99 48s max 97s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[pulse] 807 calls, 10/817 hung (1%), trunc 0, empty 0, err 9, mean 6.4s, effective 7.9s/row -> 7.61 rows/min, tokens p99~17, latency p90 24s p99 48s max 97s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[pulse] 888 calls, 11/899 hung (1%), trunc 0, empty 0, err 11, mean 6.5s, effective 8.0s/row -> 7.54 rows/min, tokens p99~17, latency p90 24s p99 48s max 119s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[belief] excluded 28/952 unannotated rows from the metrics
+
+[google/gemma-4-31B-it] shard 3 finished in 126.3 min
+
+[budget]  measured, for the next run's max_tokens and call timeout
+          output tokens    : median 16  p90 17  p99 17  max 19  (n=952)
+          suggested max_tokens : 25  (p99 x 1.5)
+          truncated at the cap : 0 of 952 checked (measured — the tail above is real)
+          call latency (s) : median 2.4  p90 23.6  p99 47.7  max 119.4  (n=952)
+          watchdog kills   : 12 of 964 attempts (1.2%), 24 min at the 120s ceiling
+          throughput       : 2.5 output tok/s over calls that returned — a call using the full budget takes budget/2.5 s, which must sit well inside the 120s ceiling
+          diagnosis        : calls are genuinely running to the ceiling — cap max_tokens first, and only then lower the timeout
