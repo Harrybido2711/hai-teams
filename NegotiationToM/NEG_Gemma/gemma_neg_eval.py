@@ -10,7 +10,7 @@ ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
 from neg_eval_core import (  # noqa: E402
     finish_reason_from, halt_on_billing, record_call, record_empty, record_error, record_usage,
-    retry_delay, run_cli, set_call_timeout, usage_from,
+    backoff_sleep, retry_delay, run_cli, set_call_timeout, usage_from,
 )
 
 load_dotenv(os.path.join(ROOT, ".env"))
@@ -21,34 +21,53 @@ load_dotenv(os.path.join(ROOT, ".env"))
 client = Together(api_key=os.getenv("TOGETHER_API_KEY"), timeout=300)
 
 
-# Measured on job 8526978 (2026-08-04, 4h20m of full run, five shards) before it was cancelled:
+# gemma-4-31B-it is a Together hybrid reasoning model, and leaving reasoning on is what made job
+# 8526978 unusable: 132 rows per shard in 4h20m, 80% of the wall clock inside calls that never
+# returned, and five shards running only 1.05x faster than one.
 #
-#   successful call    ~10s, at ~57 tok/s for ~567 billed output tokens
-#   hung calls         ~9% of attempts returned nothing at all and were killed by the watchdog
-#   cost of that       9% x 200s = 67% of the job's entire wall clock
+# Measured directly (measure_gemma_reasoning.py, 2026-08-04, 12 calls per arm on production
+# prompts, max_tokens=8192 held constant in both):
 #
-# The run was tracking towards 97h against a 19.6h projection, and the cause was not slow
-# generation: at 57 tok/s even a runaway to the full 8192 budget returns in 144s, inside the 200s
-# ceiling. These were hung connections, the failure Together has shown here before (ISSUES.md:
-# one request stuck for over two hours at timeout=18000).
+#                        succeeded   median latency   median output tokens
+#   reasoning ON             6/12            9.3 s                    517
+#   reasoning OFF           11/12            0.3 s                     16
 #
-# So the lever is the ceiling, not the token budget. Both are set below, because they interact:
-# the ceiling can only be lowered safely once the slowest *legitimate* call is bounded, and that
-# bound is max_tokens / observed tokens-per-second.
+# 29.6x faster, 32x fewer output tokens, hang rate 50% -> 8%.
 #
-#   MAX_TOKENS 2048  -> 3.6x the 567-token mean; worst legitimate call ~36s at 57 tok/s, and ~100s
-#                       even if the server halves its speed. The visible answer is ~15 tokens, so
-#                       this is headroom for hidden reasoning, not for the JSON.
-#   timeout    90s   -> 2.5x that worst legitimate call, so it cannot cut good work, while a hang
-#                       now costs 90s instead of 200s.
+# Two earlier attempts at this were wrong and are recorded so they are not retried:
 #
-# Expected effect: mean seconds per completed row falls from ~30s to ~19s, roughly 1.6x.
-# These are the first values sized this way rather than inherited; budget_report() now prints the
-# real latency and token percentiles at every checkpoint and at the end, so the next revision is a
-# measurement rather than another estimate. If truncation shows up in that report, raise MAX_TOKENS
-# first — a censored tail makes every other number in the block a lower bound.
-MAX_TOKENS = 2048
-set_call_timeout(90)
+#   * "cap max_tokens" — there is nothing to cap. Every call that returned stopped on its own at
+#     254-795 tokens, at most 9.7% of the 8192 budget, with finish_reason=stopsequence. Lowering
+#     the cap changes no call's behaviour.
+#   * "lower the watchdog" — the ceiling only makes each hang cheaper. The hangs produce ZERO
+#     tokens in 240s, so they are not slow generations, and the rate stays the same.
+#
+# The lever is which serving path the request takes, and on Together that is a boolean: there is
+# no thinking-budget parameter on chat.completions.create, only this passthrough toggle. Gemini's
+# "cap it rather than disable it" has no equivalent here.
+#
+# This matches NEG_Qwen exactly, which reached 14,138 rows at 1h57m per shard with the same
+# provider, the same client and the same 8192 budget — the one difference being this argument.
+# It is also closer to the paper's baseline: NegotiationToM (arXiv 2404.13627) reports zero-shot,
+# CoT and few-shot as three separate settings, our prompts carry no CoT wording, and hidden
+# provider-side reasoning matches none of the three.
+MAX_TOKENS = 8192
+
+# Watchdog ceiling, 200s -> 120s. A hung call returns ZERO tokens, so most of a 200s wait buys no
+# information; on the cancelled job 8526978 that waiting was 80% of the entire wall clock.
+#
+# 120 and not 60, which was the first choice and was too aggressive. 60 came from a single
+# 11-success micro-probe whose slowest legitimate call took 50.1s — a 20% margin on a sample that
+# small. The production reasoning-off log (log_pilot_ab.txt, 171 calls that returned) shows a mean
+# of 18.3s but never printed a max, because the job was cancelled before budget_report ran, so the
+# tail is genuinely unmeasured. Under a 60s ceiling every legitimate call in that unmeasured tail
+# would be recorded as a hang, and after three of them the row is written with raw_response="" and
+# scored zero. That corrupts both the data and the hang rate this run exists to interpret.
+#
+# 120s still removes 40% of the old wait while sitting far above anything observed. The pulse now
+# prints latency percentiles, so the NEXT revision can be set from this run's own p99 instead of
+# from an 11-point probe.
+set_call_timeout(120)
 
 
 # Together returns an empty string for this model intermittently at HTTP 200, so the retry budget
@@ -57,7 +76,8 @@ def call_api(messages, model, max_retries=5):
     for attempt in range(max_retries):
         try:
             response = client.chat.completions.create(
-                model=model, messages=messages, temperature=0, max_tokens=MAX_TOKENS
+                model=model, messages=messages, temperature=0, max_tokens=MAX_TOKENS,
+                reasoning={"enabled": False},
             )
             finish = finish_reason_from(response)
             content = (response.choices[0].message.content or "").strip()
@@ -66,7 +86,7 @@ def call_api(messages, model, max_retries=5):
                 record_empty()
                 print(f"[{model}] empty response ({attempt + 1}/{max_retries}), "
                       f"finish_reason={finish}, retrying", flush=True)
-                time.sleep(5)
+                backoff_sleep(5)
                 continue
             record_call(*usage_from(response), finish_reason=finish)
             time.sleep(2)
@@ -81,7 +101,11 @@ def call_api(messages, model, max_retries=5):
                 print(f"[{model}] daily request quota exhausted", flush=True)
                 return None
             if attempt + 1 < max_retries:
-                time.sleep(retry_delay(error))
+                # Pass the attempt so the wait grows. Together's limits are dynamic and shaped by
+                # our traffic, so a fixed 5s retry against a throttled endpoint is what keeps it
+                # throttled — and with many shards, an unjittered fixed wait makes them retry in
+                # lockstep.
+                backoff_sleep(retry_delay(error, attempt=attempt))
     print(f"[{model}] all {max_retries} attempts failed, giving up on this item", flush=True)
     return None
 

@@ -33,6 +33,13 @@ STATS = {
     "call_seconds": [],         # wall-clock of each call that returned, hangs excluded
     "truncated": 0,             # responses cut off by max_tokens (finish_reason == "length")
     "timeouts": 0,              # calls killed by the SIGALRM watchdog, i.e. that never returned
+    # Total wall clock inside guarded_call, back-off and hangs included. Throughput MUST come from
+    # this and never from call_seconds: that list deliberately excludes deliberate waiting so the
+    # latency percentiles can size the ceiling, and dividing rows by it overstates rows/min by
+    # exactly the time the run spent backing off. That error is not a constant — back-off grows
+    # with rate limiting, which grows with shard count, so it inflates most at the highest rung and
+    # would bias a concurrency ladder toward "more shards help".
+    "wall_seconds": 0.0,
     # Counts responses whose finish_reason the runner actually passed in. Without this,
     # "truncated: 0" is ambiguous: five of the six runners still call record_call(*usage_from(r))
     # and never supply a finish_reason, so their zero means "never looked", not "looked and found
@@ -442,14 +449,62 @@ def parse_json(text):
         return None
 
 
-def retry_delay(error, default=5.0):
-    match = re.search(r"try again in ([\d.]+)(ms|s)", str(error), re.IGNORECASE)
-    if not match:
-        return default
-    delay = float(match.group(1))
-    if match.group(2).lower() == "ms":
-        delay /= 1000
-    return max(delay + 1, 1)
+def retry_delay(error, default=5.0, attempt=0):
+    """How long to wait before retrying a failed call.
+
+    Three behaviours, in priority order:
+
+    1. **Honour an explicit retry hint** when the provider gives one. The wordings differ, and
+       matching only OpenAI's cost real time here: Together's 429 reads "Retry starting from ~2s
+       (X-RateLimit-Reset header)", which the original `try again in Xs` pattern missed entirely,
+       so every rate-limited call fell through to a flat 5s.
+    2. **Back off exponentially** otherwise. Together states its limits are dynamic and "shift with
+       live model capacity and your traffic shape, so steady traffic and exponential back-off
+       help". Retrying a throttled endpoint every 5s forever is the traffic shape it penalises, and
+       that is what this code did.
+    3. **Jitter every delay.** This matters more the more shards run: without it, N shards that hit
+       the same rate limit at the same moment all retry at the same moment, and keep doing so —
+       a self-synchronising thundering herd that looks to the provider exactly like an attack.
+
+    `attempt` is 0-based and optional, so the five runners that call retry_delay(error) keep
+    working; they simply get the base delay plus jitter rather than a growing one.
+    """
+    text = str(error)
+    hint = None
+    for pattern in (r"try again in ([\d.]+)\s*(ms|s)\b",          # OpenAI, Anthropic
+                    r"retry (?:starting )?(?:from|after)\s*~?([\d.]+)\s*(ms|s)\b",  # Together
+                    r"retry[- ]after[\"':\s]+([\d.]+)()"):        # bare Retry-After header
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            hint = float(match.group(1))
+            if (match.group(2) or "").lower() == "ms":
+                hint /= 1000
+            hint = max(hint + 1, 1)
+            break
+
+    # The hint is a FLOOR, not the answer. Returning it directly meant the exponential growth never
+    # fired for the only error Together actually sends: its 429 carries "Retry starting from ~2s",
+    # so every attempt waited the same ~3s however many had already failed — precisely the flat
+    # traffic shape Together says it penalises. Take whichever of hint and growth is larger.
+    grown = default * (2 ** max(0, attempt))
+    base = max(hint or 0.0, grown)
+    # Jitter always, hint or not: every shard receives the same hint at the same moment, so an
+    # unjittered wait makes N shards retry in lockstep. Cap AFTER jitter — capping first and then
+    # multiplying by up to 1.5 let the delay reach 180s against a stated ceiling of 120.
+    return min(base * random.uniform(0.5, 1.5), retry_delay_cap())
+
+
+def retry_delay_cap():
+    """Largest single back-off, tied to the watchdog rather than fixed.
+
+    A constant was wrong in both directions. It has to stay well under HARD_CALL_TIMEOUT, because
+    the sleep happens inside the guarded region: a 120s cap under a 60s ceiling is unreachable by
+    construction and any delay approaching the ceiling turns a throttle into a recorded hang. And
+    it has to move when a runner calls set_call_timeout, which a constant cannot do. A quarter of
+    the ceiling leaves room for several waits plus the request itself; the floor keeps it sane if
+    someone sets a very small ceiling.
+    """
+    return max(5.0, min(60.0, HARD_CALL_TIMEOUT / 4.0))
 
 
 class CallTimeout(BaseException):
@@ -499,6 +554,42 @@ def _raise_timeout(signum, frame):
     raise CallTimeout(f"call exceeded {HARD_CALL_TIMEOUT}s hard limit")
 
 
+# When the current guarded_call must finish, and how much of its elapsed time was deliberate waiting.
+# backoff_sleep pushes the deadline out by whatever it slept, so a deliberate wait is not charged to
+# a watchdog that exists to catch a dead connection, and subtracts the same amount from the recorded
+# latency — those percentiles are what the next ceiling is sized from, and a back-off folded into
+# them would inflate the ceiling on the strength of time the provider never spent.
+_deadline = [None]
+_slept = [0.0]
+
+
+def backoff_sleep(seconds):
+    """Wait between retries without the watchdog counting the wait as a hung call.
+
+    guarded_call's alarm wraps the whole of a runner's call_api, its retry sleeps included. That was
+    harmless while the delay was a flat 5s and became a real defect the moment back-off grew
+    exponentially: a rate-limit episode whose waits summed past the ceiling was killed and recorded
+    as a TIMEOUT, so provider throttling masqueraded as a dead connection. Worse, it did so most at
+    high shard counts — it would have manufactured the very concurrency signal the run was measuring.
+
+    A sleep is not a hang. Disarm across it, extend the deadline by exactly what was slept, and
+    re-arm with the time that remains, so the ceiling keeps bounding time spent waiting on the
+    network and nothing else.
+    """
+    seconds = max(0.0, float(seconds))
+    if not hasattr(signal, "SIGALRM") or _deadline[0] is None:
+        time.sleep(seconds)
+        return
+    signal.alarm(0)
+    try:
+        time.sleep(seconds)
+    finally:
+        _deadline[0] += seconds
+        _slept[0] += seconds
+        remaining = int(max(1, round(_deadline[0] - time.time())))
+        signal.alarm(remaining)
+
+
 def guarded_call(call_api, messages, model):
     """Run call_api under a SIGALRM watchdog. Raises CallTimeout if it overruns.
 
@@ -513,9 +604,13 @@ def guarded_call(call_api, messages, model):
     previous = signal.signal(signal.SIGALRM, _raise_timeout)
     signal.alarm(HARD_CALL_TIMEOUT)
     started = time.time()
+    _deadline[0] = started + HARD_CALL_TIMEOUT
+    _slept[0] = 0.0
     try:
         result = call_api(messages, model)
-        STATS["call_seconds"].append(time.time() - started)
+        # Deliberate back-off is not provider latency; excluding it keeps the percentiles usable
+        # for sizing the ceiling. Total elapsed goes to wall_seconds in the finally below.
+        STATS["call_seconds"].append(max(0.0, time.time() - started - _slept[0]))
         return result
     except CallTimeout:
         STATS["timeouts"] += 1
@@ -523,6 +618,10 @@ def guarded_call(call_api, messages, model):
     finally:
         signal.alarm(0)
         signal.signal(signal.SIGALRM, previous)
+        # Every path — returned, hung, or raised — contributes its real elapsed time. This is the
+        # only honest denominator for throughput.
+        STATS["wall_seconds"] += time.time() - started
+        _deadline[0] = None
         # Pulse from here, not from save_checkpoint, so the diagnostic is driven by the clock
         # rather than by progress — a run that completes no rows at all must still report.
         _pulse()
@@ -739,10 +838,20 @@ def _pulse():
               f"ceiling {HARD_CALL_TIMEOUT}s", flush=True)
         return
     mean_s = sum(secs) / done
-    # Effective seconds per completed row, hang cost included — the number that actually predicts
-    # the finish time, unlike the mean latency of the calls that happened to succeed.
-    per_row = (sum(secs) + hangs * HARD_CALL_TIMEOUT) / done
+    # Effective seconds per completed row, from measured wall clock rather than reconstructed from
+    # the latency list. The reconstruction was wrong twice over: call_seconds excludes back-off by
+    # design, and `hangs * HARD_CALL_TIMEOUT` assumes every hang cost exactly the ceiling while
+    # ignoring any back-off slept before it. Both errors push rows/min up, and both grow with
+    # rate limiting.
+    per_row = STATS["wall_seconds"] / done
     tail = f", tokens p99~{sorted(toks)[min(len(toks) - 1, int(0.99 * len(toks)))]}" if toks else ""
+    # Latency percentiles, not just the mean. The ceiling has to sit above the slowest call that
+    # legitimately returns, and a mean cannot say where that is — sizing it from an 11-point probe
+    # instead is what made the first choice of 60s too aggressive. Printing p90/p99/max as the run
+    # goes means the next ceiling comes from this run's own tail.
+    lat = percentiles(secs)
+    tail += (f", latency p90 {lat['p90']:.0f}s p99 {lat['p99']:.0f}s max {lat['max']:.0f}s"
+             f" (ceiling {HARD_CALL_TIMEOUT}s)")
     print(f"[pulse] {done} calls, {bad}, mean {mean_s:.1f}s, "
           f"effective {per_row:.1f}s/row -> {60 / per_row:.2f} rows/min{tail}", flush=True)
 
