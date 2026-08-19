@@ -12,7 +12,7 @@ verbatim in the next section and expanded after it. The filled record is
 says why.
 
 Companions: [JUDGE_RECORD.md](JUDGE_RECORD.md) decides *which* benchmarks need a judge and holds the
-filled record for the three that do, with [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) as its two-page
+filled record for the three that do, with [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) as its short
 version for discussion; [GPT_LLM_AS_JUDGE_GUIDE.md](GPT_LLM_AS_JUDGE_GUIDE.md) is how to
 *build* one for our own use. This file is how to *document* one that already exists.
 
