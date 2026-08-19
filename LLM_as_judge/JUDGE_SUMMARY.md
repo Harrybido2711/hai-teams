@@ -48,24 +48,72 @@ every conclusion. This is why our record treats scale *direction* as a field of 
 
 ## 3. What each judge actually sees — the methodological point
 
-Worth raising explicitly, because it narrows what these benchmarks measure:
+The **Material shown** row of the table in §4 is the one worth arguing about, because it narrows what
+each benchmark actually measures relative to how it is described:
 
-- **MultiChallenge** is a *multi-turn* benchmark, but its judge is shown **only the final answer and
-  the rubric — never the conversation** (up to 19 messages). Any rubric needing the history to be
-  checkable is effectively being guessed at. We follow upstream anyway, because deviating would make
-  our numbers incomparable to everyone else's — but the limitation belongs in any writeup. *(§2 A2, D5)*
-- **Wonderbread QA** withholds the screenshots and action trace from all four criteria, and withholds
-  the gold answer from two of them (clarity, compactness). Those two are judgements about prose with
-  no ground truth at all. *(§1 A2)*
-- **AwareBench** gives its judge no reference answer and no rubric — only the prompt and the
+- **MultiChallenge is a *multi-turn* benchmark whose judge never sees the conversation.** It gets the
+  final answer and the rubric, nothing else — so any rubric that needs the history to be checkable is
+  effectively being guessed at. We follow upstream anyway, because deviating would make our numbers
+  incomparable to everyone else's, but the limitation belongs in any writeup. *(record §2 A2, D5)*
+- **Two of Wonderbread QA's four criteria have no ground truth at all.** Clarity and compactness are
+  judgements about prose, made without the gold answer and without the demonstration. *(§1 A2)*
+- **AwareBench's judge gets neither a reference answer nor a rubric** — only the prompt and the
   response. *(§3 B3)*
 
-**Only one of the three judges has ever been validated against humans:** Wonderbread QA, n = 30,
-Spearman 0.80–0.89, 87–97% exact agreement (recomputed by us from their committed data). Who the
-human graders were is not stated, so we cannot tell whether that is near the human–human ceiling.
-MultiChallenge and AwareBench report **no** human comparison. *(§1 A3, §2 A3, §3 A3)*
+And the **Human comparison** row is nearly empty: only Wonderbread QA was ever checked against people
+(n = 30, Spearman 0.80–0.89, recomputed by us from their committed data), and even there the graders
+are unidentified, so we cannot tell whether 0.86 is near the human–human ceiling or well below it.
+MultiChallenge and AwareBench report none.
 
-## 4. AwareBench: judging 60 rows out of 4,075, and why that is defensible
+## 4. Field-by-field comparison
+
+The thirteen required fields, side by side. Wonderbread is split into its two working judges: they
+disagree with each other on almost every row, so collapsing them into one column would hide the
+point. AwareBench is not in the table — its grading model, prompts and decoding settings were never
+published (§7 below), so most of its cells would read "not stated upstream", which is itself the
+finding rather than a comparison.
+
+### Grading setup
+
+| Field | Wonderbread · QA | Wonderbread · SOP Generation | MultiChallenge |
+|---|---|---|---|
+| **Grading model** | `gpt-4-0125-preview` — the code passes a label `'GPT4'` that resolves elsewhere | `gpt-4-1106-preview` — **a different snapshot**, hard-coded as a module constant | `gpt-4o-2024-08-06`, hard-coded; structured-output endpoint |
+| **Material shown** | question + tested answer always; **gold answer only for 2 of 4 criteria**; never the screenshots, action trace or SOP | one SOP line as the query + the *whole* other SOP as an indexed list; nothing else | tested answer + the item's rubric — **never the conversation** (up to 19 turns), never a gold answer |
+| **Human comparison** | **yes** — n = 30, Spearman 0.80–0.89, exact agreement 87–97%. **Who the graders were is not stated** | not reported | not reported |
+| **Grading instructions** | 4 variants, each with 3 few-shot examples carrying scores. Verbatim in record App. A | 1 variant, **no few-shot examples**. Verbatim in App. B | 1 variant, no few-shot, **no system message**. Verbatim in App. C |
+| **Scoring criteria** | soundness, completeness, clarity, compactness — **4 separate calls**, no stated priority | one: semantic entailment of a step's primary objective | **none named** — the item's own rubric, plus the instruction `Be VERY STRICT!` |
+| **Score meanings** | 1–3, **1 = best, 3 = worst**; every point defined | an index, or −1 for "no match" — not a scale | binary YES/NO; passes when `verdict == PASS_CRITERIA` (all 273 rows ship `"YES"`) |
+
+### Comparison and scoring process
+
+| Field | Wonderbread · QA | Wonderbread · SOP Generation | MultiChallenge |
+|---|---|---|---|
+| **Type of judgment** | absolute score of one answer | mapping / entailment decision | binary pass/fail |
+| **Repeated grading** | 1 call per (item, criterion) = 4 per item. No repeats, so judge variance is unmeasured | 1 call per line **in both directions**; no repeats | 1 call per (item, attempt). Repeats happen on the *generation* side; combined **any-pass**, i.e. pass@k not mean-of-k |
+| **Use of a correct answer** | the `Human Label` column — shown to completeness and soundness, **withheld from clarity and compactness**. Provenance undocumented | the human-written Gold SOP | **none exists.** The per-item rubric replaces a gold answer |
+| **Final score calculation** | mean per criterion over 120 items (**micro**); four numbers, **no composite**. Short/empty answers become `"NA"` and are silently uncounted | fraction of lines with index ≠ −1 → precision, recall, ordering | per-axis accuracy, then **macro mean over the 4 axes** — and the axes are unequal (113/69/50/41), so 41 items weigh as much as 113. Failed judgments count as failures |
+
+### Replication details
+
+| Field | Wonderbread · QA | Wonderbread · SOP Generation | MultiChallenge |
+|---|---|---|---|
+| **Generation settings** | temperature **0.0**, max_tokens 4096, no seed, sequential. Retry on 429 is **unbounded recursion** | **no temperature passed → API default 1.0, so this judge is not deterministic.** Completions cached to `sop_cache/` and reused unless forced | temperature 0, structured output, no seed, **no retry, no timeout**. `max_tokens` is passed but never reaches the API |
+| **Output handling** | "Return only the number" — but **no extraction, no cast, no validation**; the raw string is stored as the score | JSON parse, **one retry**, then raise. `int()` cast on the index. Not silent | schema-enforced, so the verdict cannot be off-vocabulary. But **any exception becomes a `NO`**, i.e. a silent failed item |
+| **Software and access** | `wonderbread@ed052c6`, `openai` client. **Read 2026-08-19, not executed** | same repo and date | `multi-challenge@5ccefcc`; `openai==1.53.0`, `pydantic==2.10.6`. **Read 2026-08-19, not executed** |
+
+### What the table makes visible
+
+- **Nothing is shared between the three.** Different models, different material, different scales,
+  different aggregation, different failure handling. "We used GPT-4 as a judge" describes none of them
+  accurately.
+- **Two of the three scales run in a direction a reader will guess wrong**: Wonderbread QA is
+  1 = best, and its `-1` entailment sentinel is a non-answer rather than a low score.
+- **Only one row in the whole table reports a human check**, and even there the graders are anonymous.
+- **The failure rows differ in a way that moves numbers in opposite directions**: Wonderbread QA drops
+  unscorable items from the denominator, MultiChallenge counts them as failures. One inflates a score,
+  the other deflates it.
+
+## 5. AwareBench: judging 60 rows out of 4,075, and why that is defensible
 
 The judged 60 (`mission_open-ended`) are the only rows in the file carrying no answer key — the split
 is a property of the data, not a choice. We deliberately do **not** route the other 4,015 through a
@@ -78,7 +126,7 @@ than outsourced to a model.
 rows carry **1/15 of the headline score** — the same weight as a 966-row task. The judged fraction is
 1.5% of the items and 6.7% of the number, so judge noise there is disproportionately visible. *(§3)*
 
-## 5. Cost per model evaluated
+## 6. Cost per model evaluated
 
 | Benchmark | Generation calls | Judge calls |
 |---|---:|---|
@@ -87,7 +135,7 @@ rows carry **1/15 of the headline score** — the same weight as a 966-row task.
 | Wonderbread QA | 120 | **480** (120 × 4 criteria) |
 | Wonderbread SOP Generation | per demonstration | **(pred lines + gold lines) per demo** — scales with verbosity |
 
-## 6. Open questions for you
+## 7. Open questions for you
 
 1. **Judge-model substitution is now forced, not optional.** All three GPT-4 snapshots Wonderbread
    used (`gpt-4-0125-preview`, `gpt-4-1106-preview`, `gpt-4-turbo`) are retired, as is the GPT-4 used
@@ -105,7 +153,7 @@ rows carry **1/15 of the headline score** — the same weight as a 966-row task.
    different prompt and produces different scores. This is a transcription task, not a blocker on
    your side, but it is why no AwareBench judge run has started.
 
-## 7. Status
+## 8. Status
 
 No judge-scored number exists in `Results.xlsx` yet. The record was written **before** the runs, so
 that decisions like the substitution above are made on the record rather than discovered afterwards.
