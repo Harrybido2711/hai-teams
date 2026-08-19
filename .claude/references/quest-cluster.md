@@ -20,6 +20,31 @@ import, and a core transferred without the runners breaks whichever runner used 
 changed. Check the whole set before submitting, not just the file you edited — on 2026-07-29 a check
 found 6 of 32 files stale on Quest when only Qwen was suspected.
 
+### The pre-submit gate, and how it goes blind
+
+`.claude/settings.json` wires a `PreToolUse` hook on `Bash` to
+`.claude/scripts/sbatch_sync_gate.py`. It runs the sync check before any command containing the
+submit keyword, and its contract is:
+
+| checker exit | gate |
+|---|---|
+| 0 · in sync | silent, command proceeds |
+| 1 · drift | **blocks**, printing which files differ |
+| 2 · check could not run | **allows, with a warning** — it fails open on purpose |
+
+Two things about it are worth knowing before trusting it:
+
+- **A stale local path makes it protect nothing, silently.** The 2026-08-19 reorganisation moved
+  `NegotiationToM/` under `Interpersonal_processes_benchmarks/`; the checker then found zero code
+  files, exited 2, and every submit took the allow-with-warning branch while the gate still looked
+  wired up. `check_quest_sync.py` now *searches* for the folder and honours a `NEG_LOCAL_DIR`
+  override, but the lesson generalises: after any move, run the checker by hand and confirm it
+  reports a non-zero file count on both sides.
+- **It triggers on the keyword appearing anywhere in the command text**, including inside a quoted
+  commit message or a heredoc that merely mentions it. That is a false positive, not a bug to fix by
+  narrowing the match — a gate that under-triggers is invisible, while one that over-triggers is
+  merely annoying. Reword the command and move on.
+
 `python3 .claude/scripts/check_quest_sync.py` does this comparison and exits 1 on drift. The manual
 form, when you need to see it:
 
