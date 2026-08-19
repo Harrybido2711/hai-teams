@@ -5,7 +5,8 @@ gold label can be re-derived from the data; a GPT score cannot be re-derived fro
 exact model, the exact prompt, and the exact aggregation. This file defines the record that every
 judge-scored benchmark in this repo must carry before its numbers enter `Results.xlsx`.
 
-It is a **rule and a template**, not a filled-in survey. The per-benchmark records are written into
+It is a **rule and a template**, not a filled-in survey. The thirteen required fields are quoted
+verbatim in the next section and expanded after it. The per-benchmark records are written into
 `LLM_as_judge/records/<benchmark>.md`, one file each, and are not started yet — see the status table
 at the end.
 
@@ -13,6 +14,38 @@ Companions:
 [../benchmark_evaluation_guide.md](../benchmark_evaluation_guide.md) decides *which* benchmarks need
 a judge; [GPT_LLM_AS_JUDGE_GUIDE.md](GPT_LLM_AS_JUDGE_GUIDE.md) is how to *build* one for our own
 use. This file is how to *document* one that already exists.
+
+## The requirement, verbatim
+
+This is the specification as given, reproduced word for word. It is the authoritative list; the
+sections after it expand each line but never replace or reword it. If the two ever disagree, this
+block wins.
+
+```text
+For each benchmark, record the following:
+
+Grading Setup
+Grading model: What model graded the answers? Record the exact model name and version, when available.
+Material shown to the model: Did it receive the question, tested answer, correct answer, background documents, or previous conversation?
+Human comparison: Were model grades compared with human judgments? Record the sample size, potential few shot examples, agreement measures, and who the human graders were (students, researchers, etc.).
+Grading instructions: Copy the complete instructions given to the model, including any examples.
+Scoring criteria: What qualities was the model asked to consider, such as correctness, relevance, clarity, safety, or completeness?
+Score meanings: What scale was used, and was each score clearly defined?
+
+Comparison and Scoring Process
+Type of judgment: Did the model score one answer, compare two answers, rank several answers, or give a pass/fail decision?
+Repeated grading: Was each answer graded once or multiple times? Record how disagreements across runs were resolved.
+Use of a correct answer: Was the model given a reference answer? If so, how was that answer created and checked?
+Final score calculation: How were ratings combined across questions, criteria, models, or repeated runs? Note how ties and failed grading attempts were handled.
+
+Replication Details
+Generation settings: Record all reported settings that may affect grading, including randomness settings, number of grading runs, and any fixed random number.
+Output handling: How was the model’s response converted into a score? Record required formatting, extraction rules, and treatment of malformed responses.
+Software and access: Record the code, software packages, service used to access the model, and date of evaluation.
+```
+
+Thirteen fields in three groups. The numbering used below — A1–A6, B1–B4, C1–C3 — follows this list
+in order, so a record can be checked against it field by field.
 
 ## Scope
 
@@ -83,7 +116,7 @@ rule for combining them: mean, majority vote, any-pass, or both reported separat
 and disagreements between runs are resolved, and whether repeats vary anything (prompt variant,
 option order, temperature) or are identical calls.
 
-**B3 · Use of a reference answer.** Whether the judge is given one, which fields carry it, who wrote
+**B3 · Use of a correct answer.** Whether the judge is given a reference answer, which fields carry it, who wrote
 it, and how it was validated. If some criteria see the reference and others do not, list them
 separately — that asymmetry changes what each score means.
 
@@ -120,12 +153,12 @@ Scope: <which subtask(s)/how many items of how many are judged; the rest are sco
 Written: <date> · Sources read: <repo@commit>, <paper §>
 
 ## A · Grading setup
-A1 Grading model:            <value>   · Source: <file:line | paper § | not stated upstream>
-A2 Material shown:           <shown: ... | withheld: ...>   · Source:
-A3 Human comparison:         <n, who, measure, value | not reported>   · Source:
-A4 Grading instructions:     <verbatim, below>   · Source:
-A5 Scoring criteria:         <value>   · Source:
-A6 Score meanings:           <scale, direction, per-point definitions>   · Source:
+A1 Grading model:          <value>   · Source: <file:line | paper § | not stated upstream>
+A2 Material shown to the model: <shown: ... | withheld: ...>   · Source:
+A3 Human comparison:       <n, who, measure, value | not reported>   · Source:
+A4 Grading instructions:   <verbatim, below>   · Source:
+A5 Scoring criteria:       <value>   · Source:
+A6 Score meanings:         <scale, direction, per-point definitions>   · Source:
 
 ### A4 prompts (verbatim, variant 1 of N)
 ```text
@@ -133,15 +166,15 @@ A6 Score meanings:           <scale, direction, per-point definitions>   · Sour
 ```
 
 ## B · Comparison and scoring
-B1 Type of judgment:         <value>   · Source:
-B2 Repeated grading:         <calls/item; combination rule; tie rule>   · Source:
-B3 Reference answer:         <given? provenance? which criteria see it>   · Source:
-B4 Final score:              <aggregation path; micro/macro; ties; failed judgments>   · Source:
+B1 Type of judgment:       <value>   · Source:
+B2 Repeated grading:       <calls/item; combination rule; tie rule>   · Source:
+B3 Use of a correct answer: <given? provenance? which criteria see it>   · Source:
+B4 Final score calculation: <aggregation path; micro/macro; ties; failed judgments>   · Source:
 
 ## C · Replication
-C1 Generation settings:      <judge: ...; tested model: ...>   · Source:
-C2 Output handling:          <format, extraction, malformed policy>   · Source:
-C3 Software and access:      <repo@commit, packages, API, who, date>   · Source:
+C1 Generation settings:    <judge: ...; tested model: ...>   · Source:
+C2 Output handling:        <format, extraction, malformed policy>   · Source:
+C3 Software and access:    <repo@commit, packages, API, who, date>   · Source:
 
 ## Discrepancies and decisions
 - <code vs paper conflicts; upstream bugs; our choice: ... (date, who)>
