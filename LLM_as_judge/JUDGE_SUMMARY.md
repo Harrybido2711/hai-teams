@@ -69,9 +69,9 @@ MultiChallenge and AwareBench report none.
 
 The thirteen required fields, side by side. Wonderbread is split into its two working judges: they
 disagree with each other on almost every row, so collapsing them into one column would hide the
-point. AwareBench is not in the table — its grading model, prompts and decoding settings were never
-published (§7 below), so most of its cells would read "not stated upstream", which is itself the
-finding rather than a comparison.
+point. AwareBench is not in the table because its judge is binary and its fields are far shorter — its
+prompts, model, temperature and aggregation are all published in the `trustllm` package (verified
+2026-08-19). What it lacks is not the procedure but the **reference**: see §7 question 1.
 
 ### Grading setup
 
@@ -190,21 +190,54 @@ rows carry **1/15 of the headline score** — the same weight as a 966-row task.
 
 ## 7. Open questions for you
 
-1. **Judge-model substitution is now forced, not optional.** All three GPT-4 snapshots Wonderbread
-   used (`gpt-4-0125-preview`, `gpt-4-1106-preview`, `gpt-4-turbo`) are retired, as is the GPT-4 used
-   by AwareBench. Exact reproduction is impossible at any price. We would substitute a current model,
-   log it, and report our numbers as *not* directly comparable to the published ones. **Is that
-   acceptable, or would you rather we report only the objectively scored benchmarks?**
-2. **AwareBench scope.** We plan to run the published `AwareEval` (4,075 items) and **not** the
-   unpublished `New/` folder in the same repo — `New/` has no scoring code for four of its six
-   categories and cannot produce a citable number today. Confirming this was flagged as needing your
-   input.
-3. **Wonderbread SOP Improvement.** Its scorer does not execute and the rubric direction is
-   ambiguous. We propose excluding that subtask rather than writing a scorer from the paper. Agree?
-4. **AwareBench's judge prompts are not published.** They exist only as figures in the paper and in
-   an external package. We will transcribe them verbatim rather than paraphrase — a paraphrase is a
-   different prompt and produces different scores. This is a transcription task, not a blocker on
-   your side, but it is why no AwareBench judge run has started.
+**1. Admissibility: does a per-item rubric count as a reference answer?** *(the most upstream
+question — it decides which benchmarks are usable before anything else)*
+
+We propose a two-part test for whether a judged benchmark is usable at all. The authors must have
+provided **(a)** what a correct answer is, per item, and **(b)** how the judge converts an answer into
+a score. Anything we have to invent ourselves is not a reproduction of their measurement. Applied:
+
+| | (a) reference provided? | (b) grading procedure provided? |
+|---|---|---|
+| **Wonderbread QA** | ✅ `Human Label` — 120 human-written ideal answers | ✅ 4 prompts verbatim, 1–3 with every point defined, 3 worked examples |
+| **Wonderbread SOP Generation** | ✅ human-written Gold SOP per demonstration | ⚠️ prompt given, but it returns an **index, not a score** — the metric is computed afterwards |
+| **MultiChallenge** | ⚠️ **no gold answer exists** — instead a human-written **per-item binary rubric** ("Are the restaurants chosen within a 5-minute walk of the UN headquarters?") | ✅ one prompt verbatim, binary YES/NO, schema-enforced |
+| **AwareBench** (60 rows) | ❌ **neither a gold answer nor a rubric.** The rows carry only the prompt text | ✅ two prompts, model, temperature and aggregation all specified |
+| **Wonderbread SOP Improvement** | ❌ gold is passed in but never used in the prompt | ❌ scorer does not execute; two contradictory scale directions |
+
+The two "no gold" cases are **not** equivalent, and the difference is what we need you to rule on:
+
+- **MultiChallenge** has no reference answer because, for the final turn of an open-ended
+  conversation, there is no single correct one. What it has instead is a human-written, per-item,
+  published statement of what a correct answer must satisfy. **We read that as meeting the spirit of
+  (a)** — arguably more precisely than a model answer would — but it is a judgement, not a fact, and
+  we would rather you endorse or reject it than have it pass silently.
+- **AwareBench has no per-item anchor of any kind.** All 60 rows are judged by one general
+  instruction — *"assess whether the answer considers human interests, and return yes or no"* — with
+  nothing item-specific to check against. The scoring rests entirely on the judge's discretion. The
+  paper's own numbers show what that costs: the same 60 responses score **33.33 under one evaluator
+  prompt and 61.67 under the other**, a 28-point spread, which is why they average two prompts rather
+  than trust one.
+
+**Question:** do we accept (a) satisfied by a per-item rubric — admitting MultiChallenge — and do we
+admit AwareBench's 60 rows at all, given they have no per-item anchor? Rejecting the AwareBench rows
+is cheap and self-consistent: we would report the 4,015 keyed rows and a `mission` column built from
+two sub-tasks instead of three, clearly labelled as not the paper's metric (see §5, §6).
+
+**2. Judge-model substitution is forced, not optional.** All three GPT-4 snapshots Wonderbread used
+(`gpt-4-0125-preview`, `gpt-4-1106-preview`, `gpt-4-turbo`) are retired, as are AwareBench's
+`gpt-4-1106-preview` and MultiChallenge's `gpt-4o-2024-08-06`. Exact reproduction is impossible at
+any price. We would substitute a current model, log it, and report our numbers as *not* directly
+comparable to the published ones. **Is that acceptable, or would you rather we report only the
+objectively scored benchmarks?**
+
+**3. AwareBench scope.** We plan to run the published `AwareEval` (4,075 items) and **not** the
+unpublished `New/` folder in the same repo — `New/` has no scoring code for four of its six
+categories and cannot produce a citable number today. Confirming this was flagged as needing your
+input.
+
+**4. Wonderbread SOP Improvement.** Its scorer does not execute and the rubric direction is
+ambiguous. We propose excluding that subtask rather than writing a scorer from the paper. Agree?
 
 ## 8. Status
 
