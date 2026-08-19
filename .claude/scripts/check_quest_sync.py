@@ -23,10 +23,30 @@ import time
 
 QUEST = "quest"
 QDIR = "/gpfs/projects/p32983/NegotiationToM"
-LOCAL = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-    "NegotiationToM",
-)
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
+def _find_local():
+    """Locate the local NegotiationToM folder.
+
+    It has moved once already — on 2026-08-19 the repo was reorganised by team process and the
+    folder became Interpersonal_processes_benchmarks/NegotiationToM. A hardcoded path that goes
+    stale is worse than it sounds: this checker then finds no code, exits 2, and the pre-submit
+    gate fails open with a warning. The check stops protecting anything while still appearing to
+    be wired up. So search, and only fall back to a fixed guess if nothing is found.
+    """
+    for rel in ("Interpersonal_processes_benchmarks/NegotiationToM", "NegotiationToM"):
+        cand = os.path.join(REPO, rel)
+        if os.path.isdir(cand):
+            return cand
+    for dirpath, dirnames, _ in os.walk(REPO):
+        dirnames[:] = [d for d in dirnames if d not in (".git", "__pycache__")]
+        if os.path.basename(dirpath) == "NegotiationToM":
+            return dirpath
+    return os.path.join(REPO, "Interpersonal_processes_benchmarks/NegotiationToM")
+
+
+LOCAL = os.environ.get("NEG_LOCAL_DIR") or _find_local()
 
 # Code only. Anything under results*/ or ending in .txt/.csv/.jsonl is output, not input.
 PATTERNS = ("*.py", "NEG_*/*.py", "NEG_*/*.sh", "*.sh")

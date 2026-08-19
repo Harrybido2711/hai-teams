@@ -14,7 +14,7 @@
 
 set -u
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-LOCAL="$REPO/NegotiationToM"
+LOCAL="$REPO/Interpersonal_processes_benchmarks/NegotiationToM"
 QDIR=/gpfs/projects/p32983/NegotiationToM
 LOG="${PULL_LOG:-$REPO/quest_pull.log}"
 INTERVAL="${PULL_INTERVAL:-1800}"

@@ -55,12 +55,12 @@ const RECORD = '.claude/references/external-patterns.md'
 // block. A replace that silently fails to match would hand the Record phase two contradictory
 // instructions — read-only, and also write this file.
 const SCOPE_READONLY = `- READ-ONLY on this repo. Do not edit or create any file. In particular do not touch
-  .claude/agents/*, .claude/workflows/*, CLAUDE.md, or anything under NegotiationToM/. This
+  .claude/agents/*, .claude/workflows/*, CLAUDE.md, or anything under Interpersonal_processes_benchmarks/NegotiationToM/. This
   workflow proposes; a human decides.`
 
 const SCOPE_RECORD = `- Write ONLY ${RECORD}, plus the one routing row in .claude/references/README.md that this task
   explicitly asks for. Do not touch .claude/agents/*, .claude/workflows/*, CLAUDE.md, or anything
-  under NegotiationToM/. You are recording proposals; a human decides whether to apply them.`
+  under Interpersonal_processes_benchmarks/NegotiationToM/. You are recording proposals; a human decides whether to apply them.`
 
 const rules = (scope) => `
 This project is hai-teams: LLM evaluation benchmarks in Python, run as SLURM jobs on Northwestern's

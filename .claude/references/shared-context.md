@@ -8,16 +8,32 @@ stay in sync as the project moves — prefer them over anything remembered from 
 
 | Document | Authoritative on |
 |---|---|
-| `NegotiationToM/negotiation.md` | The key findings: current results, the dataset traps that silently change scores, reasoning-token cost, the silent-failure catalogue, and the conventions that must not drift. Read this first for anything NegotiationToM |
-| `NegotiationToM/ISSUES.md` | Problems already hit, what was rejected, what shipped, and the false alarms recorded so they are not investigated twice |
-| `NegotiationToM/DATA_NOTES.md` | Dataset traps: cutoff tiling, the `"None"` sentinel, which gold fields are correct, expected row counts |
+| `Interpersonal_processes_benchmarks/NegotiationToM/negotiation.md` | The key findings: current results, the dataset traps that silently change scores, reasoning-token cost, the silent-failure catalogue, and the conventions that must not drift. Read this first for anything NegotiationToM |
+| `Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md` | Problems already hit, what was rejected, what shipped, and the false alarms recorded so they are not investigated twice |
+| `Interpersonal_processes_benchmarks/NegotiationToM/DATA_NOTES.md` | Dataset traps: cutoff tiling, the `"None"` sentinel, which gold fields are correct, expected row counts |
 | `benchmark_evaluation_guide.md` | What each benchmark requires — metrics, judges, assets |
-| `EmoBench-master/EMO_SCRIPT.md`, `NegotiationToM/Negotiation_script.md` | Per-benchmark task semantics. Authoritative on what a task *means*; their file listings go stale, so verify listings against the tree |
+| `Interpersonal_processes_benchmarks/EmoBench/EMO_SCRIPT.md`, `Interpersonal_processes_benchmarks/NegotiationToM/Negotiation_script.md` | Per-benchmark task semantics. Authoritative on what a task *means*; their file listings go stale, so verify listings against the tree |
 
 ## Repo layout
 
-Benchmarks live one per directory: `NegotiationToM/`, `EmoBench-master/`, `bbh/`, `DocVQA/`,
-`mmlu/`, `TruthfulQA-main/`, `LLMs-Planning-main/`, `sycophancy-eval-main/`.
+Benchmarks are grouped by the team process they measure — the grouping is the tracker's, so a
+folder states what a benchmark is evidence for (reorganised 2026-08-19; paths before that date in
+older notes are stale):
+
+```
+Transition_processes_benchmarks/   Awareness_in_LLM, LLMs-Planning_bench, Multi-party_Goal_Tracking_bench
+Action_processes_benchmarks/       Wonderbread_bench, Multi-challenge_bench
+Interpersonal_processes_benchmarks/ NegotiationToM, EmoBench
+Tasks_benchmarks/                  DocVQA, bbh, mmlu
+Random_stuff/                      SQA Release 1.0, TruthfulQA-main, sycophancy-eval-main
+```
+
+`PLAN.md` at the repo root is the map: what each folder is, which benchmark needs a judge, and what
+state each run is in. `VENDORED_SOURCES.md` records which upstream commit each vendored copy came
+from — those folders carry no `.git` of their own.
+
+**On Quest nothing moved.** The remote layout is still flat under `/gpfs/projects/p32983/`, so
+`/gpfs/projects/p32983/NegotiationToM` remains correct and must not be "fixed" to match local.
 
 Every benchmark uses **one folder per model** — a Python eval script, a SLURM `.sh`, a `results/`
 directory. Copy the closest existing folder and swap the client; do not invent a new structure,

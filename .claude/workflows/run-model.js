@@ -53,7 +53,7 @@ if (!MODEL) {
 }
 
 const REPO = '/Users/harrychen/SONIC/hai-teams'
-const LOCAL = REPO + '/NegotiationToM'
+const LOCAL = REPO + '/Interpersonal_processes_benchmarks/NegotiationToM'
 const QDIR = '/gpfs/projects/p32983/NegotiationToM'
 const SUBMIT = IS_PILOT ? 'run_pilot.sh' : 'run_negotiation.sh'
 const RESULTS = IS_PILOT ? 'results/pilot' : 'results'
@@ -270,7 +270,7 @@ A. **Quest -> local.** \`bash ${REPO}/.claude/scripts/pull_quest_results.sh\` an
    delta it prints. Results are generated on Quest and pulled down; never push results upward.
    ${DO_PUSH ? `
 B. **local -> git.** Stage ONLY this model's results and logs by explicit path:
-     git add NegotiationToM/${MODEL}/results NegotiationToM/${MODEL}/log_*.txt
+     git add Interpersonal_processes_benchmarks/NegotiationToM/${MODEL}/results Interpersonal_processes_benchmarks/NegotiationToM/${MODEL}/log_*.txt
    Never \`git add -A\` — an unattended loop that did swept unreviewed work into commits and pushed
    them. If nothing changed, say so and skip the commit rather than making an empty one. Commit with
    a message naming the model, the job id and the row counts, then push to \`backup\` and \`origin\`.
@@ -406,7 +406,7 @@ ${RULES}
 
 1. \`bash ${REPO}/.claude/scripts/pull_quest_results.sh\`, then verify: for each task, the local row
    count equals Quest's. Report both numbers; do not assert success without them.
-${DO_PUSH ? `2. Stage ONLY this model's paths — \`git add NegotiationToM/${MODEL}/results NegotiationToM/${MODEL}/log_*.txt\` — never \`git add -A\`. Commit with a message naming the model, job ${launched.job_id}, the row counts, the empty rate, and whether the run is usable. Push to \`backup\` and \`origin\`, never \`upstream\`.` : '2. Skipping git (push=false). Say so explicitly.'}
+${DO_PUSH ? `2. Stage ONLY this model's paths — \`git add Interpersonal_processes_benchmarks/NegotiationToM/${MODEL}/results Interpersonal_processes_benchmarks/NegotiationToM/${MODEL}/log_*.txt\` — never \`git add -A\`. Commit with a message naming the model, job ${launched.job_id}, the row counts, the empty rate, and whether the run is usable. Push to \`backup\` and \`origin\`, never \`upstream\`.` : '2. Skipping git (push=false). Say so explicitly.'}
 3. State plainly whether anything of this run still exists only on Quest.`,
   { agentType: 'executor', phase: 'Audit', schema: {
     type: 'object', additionalProperties: false,
@@ -424,7 +424,7 @@ ${DO_PUSH ? `2. Stage ONLY this model's paths — \`git add NegotiationToM/${MOD
 // ---------- 7. Record ----------
 phase('Record')
 const recorded = await agent(
-  `Record this run in NegotiationToM/ISSUES.md. Extend an existing entry if one covers the same root
+  `Record this run in Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md. Extend an existing entry if one covers the same root
 cause; otherwise add one. House style: symptom, root cause, what was rejected, fix, measured
 evidence. Be brief.
 

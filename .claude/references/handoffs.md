@@ -8,7 +8,7 @@ or be readable at a path it is given.
 
 The planner passes **what to accomplish** and **where**. The agent decides **how**.
 
-1. **The target and its paths.** `NEG_Gemma`, not "the Gemma run". `NegotiationToM/neg_eval_core.py`,
+1. **The target and its paths.** `NEG_Gemma`, not "the Gemma run". `Interpersonal_processes_benchmarks/NegotiationToM/neg_eval_core.py`,
    not "the shared core". An agent that has to guess which file you meant will guess.
 2. **The decision already made, when there is one.** `executor` is given a decision, not a problem;
    if the instruction is ambiguous or looks wrong it stops and says so rather than re-opening it.

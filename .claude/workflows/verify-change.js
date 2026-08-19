@@ -73,7 +73,7 @@ g) **Which running processes are actually executing this code?** Python reads a 
    job start times and say which conclusions apply to which jobs.
 h) **Does documentation still describe the superseded behaviour?** A skeleton or checklist that
    still teaches the old rule will quietly reintroduce it. Check .claude/agents/*.md and
-   NegotiationToM/*.md.
+   Interpersonal_processes_benchmarks/NegotiationToM/*.md.
 `
 
 // ---------- Attack + Observe, concurrently ----------
@@ -174,7 +174,7 @@ instead of hedging.`,
 // ---------- Record ----------
 phase('Record')
 const recorded = await agent(
-  `Record this review in NegotiationToM/ISSUES.md, under the entry for the problem the change
+  `Record this review in Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md, under the entry for the problem the change
 addresses if one exists, otherwise as a new entry. House style: symptom, root cause, what was
 rejected, fix, measured evidence.
 

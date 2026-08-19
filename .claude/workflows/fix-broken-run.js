@@ -43,7 +43,7 @@ if (!MODEL) {
 }
 
 const QDIR = '/gpfs/projects/p32983/NegotiationToM'
-const LOCAL = '/Users/harrychen/SONIC/hai-teams/NegotiationToM'
+const LOCAL = '/Users/harrychen/SONIC/hai-teams/Interpersonal_processes_benchmarks/NegotiationToM'
 const SUBMIT = IS_PILOT ? 'run_pilot.sh' : 'run_negotiation.sh'
 const RESULTS = IS_PILOT ? 'results/pilot' : 'results'
 
@@ -267,7 +267,7 @@ empty rate ${state.empty_rate}, ${state.rate_per_min || '?'} rows/min.`,
 // ---------- 7. Record ----------
 phase('Record')
 const recorded = await agent(
-  `Record this in NegotiationToM/ISSUES.md. If an entry already covers the same root cause, extend it
+  `Record this in Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md. If an entry already covers the same root cause, extend it
 rather than adding a near-duplicate. Keep the house style: symptom, root cause, what was rejected,
 fix, measured evidence. Be brief — this is for someone who was not here.
 

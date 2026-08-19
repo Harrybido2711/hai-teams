@@ -24,7 +24,7 @@ found 6 of 32 files stale on Quest when only Qwen was suspected.
 form, when you need to see it:
 
 ```bash
-cd NegotiationToM
+cd Interpersonal_processes_benchmarks/NegotiationToM
 setopt null_glob
 FILES=(*.py NEG_*/*.py NEG_*/*.sh); FILES=(${(u)FILES})
 md5 -r "${FILES[@]}" | awk '{print $2, $1}' | sort -k1,1 > /tmp/l.md5

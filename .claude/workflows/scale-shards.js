@@ -58,7 +58,7 @@ if (LADDER.some(n => !Number.isInteger(n) || n < 1)) {
 }
 
 const REPO = '/Users/harrychen/SONIC/hai-teams'
-const LOCAL = REPO + '/NegotiationToM'
+const LOCAL = REPO + '/Interpersonal_processes_benchmarks/NegotiationToM'
 const QDIR = '/gpfs/projects/p32983/NegotiationToM'
 const MAX_CYCLES = Math.max(1, Math.ceil((MAX_HOURS * 60) / SYNC_MIN))
 
@@ -456,7 +456,7 @@ ${RULES}
 A. **Quest -> local.** \`bash ${REPO}/.claude/scripts/pull_quest_results.sh\`; report the row delta.
    Results flow down only; never push results upward.
 ${DO_PUSH ? `B. **local -> git.** Stage ONLY this model's results and logs, by explicit path:
-     git add NegotiationToM/${MODEL}/results NegotiationToM/${MODEL}/log_*.txt
+     git add Interpersonal_processes_benchmarks/NegotiationToM/${MODEL}/results Interpersonal_processes_benchmarks/NegotiationToM/${MODEL}/log_*.txt
    Never \`git add -A\`. If nothing changed, skip the commit rather than making an empty one.
    Commit naming the model, job id and row counts, then push to \`backup\` and \`origin\`.
    Never push to \`upstream\`; it is the shared repo.` : 'B. Skipping git (push=false). Say so explicitly.'}

@@ -10,8 +10,8 @@ re-diagnosed from scratch in a later session, which is the single most expensive
 
 ## Where you write
 
-`NegotiationToM/ISSUES.md`, in the repo, in English. That is the single home for problem history —
-its companion `NegotiationToM/negotiation.md` holds the distilled findings, so check there before
+`Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md`, in the repo, in English. That is the single home for problem history —
+its companion `Interpersonal_processes_benchmarks/NegotiationToM/negotiation.md` holds the distilled findings, so check there before
 adding an entry: if a problem has already become a settled convention, update that instead of
 logging it twice.
 it is committed, so teammates and future agents get it from a clone.

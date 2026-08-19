@@ -16,7 +16,7 @@ start a job, stay here.
 | `evaluator` | whether the numbers can be believed, what they mean, cost audit. Recommends only |
 | `executor` | a change that has already been decided — edit, transfer, sbatch, scancel |
 | `reviewer` | read the diff before it reaches Quest |
-| `tracker` | record a problem and its resolution in `NegotiationToM/ISSUES.md` |
+| `tracker` | record a problem and its resolution in `Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md` |
 | `summarizer` | read a lot of files, return only the conclusion |
 
 Every agent ends its report with a `STATUS:` line drawn from a fixed vocabulary, so a dispatch can
@@ -72,7 +72,7 @@ model being worked on: a check on 2026-07-29 found 6 of 32 files stale, includin
 fails at import. **Sync the core and the runners together, or not at all.**
 
 ```bash
-cd NegotiationToM
+cd Interpersonal_processes_benchmarks/NegotiationToM
 setopt null_glob
 FILES=(*.py NEG_*/*.py NEG_*/*.sh); FILES=(${(u)FILES})
 md5 -r "${FILES[@]}" | awk '{print $2, $1}' | sort -k1,1 > /tmp/l.md5
@@ -166,10 +166,10 @@ Two rules keep them useful:
 
 Project knowledge — what is true about the benchmarks and what has already gone wrong:
 
-- `NegotiationToM/negotiation.md` — current results, dataset traps, reasoning-token cost, the
+- `Interpersonal_processes_benchmarks/NegotiationToM/negotiation.md` — current results, dataset traps, reasoning-token cost, the
   silent-failure catalogue
-- `NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, false alarms
-- `NegotiationToM/DATA_NOTES.md` — cutoff tiling, the `"None"` sentinel, expected row counts
+- `Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md` — problems already hit, what was rejected, what shipped, false alarms
+- `Interpersonal_processes_benchmarks/NegotiationToM/DATA_NOTES.md` — cutoff tiling, the `"None"` sentinel, expected row counts
 
 Operating knowledge — what an agent must do before acting. Indexed in
 `.claude/references/README.md`:
