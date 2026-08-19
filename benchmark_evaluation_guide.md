@@ -1,6 +1,14 @@
 # Human–AI Benchmarks: Evaluation Methods and Requirements
 
-> Source: `Human_AI_Documentation.pdf`. This guide covers the seven unfinished benchmarks. DocVQA, BIG-Bench Hard, and MMLU have already been evaluated objectively and are therefore excluded. EmoBench appears twice in the PDF but is counted only once.
+> Source: `Human_AI_Documentation.pdf`. EmoBench appears twice in the PDF but is counted only once.
+>
+> **Revised 2026-08-19.** The judge verdict is now stated for all **ten** benchmarks in the tracker.
+> DocVQA, BIG-Bench Hard and MMLU were previously excluded as "already evaluated objectively"; they
+> are now listed explicitly so the table answers the question for every row rather than for seven of
+> them. Verdicts for the benchmarks vendored in this repo were checked against the code and data on
+> disk, not only against the PDF. The three that are **not** vendored here — Multi-party Goal
+> Tracking, Wonderbread, MultiChallenge — are read off their papers and repos, and are marked as such
+> in the Basis column.
 
 ## Overview
 
@@ -13,20 +21,81 @@
 | MultiChallenge | Answer the final turn of a conversation of up to ten turns while retaining instructions, user facts, versions, and self-consistency | An LLM judge answers an instance-specific binary rubric; results are aggregated as Accuracy | **Yes—all final responses** | Full histories, final user turns, human-written binary rubrics, model responses, judge model/prompt, binary parser, and Accuracy script |
 | NegotiationToM | Identify Desire, Belief, and Intention in negotiation dialogues | Desire/Belief Exact Match, Intention micro/macro F1, All score, and Consistency score | **No** | 395 CaSiNo dialogues, about 13.8K questions, answer choices, gold labels, multi-label intention annotations, zero/few-shot/CoT prompts, parser, and metric scripts |
 | EmoBench | Multiple-choice Emotional Understanding (EU) and Emotional Application (EA) | Accuracy after repeated sampling, majority voting, and averaging across four answer-order permutations | **No** | 400 English/Chinese MCQs, choices, gold labels, EU/EA categories, option shuffler, repeated inference and voting logic, heuristic parser, and Accuracy script |
+| DocVQA | Extractive question answering over document images | ANLS — average normalized Levenshtein similarity against the gold answer strings | **No** | Document images, questions, gold answer lists, an ANLS scorer, and a response normalizer |
+| BIG-Bench Hard | 23 tasks selected as hard for LLMs, answered directly or with Chain-of-Thought | Exact match on the extracted final answer | **No** | Task JSONs, the official CoT prompts, an answer extractor, and an exact-match scorer |
+| MMLU | 57-subject four-way multiple choice | Accuracy on the selected letter | **No** | Dev/test splits, few-shot prompts, a letter parser, and an Accuracy script |
 
-## LLM-as-a-Judge Summary
+## Which benchmarks need an LLM judge
 
-### Required by the original benchmark
+**Three of the ten do: AWAREBENCH (part of it), Wonderbread (part of it), and MultiChallenge (all of
+it).** The other seven have a gold label, a symbolic validator, or a string metric. Adding a judge to
+those would not make them more faithful — it would replace a deterministic score with a noisier one
+and break comparability with every published number.
 
-1. **AWAREBENCH:** GPT-4 judges only the open-ended mission-awareness responses. It evaluates whether the answer prioritizes human needs and assesses generation quality. Binary and multiple-choice items use objective Accuracy.
-2. **Wonderbread:** GPT-4 scores Question Answering on soundness, completeness, clarity, and compactness, each on a 1–3 scale. The document also describes the benchmark generally as using “GPT as a judge & human alignment.”
-3. **MultiChallenge:** Each item has a human-written yes/no rubric. The judge applies that rubric to the model’s final response, and the binary results are aggregated into Accuracy.
+| Benchmark | Judge needed | What the judge scores | Judge calls per model | Basis |
+|---|---|---|---|---|
+| **AWAREBENCH** | **Yes — 60 of 4,075 rows** | `mission_open-ended` only: human alignment (binary) and generation quality | **120** = 60 rows × 2 evaluator prompts | Verified on disk: those 60 rows carry no `label` and no `choices`; the other 4,015 have an exact-match key. See `Awareness-in-LLM/AWARENESS_NOTES.md` §2.5 and `Output_template/README.md` |
+| **Wonderbread** | **Yes — Question Answering; verify two more subtasks** | QA answers on soundness, completeness, clarity, compactness (1–3 each) | one call per QA item; more if SOP Improvement and SOP Generation also use a model scorer | Paper and PDF. Repo not vendored here — confirm against the official evaluator before implementing |
+| **MultiChallenge** | **Yes — every final response** | the instance-specific human-written binary rubric, applied to the model's final turn | one call per test item | Paper and PDF. Repo not vendored here |
+| Multi-party Goal Tracking | No — *manual* review, not a judge | — | — | Paper and repo. Scored against gold `[MASK]` annotations; the residue goes to a human, not to a model |
+| PlanBench | No — symbolic validator | — | — | Vendored: `LLMs-Planning-main/plan-bench/response_evaluation.py` validates plans with VAL/PDDL |
+| NegotiationToM | No | — | — | Vendored: `NegotiationToM/neg_eval_core.py` scores with exact match and `sklearn.metrics.f1_score`. No judge in any of our runs |
+| EmoBench | No | — | — | Vendored: MCQ with gold letters, heuristic parser plus majority voting across permutations |
+| DocVQA | No | — | — | Vendored: ANLS/Levenshtein scorer in `DocVQA/*_eval.py` |
+| BIG-Bench Hard | No | — | — | Vendored: exact match against the task's gold target |
+| MMLU | No | — | — | Vendored: Accuracy on the parsed letter |
 
-### Not required
+A grep for judge machinery across every vendored benchmark in this repo returns hits in
+`Awareness-in-LLM/` and nowhere else, which is consistent with the table above.
 
-- **PlanBench** uses a symbolic planning validator; an LLM judge should not replace VAL.
-- **NegotiationToM** and **EmoBench** have discrete gold labels and are scored objectively.
-- **Multi-party Goal Tracking** is scored against gold annotations. Its “functionally identical” and broad `Correct` categories may require deterministic equivalence rules or manual review, but this is not LLM-as-a-Judge.
+### The three that need one
+
+1. **AWAREBENCH.** GPT-4 judges only the open-ended mission-awareness items — 60 rows out of 4,075.
+   It produces two separate things: a binary *human alignment* judgement (does the response prioritize
+   human needs) and a *generation quality* score. Because prompt-induced randomness moves GPT-4's
+   judgements, the paper runs the judge under **two evaluator prompts** — a standard one and a
+   role-playing one — and reports both plus their mean, so the real cost is 120 judge calls per model,
+   not 60. Binary and multiple-choice items are exact match and must not be routed to the judge.
+   Note the leverage: those 60 rows carry 1/15 of the total awareness score, the same weight as the
+   966-row `mission_explicit` task, so judge noise is disproportionately visible.
+2. **Wonderbread.** GPT-4 scores Question Answering on soundness, completeness, clarity, and
+   compactness, 1–3 each — this one is explicit in the source. Two further subtasks are *candidates*
+   and are unresolved here: **SOP Improvement** is scored on a 1–5 rubric with no scorer named, and
+   **SOP Generation** uses semantic step matching for Precision/Recall, which may itself be
+   model-based. Confirm both against the official evaluator before budgeting; do not assume.
+3. **MultiChallenge.** Every final response is judged against that instance's human-written yes/no
+   rubric, and the booleans are aggregated into Accuracy. The rubric is per-item and is part of the
+   dataset; a generic "is this answer good?" prompt is a different benchmark.
+
+### Three phrases in the tracker that look like a judge but are not
+
+- **"Hand-evaluation and domain-specific"** (Multi-party Goal Tracking) means a *human* resolves
+  whether a prediction is functionally equivalent to the gold annotation — a broader slot category,
+  a synonym, a plurality difference. Write deterministic normalization rules first and send only the
+  residue to a person. Substituting a GPT judge here changes the metric's definition rather than
+  automating it.
+- **"Human evaluation"** (NegotiationToM) refers to how the dataset was built and validated, not to
+  how a model is scored. Scoring is Desire/Belief grouped exact match plus Intention micro/macro F1,
+  computed programmatically. Our runs use no judge and should not start using one.
+- **"GPT as a judge in some settings" / "Human or GPT as a judge"** (Wonderbread, MultiChallenge)
+  are not optional shortcuts — the judge *is* the official metric on those subtasks, and the human
+  is the reference it was calibrated against. Swapping in a different judge model is allowed but
+  produces numbers that are not comparable to the published ones unless re-reported.
+
+### If a different judge model is used
+
+Nothing here forces GPT-4 specifically, but the substitution has to be declared, because judge-based
+scores are not portable across judge models. Whatever is used, fix and log the judge model version,
+temperature, prompt version, retry rules, and the raw judge output, and keep a manually reviewed
+sample for a reliability check. Parse failures must be counted as their own category, never silently
+scored zero. `LLM_as_judge/GPT_LLM_AS_JUDGE_GUIDE.md` holds this project's judge-implementation
+notes, including structured-output parsing and position-bias handling for pairwise setups.
+
+**Before any judge-scored number from these three benchmarks is used, its setup must be recorded**
+under the rule in `LLM_as_judge/JUDGE_DOCUMENTATION_RULE.md` — grading model and version, what the
+judge was and was not shown, the verbatim prompts, the scale and its direction, the aggregation path,
+and the settings needed to run it again. The seven objectively scored benchmarks get a three-line
+stub there, so "no judge" is never confused with "not yet checked".
 
 ## Detailed Evaluation Procedures
 
@@ -145,6 +214,20 @@ Procedure described in the document:
 
 The phrase “prompt each LLM five times (5-shot)” is ambiguous. Because the next step uses majority voting, it appears to mean five repeated samples rather than five demonstrations in a prompt. Confirm the exact behavior in the official implementation and document it explicitly.
 
+### 8. DocVQA, BIG-Bench Hard, and MMLU
+
+These three are already evaluated in this repo and are listed here only to close the tracker's judge
+column.
+
+| Benchmark | Prediction | Scoring | Why no judge |
+|---|---|---|---|
+| DocVQA | short extractive answer from a document image | ANLS against the gold answer list | The metric is a string-similarity function; a judge would replace a defined number with an opinion |
+| BIG-Bench Hard | final answer, optionally after CoT | exact match on the extracted answer | Every task has one gold target. Judge only the *extraction* if parsing is the problem, and fix the parser instead |
+| MMLU | one of four letters | Accuracy | Gold letter; the only failure mode is parsing, not judging |
+
+If any of the three shows a suspicious score, the cause is almost always answer extraction — an
+unparsed response is being scored as wrong. Inspect the raw outputs before touching the metric.
+
 ## Minimum Implementation Checklist
 
 - A target-model API endpoint or local inference server, with an exact model version.
@@ -179,4 +262,8 @@ judge_score
 error_type
 ```
 
-Populate the `judge_*` fields only for AWAREBENCH open-ended questions, Wonderbread judge-based subtasks, and MultiChallenge. Leave them empty for objectively scored benchmarks.
+Populate the `judge_*` fields only for the 60 AWAREBENCH open-ended rows, the Wonderbread
+judge-based subtasks, and every MultiChallenge item. Leave them empty everywhere else — PlanBench,
+NegotiationToM, EmoBench, Multi-party Goal Tracking, DocVQA, BIG-Bench Hard, and MMLU. For AWAREBENCH
+the two evaluator prompts are two rows, not one: `judge_prompt_version` distinguishes the standard
+pass from the role-playing pass.
