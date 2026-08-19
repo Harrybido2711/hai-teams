@@ -292,6 +292,10 @@ paper's own 13 models) and flip one pair of ranks. *(record §3)*
 | Wonderbread QA             |               120 | **480** (120 × 4 criteria)                                     |
 | Wonderbread SOP Generation | per demonstration | **(pred lines + gold lines) per demo** — scales with verbosity |
 
+Judge calls are not the binding cost for Wonderbread. Its demonstrations are a **33 GB** separate
+download (132.7 GB for the full set), of which 90% is video and key frames; a text-only run needs
+188 MB. See §6 question 4.
+
 ## 6. Open questions for you
 
 **1. Admissibility: does a per-item rubric count as a reference answer?** *(the most upstream
@@ -340,5 +344,40 @@ unpublished `New/` folder in the same repo — `New/` has no scoring code for fo
 categories and cannot produce a citable number today. Confirming this was flagged as needing your
 input.
 
-**4. Wonderbread SOP Improvement.** Its scorer does not execute and the rubric direction is
+**4. Wonderbread's data is 33 GB, and the cheap path changes what we measure.** The code is
+complete upstream, but the demonstrations are a separate Zenodo download and the repo does not state
+their size. Measured directly from the archive headers on 2026-08-19:
+
+| | Size | What it is |
+|---|---:|---|
+| `demos.zip` | **132.7 GB** | all 2,928 demonstrations |
+| `gold_demos.zip` | **33.0 GB** | 724 demos / 162 "Gold" tasks — the realistic target |
+| `debug_demos.zip` | 0.94 GB | 24 demos, for checking the pipeline runs |
+
+Inside `gold_demos.zip`, **90% is screen recordings and key frames** (24.3 GB of `.mp4`, 5.5 GB of
+`.png`). The parts a text-only run needs — the gold SOPs and the processed action traces — are
+**188 MB**, and the gold SOPs alone are **0.31 MB**. Zenodo serves range requests, so that subset can
+be pulled without downloading the archive.
+
+**Storage is not the constraint:** our Quest allocation is 1,024 GB with 13 GB used, so 33 GB is 3% of
+quota. Two other things are:
+
+- **Dropping the images changes the task for SOP Generation.** Its whole point is *"given a video
+  recording of a workflow demonstration, generate an SOP"*. Running it from action traces alone
+  (`--is_act` without `--is_kf`) is a legitimate upstream ablation but a **different, easier task**,
+  and its numbers are not comparable to the paper's. For **QA** the situation is better:
+  `prompt__qa_sop_only` is an official variant that answers from the written SOP, so a text-only QA
+  run is a published configuration rather than a compromise.
+- **Provider coverage points the other way.** Our only multimodal benchmark, DocVQA, runs on 2 of our
+  7 providers. A multimodal Wonderbread would land in the same place, whereas a text-only run could
+  cover all seven — which for a comparison study may be worth more than fidelity to one paper's
+  configuration.
+
+**Question:** do we (a) take the 33 GB and run Wonderbread as published, on whichever providers accept
+images; (b) run the text-only configuration on all seven providers and report it as the ablation it
+is; or (c) both, with QA text-only and SOP Generation multimodal? Either way we propose starting with
+the 0.94 GB debug set to confirm the code behaves when key frames are absent — that is cheap and
+settles a question we currently have no evidence on.
+
+**5. Wonderbread SOP Improvement.** Its scorer does not execute and the rubric direction is
 ambiguous. We propose excluding that subtask rather than writing a scorer from the paper. Agree?
