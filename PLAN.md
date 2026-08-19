@@ -29,7 +29,8 @@ hai-teams/
 ├── Random_stuff/                        1,032 files · 75M — parked, not part of the taxonomy
 │   ├── SQA Release 1.0/ · TruthfulQA-main/ · sycophancy-eval-main/
 ├── LLM_as_judge/                        judge methodology, not a benchmark
-│   └── JUDGE_RECORD.md                  the filled record for all three judged benchmarks
+│   ├── JUDGE_RECORD.md                  the filled record for all three judged benchmarks
+│   └── JUDGE_SUMMARY.md                 its two-page version, for discussion
 ├── .claude/                             agents, references, workflows (see below)
 ├── CLAUDE.md                            planner rules — role split, kill-and-resync, sync check
 ├── VENDORED_SOURCES.md                  upstream URL + commit for every vendored folder
@@ -90,6 +91,7 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 | `CLAUDE.md` | planner rules — who does what, kill-and-resync authorisation, the local↔Quest md5 check, saved workflows |
 | `LLM_as_judge/JUDGE_DOCUMENTATION_RULE.md` | the thirteen fields that must be recorded about any judge before its numbers are used |
 | `LLM_as_judge/JUDGE_RECORD.md` | the filled record — every judge in the suite: what it is, what it is shown, what its numbers mean, and which seven benchmarks need no record |
+| `LLM_as_judge/JUDGE_SUMMARY.md` | the two-page version of that record: the findings, the cost per model, and the open decisions |
 | `LLM_as_judge/GPT_LLM_AS_JUDGE_GUIDE.md` | how to *build* a judge with GPT — pairwise setup, structured output, position bias |
 | `VENDORED_SOURCES.md` | which upstream commit each vendored folder came from |
 | `Interpersonal_.../NegotiationToM/negotiation.md` | current NegotiationToM results, dataset traps, reasoning-token cost, silent-failure catalogue |

@@ -5,6 +5,9 @@ every judge in the repo in one place. Written 2026-08-19, from the vendored code
 papers — rule 1 puts code first, and on all three benchmarks the code turned out to say something the
 paper did not.
 
+**For a two-page version to discuss or present, read [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) instead.**
+This file is the evidence behind it: every field, every citation, every prompt verbatim.
+
 Three benchmarks are documented here, in the order they are usable:
 [Wonderbread](#1--wonderbread) · [MultiChallenge](#2--multichallenge) · [AwareBench](#3--awarebench).
 Verbatim prompts are in the appendices so the fields stay readable.
