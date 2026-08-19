@@ -29,9 +29,9 @@ hai-teams/
 ├── Random_stuff/                        1,032 files · 75M — parked, not part of the taxonomy
 │   ├── SQA Release 1.0/ · TruthfulQA-main/ · sycophancy-eval-main/
 ├── LLM_as_judge/                        judge methodology, not a benchmark
+│   └── JUDGE_RECORD.md                  the filled record for all three judged benchmarks
 ├── .claude/                             agents, references, workflows (see below)
 ├── CLAUDE.md                            planner rules — role split, kill-and-resync, sync check
-├── benchmark_evaluation_guide.md        per-benchmark scoring methods + the judge verdict
 ├── VENDORED_SOURCES.md                  upstream URL + commit for every vendored folder
 ├── PLAN.md                              this file
 ├── README.md · Results.xlsx             the shared workbook every reported number lands in
@@ -57,7 +57,7 @@ drives this project, so a benchmark's folder states which team process it is evi
 | `Tasks_.../mmlu` | MMLU | general task ability | hendrycks/test | no — accuracy | 7 providers incl. Llama |
 
 "Result files present" means CSV/JSONL output exists on disk under that provider's name — it is not a
-claim that the run is complete or that its numbers have been audited. `benchmark_evaluation_guide.md`
+claim that the run is complete or that its numbers have been audited. `LLM_as_judge/JUDGE_RECORD.md`
 carries the judge verdict and the evidence behind it.
 
 ## The shape that repeats inside a benchmark folder
@@ -88,8 +88,8 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 | File | Authoritative on |
 |---|---|
 | `CLAUDE.md` | planner rules — who does what, kill-and-resync authorisation, the local↔Quest md5 check, saved workflows |
-| `benchmark_evaluation_guide.md` | how each of the ten benchmarks is scored, and which three need an LLM judge |
 | `LLM_as_judge/JUDGE_DOCUMENTATION_RULE.md` | the thirteen fields that must be recorded about any judge before its numbers are used |
+| `LLM_as_judge/JUDGE_RECORD.md` | the filled record — every judge in the suite: what it is, what it is shown, what its numbers mean, and which seven benchmarks need no record |
 | `LLM_as_judge/GPT_LLM_AS_JUDGE_GUIDE.md` | how to *build* a judge with GPT — pairwise setup, structured output, position bias |
 | `VENDORED_SOURCES.md` | which upstream commit each vendored folder came from |
 | `Interpersonal_.../NegotiationToM/negotiation.md` | current NegotiationToM results, dataset traps, reasoning-token cost, silent-failure catalogue |
@@ -126,8 +126,14 @@ outlive the session that wrote them. Details in `CLAUDE.md`.
 
 ## Open work
 
-1. **Judge records.** `LLM_as_judge/records/` does not exist yet. AwareBench, Wonderbread and
-   MultiChallenge each need the thirteen-field record before any judge-scored number is used.
+1. **Judge record — done 2026-08-19.** `LLM_as_judge/JUDGE_RECORD.md` is the single filled record:
+   all thirteen fields for Wonderbread, MultiChallenge and AwareBench, plus verbatim prompts. The
+   seven benchmarks with no LLM judge get no record — they are named in its opening section. Three
+   findings from writing them change downstream work: Wonderbread's judge covers **SOP Generation**
+   as well as QA (so the call budget scales with SOP length, not with item count); MultiChallenge's
+   harness raises `TypeError` before its first API call and needs a one-line patch; and AwareBench's
+   judge prompts are not in the repo at all — they must be transcribed from paper Figures 8–10
+   before that run can be faithful.
 2. **AwareBench run.** Scope is decided (AwareEval, not `New/`) and the output templates are written,
    but no generation has run. Budget per model: 4,075 generation calls + 120 judge calls.
 3. **Three benchmarks have no runner.** Multi-party Goal Tracking, Wonderbread and MultiChallenge are

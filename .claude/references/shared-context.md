@@ -11,7 +11,7 @@ stay in sync as the project moves — prefer them over anything remembered from 
 | `Interpersonal_processes_benchmarks/NegotiationToM/negotiation.md` | The key findings: current results, the dataset traps that silently change scores, reasoning-token cost, the silent-failure catalogue, and the conventions that must not drift. Read this first for anything NegotiationToM |
 | `Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md` | Problems already hit, what was rejected, what shipped, and the false alarms recorded so they are not investigated twice |
 | `Interpersonal_processes_benchmarks/NegotiationToM/DATA_NOTES.md` | Dataset traps: cutoff tiling, the `"None"` sentinel, which gold fields are correct, expected row counts |
-| `benchmark_evaluation_guide.md` | What each benchmark requires — metrics, judges, assets |
+| `LLM_as_judge/JUDGE_RECORD.md` | Which benchmarks need an LLM judge, and the full record for the three that do |
 | `Interpersonal_processes_benchmarks/EmoBench/EMO_SCRIPT.md`, `Interpersonal_processes_benchmarks/NegotiationToM/Negotiation_script.md` | Per-benchmark task semantics. Authoritative on what a task *means*; their file listings go stale, so verify listings against the tree |
 
 ## Repo layout

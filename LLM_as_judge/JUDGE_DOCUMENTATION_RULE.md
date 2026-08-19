@@ -6,14 +6,14 @@ exact model, the exact prompt, and the exact aggregation. This file defines the 
 judge-scored benchmark in this repo must carry before its numbers enter `Results.xlsx`.
 
 It is a **rule and a template**, not a filled-in survey. The thirteen required fields are quoted
-verbatim in the next section and expanded after it. The per-benchmark records are written into
-`LLM_as_judge/records/<benchmark>.md`, one file each, and are not started yet — see the status table
-at the end.
+verbatim in the next section and expanded after it. The filled record is
+[JUDGE_RECORD.md](JUDGE_RECORD.md) — **one file covering every judge in the suite**, written
+2026-08-19. Benchmarks with no LLM judge get no record; that file's first section names them and
+says why.
 
-Companions:
-[../benchmark_evaluation_guide.md](../benchmark_evaluation_guide.md) decides *which* benchmarks need
-a judge; [GPT_LLM_AS_JUDGE_GUIDE.md](GPT_LLM_AS_JUDGE_GUIDE.md) is how to *build* one for our own
-use. This file is how to *document* one that already exists.
+Companions: [JUDGE_RECORD.md](JUDGE_RECORD.md) decides *which* benchmarks need a judge and holds the
+filled record for the three that do; [GPT_LLM_AS_JUDGE_GUIDE.md](GPT_LLM_AS_JUDGE_GUIDE.md) is how to
+*build* one for our own use. This file is how to *document* one that already exists.
 
 ## The requirement, verbatim
 
@@ -49,12 +49,13 @@ in order, so a record can be checked against it field by field.
 
 ## Scope
 
-| Needs a full record | Needs a one-line stub |
+| Needs a record | Needs none |
 |---|---|
 | AWAREBENCH (the 60 `mission_open-ended` rows only), Wonderbread (its judge-scored subtasks), MultiChallenge (all items) | Multi-party Goal Tracking, PlanBench, NegotiationToM, EmoBench, DocVQA, BIG-Bench Hard, MMLU |
 
-A stub is three lines: what scores it, why no judge is involved, and a pointer to the scoring code.
-It exists so that "no record" and "no judge" are never confused with each other.
+**The right-hand column gets no record at all** — there is no judge, so there is nothing about one to
+document. They are listed once, by name and with their scoring code, in the first section of
+[JUDGE_RECORD.md](JUDGE_RECORD.md), so that "no record" and "not yet checked" are never confused.
 
 ## Three rules that make a record worth having
 
@@ -144,7 +145,7 @@ versions, the API or service used to reach the model, who ran the evaluation, an
 record was written from a repo that we did not run, say that too: reading code is not the same
 evidence as executing it.
 
-## Blank record — copy this into `records/<benchmark>.md`
+## Blank record — the shape each benchmark's section follows in `JUDGE_RECORD.md`
 
 ````markdown
 # <Benchmark> — judge record
@@ -196,20 +197,27 @@ A3 Human comparison:  not reported in repo; paper § to check   · Source: not s
 3. **Record upstream bugs where they are found.** A judge harness that crashes, mislabels an attempt
    index, or passes the wrong variable into a prompt slot changes what the number means, and the next
    person will otherwise rediscover it at their own cost.
-4. **Add the summary row** to [../benchmark_evaluation_guide.md](../benchmark_evaluation_guide.md)
-   so the guide and the record never drift apart.
+4. **Add the benchmark to the verdict table** at the top of [JUDGE_RECORD.md](JUDGE_RECORD.md), in
+   the judged list or the needs-no-record list, so the verdict and the record never drift apart.
 
 ## Status
 
-| Benchmark | Record type | File | Status |
-|---|---|---|---|
-| AWAREBENCH | full (60 of 4,075 rows) | `records/awarebench.md` | not started |
-| Wonderbread | full (judge-scored subtasks) | `records/wonderbread.md` | not started |
-| MultiChallenge | full (all items) | `records/multichallenge.md` | not started |
-| Multi-party Goal Tracking | stub | `records/mpgt.md` | not started |
-| PlanBench | stub | `records/planbench.md` | not started |
-| NegotiationToM | stub | `records/negotiationtom.md` | not started |
-| EmoBench | stub | `records/emobench.md` | not started |
-| DocVQA | stub | `records/docvqa.md` | not started |
-| BIG-Bench Hard | stub | `records/bbh.md` | not started |
-| MMLU | stub | `records/mmlu.md` | not started |
+| Benchmark | Section of `JUDGE_RECORD.md` | Status |
+|---|---|---|
+| Wonderbread | §1 | **written 2026-08-19** — scope corrected: QA *and* SOP Generation are judged; the SOP-Improvement rubric scorer does not execute |
+| MultiChallenge | §2 | **written 2026-08-19** — harness raises `TypeError` as vendored; fix recorded in its D1 |
+| AWAREBENCH | §3 (60 of 4,075 rows) | **written 2026-08-19** — 3 blockers open: judge prompts not transcribed (A4), 1-5 direction unset (A6), judge decoding settings unpublished (C1) |
+| the other seven | named in the opening section | no record needed — no LLM judge |
+
+**What writing it changed.** Three facts that were wrong or unknown before, all found by reading code
+rather than papers — which is why rule 1 puts code first:
+
+1. **Wonderbread's judge surface is larger than "QA".** SOP Generation's "semantic" Precision/Recall
+   are tallies of GPT-4 line-entailment decisions, on a *different* GPT-4 snapshot than QA uses.
+2. **Two of the three judge harnesses do not run as vendored** — MultiChallenge raises `TypeError`
+   before its first API call, and Wonderbread's rubric scorer fails on four independent counts.
+3. **The same 1-5 rubric ships in Wonderbread with both polarities** — "1 (best) to 5 (worst)" in one
+   file, "1 (worse) to 5 (best)" in another. A6's insistence that direction is its own field is not
+   hypothetical.
+
+None of the three would have been visible from the papers, and all three change what a number means.
