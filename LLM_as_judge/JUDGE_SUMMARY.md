@@ -101,6 +101,59 @@ finding rather than a comparison.
 | **Output handling** | "Return only the number" — but **no extraction, no cast, no validation**; the raw string is stored as the score | JSON parse, **one retry**, then raise. `int()` cast on the index. Not silent | schema-enforced, so the verdict cannot be off-vocabulary. But **any exception becomes a `NO`**, i.e. a silent failed item |
 | **Software and access** | `wonderbread@ed052c6`, `openai` client. **Read 2026-08-19, not executed** | same repo and date | `multi-challenge@5ccefcc`; `openai==1.53.0`, `pydantic==2.10.6`. **Read 2026-08-19, not executed** |
 
+### A worked example — Wonderbread QA, and what the gold answer does
+
+One real item, taken from the authors' own committed results
+(`data/experimental_results/question_answering_all_results.csv`, task 216, model under test GPT-4).
+It shows what "gold answer withheld from two criteria" costs in practice.
+
+**Question put to the tested model**
+
+> Here are two demonstrations, one of which is more efficient than the other. Please describe ways to
+> improve the less optimal workflow.
+
+**Human Label — the gold answer**
+
+> The first workflow is more efficient since it uses a shorter search term of just 'electra' instead
+> of the full form 'electra bra top.' It is not necessary to type in the extra words. Thus, the user
+> can reach the same desired answers slightly quicker than before.
+
+**GPT-4's answer**
+
+> The less optimal workflow can be improved by specifying the product name ("electra bra top") in the
+> search to directly filter reviews relevant to a specific product, as seen in the second workflow.
+> This approach reduces the time spent sifting through unrelated reviews and directly focuses on the
+> product of interest.
+
+The answer is not merely incomplete — **it is backwards.** The gold says the short search term
+`electra` is what makes the first workflow better; the answer recommends typing the *longer* term
+`electra bra top`, and names the wrong workflow as the efficient one.
+
+**The four scores the judge gave it** (1 = best, 3 = worst):
+
+| Criterion | Sees the gold? | Score | |
+|---|:--:|:--:|---|
+| completeness | ✅ | **3** | worst — correctly penalised |
+| soundness | ✅ | **3** | worst — correctly penalised |
+| clarity | ❌ | **1** | **best** |
+| compactness | ❌ | **1** | **best** |
+
+**Half the rubric gave a factually inverted answer full marks** — not because the judge failed, but
+because clarity and compactness are *defined* without reference to ground truth, and the prompt for
+those two never receives the Human Label. On this item the judge behaved exactly as specified.
+
+Two things follow for how we report Wonderbread QA:
+
+1. **The four numbers must never be averaged into one.** Two of them measure whether the answer is
+   right and two measure whether it reads well; a composite would let good prose cancel a wrong
+   answer. Upstream does not average them either — it reports four separate numbers — and we should
+   keep it that way. *(record §1 B4)*
+2. **Clarity and compactness are not accuracy measures and should not be described as quality
+   scores** in any table we produce. They are readability measures that a wrong answer can top.
+
+This pattern is not a one-off: **27 of the 480 scored rows** score 3/3 on the two gold-aware criteria
+and 1/1 on the two that are gold-blind.
+
 ### What the table makes visible
 
 - **Nothing is shared between the three.** Different models, different material, different scales,
