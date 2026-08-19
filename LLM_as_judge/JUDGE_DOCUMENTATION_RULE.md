@@ -65,7 +65,8 @@ document. They are listed once, by name and with their scoring code, in the firs
    value is never inferred from what a benchmark "probably" does.
 2. **Prompts are copied verbatim.** Full text, every few-shot example, the system message, the
    output-format sentence, and the placeholders exactly as they appear. A paraphrase is a different
-   prompt and produces different scores.
+   prompt and produces different scores. They are collected in the appendices of
+   [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md); each A4 field in the record links to its own.
 3. **Where code and paper disagree, record both** and state which one our run follows. Silently
    preferring one is how a reproduction ends up measuring something nobody described.
 
