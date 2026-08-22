@@ -78,5 +78,5 @@ list and point; they do not explain.
   and usually touches several: the restructure of 2026-08-22 named `CLAUDE.md` and moved eight.
 - **The commit is the checkpoint.** `.githooks/pre-commit` runs `check_docs.py` — links, orphans,
   structure, size, and the facts that must have exactly one home. A finding is either fixed or
-  **declared in `.claude/doc-exceptions.json` with a reason**; nothing is left merely known. That is
-  what stops duplication from accumulating the way it did before the check existed.
+  **declared in `.claude/doc-exceptions.json` with a reason**; nothing is left merely known. What
+  each finding means and how to clear it: `.claude/references/sync-and-consistency.md`.
