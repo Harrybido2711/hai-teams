@@ -32,18 +32,22 @@ and four with a six-branch lenient matcher** that accepts `B` for `(B)`, an opti
 letter, and comma-vs-space differences. The four strict-scored models are penalised for formatting
 rather than reasoning, and nothing in the result CSVs records which scorer produced them.
 
-Full parameter and scoring inventory, per script with `file:line`:
-[`BBH_MODEL_PARAMS.md`](../../../../Tasks_benchmarks/bbh/BBH_MODEL_PARAMS.md) in the benchmark
-folder. Read it before comparing any two providers here.
+Every generation parameter each runner sets, with `file:line`, is the BBH table in the repo's
+[`README.md`](../../../../README.md). Read it before comparing any two providers here.
 
 ## Its own traps
 
-- **The `splits` list in five of the eight scripts no longer matches the CSVs on disk** — they were
-  narrowed to failing tasks during a re-run and never restored. A CSV present is not evidence the
-  current script would regenerate it.
-- **One failed call discards the whole task.** A `None` response reaches `re.search` and raises
-  `TypeError`, which the per-split handler catches by moving to the next split — the rows collected
-  so far are dropped and no CSV is written.
+- **Two of the eight `.sh` files do not submit the file their name implies.** `gemma_eval_script.sh`
+  runs `gemma_finish.py` and `qwen_eval_script.sh` runs `qwen_finish.py`, and the `_finish` twins
+  differ from the `_eval` ones in `max_tokens`, client timeout, retry behaviour and task list. **Read
+  the `.sh` before reading any runner here** — documenting these two from the `_eval.py` file gets
+  four columns wrong, which is exactly how the first version of the inventory came out wrong.
+- **The `splits` list in four of the eight submitted scripts is a narrowed re-run list** that was
+  never restored. A CSV present is not evidence the script beside it would regenerate it, and no
+  result file records which script version wrote it.
+- **One failed call discards a whole task, in seven of eight.** A `None` response reaches `re.search`
+  and raises `TypeError`; the per-split handler catches it and moves to the next split, dropping the
+  rows collected so far without writing a CSV. `gemma_finish.py` returns `""` and is the exception.
 - **No script sets `seed`, and one runs at `temperature=1`.** Nothing here is reproducible.
 
 ## Where the client details live
