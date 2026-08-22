@@ -35,6 +35,22 @@ the shipped fix is the provider control `reasoning={"enabled": False}`, not prom
 larger token budget. **Keep the shared prompt identical across models.** Log `finish_reason` and
 usage on every empty response, including billed tokens from failed attempts.
 
+## google-genai: the thinking field depends on the installed SDK
+
+**Verify against the interpreter that will run the job, not the one you tested on.** google-genai
+**2.19** accepts `types.ThinkingConfig(thinking_level="minimal")`. **Quest's is 1.49.0**, whose
+`ThinkingConfig` exposes only `include_thoughts` and `thinking_budget` — sending `thinking_level`
+there raises a pydantic **`ValidationError` on every call**.
+
+- **Select the field from `ThinkingConfig.model_fields`; do not try one and catch an exception.** The
+  EmoBench runner guarded this and caught `TypeError`. google-genai is pydantic, so the guard never
+  fired, the error reached the generic retry handler, and a permanent config error was retried three
+  times an item — 20 rows, all empty, 26 s each, before anyone looked. 2026-08-23.
+- **A malformed request must be fatal.** `INVALID_ARGUMENT`, `Extra inputs are not permitted` and
+  `ValidationError` are not transient; retrying them spends the run to learn one fact.
+- On `gemini-3.5-flash-lite`, `thinking_budget=0` is rejected **400 INVALID_ARGUMENT** — thinking
+  cannot be switched off — and **128 spends none**, the same effective condition as `minimal`.
+
 ## Health checks must use real prompts
 
 A synthetic probe (system `"You are a JSON API."`) was rejected by grok with
