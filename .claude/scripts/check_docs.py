@@ -161,6 +161,38 @@ def check_canaries(docs):
     return out
 
 
+def touched(paths, docs):
+    """Given the files being committed, name the documents that talk about them and are not.
+
+    This is the drift detector. A contradiction between two documents almost always starts as one
+    of them being edited while the other, which describes it, was not — and no link is broken and
+    no size is exceeded, so nothing else here notices.
+    """
+    staged = {os.path.normpath(p) for p in paths}
+    flat = {rel(p): open(p).read() for p in docs}
+    hits = []
+    for p in sorted(staged):
+        name = os.path.basename(p)
+        if not name.endswith(".md") and not name.endswith(".py"):
+            continue
+        stem = name[:-3] if name.endswith(".md") else name
+        others = [f for f, body in flat.items()
+                  if os.path.normpath(os.path.join(REPO, f)) not in
+                  {os.path.normpath(os.path.join(REPO, q)) for q in staged}
+                  and (name in body or stem in body)]
+        if others:
+            hits.append((rel(os.path.join(REPO, p)) if not p.startswith(REPO) else rel(p), others))
+    if not hits:
+        return 0
+    print("\nAlso mentions what you are committing — check these did not need the same edit:")
+    for target, others in hits:
+        print("  %s" % target)
+        for o in others:
+            print("      %s" % o)
+    print("  (a report, not a failure: a mention often needs nothing)")
+    return 0
+
+
 def impact(term, docs):
     print("Files mentioning %r — this is the work list, not a suggestion:\n" % term)
     n = 0
@@ -177,6 +209,9 @@ def main():
     docs = doc_files()
     if len(sys.argv) > 2 and sys.argv[1] == "--impact":
         return impact(sys.argv[2], docs)
+    report_touched = None
+    if len(sys.argv) > 2 and sys.argv[1] == "--touched":
+        report_touched = sys.argv[2:]
 
     findings = (check_links(docs) + check_orphans(docs) + check_structure()
                 + check_benchmarks() + check_size(docs) + check_canaries(docs))
@@ -193,6 +228,8 @@ def main():
     for k in stale:
         print("note  exception no longer needed: %s %s" % k)
     print("\n%d checked · %d failing · %d declared" % (len(docs), len(live), len(excused)))
+    if report_touched and not live:
+        touched(report_touched, docs)
     return 1 if (live or missing_why) else 0
 
 

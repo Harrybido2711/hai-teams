@@ -31,7 +31,8 @@ and proceeding anyway is the failure this table exists to prevent.
 | **writing or changing any runner** — which decoding, thinking and output limits it must set | [model-parameters.md](model-parameters.md) — applies to every benchmark | 4 KB |
 | a reasoning bill that looks too high, or how a thinking/output cap behaves and backfires | [reasoning-cost.md](reasoning-cost.md) | 3 KB |
 | writing or changing an eval script — retries, checkpoints, resume, normalisation, scoring, a benchmark's shared core | [script-skeleton.md](script-skeleton.md) | 5 KB |
-| a consistency check failing, a commit being blocked, deciding whether two copies of a fact are allowed, or "which files does this change touch" | [sync-and-consistency.md](sync-and-consistency.md) | 4 KB |
+| deciding whether a change needs a Quest sync, or what the three sync layers oblige | [sync-and-consistency.md](sync-and-consistency.md) | 4 KB |
+| a commit blocked by the doc check, whether two copies of a fact are allowed, or "which files does this change touch" | [doc-check.md](doc-check.md) | 3 KB |
 | dispatching a subagent or reading its report — what to pass, `STATUS:` values, rewriting an ambiguous instruction | [handoffs.md](handoffs.md) | 4 KB |
 | what can be dispatched at all — the workflow and agent roster | [../tools/README.md](../tools/README.md) | 3 KB |
 | borrowing a pattern from an outside repo, or "was this already screened and rejected" | [external-patterns.md](external-patterns.md) | **28 KB** — the most expensive file here; for a sweep only |

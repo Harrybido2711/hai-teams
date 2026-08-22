@@ -103,6 +103,11 @@ every row the old code wrote. One result set holding two configurations is worse
 Synchronisation is not something big changes get and small ones skip. It is how this project stays
 coherent, so **a task is not finished until the pass is done** — the same pass, every time.
 
+**Sync per finished change, not per batch of them.** Two documents disagree because one was edited
+and the other, which describes it, was not — and the window in which that is cheap to notice is the
+commit. Every contradiction found in this repo so far began as an edit left sitting while the next
+one started.
+
 | Layer | When it applies | What "done" means |
 |---|---|---|
 | 1 · local ↔ local | **always** | the consistency check passes, or every finding is declared with a reason |
