@@ -52,10 +52,17 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 
 ## Last major change
 
-**2026-08-19** — benchmarks reorganised into the four team-process folders (`269bbfe`). **Quest's
-layout did not move**: `/gpfs/projects/p32983/NegotiationToM` is still correct and must not be
-"fixed" to match local. Any path remembered from before that date is stale — and this move is what
-blinded the pre-submit gate, which found zero files and exited 2 while still looking wired up.
+**2026-08-19** — benchmarks reorganised into the four team-process folders (`269bbfe`), local only.
+That divergence is what blinded the pre-submit gate, which found zero files and exited 2 while still
+looking wired up.
+
+**2026-08-23** — the divergence closed for **the three directories this account owns**. On Quest,
+`DocVQA` → `Tasks_benchmarks/DocVQA`, `EmoBench-master` → `Interpersonal_processes_benchmarks/EmoBench`,
+`NegotiationToM` → `Interpersonal_processes_benchmarks/NegotiationToM`. **The rest of
+`/projects/p32983` belongs to other accounts** — `bbh`, `mmlu`, `LLMs-Planning-main`, both
+`*_DocVQA` copies and `pythonenvs` are `cpz1698`'s, `eval` is `wxw6517`'s, `gen-ai-ngt` is
+`gdg0095`'s. They stay flat at the top level and must not be moved. Any Quest path remembered from
+before this date is stale.
 
 **2026-08-22** — agent-facing docs split three ways: this file (orientation), `references/`
 (knowledge), `tools/` (what to dispatch). `CLAUDE.md` holds rules only.

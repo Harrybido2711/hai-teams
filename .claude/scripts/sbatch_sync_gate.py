@@ -120,7 +120,7 @@ def main():
             "neg_eval_core.py together with the runners: the runners import from it, so a runner "
             "without the core dies at import.\n"
             "Re-run the check by hand with:\n  python3 %s" % (
-                "/gpfs/projects/p32983/NegotiationToM", CHECKER
+                "/gpfs/projects/p32983/Interpersonal_processes_benchmarks/NegotiationToM", CHECKER
             )
         )
 

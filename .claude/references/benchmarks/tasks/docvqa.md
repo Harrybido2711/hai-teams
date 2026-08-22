@@ -8,7 +8,7 @@ providers have results: OpenAI and Gemini.
 | | Path |
 |---|---|
 | Local | `Tasks_benchmarks/DocVQA` |
-| Quest | `/gpfs/projects/p32983/DocVQA` |
+| Quest | `/gpfs/projects/p32983/Tasks_benchmarks/DocVQA` |
 
 ## Layout
 

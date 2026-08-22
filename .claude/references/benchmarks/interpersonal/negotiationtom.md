@@ -10,11 +10,11 @@ truth is not one.
 | | Path |
 |---|---|
 | Local | `Interpersonal_processes_benchmarks/NegotiationToM` |
-| Quest | `/gpfs/projects/p32983/NegotiationToM` |
+| Quest | `/gpfs/projects/p32983/Interpersonal_processes_benchmarks/NegotiationToM` |
 
-**The local path moved on 2026-08-19; the Quest path did not.** `/gpfs/projects/p32983/NegotiationToM`
-is correct and must not be "fixed" to mirror the local tree. That mismatch is also what blinded the
-pre-submit gate — the incident and the gate's contract are in [../quest-cluster.md](../../quest-cluster.md).
+**Quest was moved to match local on 2026-08-23**; before that it was flat at
+`/gpfs/projects/p32983/NegotiationToM`. Anything still naming the old path is stale — that mismatch
+is what blinded the pre-submit gate, whose contract is in [../quest-cluster.md](../../quest-cluster.md).
 
 ## Layout
 
@@ -44,7 +44,7 @@ cd Interpersonal_processes_benchmarks/NegotiationToM
 setopt null_glob
 FILES=(*.py NEG_*/*.py NEG_*/*.sh); FILES=(${(u)FILES})
 md5 -r "${FILES[@]}" | awk '{print $2, $1}' | sort -k1,1 > /tmp/l.md5
-ssh quest "cd /gpfs/projects/p32983/NegotiationToM && md5sum ${FILES[*]}" \
+ssh quest "cd /gpfs/projects/p32983/Interpersonal_processes_benchmarks/NegotiationToM && md5sum ${FILES[*]}" \
   | awk 'NF==2{print $2, $1}' | sort -k1,1 > /tmp/q.md5
 join -j1 -o 0,1.2,2.2 /tmp/l.md5 /tmp/q.md5 | awk '$2!=$3{print "DIFFER  " $1}'
 join -v1 -j1 /tmp/l.md5 /tmp/q.md5      | awk '{print "MISSING ON QUEST  " $1}'

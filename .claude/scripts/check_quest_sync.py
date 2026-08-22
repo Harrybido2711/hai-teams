@@ -22,7 +22,7 @@ import sys
 import time
 
 QUEST = "quest"
-QDIR = "/gpfs/projects/p32983/NegotiationToM"
+QDIR = "/gpfs/projects/p32983/Interpersonal_processes_benchmarks/NegotiationToM"
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
