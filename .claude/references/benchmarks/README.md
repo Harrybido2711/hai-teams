@@ -59,4 +59,9 @@ leaving a copy behind. The seven fields worth having, in the order they get used
    result directories are ours: **a directory of ours carries the model's name**, so an unnamed
    `results/` shipped with a vendored copy is upstream's and is not ours to report.
 6. **Run order** — the exact scripts, in sequence.
-7. **Its own traps** — the ones that produce wrong numbers that look right.
+7. **What its README says about showing reasoning.** Every benchmark decides this for itself — a
+   flag, a prompt that asks for a chain, or silence. Establish it from the upstream README before
+   writing a runner, and name the upstream mode rather than inventing an instruction. Capping the
+   model's *hidden* reasoning is not a per-benchmark question: that is always done
+   ([../model-parameters.md](../model-parameters.md)).
+8. **Its own traps** — the ones that produce wrong numbers that look right.

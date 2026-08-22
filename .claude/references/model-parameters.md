@@ -7,23 +7,25 @@ NegotiationToM, EmoBench, bbh, mmlu and DocVQA. Read before writing or changing 
 
 Set by the user on 2026-08-22:
 
-1. **A reasoning-capable model gets an explicit thinking cap — a numeric budget where one exists.**
-   Thinking stays on; what is bounded is what it may spend. A level is an intention, a budget is a
-   ceiling. Never left to the model's discretion.
+1. **Hidden reasoning is always capped** — every reasoning-capable model, every benchmark. A
+   numeric budget where one exists, a level where it does not, the prompt where neither does.
+   Thinking stays on; what is bounded is what it may spend. Independent of rule 3: capping the
+   hidden half never depends on whether the visible half is shown.
 2. **A model that does not reason gets an explicit output cap.** `max_tokens` on every call.
-3. **Every model is asked to show its reasoning, with the same prompt.** That contract does not vary
-   by model, and it is not a cost lever — cutting it trims the cheap side and changes the measurement.
-   Where the model reasons internally, **record that too** — how, and the parsing trap it brings,
-   are in [reasoning-cost.md](reasoning-cost.md).
+3. **Whether reasoning is *shown* is the benchmark's decision, read from its own README.** BBH's
+   prompt asks for a visible chain; EmoBench ships `--use_cot` and defaults it off. Use the upstream
+   mode rather than writing your own instruction, and keep the other branch reachable — they are
+   different conditions and do not share a results table. Either way **record what was reasoned**:
+   the visible chain where there is one, the hidden summary always
+   ([reasoning-cost.md](reasoning-cost.md)).
 4. **Set the value even when it equals the default.** A default belongs to the provider and can move;
    a pinned value records what the run used.
-5. **When a limit cannot be set through the API, set it in the prompt.** The table's last column says
-   which models that is.
+5. **No API limit? Set it in the prompt.** The last column says which models.
 
 ## When the knob does not exist, the prompt is the knob
 
-Some models expose no thinking parameter at all — the last column names them. **They are not exempt
-from rule 1.** Where the API offers nothing, the ceiling goes into the prompt:
+Some models expose no thinking parameter at all. **They are not exempt from rule 1** — the ceiling
+goes into the prompt:
 
 ```text
 Think briefly. Use at most <N> sentences of reasoning before your final line.
@@ -31,12 +33,11 @@ Then end your response with:
 "Final Answer: <your concise answer here>"
 ```
 
-The same applies to output length wherever `max_tokens` is unavailable or unsafe to set tightly.
+The same applies to output length where `max_tokens` is unavailable or unsafe to set tightly.
 
-- **It is a request, not a limit.** Verify from
-  `usage.completion_tokens_details.reasoning_tokens`, never from how long the answer looks.
-- **It changes the prompt, so it changes the measurement.** A prompt-limited run and an unlimited one
-  must not share a results table. Record the wording with the score.
+- **A request, not a limit.** Verify from `usage.completion_tokens_details.reasoning_tokens`, never
+  from how long the answer looks.
+- **It changes the prompt, so it changes the measurement.** Record the wording with the score.
 
 ## Per model
 
@@ -64,8 +65,8 @@ assuming a knob exists, setting nothing, and finding out from the bill.
 ## Choosing the number
 
 **Measure, do not reason from the parameter name.** One small slice at two or three settings,
-comparing accuracy and cost together. Measured budgets, the recording trap, and the four ways
-capping backfires: [reasoning-cost.md](reasoning-cost.md).
+accuracy and cost together. Measured budgets and the four ways capping backfires:
+[reasoning-cost.md](reasoning-cost.md).
 
 **Nothing in this table has been applied to a runner yet.** What each runner currently sets is
 recorded on its benchmark's page; this file is what they must be changed to.
