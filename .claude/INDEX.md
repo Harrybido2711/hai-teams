@@ -7,18 +7,27 @@ cluster against six commercial providers, with every reported number landing in 
 Read this file, then only what the task needs. Nothing else is loaded up front — that is the design,
 not an omission.
 
-## The three that are always first
+## What the work is — five phases
 
-| Read | For |
-|---|---|
-| [tools/README.md](tools/README.md) | what can be dispatched — workflows and agents. Check here **before** hand-rolling a procedure; the common ones already exist |
-| [references/README.md](references/README.md) | the document map: which reference a task triggers, what each costs, which document wins in a conflict |
-| [../PLAN.md](../PLAN.md) | the repo map — what each folder is, which benchmark needs a judge, what state each run is in |
+Every task in this repo sits in one of these. Find yours, then read what its row points at.
 
-`references/shared-context.md` is the one reference read on *every* task: it says which committed
-document is authoritative on what. Everything else is on demand.
+| # | Phase | What it means | Read first |
+|---|---|---|---|
+| 1 | **Analyse a new benchmark** | read the vendored repo, establish paths, counts, scoring, traps; write its page | [`references/benchmarks/`](references/benchmarks/README.md) — the page template is in its README |
+| 2 | **Write the per-model scripts** | one runner per model from prior experience, plus the template answer the scoring depends on | [`references/script-skeleton.md`](references/script-skeleton.md) · [`references/model-parameters.md`](references/model-parameters.md) · [`references/provider-gotchas.md`](references/provider-gotchas.md) |
+| 3 | **Upload and run on Quest** | **only after the user has finished and verified every script.** Then sync, submit, gate on the first minutes | [`references/quest-cluster.md`](references/quest-cluster.md) · [`tools/run-model.md`](tools/run-model.md) |
+| 4 | **Monitor the run** | dispatch the agents, and build a workflow when the procedure repeats | [`tools/README.md`](tools/README.md) — the roster of both |
+| 5 | **Keep everything in sync** | not a phase so much as the thing that runs through all four | [`references/sync-and-consistency.md`](references/sync-and-consistency.md) |
 
-**Working on a specific benchmark? Read its page first, and its group page with it** —
+Phase 3 has a gate in front of it that is not technical: **the scripts are the user's to verify, and
+nothing is transferred or submitted before they say so.** Phases 1, 2 and 5 are local work and need
+no such permission.
+
+Two files are read on every task regardless of phase:
+[`references/README.md`](references/README.md), the map of what to read when, and
+`references/shared-context.md`, which says which document is authoritative on what.
+
+**Working on a specific benchmark? Read its page and its group page** —
 [`references/benchmarks/`](references/benchmarks/README.md). The rest of `.claude/` is deliberately
 benchmark-agnostic; every number, path and task name belonging to one benchmark lives on its own
 page, and carrying one across benchmarks is the mistake that split is there to prevent.
@@ -29,16 +38,11 @@ page, and carrying one across benchmarks is the mistake that split is there to p
   the transfer happens once local is settled. That does not relax any rule about *how* a sync is
   done when it happens — it means the sync has not happened yet.
 - **Running now:** nothing is assumed. Check, don't remember — `check-status`, or `squeue -u uwr0681`.
-- **NegotiationToM** — the active benchmark, six providers with results
-  ([its page](references/benchmarks/interpersonal/negotiationtom.md)).
-- **EmoBench** six providers · **bbh**, **mmlu** seven · **DocVQA** two · the other four have no
-  results and, in three cases, no runner.
-- **All ten have a knowledge-base page**, grouped by process folder under
-  [`references/benchmarks/`](references/benchmarks/README.md).
-- **Judge record written 2026-08-19** for the three judged benchmarks (Wonderbread, MultiChallenge,
-  AwareBench); AwareBench still has three open blockers. `LLM_as_judge/JUDGE_RECORD.md`.
-- **No runner exists** for Multi-party Goal Tracking, Wonderbread or MultiChallenge — vendored only.
-- Open work in full: `PLAN.md` § Open work.
+- **All ten benchmarks have a knowledge-base page**; three of them have no runner at all, so work
+  there starts at phase 1 or 2 rather than 3.
+- **No runner currently complies with the model-parameter rule** — none sets a thinking or output
+  cap. See [`references/model-parameters.md`](references/model-parameters.md).
+- Per-benchmark state, provider coverage and open work: `PLAN.md`.
 
 ## Terms this project uses in a specific way
 

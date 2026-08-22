@@ -1,4 +1,8 @@
-# BBH — model call parameters
+# BBH — model call parameters, as they are today
+
+This is the **as-is record** for bbh's eight runners. What every runner *must* be changed to is
+[model-parameters.md](../../model-parameters.md), which is keyed by model and covers every
+benchmark. Do not read this page as a target.
 
 Every generation parameter set by the BBH runners in `Tasks_benchmarks/bbh/`, read from the code on
 2026-08-22.
@@ -34,23 +38,10 @@ What the table shows:
 4. **A reasoning-capable model name is not a reasoning setting.** No runner passes a reasoning
    configuration, so no model's internal behaviour may be recorded as a `reasoning_effort` value.
 
-## Cost control — nothing here caps reasoning today
+## Cost control — nothing here caps anything today
 
-**No runner sets a reasoning or output limit**, so on the reasoning-capable models the bill is
-whatever the model decides to think, and that line dominates every other. Which of these models has
-a knob at all:
-
-| Model here | Reasoning model? | The knob | Notes |
-|---|---|---|---|
-| `gpt-4o-mini-2024-07-18` | no | — | contributes no reasoning tokens |
-| `google/gemma-4-31B-it` | no | — | — |
-| `meta-llama/Llama-4-Maverick…` | no | — | — |
-| `gemini-2.5-flash` | yes | `thinking_level` (3.x) / thinking budget (2.5) | floor is `minimal`, not off |
-| `Qwen/Qwen3.5-9B` | hybrid | `reasoning={"enabled": False}` | this project's shipped fix elsewhere |
-| `grok-3-mini` | yes | `reasoning_effort` | reasoning is the model; cannot be removed |
-| `deepseek-reasoner` | yes | none exposed | to spend less, change model |
-| `kimi-k2.5` | not established | — | verify before assuming |
-
-Read [reasoning-cost.md](../../reasoning-cost.md) before setting any of them: capping is not free,
-and an over-tight output budget produces **billed empty responses**, which every runner here scores
-as wrong rather than counting separately.
+**No runner sets a reasoning or output limit.** On the reasoning-capable models the bill is whatever
+the model decides to think, so all eight are out of compliance with the standing rule. Which knob and
+which cap each of them needs — including the three that are not reasoning models and need only an
+output cap — is in [model-parameters.md](../../model-parameters.md), and why an over-tight cap
+returns a billed empty response is in [reasoning-cost.md](../../reasoning-cost.md).

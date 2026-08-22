@@ -36,31 +36,14 @@ A reasoning line on the bill therefore names which model produced it.
   benchmark exists to test, so a capped run and an uncapped run are not comparable and must not share
   a results table. Record the setting beside the score.
 
-## The standing rule
+## What to set
 
-Set by the user on 2026-08-22, and it applies to every runner in this repo:
+The standing rule, and the per-model knob and cap for every model this project calls, are in
+[model-parameters.md](model-parameters.md). This file is the mechanism behind those choices; that one
+is the decision. When a model has no knob at all, the ceiling goes in the prompt — that fallback and
+its three caveats are on the same page.
 
-1. **A reasoning-capable model gets an explicit thinking cap.** Never left to the model's discretion.
-2. **A model that does not reason gets an explicit output cap.** `max_tokens` on every call.
-3. **Every model is asked to show its reasoning, with the same prompt.** That contract does not vary
-   by model, and it is not a cost lever — cutting it trims the cheap side and changes what is being
-   measured.
-4. **Set the value even when it equals the default.** A default belongs to the provider and can move
-   without notice; a pinned value is a record of what the run actually used.
-
-| Model | Class | Thinking cap | Output cap | Note |
-|---|---|---|---|---|
-| `gemini-3.5-flash-lite` | reasoning, already at the floor | `thinking_level="minimal"` | `max_output_tokens` | `minimal` is the default *and* the floor — "as close as possible to a zero budget… but still requires thought signatures". **There is no off.** Thinking bills at the $2.50/M output rate |
-| `gemini-3.5-flash` | reasoning | `thinking_level`, default `medium` | `max_output_tokens` | one step down from the default is the first thing to measure |
-| `gemini-2.5-flash` | reasoning | thinking budget | `max_output_tokens` | pre-`thinking_level` |
-| `grok-3-mini` | reasoning | `reasoning_effort` | provider default | reasoning is the model; cannot be removed |
-| `deepseek-reasoner` | reasoning, no knob | none exposed | `max_tokens` | the only lever is choosing a different model |
-| `Qwen/Qwen3.5-9B` | hybrid | `reasoning={"enabled": False}` | `max_tokens` | this project's shipped fix |
-| `kimi-k2.5` | not established | verify before assuming | `max_tokens` | — |
-| `gpt-4o-mini` · `gemma-4-31B-it` · `llama-4-Maverick` | not reasoning | n/a | `max_tokens` | rule 2 only |
-
-**Pick the value by measuring, not by reading the parameter name.** Run the same small slice at two
-or three settings and compare **accuracy and cost together**; a setting that halves the bill and
-costs two accuracy points is a decision someone makes knowingly. Read the cost from
+**Measure, do not reason from the parameter name.** Run one small slice at two or three settings and
+compare accuracy and cost together. Read the cost from
 `usage.completion_tokens_details.reasoning_tokens`, not from the response length — the expensive
 tokens are the ones you never see.

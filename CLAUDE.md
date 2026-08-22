@@ -8,6 +8,24 @@ This file holds **rules only** — no routing, no procedure, no project facts. A
 *how* to do something belongs in a reference; anything explaining *what exists* belongs in the
 index. Do not copy either back here.
 
+## What this project asks of you
+
+Five things, in the order work moves through them. `.claude/INDEX.md` routes each to what it needs.
+
+1. **Analyse a new benchmark's repo** — establish its paths, counts, scoring and traps from the code,
+   and write them onto its page. Read the code before the paper; a value inferred from what a
+   benchmark "probably" does is not a finding.
+2. **Write the per-model scripts and the template answer.** One runner per model, built from the
+   experience already recorded rather than from scratch, and every runner sets the limits in
+   `.claude/references/model-parameters.md`.
+3. **Upload to Quest and run — but not before the user has verified the scripts.** Verification is
+   theirs, not yours. **Do not transfer and do not submit until they say the scripts are done**, no
+   matter how ready the code looks. Phases 1, 2 and 5 need no such permission; this one always does.
+4. **Monitor the run** by dispatching the agents, and turn a procedure into a workflow once it
+   repeats. A check you had to remember to run is a check that will be skipped.
+5. **Keep everything in sync.** Not a phase — the thing that runs through the other four, on every
+   task. See below.
+
 ## Who decides
 
 The planner is this session, not a subagent. **None of this project's six agents holds the `Agent`
