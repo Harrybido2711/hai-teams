@@ -1,4 +1,4 @@
-# hai-teams — planner rules
+hai-teams — planner rules
 
 ## What this project is
 
@@ -34,6 +34,7 @@ transcript dies when the session ends.
 **1 · Analyse a new benchmark's repo.** Establish paths, counts, scoring and traps from the code.
 Read the code before the paper; a value inferred from what a benchmark "probably" does is not a
 finding, and an unestablished field is written as unestablished.
+
 - *Memory* — read `references/benchmarks/README.md` for the page template and what is already
   covered, plus the benchmark's own committed notes named on its group page. Write a new page under
   `references/benchmarks/<group>/`, **and its row in the group index in the same edit**.
@@ -42,9 +43,11 @@ finding, and an unestablished field is written as unestablished.
 
 **2 · Write the per-model scripts and the template answer.** One runner per model, built from what is
 already recorded rather than from scratch.
+
 - *Memory* — `references/script-skeleton.md` for the runner shape and the invariants a diff is
-  checked against; `references/model-parameters.md` for the thinking and output limits **every**
-  runner must set; `references/provider-gotchas.md` for that client's failure modes; the benchmark's
+  checked against; `references/model-calls.md` for how to reach that model at all — client,
+  `base_url`, key, model id; `references/model-parameters.md` for the thinking and output limits
+  **every** runner must set; `references/provider-gotchas.md` for that client's failure modes; the benchmark's
   page for counts, task names and output naming.
 - *Tools* — `executor` once the change is decided, given the decision and not the problem;
   `reviewer` before it goes anywhere; the `verify-change` workflow when the change is meant to
@@ -53,6 +56,7 @@ already recorded rather than from scratch.
 **3 · Upload to Quest and run — but not before the user has verified the scripts.** Verification is
 theirs, not yours. **Do not transfer and do not submit until they say the scripts are done**, however
 ready the code looks. Phases 1, 2 and 5 need no such permission; this one always does.
+
 - *Memory* — `references/quest-cluster.md` for transfers, `md5sum`, SLURM and the two ways the
   pre-submit gate lies; the benchmark's page for its remote path and run order, which are not
   inferable from the local tree.
@@ -62,6 +66,7 @@ ready the code looks. Phases 1, 2 and 5 need no such permission; this one always
 
 **4 · Monitor the run.** Dispatch the agents, and turn a procedure into a workflow once it repeats —
 a check you had to remember to run is a check that will be skipped.
+
 - *Memory* — `references/handoffs.md` for what a dispatch must carry and the `STATUS:` vocabulary
   each agent returns; the benchmark's page for the counts to judge progress against.
 - *Tools* — `check-status` first: read-only, two agents, cheap enough to repeat and safe beside a
@@ -109,11 +114,11 @@ and the other, which describes it, was not — and the window in which that is c
 commit. Every contradiction found in this repo so far began as an edit left sitting while the next
 one started.
 
-| Layer | When it applies | What "done" means |
-|---|---|---|
-| 1 · local ↔ local | **always** | the consistency check passes, or every finding is declared with a reason |
-| 2 · local ↔ Quest | **only when the task changed something that also exists on Quest** — a runner, a shared core, an sbatch script, a config | Quest matches local, proven with `md5sum`, core and runners transferred together |
-| 3 · local ↔ git | **always** | committed and pushed to `origin` and `backup` |
+| Layer               | When it applies                                                                                                                 | What "done" means                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 1 · local ↔ local | **always**                                                                                                                | the consistency check passes, or every finding is declared with a reason          |
+| 2 · local ↔ Quest | **only when the task changed something that also exists on Quest** — a runner, a shared core, an sbatch script, a config | Quest matches local, proven with`md5sum`, core and runners transferred together |
+| 3 · local ↔ git   | **always**                                                                                                                | committed and pushed to`origin` and `backup`                                  |
 
 A change that touches only local files — documentation, notes, a script that never leaves the laptop
 — skips layer 2 and nothing else.

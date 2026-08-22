@@ -28,6 +28,7 @@ and proceeding anyway is the failure this table exists to prevent.
 | working on a named benchmark — its paths, expected counts, tasks, output layout, run order, traps | [benchmarks/](benchmarks/README.md) then that benchmark's group and page | 3 KB + page |
 | `ssh`, transfer, `md5sum`, `sbatch`, `scancel`, `squeue`, `sacct`, partition, shard, array, "pull results", a Quest path | [quest-cluster.md](quest-cluster.md) | 7 KB |
 | a provider name (GPT, Gemini, Gemma, Qwen, Deepseek, XAI/grok), client, timeout, empty response, reasoning tokens, halt marker | [provider-gotchas.md](provider-gotchas.md) | 3 KB |
+| **writing a runner for a model** — which client, `base_url`, key, model id and non-optional parameters | [model-calls.md](model-calls.md) — the invocation recipe, measured where we have run it | 5 KB |
 | **writing or changing any runner** — which decoding, thinking and output limits it must set | [model-parameters.md](model-parameters.md) — applies to every benchmark | 4 KB |
 | a reasoning bill that looks too high, or how a thinking/output cap behaves and backfires | [reasoning-cost.md](reasoning-cost.md) | 3 KB |
 | writing or changing an eval script — retries, checkpoints, resume, normalisation, scoring, a benchmark's shared core | [script-skeleton.md](script-skeleton.md) | 5 KB |

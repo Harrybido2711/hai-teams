@@ -134,13 +134,33 @@ def check_benchmarks():
     return out
 
 
+def content_size(path):
+    """Bytes a reader actually takes in.
+
+    Markdown formatters pad table cells to align the pipes, which can add kilobytes without adding
+    a word. The split rule is about how much there is to absorb, so alignment padding inside table
+    rows is collapsed before measuring — otherwise the check fights the editor and loses.
+    """
+    out = 0
+    for line in open(path):
+        if line.lstrip().startswith("|"):
+            line = re.sub(r" {2,}", " ", line)
+            line = re.sub(r"-{3,}", "---", line)
+        out += len(line.encode("utf-8"))
+    return out
+
+
 def check_size(docs):
     out = []
     for p in docs:
         if os.sep + "references" + os.sep in p or os.sep + "tools" + os.sep in p:
-            n = os.path.getsize(p)
+            n = content_size(p)
             if n > SIZE_LIMIT:
-                out.append(("size", rel(p), "%d bytes; the rule is to split past ~%d" % (n, SIZE_LIMIT)))
+                raw = os.path.getsize(p)
+                note = "" if raw == n else " (%d on disk, the rest is table padding)" % raw
+                out.append(("size", rel(p),
+                            "%d bytes of content%s; the rule is to split past ~%d"
+                            % (n, note, SIZE_LIMIT)))
     return out
 
 
