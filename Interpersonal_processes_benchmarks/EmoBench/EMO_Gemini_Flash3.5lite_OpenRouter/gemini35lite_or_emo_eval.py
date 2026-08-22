@@ -6,11 +6,11 @@ differs here is only the transport:
 
   * OpenAI client against https://openrouter.ai/api/v1, so the system prompt is a system *message*
     rather than google-genai's system_instruction. Same text either way.
-  * Two independent ceilings, matching the Google runner: reasoning={"effort":"minimal"} at the API
-    and a sentence limit in the prompt. The numeric form, reasoning={"max_tokens": N}, is the
-    stronger lever where thinking actually fires — measured, 256 spent 258 reasoning tokens against
-    397 for effort="high" — and --reasoning-max-tokens switches to it. exclude:true is NOT used:
-    excluded reasoning is still billed, so it would hide the trace and save nothing.
+  * Hidden thinking is capped at the API while visible reasoning is switched on — different things,
+    and capping one does not suppress the other. Chain-of-thought is upstream's own condition, built
+    from its config the way src/utils.py builds it, not an invented instruction. Upstream defaults
+    it off (src/main.py:32) and the five finished providers ran without it, so **a CoT run is a
+    different condition**; --no-cot restores the comparable one and the flag is on every row.
   * max_tokens caps visible output. Unlike the native route it does not bound thinking, so the two
     runners bound cost differently and their bills are not directly comparable even though their
     scores are.
@@ -21,8 +21,7 @@ temperature is not set, matching the Google-route runner and following Google's 
 remove it rather than tune it. The 2.5 runner uses 0.6, which is a real difference between the old
 numbers and these.
 
-The prompt is NOT modified — see the sibling runner's header for why EmoBench does not take the
-show-your-reasoning rule.
+Nothing in the prompt is invented here — see the sibling runner's header.
 """
 import argparse
 import json
@@ -48,10 +47,6 @@ LETTERS = string.ascii_uppercase
 
 REASONING_EFFORT = "minimal"   # API-side ceiling; --reasoning-effort or --reasoning-max-tokens
 
-# Prompt-side ceiling — see the Google runner's header for why this changes the measurement and how
-# to run the comparable condition without it.
-PROMPT_CEILING = ("\n\nThink briefly. Use at most two short sentences of internal reasoning before "
-                  "you answer, then give the JSON and nothing else.")
 AUTH_MARKERS = ("No auth credentials", "invalid_api_key", "Unauthorized", "401")
 
 
@@ -66,13 +61,20 @@ def rank_choices(choices):
     return "\n".join(f"{LETTERS[i]}) {c}" for i, c in enumerate(choices))
 
 
-def build_system_prompt(task, prompt_ceiling=True):
+def build_system_prompt(task, use_cot=True):
+    """Upstream's own construction, both branches — src/utils.py::get_response_format.
+
+    With CoT the statement changes and a "reasoning" key is prepended to the JSON conditions, so the
+    model returns its reasoning as data rather than as prose the parser has to survive.
+    """
     prompts = load_yaml("src/configs/prompts.yaml")
     response = load_yaml("src/configs/response.yaml")
-    statement = response["base"]["en"]
+    statement = response["cot"]["en"] if use_cot else response["base"]["en"]
     conditions = response[task]["en"]
+    if use_cot:
+        conditions = response["reasoning"]["en"] + ",\n" + conditions
     fmt = f"\n{statement}\n```json\n    {{\n    {conditions}\n    }}\n```"
-    return prompts["sys"]["en"] + fmt + (PROMPT_CEILING if prompt_ceiling else "")
+    return prompts["sys"]["en"] + fmt
 
 
 def build_user_prompt(task, sample):
@@ -207,7 +209,7 @@ def evaluate(results, task, model_name):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, save_every, max_tokens, reasoning_cfg, ceiling, limit=0):
+def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -238,8 +240,8 @@ def run_task(task, model, save_every, max_tokens, reasoning_cfg, ceiling, limit=
     else:
         print(f"[{task}-en] Processing {len(data)} samples")
 
-    sys_prompt = build_system_prompt(task, ceiling)
-    print(f"[{task}-en] reasoning={reasoning_cfg}  prompt_ceiling={ceiling}")
+    sys_prompt = build_system_prompt(task, use_cot)
+    print(f"[{task}-en] reasoning={reasoning_cfg}  use_cot={use_cot}")
 
     def save_checkpoint():
         with open(out_path, "w", encoding="utf-8") as f:
@@ -270,7 +272,10 @@ def run_task(task, model, save_every, max_tokens, reasoning_cfg, ceiling, limit=
             "reasoning": thought,
             # The two ceilings are part of the condition, so they travel with the row.
             "reasoning_cfg": json.dumps(reasoning_cfg),
-            "prompt_ceiling": ceiling,
+            "use_cot": use_cot,
+            # Visible reasoning, returned as a JSON field in CoT mode. Distinct from the hidden
+            # thought summary above: one is what the model showed, the other what it was billed for.
+            "reasoning_visible": (parsed or {}).get("reasoning", ""),
         }
         if task == "EU":
             res = {
@@ -318,8 +323,9 @@ if __name__ == "__main__":
                         choices=["minimal", "low", "medium", "high"])
     parser.add_argument("--reasoning-max-tokens", type=int, default=0,
                         help="use a numeric reasoning budget instead of an effort level")
-    parser.add_argument("--no-prompt-ceiling", action="store_true",
-                        help="drop the added sentence limit and run the upstream prompt unmodified")
+    parser.add_argument("--no-cot", action="store_true",
+                        help="upstream's default: no visible reasoning, and comparable with the "
+                             "five providers already finished")
     args = parser.parse_args()
 
     reasoning_cfg = ({"max_tokens": args.reasoning_max_tokens} if args.reasoning_max_tokens
@@ -328,4 +334,4 @@ if __name__ == "__main__":
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_tokens,
-                 reasoning_cfg, not args.no_prompt_ceiling, args.limit)
+                 reasoning_cfg, not args.no_cot, args.limit)

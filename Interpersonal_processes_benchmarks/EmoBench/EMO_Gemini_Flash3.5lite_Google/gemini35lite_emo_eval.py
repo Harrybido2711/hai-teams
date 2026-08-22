@@ -3,28 +3,31 @@
 Modelled on EMO_Gemini_Flash2.5/gemini_emo_eval.py. Everything that decides a score — the prompts
 built from src/configs, the JSON parse, the record shape, the CSV outputs, the resume-by-qid
 checkpoint — is deliberately identical, so this run stays comparable with the five providers already
-finished. Four things differ, and each is a decision rather than an accident:
+finished. Six things differ, and each is a decision rather than an accident:
 
-  1. Two independent ceilings on thinking, by request: thinking_level="minimal" at the API, and a
-     sentence limit in the prompt. Either alone would do on this workload — measured, minimal spends
-     zero thinking tokens on EmoBench — and the pair is deliberate belt and braces.
-     thinking_level and thinking_budget are mutually exclusive, so choosing the level gives up the
-     numeric budget. The budget is the stronger lever where thinking actually fires; use
-     --thinking-level to change this.
-  2. temperature is NOT set. The 2.5 runner uses 0.6; Google's 3.x guidance is to remove temperature,
+  1. Hidden thinking is capped at the API and visible reasoning is switched on. They are different
+     things: the thinking cap bounds the expensive invisible half, while --use-cot is upstream's own
+     supported condition in which the model returns its step-by-step reasoning as a JSON field.
+     Capping one does not suppress the other.
+  2. Chain-of-thought follows upstream exactly rather than an invented instruction. src/utils.py
+     swaps response.yaml's "base" statement for "cot" and prepends the "reasoning" key to the JSON
+     conditions; this runner calls the same config the same way. Upstream defaults use_cot to False
+     (src/main.py:32) and the five providers already finished ran without it, so **a CoT run is a
+     different condition** — --no-cot restores the comparable one, and the flag is recorded on
+     every row.
+  3. temperature is NOT set. The 2.5 runner uses 0.6; Google's 3.x guidance is to remove temperature,
      top_p and top_k rather than tune them. This is a real difference from the 2.5 numbers and must
      be stated wherever the two are compared.
-  3. max_output_tokens is set, and it INCLUDES thinking tokens. Too low and the model is billed for
+  4. max_output_tokens is set, and it INCLUDES thinking tokens. Too low and the model is billed for
      thinking and returns nothing — see the finish_reason handling below.
-  4. Auth failures are fatal, not retried. Retrying an auth failure 3x per item across 400 items
+  5. Auth failures are fatal, not retried. Retrying an auth failure 3x per item across 400 items
      wastes an hour to learn one fact.
-  5. include_thoughts=True, and the thought summary is stored per item. It is a summary rather than
-     the raw chain, and it does not change what is billed — but without it the expensive half of
-     every response is invisible in the results.
+  6. include_thoughts=True, and the thought summary is stored per item alongside the visible
+     reasoning. A summary rather than the raw chain, and it changes nothing about the bill — but
+     without it the expensive half of every response leaves no trace in the results.
 
-The prompt is NOT modified. EmoBench's own contract says "Do not provide any additional information
-or explanations", which is the opposite of the show-your-reasoning rule that applies to BBH; the
-upstream cot variant exists for that condition and switching to it would be a different experiment.
+Nothing in the prompt is invented here. Both branches come from upstream's own config and are built
+the way src/utils.py builds them; the only choice this runner makes is which branch is the default.
 """
 import argparse
 import json
@@ -52,15 +55,6 @@ LETTERS = string.ascii_uppercase
 
 THINKING_LEVEL = "minimal"   # API-side ceiling; --thinking-level overrides
 
-# Prompt-side ceiling, the second half of the belt and braces. Appended to the upstream system
-# prompt rather than edited into it, so the unmodified condition is one flag away.
-#
-# It changes the prompt, and therefore the measurement: EmoBench's own contract says "Do not provide
-# any additional information or explanations", and the five providers already finished ran without
-# this line. A run with it and a run without it do not belong in the same results table.
-# --no-prompt-ceiling restores the comparable condition.
-PROMPT_CEILING = ("\n\nThink briefly. Use at most two short sentences of internal reasoning before "
-                  "you answer, then give the JSON and nothing else.")
 AUTH_MARKERS = ("API key not valid", "ACCESS_TOKEN_TYPE_UNSUPPORTED", "PERMISSION_DENIED",
                 "API_KEY_INVALID", "UNAUTHENTICATED")
 
@@ -76,13 +70,20 @@ def rank_choices(choices):
     return "\n".join(f"{LETTERS[i]}) {c}" for i, c in enumerate(choices))
 
 
-def build_system_prompt(task, prompt_ceiling=True):
+def build_system_prompt(task, use_cot=True):
+    """Upstream's own construction, both branches — src/utils.py::get_response_format.
+
+    With CoT the statement changes and a "reasoning" key is prepended to the JSON conditions, so the
+    model returns its reasoning as data rather than as prose the parser has to survive.
+    """
     prompts = load_yaml("src/configs/prompts.yaml")
     response = load_yaml("src/configs/response.yaml")
-    statement = response["base"]["en"]
+    statement = response["cot"]["en"] if use_cot else response["base"]["en"]
     conditions = response[task]["en"]
+    if use_cot:
+        conditions = response["reasoning"]["en"] + ",\n" + conditions
     fmt = f"\n{statement}\n```json\n    {{\n    {conditions}\n    }}\n```"
-    return prompts["sys"]["en"] + fmt + (PROMPT_CEILING if prompt_ceiling else "")
+    return prompts["sys"]["en"] + fmt
 
 
 def build_user_prompt(task, sample):
@@ -260,7 +261,7 @@ def evaluate(results, task, model_name):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, save_every, max_output_tokens, level, ceiling, limit=0):
+def run_task(task, model, save_every, max_output_tokens, level, use_cot, limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -291,8 +292,8 @@ def run_task(task, model, save_every, max_output_tokens, level, ceiling, limit=0
     else:
         print(f"[{task}-en] Processing {len(data)} samples")
 
-    sys_prompt = build_system_prompt(task, ceiling)
-    print(f"[{task}-en] thinking_level={level}  prompt_ceiling={ceiling}")
+    sys_prompt = build_system_prompt(task, use_cot)
+    print(f"[{task}-en] thinking_level={level}  use_cot={use_cot}")
 
     def save_checkpoint():
         with open(out_path, "w", encoding="utf-8") as f:
@@ -323,7 +324,10 @@ def run_task(task, model, save_every, max_output_tokens, level, ceiling, limit=0
             "reasoning": thought,
             # The two ceilings are part of the condition, so they travel with the row.
             "thinking_level": level,
-            "prompt_ceiling": ceiling,
+            "use_cot": use_cot,
+            # Visible reasoning, returned as a JSON field in CoT mode. Distinct from the hidden
+            # thought summary above: one is what the model showed, the other what it was billed for.
+            "reasoning_visible": (parsed or {}).get("reasoning", ""),
         }
         if task == "EU":
             res = {
@@ -371,11 +375,12 @@ if __name__ == "__main__":
     parser.add_argument("--max-output-tokens", type=int, default=2048)
     parser.add_argument("--thinking-level", type=str, default=THINKING_LEVEL,
                         choices=["minimal", "low", "medium", "high"])
-    parser.add_argument("--no-prompt-ceiling", action="store_true",
-                        help="drop the added sentence limit and run the upstream prompt unmodified")
+    parser.add_argument("--no-cot", action="store_true",
+                        help="upstream's default: no visible reasoning, and comparable with the "
+                             "five providers already finished")
     args = parser.parse_args()
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_output_tokens,
-                 args.thinking_level, not args.no_prompt_ceiling, args.limit)
+                 args.thinking_level, not args.no_cot, args.limit)

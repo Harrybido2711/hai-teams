@@ -50,6 +50,25 @@ first one's log.
 `sbatch run_emobench.sh` per model folder. The script pins the model on the command line and runs
 `--task all --save-every 20` under `--partition=long`, `--time=24:00:00`, 8 GB.
 
+## Reasoning: upstream has a flag for it
+
+`--use_cot` (upstream `src/main.py:32`, documented in its README) is a **supported condition, not a
+prompt edit**. `src/utils.py::get_response_format` swaps `response.yaml`'s `base` statement for
+`cot` and prepends a `"reasoning"` key to the JSON conditions, so the model returns its reasoning as
+data. Upstream also raises its own output cap from 50 to 2048 tokens for that branch.
+
+**It is off by default upstream, and the five finished providers ran without it** — a CoT run and a
+non-CoT run are different conditions and do not share a results table.
+
+Two things this changes for a runner:
+
+- **Hidden thinking and visible reasoning are separate.** A thinking cap at the API bounds the
+  invisible half; CoT makes the model write the visible half. Capping one does not suppress the
+  other, so record both.
+- **CoT makes the JSON fragile.** The reasoning lands inside a string field, and a model that emits
+  a raw newline there breaks `json.loads`. Verified: quotes survive, unescaped newlines do not. Those
+  rows must be counted as parse failures rather than scored zero.
+
 ## Its own traps
 
 - **`EMO_SCRIPT.md` is not about EmoBench.** Despite living in this folder, it is a repo-wide script
