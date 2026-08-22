@@ -4,10 +4,6 @@ A reasoning model bills its internal thinking as output tokens, and on this proj
 line dominates everything else — one day's bill read **$16.99 reasoning against $0.41 completion**,
 a factor of 41. The visible answer is nearly free; the thinking is the entire cost.
 
-**The prompt cannot control it.** Asking for less reasoning in the text, or dropping "show your
-reasoning" entirely, changes only the completion side — the cheap side. Internal thinking is
-controlled by a provider parameter or not at all.
-
 ## The knob, per client
 
 | Client | Parameter | Values | Off entirely? |
@@ -40,16 +36,31 @@ A reasoning line on the bill therefore names which model produced it.
   benchmark exists to test, so a capped run and an uncapped run are not comparable and must not share
   a results table. Record the setting beside the score.
 
-## How to choose a value
+## The standing rule
 
-Measure it; do not reason about it. Run the same small slice at two or three settings and compare
-**accuracy and cost together** — a setting that halves the bill and costs two accuracy points is a
-decision someone has to make knowingly, and it cannot be made from the parameter name.
+Set by the user on 2026-08-22, and it applies to every runner in this repo:
 
-Read the cost from the provider's usage numbers, not from the response length: the whole point is
-that the expensive tokens are the ones you never see. `usage.completion_tokens_details.reasoning_tokens`
-is the field where it is reported.
+1. **A reasoning-capable model gets an explicit thinking cap.** Never left to the model's discretion.
+2. **A model that does not reason gets an explicit output cap.** `max_tokens` on every call.
+3. **Every model is asked to show its reasoning, with the same prompt.** That contract does not vary
+   by model, and it is not a cost lever — cutting it trims the cheap side and changes what is being
+   measured.
+4. **Set the value even when it equals the default.** A default belongs to the provider and can move
+   without notice; a pinned value is a record of what the run actually used.
 
-Start from the model's default rather than from zero. Gemini 3.5 Flash defaults to `medium` and
-3.1 Flash-Lite to `minimal`, so a Flash-Lite run is already near the floor and has little to give
-back.
+| Model | Class | Thinking cap | Output cap | Note |
+|---|---|---|---|---|
+| `gemini-3.5-flash-lite` | reasoning, already at the floor | `thinking_level="minimal"` | `max_output_tokens` | `minimal` is the default *and* the floor — "as close as possible to a zero budget… but still requires thought signatures". **There is no off.** Thinking bills at the $2.50/M output rate |
+| `gemini-3.5-flash` | reasoning | `thinking_level`, default `medium` | `max_output_tokens` | one step down from the default is the first thing to measure |
+| `gemini-2.5-flash` | reasoning | thinking budget | `max_output_tokens` | pre-`thinking_level` |
+| `grok-3-mini` | reasoning | `reasoning_effort` | provider default | reasoning is the model; cannot be removed |
+| `deepseek-reasoner` | reasoning, no knob | none exposed | `max_tokens` | the only lever is choosing a different model |
+| `Qwen/Qwen3.5-9B` | hybrid | `reasoning={"enabled": False}` | `max_tokens` | this project's shipped fix |
+| `kimi-k2.5` | not established | verify before assuming | `max_tokens` | — |
+| `gpt-4o-mini` · `gemma-4-31B-it` · `llama-4-Maverick` | not reasoning | n/a | `max_tokens` | rule 2 only |
+
+**Pick the value by measuring, not by reading the parameter name.** Run the same small slice at two
+or three settings and compare **accuracy and cost together**; a setting that halves the bill and
+costs two accuracy points is a decision someone makes knowingly. Read the cost from
+`usage.completion_tokens_details.reasoning_tokens`, not from the response length — the expensive
+tokens are the ones you never see.
