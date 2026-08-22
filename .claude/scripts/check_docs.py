@@ -35,6 +35,7 @@ CANARIES = {
     "3h10m": ("CLAUDE.md", "the Qwen reasoning-token incident"),
     "watcher checkpoint": ("CLAUDE.md", "the git add -A incident"),
     "BinaryExpression": (".claude/tools/create-workflow.md", "the Workflow meta constraint"),
+    "$16.99": (".claude/references/reasoning-cost.md", "the reasoning-vs-completion cost split"),
 }
 
 

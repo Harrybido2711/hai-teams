@@ -28,6 +28,7 @@ and proceeding anyway is the failure this table exists to prevent.
 | working on a named benchmark — its paths, expected counts, tasks, output layout, run order, traps | [benchmarks/](benchmarks/README.md) then that benchmark's group and page | 3 KB + page |
 | `ssh`, transfer, `md5sum`, `sbatch`, `scancel`, `squeue`, `sacct`, partition, shard, array, "pull results", a Quest path | [quest-cluster.md](quest-cluster.md) | 7 KB |
 | a provider name (GPT, Gemini, Gemma, Qwen, Deepseek, XAI/grok), client, timeout, empty response, reasoning tokens, halt marker | [provider-gotchas.md](provider-gotchas.md) | 3 KB |
+| a reasoning bill that looks too high, or setting `reasoning_effort` / `thinking_level` / an output cap | [reasoning-cost.md](reasoning-cost.md) | 4 KB |
 | writing or changing an eval script — retries, checkpoints, resume, normalisation, scoring, a benchmark's shared core | [script-skeleton.md](script-skeleton.md) | 5 KB |
 | a consistency check failing, a commit being blocked, deciding whether two copies of a fact are allowed, or "which files does this change touch" | [sync-and-consistency.md](sync-and-consistency.md) | 4 KB |
 | dispatching a subagent or reading its report — what to pass, `STATUS:` values, rewriting an ambiguous instruction | [handoffs.md](handoffs.md) | 4 KB |
