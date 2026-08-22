@@ -7,21 +7,14 @@ cluster against six commercial providers, with every reported number landing in 
 Read this file, then only what the task needs. Nothing else is loaded up front — that is the design,
 not an omission.
 
-## What the work is — five phases
+## What the work is
 
-Every task in this repo sits in one of these. Find yours, then read what its row points at.
+Five phases — analyse a new benchmark, write the per-model scripts, upload and run on Quest, monitor,
+and keep everything in sync. **They are listed in `CLAUDE.md`, which is already in your context**,
+each with the reference it reads and the tool it reaches for. Not repeated here.
 
-| # | Phase | What it means | Read first |
-|---|---|---|---|
-| 1 | **Analyse a new benchmark** | read the vendored repo, establish paths, counts, scoring, traps; write its page | [`references/benchmarks/`](references/benchmarks/README.md) — the page template is in its README |
-| 2 | **Write the per-model scripts** | one runner per model from prior experience, plus the template answer the scoring depends on | [`references/script-skeleton.md`](references/script-skeleton.md) · [`references/model-parameters.md`](references/model-parameters.md) · [`references/provider-gotchas.md`](references/provider-gotchas.md) |
-| 3 | **Upload and run on Quest** | **only after the user has finished and verified every script.** Then sync, submit, gate on the first minutes | [`references/quest-cluster.md`](references/quest-cluster.md) · [`tools/run-model.md`](tools/run-model.md) |
-| 4 | **Monitor the run** | dispatch the agents, and build a workflow when the procedure repeats | [`tools/README.md`](tools/README.md) — the roster of both |
-| 5 | **Keep everything in sync** | not a phase so much as the thing that runs through all four | [`references/sync-and-consistency.md`](references/sync-and-consistency.md) |
-
-Phase 3 has a gate in front of it that is not technical: **the scripts are the user's to verify, and
-nothing is transferred or submitted before they say so.** Phases 1, 2 and 5 are local work and need
-no such permission.
+One of them has a gate that is not technical: **phase 3 does not start until the user has verified
+the scripts.** Phases 1, 2 and 5 are local work and need no permission.
 
 Two files are read on every task regardless of phase:
 [`references/README.md`](references/README.md), the map of what to read when, and

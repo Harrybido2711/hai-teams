@@ -1,30 +1,77 @@
 # hai-teams — planner rules
 
+## What this project is
+
+A benchmark suite measuring whether LLMs can do the things a **team-process taxonomy** names —
+*transition* processes (mission analysis, planning, goal specification), *action* processes
+(monitoring progress, coordination), *interpersonal* processes (conflict, affect) — with general task
+ability alongside them as a baseline. Ten benchmarks, each a vendored upstream repo plus this
+project's own per-model runners. Runs execute on Northwestern's **Quest** SLURM cluster against eight
+commercial models, and every reported number lands in `Results.xlsx`.
+
+The work is empirical and the failures are quiet: a job that reports success while writing empty
+rows, a scorer that penalises formatting, a number carried from one benchmark to another. Most rules
+in this file exist because one of those already happened.
+
 **Read [`.claude/INDEX.md`](.claude/INDEX.md) first.** It orients in one page and routes onward:
 [`.claude/tools/README.md`](.claude/tools/README.md) for what can be dispatched,
 [`.claude/references/README.md`](.claude/references/README.md) for what to read before acting.
 
-This file holds **rules only** — no routing, no procedure, no project facts. Anything explaining
-*how* to do something belongs in a reference; anything explaining *what exists* belongs in the
-index. Do not copy either back here.
+This file holds **what the job is and the rules it runs under**. Each phase below names the file to
+read and the tool to reach for — it points, it never copies. Anything explaining *how* to do
+something belongs in a reference; anything cataloguing *what exists* belongs in the index. A summary
+of either, pasted back here, is the thing that made this file 11 KB once before.
 
 ## What this project asks of you
 
 Five things, in the order work moves through them. `.claude/INDEX.md` routes each to what it needs.
 
-1. **Analyse a new benchmark's repo** — establish its paths, counts, scoring and traps from the code,
-   and write them onto its page. Read the code before the paper; a value inferred from what a
-   benchmark "probably" does is not a finding.
-2. **Write the per-model scripts and the template answer.** One runner per model, built from the
-   experience already recorded rather than from scratch, and every runner sets the limits in
-   `.claude/references/model-parameters.md`.
-3. **Upload to Quest and run — but not before the user has verified the scripts.** Verification is
-   theirs, not yours. **Do not transfer and do not submit until they say the scripts are done**, no
-   matter how ready the code looks. Phases 1, 2 and 5 need no such permission; this one always does.
-4. **Monitor the run** by dispatching the agents, and turn a procedure into a workflow once it
-   repeats. A check you had to remember to run is a check that will be skipped.
-5. **Keep everything in sync.** Not a phase — the thing that runs through the other four, on every
-   task. See below.
+The project's memory is `.claude/references/` — committed, so it survives the session, and readable
+by subagents, which your context is not. **The loop is the same in every phase: read the reference
+before acting, and write what the work taught back into it afterwards.** A lesson left in a
+transcript dies when the session ends.
+
+**1 · Analyse a new benchmark's repo.** Establish paths, counts, scoring and traps from the code.
+Read the code before the paper; a value inferred from what a benchmark "probably" does is not a
+finding, and an unestablished field is written as unestablished.
+- *Memory* — read `references/benchmarks/README.md` for the page template and what is already
+  covered, plus the benchmark's own committed notes named on its group page. Write a new page under
+  `references/benchmarks/<group>/`, **and its row in the group index in the same edit**.
+- *Tools* — `summarizer` when the answer needs a lot of reading and none of it belongs in context;
+  `Explore` to locate files. No executor: nothing is being changed yet.
+
+**2 · Write the per-model scripts and the template answer.** One runner per model, built from what is
+already recorded rather than from scratch.
+- *Memory* — `references/script-skeleton.md` for the runner shape and the invariants a diff is
+  checked against; `references/model-parameters.md` for the thinking and output limits **every**
+  runner must set; `references/provider-gotchas.md` for that client's failure modes; the benchmark's
+  page for counts, task names and output naming.
+- *Tools* — `executor` once the change is decided, given the decision and not the problem;
+  `reviewer` before it goes anywhere; the `verify-change` workflow when the change is meant to
+  prevent a class of failure and has not yet been proven wrong.
+
+**3 · Upload to Quest and run — but not before the user has verified the scripts.** Verification is
+theirs, not yours. **Do not transfer and do not submit until they say the scripts are done**, however
+ready the code looks. Phases 1, 2 and 5 need no such permission; this one always does.
+- *Memory* — `references/quest-cluster.md` for transfers, `md5sum`, SLURM and the two ways the
+  pre-submit gate lies; the benchmark's page for its remote path and run order, which are not
+  inferable from the local tree.
+- *Tools* — `run-model` is the default and owns both sync directions; `run-fast` when it must finish
+  today; `scale-shards` when the right parallelism is the open question; `executor` for a single
+  decided submit.
+
+**4 · Monitor the run.** Dispatch the agents, and turn a procedure into a workflow once it repeats —
+a check you had to remember to run is a check that will be skipped.
+- *Memory* — `references/handoffs.md` for what a dispatch must carry and the `STATUS:` vocabulary
+  each agent returns; the benchmark's page for the counts to judge progress against.
+- *Tools* — `check-status` first: read-only, two agents, cheap enough to repeat and safe beside a
+  running supervisor. `watcher` for raw state, `evaluator` for whether the numbers can be believed,
+  `fix-broken-run` when it has to be killed. `tracker` writes the outcome to the problem log.
+
+**5 · Keep everything in sync.** Not a phase — the thing that runs through the other four. The
+obligation is the next section; `references/sync-and-consistency.md` is what each finding means, and
+`check_docs.py --impact <term>` is what you run **before** editing to find every file a change
+touches.
 
 ## Who decides
 
