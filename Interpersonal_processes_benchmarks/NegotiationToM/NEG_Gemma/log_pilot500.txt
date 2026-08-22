@@ -1,0 +1,61 @@
+[pilot] 83/2380 dialogues (3.5%), seed=42
+[pulse] 1 calls, 0/1 hung (0%), trunc 0, empty 0, err 0, mean 2.6s, effective 2.6s/row -> 23.13 rows/min, tokens p99~16, latency p90 3s p99 3s max 3s (ceiling 120s)
+[pulse] 88 calls, 0/88 hung (0%), trunc 0, empty 0, err 0, mean 6.9s, effective 6.9s/row -> 8.75 rows/min, tokens p99~19, latency p90 24s p99 98s max 98s (ceiling 120s)
+[pulse] 139 calls, 0/139 hung (0%), trunc 0, empty 0, err 0, mean 8.8s, effective 8.8s/row -> 6.81 rows/min, tokens p99~18, latency p90 24s p99 63s max 98s (ceiling 120s)
+[desire] excluded 6/166 unannotated rows from the metrics
+[pulse] 211 calls, 0/211 hung (0%), trunc 0, empty 0, err 0, mean 8.7s, effective 8.7s/row -> 6.94 rows/min, tokens p99~17, latency p90 24s p99 63s max 98s (ceiling 120s)
+[pulse] 306 calls, 0/306 hung (0%), trunc 0, empty 0, err 0, mean 7.9s, effective 7.9s/row -> 7.57 rows/min, tokens p99~17, latency p90 24s p99 51s max 98s (ceiling 120s)
+[belief] excluded 6/166 unannotated rows from the metrics
+[pulse] 378 calls, 1/379 hung (0%), trunc 0, empty 0, err 0, mean 7.7s, effective 8.0s/row -> 7.47 rows/min, tokens p99~18, latency p90 24s p99 51s max 98s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[pulse] 426 calls, 4/430 hung (1%), trunc 0, empty 0, err 3, mean 7.4s, effective 8.5s/row -> 7.03 rows/min, tokens p99~19, latency p90 24s p99 49s max 98s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+[pulse] 477 calls, 8/485 hung (2%), trunc 0, empty 0, err 8, mean 6.9s, effective 8.9s/row -> 6.75 rows/min, tokens p99~19, latency p90 24s p99 49s max 98s (ceiling 120s)
+[google/gemma-4-31B-it] call exceeded 120s hard limit (1/3), retrying
+
+====================================================================
+ PILOT REPORT — google/gemma-4-31B-it
+====================================================================
+
+[sample]  83 / 2380 dialogues (3.5%), seed-fixed so every model sees the same subset
+
+[health]  successful calls : 493
+          empty responses  : 0
+          API errors       : 9
+          JSON parse fails : 0
+          failure rate     : 1.8%  (looks healthy)
+
+[scores]
+          Desire_EM          0.6562
+          Desire_EM_all      0.6325
+          desire_scored_rows 160.0000
+          Belief_EM          0.5125
+          Belief_EM_all      0.4940
+          belief_scored_rows 160.0000
+          Intent_Micro_F1    0.4790
+          Intent_Macro_F1    0.4727
+          intention_scored_rows 161.0000
+
+[cost]    elapsed          : 74.4 min for 493 calls
+          projected full   : 35.5 h single-threaded, 7.1 h across 5 shards
+          tokens           : 152,876 in / 7,253 out (493 API responses reported usage)
+          output/response  : 14.7 tokens average
+          projected full   : 4,383,673 in / 207,978 out
+          projected cost   : add 'google/gemma-4-31B-it' to PRICE_PER_1M to get a figure
+
+[budget]  measured, for the next run's max_tokens and call timeout
+          output tokens    : median 15  p90 17  p99 20  max 34  (n=493)
+          suggested max_tokens : 30  (p99 x 1.5)
+          truncated at the cap : 0 of 493 checked (measured — the tail above is real)
+          call latency (s) : median 2.5  p90 23.9  p99 48.7  max 98.1  (n=493)
+          watchdog kills   : 9 of 502 attempts (1.8%), 18 min at the 120s ceiling
+          throughput       : 2.1 output tok/s over calls that returned — a call using the full budget takes budget/2.1 s, which must sit well inside the 120s ceiling
+          diagnosis        : calls are genuinely running to the ceiling — cap max_tokens first, and only then lower the timeout
+====================================================================
+
