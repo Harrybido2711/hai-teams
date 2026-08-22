@@ -25,13 +25,29 @@ retracted result and was not deleted, so it is still on disk.
 Take the coverage claim from `PLAN.md` and `Results.xlsx`, never from `ls *.csv`. bbh is the one
 benchmark here where counting files overstates what was run on purpose.
 
-## Scoring
+## Scoring — two different scorers, not one
 
-Exact match on the answer extracted after `Final Answer:`. The prompt contract is the scoring
-contract — a runner that changes the phrasing changes the score without changing the model.
+Every runner extracts the text after `Final Answer:`, but **four score with strict string equality
+and four with a six-branch lenient matcher** that accepts `B` for `(B)`, an option's text for its
+letter, and comma-vs-space differences. The four strict-scored models are penalised for formatting
+rather than reasoning, and nothing in the result CSVs records which scorer produced them.
+
+Full parameter and scoring inventory, per script with `file:line`:
+[`BBH_MODEL_PARAMS.md`](../../../../Tasks_benchmarks/bbh/BBH_MODEL_PARAMS.md) in the benchmark
+folder. Read it before comparing any two providers here.
+
+## Its own traps
+
+- **The `splits` list in five of the eight scripts no longer matches the CSVs on disk** — they were
+  narrowed to failing tasks during a re-run and never restored. A CSV present is not evidence the
+  current script would regenerate it.
+- **One failed call discards the whole task.** A `None` response reaches `re.search` and raises
+  `TypeError`, which the per-split handler catches by moving to the next split — the rows collected
+  so far are dropped and no CSV is written.
+- **No script sets `seed`, and one runs at `temperature=1`.** Nothing here is reproducible.
 
 ## Where the client details live
 
-`Interpersonal_processes_benchmarks/EmoBench/EMO_SCRIPT.md` §1 tables every BBH runner's model id and
-SDK — despite living in the EmoBench folder, that section is about this benchmark. It is the only
-written record of which client each provider uses here.
+`BBH_MODEL_PARAMS.md` in the benchmark folder is authoritative. `EmoBench/EMO_SCRIPT.md` §1 also
+tables the BBH runners' model ids and SDKs — it predates the inventory and covers six of the eight;
+where they disagree, the inventory was read later and cites lines.
