@@ -10,12 +10,9 @@ hypothesis until one call confirms it.
 ## `google/gemma-4-31B-it` — DeepInfra
 
 ```python
-from openai import OpenAI
-client = OpenAI(api_key=os.getenv("DEEPINFRA_API_KEY"),
-                base_url="https://api.deepinfra.com/v1/openai",
-                timeout=300)
-client.chat.completions.create(model="google/gemma-4-31B-it",
-                               messages=messages, temperature=0, max_tokens=MAX_TOKENS)
+OpenAI(api_key=os.getenv("DEEPINFRA_API_KEY"),
+       base_url="https://api.deepinfra.com/v1/openai", timeout=300)
+# .chat.completions.create(model="google/gemma-4-31B-it", messages=…, temperature=0, max_tokens=…)
 ```
 
 Same client shape as DeepSeek and GPT; only `base_url` and the key differ.
@@ -31,15 +28,19 @@ helpfully is a regression.
 517 output tokens; off gave 11/12 at 0.3 s and 16. Capping `max_tokens` is no substitute — every call
 that returned stopped on its own. · Source: `NEG_Gemma/gemma_neg_eval.py:21-53`
 
-Across both: **SIGALRM at 120 s is the primary guard**, below the 300 s socket timeout so a hang is
-classified the same either way — Together ignores `timeout=` outright. And **tolerate four `<think>`
-spellings**, not one.
+Across both: **SIGALRM at 120 s is the primary guard**, below the 300 s socket timeout — Together
+ignores `timeout=` outright. And **tolerate four `<think>` spellings**, not one.
 
 ## `gemini-3.5-flash-lite` — two routes, both probed
 
-**Both confirmed 2026-08-22** on one real EmoBench item each: HTTP 200, finish STOP, the exact JSON
-asked for, gold answer. Per item: 192/18 tokens native, 194/18 via OpenRouter at **$0.0001032** — a
-400-item run costs about four cents. **`minimal` produced zero thinking tokens** on this workload.
+**Both run end to end, 2026-08-22**: six real EmoBench items each — prompts, JSON parse, checkpoint,
+scoring, CSVs. Per item 192/18 tokens native, 194/18 via OpenRouter at **$0.0001032**; a 400-item run
+is about four cents. **`minimal` produced zero thinking tokens**, and the SDK accepts
+`types.ThinkingConfig(thinking_level="minimal")`.
+
+**OpenRouter switched backend inside six calls** — `provider` returned both `Google` and `Google AI
+Studio`. The routes agreed on five of six items: neither is deterministic, since no seed is offered
+and temperature is deliberately unset.
 
 **Route A · Google AI Studio, native SDK.** `client.models.generate_content(model=, contents=,
 config=types.GenerateContentConfig(system_instruction=, thinking_config=types.ThinkingConfig(
@@ -54,7 +55,7 @@ docs also show a newer `client.interactions.create` surface; the older one is wh
 - The key is an `AQ.` auth key. Those are *reported* to 401 here, and **this project's key does
   not** — probed, HTTP 200. Check per key; it is not a property of AQ. keys.
 
-**Route B · OpenRouter, OpenAI-compatible.** The same client shape as DeepInfra and DeepSeek:
+**Route B · OpenRouter.** Same client shape as DeepInfra and DeepSeek:
 
 ```python
 client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
@@ -73,9 +74,8 @@ carries `provider` and a per-call `usage.cost`.
 ## `deepseek-reasoner`
 
 ```python
-client = OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"),
-                base_url="https://api.deepseek.com", timeout=7200)
-client.chat.completions.create(model=model, messages=messages, temperature=0, max_tokens=8192)
+OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"), base_url="https://api.deepseek.com", timeout=7200)
+# .chat.completions.create(model=…, messages=…, temperature=0, max_tokens=8192)
 ```
 
 · Source: `NEG_Deepseek/deepseek_neg_eval.py:16-17, 29-40`

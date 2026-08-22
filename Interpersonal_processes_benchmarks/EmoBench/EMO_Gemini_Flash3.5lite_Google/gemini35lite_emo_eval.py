@@ -228,7 +228,7 @@ def evaluate(results, task, model_name):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, save_every, max_output_tokens):
+def run_task(task, model, save_every, max_output_tokens, limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -236,6 +236,12 @@ def run_task(task, model, save_every, max_output_tokens):
             s = json.loads(line)
             if s["language"] == "en":
                 data.append(s)
+    # Smoke-test lever. Truncates the work list, so the checkpoint it writes is a partial run of the
+    # same config — resuming a real run on top of it is correct, but delete it first if the config
+    # changed in between.
+    if limit:
+        data = data[:limit]
+        print(f"[{task}-en] --limit {limit}: smoke test, not a run")
 
     model_name = model.replace(".", "_").replace("/", "-")
     results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", task)
@@ -317,6 +323,8 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, default="gemini-3.5-flash-lite")
     parser.add_argument("--task", type=str, default="all", choices=["EU", "EA", "all"])
     parser.add_argument("--save-every", type=int, default=20)
+    parser.add_argument("--limit", type=int, default=0,
+                        help="process only the first N items per task; 0 means all")
     # Includes thinking tokens. 2048 is a starting point, not a measured value: the expected answer
     # is a few tokens of JSON, and the rest is headroom for minimal thinking. Watch the empty-response
     # count on the pilot before trusting it.
@@ -325,4 +333,4 @@ if __name__ == "__main__":
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
-        run_task(task, args.model, args.save_every, args.max_output_tokens)
+        run_task(task, args.model, args.save_every, args.max_output_tokens, args.limit)
