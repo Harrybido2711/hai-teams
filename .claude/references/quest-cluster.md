@@ -33,7 +33,13 @@ submit keyword, and its contract is:
 | 1 · drift | **blocks**, printing which files differ |
 | 2 · check could not run | **allows, with a warning** — it fails open on purpose |
 
-Two things about it are worth knowing before trusting it:
+Three things about it are worth knowing before trusting it:
+
+- **It only covers NegotiationToM.** `check_quest_sync.py` resolves that one directory and globs
+  `NEG_*`; there is no per-benchmark argument. A submit for EmoBench or DocVQA therefore gets
+  exit 0 — *in sync* — on the strength of a comparison that never looked at the benchmark being
+  submitted. Verified 2026-08-22: 41 files compared, all NegotiationToM's. For anything else, run the
+  comparison by hand from that benchmark's page before submitting.
 
 - **A stale local path makes it protect nothing, silently.** The 2026-08-19 reorganisation moved
   `NegotiationToM/` under `Interpersonal_processes_benchmarks/`; the checker then found zero code

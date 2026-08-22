@@ -10,9 +10,14 @@ index. Do not copy either back here.
 
 ## Who decides
 
-The planner is this session, not a subagent. No subagent has the `Agent` tool, so none can dispatch
-another, and each starts with no memory of the last. **Sequencing, and the decision to start or stop
-a job, stay here.** Agents report; the planner acts on the report.
+The planner is this session, not a subagent. **None of this project's six agents holds the `Agent`
+tool** — checked against their `tools:` lines, 2026-08-22 — so none can dispatch another, and each
+starts with no memory of the last. **Sequencing, and the decision to start or stop a job, stay
+here.** Agents report; the planner acts on the report.
+
+That guarantee is a property of those six definitions, not of subagents in general: a general-purpose
+agent dispatched with the full tool set can spawn others, and the moment one is used the planner is
+no longer the only thing sequencing work.
 
 Every agent ends with a `STATUS:` line from a fixed vocabulary, so a dispatch can be branched on
 without re-reading prose. Do not invent a second wording for a state that already has one.
@@ -30,11 +35,17 @@ every row the old code wrote. One result set holding two configurations is worse
 
 ## Rules that hold on every task
 
-- **Never submit without proving Quest matches local.** The automatic pre-submit hook **fails open**:
-  a warning that the check could not run is not a pass, and a stale path makes it protect nothing
-  while still looking wired up.
+- **Never submit without proving Quest matches local.** Two ways the automatic hook does not save
+  you. It **fails open** — a warning that the check could not run is not a pass, and a stale path
+  makes it protect nothing while still looking wired up. And it **only checks NegotiationToM**:
+  `check_quest_sync.py` resolves that one directory and globs `NEG_*`, so an `sbatch` for any other
+  benchmark passes a gate that compared someone else's files and said nothing about yours. Verified
+  2026-08-22 — the hook is live and compares 41 files, all of them NegotiationToM's.
 - **Sync the shared core and its runners together, or not at all.** The runners import from the core.
 - **Code flows up to Quest, results flow down.** Never the reverse.
+- **Name a results directory after the model that produced it.** The user's convention, 2026-08-22.
+  It is what makes our output distinguishable from the results a vendored copy shipped with — an
+  unnamed `results/` is upstream's, and reporting one as ours is the mistake this prevents.
 - **Every finished change is committed and pushed, to `origin` *and* `backup`.** Standing rule from
   the user, 2026-08-22, and it applies to any kind of change — code, results, documentation. A change
   that is finished and not pushed is a change that exists in one place. Do not batch a day's work

@@ -63,9 +63,6 @@ So a `results/` or `experimental_results/` directory that carries **no model nam
 output**, shipped with the vendored copy. It is not evidence that anything ran here, and its numbers
 are not ours to report. PlanBench ships two such directories and Wonderbread one.
 
-Follow it when writing, not only when reading: put a run's output under the model's name, or the next
-person cannot tell what produced it.
-
 ## Counting rows
 
 **Expected counts are per benchmark and live on its page.** Do not carry one benchmark's totals to
