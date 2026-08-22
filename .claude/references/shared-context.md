@@ -8,11 +8,13 @@ stay in sync as the project moves — prefer them over anything remembered from 
 
 | Document | Authoritative on |
 |---|---|
-| `Interpersonal_processes_benchmarks/NegotiationToM/negotiation.md` | The key findings: current results, the dataset traps that silently change scores, reasoning-token cost, the silent-failure catalogue, and the conventions that must not drift. Read this first for anything NegotiationToM |
-| `Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md` | Problems already hit, what was rejected, what shipped, and the false alarms recorded so they are not investigated twice |
-| `Interpersonal_processes_benchmarks/NegotiationToM/DATA_NOTES.md` | Dataset traps: cutoff tiling, the `"None"` sentinel, which gold fields are correct, expected row counts |
+| `.claude/references/benchmarks/<group>/<name>.md` | **Everything specific to one benchmark** — its Quest path, layout, expected counts, output paths, run order and its own traps. Read the page for the benchmark you are working on, and its group page with it; a number from another page is not transferable |
+| `.claude/references/benchmarks/README.md` | The index of all ten pages, and what a page is required to establish before its numbers are used |
 | `LLM_as_judge/JUDGE_RECORD.md` | Which benchmarks need an LLM judge, and the full record for the three that do |
-| `Interpersonal_processes_benchmarks/EmoBench/EMO_SCRIPT.md`, `Interpersonal_processes_benchmarks/NegotiationToM/Negotiation_script.md` | Per-benchmark task semantics. Authoritative on what a task *means*; their file listings go stale, so verify listings against the tree |
+| `PLAN.md` | Repo map: what each folder is, provider coverage, and the state of each run |
+
+A benchmark's own `*_script.md` / `*_SCRIPT.md` is authoritative on what a task *means*, but their
+file listings go stale — verify listings against the tree.
 
 ## Repo layout
 
@@ -29,11 +31,12 @@ Random_stuff/                      SQA Release 1.0, TruthfulQA-main, sycophancy-
 ```
 
 `PLAN.md` at the repo root is the map: what each folder is, which benchmark needs a judge, and what
-state each run is in. `VENDORED_SOURCES.md` records which upstream commit each vendored copy came
-from — those folders carry no `.git` of their own.
+state each run is in. Vendored folders carry no `.git` of their own, and the file that recorded which
+upstream commit each came from is **no longer in the tree** — treat vendored provenance as unrecorded
+until someone re-establishes it.
 
-**On Quest nothing moved.** The remote layout is still flat under `/gpfs/projects/p32983/`, so
-`/gpfs/projects/p32983/NegotiationToM` remains correct and must not be "fixed" to match local.
+**On Quest nothing moved.** The remote layout is still flat under `/gpfs/projects/p32983/`, so a
+remote path inferred from the local tree is wrong. Each benchmark's remote path is on its page.
 
 Every benchmark uses **one folder per model** — a Python eval script, a SLURM `.sh`, a `results/`
 directory. Copy the closest existing folder and swap the client; do not invent a new structure,
@@ -46,27 +49,34 @@ because the cross-model summary CSVs depend on this shape.
 └── results/<TASK>/
 ```
 
-The active work is NegotiationToM, which additionally factors the shared logic into
-`neg_eval_core.py`, with six thin runners (`NEG_{GPT,Gemini,XAI,Qwen,Gemma,Deepseek}/<provider>_neg_eval.py`)
-each supplying only their own `call_api`.
+Some benchmarks additionally factor their shared logic into a core module that every runner imports.
+Where one exists, the core and the runners are transferred together or not at all — the page says
+which file it is.
 
-## Numbers worth knowing before counting anything (NegotiationToM)
+## Telling our results from the vendored copy's
 
-A full run is **14,138 rows**: desire 4,760 + belief 4,760 + intention **4,618**.
+**A results directory of ours is named after the model that produced it** — `NEG_GPT/`,
+`EMO_Gemma/`, `OpenAI_result/`, `mmlu/llama/`. Stated by the user 2026-08-22 as a standing
+convention, and it holds across every folder in the tree.
 
-- **intention at 4,760 means a known bug has returned** — odd-length dialogues annotate one target
-  utterance, not two.
-- `scored_rows` is **4,604** for desire and belief: 156 rows per task are excluded because their
-  gold is the sentinel `"None"`, which marks an unannotated sample rather than "wants nothing".
-- `All_EM` in the low single-digit percents is **expected**, not a defect: it ANDs all 5–6 rows of a
-  dialogue, and intention gets no partial credit there even though its F1 does.
+So a `results/` or `experimental_results/` directory that carries **no model name is upstream's
+output**, shipped with the vendored copy. It is not evidence that anything ran here, and its numbers
+are not ours to report. PlanBench ships two such directories and Wonderbread one.
 
-## Two ways a results directory lies
+Follow it when writing, not only when reading: put a run's output under the model's name, or the next
+person cannot tell what produced it.
 
-- **A finished job proves nothing about whether its data is usable.** Grok's five shards all exited
-  `COMPLETED 0:0` with a perfect 14,138 rows while belief and intention were 100% empty — its
-  credits had run out. Report the **non-empty `raw_response` rate and the null-`pred` count**, not
-  just row counts.
+## Counting rows
+
+**Expected counts are per benchmark and live on its page.** Do not carry one benchmark's totals to
+another, and do not infer a total from what a directory happens to contain.
+
+Two ways a results directory lies, both hit in practice and both general:
+
+- **A finished job proves nothing about whether its data is usable.** A run once exited
+  `COMPLETED 0:0` with a perfect row count while two of its three tasks were 100% empty — the
+  provider's credits had run out. Report the **non-empty `raw_response` rate and the null-`pred`
+  count**, not just row counts.
 - **Verify from the `.jsonl`, not the `.csv`.** Reasoning models emit newlines inside
   `raw_response`, so `cut -d, -f1` on the CSV mis-parses and can report *more* unique uids than
   rows. That false alarm looked model-specific and nearly triggered a needless re-run.

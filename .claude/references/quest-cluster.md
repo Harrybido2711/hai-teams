@@ -1,8 +1,10 @@
 # Quest
 
 Northwestern's cluster. Key-based SSH to `uwr0681@login.quest.northwestern.edu`
-(`~/.ssh/id_ed25519`); repo at `/gpfs/projects/p32983/NegotiationToM`. Never ask for or use the
-NetID password. `client_global_hostkeys_prove_confirm ... libcrypto` on connect is cosmetic; filter
+(`~/.ssh/id_ed25519`); project space `/gpfs/projects/p32983/`. **Each benchmark's remote path is on
+its page in [benchmarks/](benchmarks/README.md)** — the remote layout is flat and did not follow the
+2026-08-19 local reorganisation, so a path inferred from the local tree is wrong. Never ask for or
+use the NetID password. `client_global_hostkeys_prove_confirm ... libcrypto` on connect is cosmetic; filter
 it out.
 
 **Hard boundary:** under `/projects/p32983` touch only directories owned by `uwr0681` —
@@ -14,11 +16,10 @@ Transfer with `ssh quest "cat > $REMOTE/$f" < $LOCAL/$f`, then **verify with `md
 assume a transfer landed. **Never overwrite `.env` on Quest** and never copy it out — it exists only
 there; if it goes missing, `cp ../EmoBench-master/.env .env`.
 
-**Sync `neg_eval_core.py` together with the runners, always.** The runners import from it
-(`record_usage` was added there on 2026-07-29), so a runner transferred without the core dies at
-import, and a core transferred without the runners breaks whichever runner used a signature that
-changed. Check the whole set before submitting, not just the file you edited — on 2026-07-29 a check
-found 6 of 32 files stale on Quest when only Qwen was suspected.
+**Sync a benchmark's shared core together with its runners, always.** The runners import from the
+core, so a runner transferred without it dies at import, and a core transferred without the runners
+breaks whichever runner used a signature that changed. **Check the whole set before submitting, not
+just the file you edited** — drift is never confined to the model being worked on.
 
 ### The pre-submit gate, and how it goes blind
 
@@ -46,18 +47,8 @@ Two things about it are worth knowing before trusting it:
   merely annoying. Reword the command and move on.
 
 `python3 .claude/scripts/check_quest_sync.py` does this comparison and exits 1 on drift. The manual
-form, when you need to see it:
-
-```bash
-cd Interpersonal_processes_benchmarks/NegotiationToM
-setopt null_glob
-FILES=(*.py NEG_*/*.py NEG_*/*.sh); FILES=(${(u)FILES})
-md5 -r "${FILES[@]}" | awk '{print $2, $1}' | sort -k1,1 > /tmp/l.md5
-ssh quest "cd /gpfs/projects/p32983/NegotiationToM && md5sum ${FILES[*]}" \
-  | awk 'NF==2{print $2, $1}' | sort -k1,1 > /tmp/q.md5
-join -j1 -o 0,1.2,2.2 /tmp/l.md5 /tmp/q.md5 | awk '$2!=$3{print "DIFFER  " $1}'
-join -v1 -j1 /tmp/l.md5 /tmp/q.md5      | awk '{print "MISSING ON QUEST  " $1}'
-```
+form — hash both sides, sort **by filename**, `join` — is written out per benchmark on its page,
+because the file globs and the remote directory differ.
 
 **Print the row count of both `.md5` files before believing the result.** This check has two silent
 failure modes, both hit in practice:
@@ -99,14 +90,13 @@ limit — measured `MaxJobsPU` is **5000**, and 22 jobs have run concurrently. S
 carry a shard tag (`{model}_shard{N}of{M}.jsonl`); writing an `_overall.csv` without one made each
 shard overwrite the last, leaving only one category's results.
 
-**Run order:** `preflight.py` → `sbatch run_pilot.sh` (10% of data, output under `results/pilot/`)
-→ review → `sbatch run_<bench>.sh` → `bash run_merge.sh` if sharded.
+**Run order:** preflight → pilot (a small fraction of the data, reviewed before anything else) →
+full run → merge if sharded. The exact script names are on the benchmark's page.
 
 ## Reading the live state
 
-Output lives in `<folder>/results/pilot/<task>/*.jsonl` (pilot) and
-`<folder>/results/<task>/*_shard*.jsonl` (full). Logs: `log_pilot.txt` / `log_shard%a.txt` and
-`.err`.
+Output lives under `<model folder>/results/` — pilot and full-run paths, the task names and the log
+filenames are on the benchmark's page.
 
 ```bash
 squeue -u uwr0681 -o "%.12i %.16j %.9P %.9T %.10M"           # queued and running
@@ -118,8 +108,8 @@ inside an API call. Gemma once sat that way for over two hours with an empty log
 looked perfectly healthy.
 
 ```bash
-for d in NEG_*; do
-  for t in desire belief intention; do
+for d in <BENCH>_*; do                      # model folders, e.g. NEG_* / EMO_*
+  for t in <task> <task>; do                # task names come from the benchmark's page
     f=$(ls $d/results/pilot/$t/*.jsonl 2>/dev/null | head -1)
     [ -n "$f" ] && echo "$d/$t $(wc -l < $f) rows, written $(date -r $f +%H:%M:%S)"
   done
@@ -132,7 +122,7 @@ whatever the queue says.
 **Halt markers are the cheapest signal there is** — check them before grepping any log:
 
 ```bash
-ls NEG_*/BILLING_HALT.txt NEG_*/QUOTA_HALT.txt NEG_*/FAILURE_HALT.txt 2>/dev/null
+ls <BENCH>_*/BILLING_HALT.txt <BENCH>_*/QUOTA_HALT.txt <BENCH>_*/FAILURE_HALT.txt 2>/dev/null
 ```
 
 `BILLING_HALT` needs a human to top the account up; `QUOTA_HALT` clears when the provider's daily

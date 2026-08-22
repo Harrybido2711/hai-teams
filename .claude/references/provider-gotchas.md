@@ -19,7 +19,8 @@ call stalls the job: Gemma sat inside a single request for over two hours with S
 RUNNING and an empty log.
 
 Worse, **Together's client did not honour `timeout=` at all** — lowering it to 300 still produced a
-~70-minute hang. The reliable guard is `neg_eval_core.py::guarded_call`, a SIGALRM watchdog (420s)
+~70-minute hang. The reliable guard is a SIGALRM watchdog (420s) — implemented for NegotiationToM as
+`neg_eval_core.py::guarded_call`, and needed in equivalent form by any new runner
 that interrupts the blocking read whatever the library does.
 
 `CallTimeout` **must derive from `BaseException`**: as an `Exception` it is caught by each runner's

@@ -1,7 +1,8 @@
 # Eval script skeleton
 
-The order below is the one the six NegotiationToM runners follow. Copy the closest existing folder
-and swap the client rather than starting from this list.
+The order below is the shape every runner in this project follows; NegotiationToM's six are the
+worked example. Copy the closest existing folder and swap the client rather than starting from this
+list.
 
 **1. Paths and client.** Resolve from the script's own location, never from cwd:
 
@@ -84,6 +85,5 @@ These are settled; a change that breaks one is wrong unless it argues otherwise 
 | A timeout exception derives from `BaseException` | `except Exception` in each runner would swallow it |
 | Job scripts `export PYTHONUNBUFFERED=1` | or the log is empty while the job runs |
 | Shard outputs carry a shard tag | untagged `_overall.csv` files overwrite each other |
-| Model-specific prompt tweaks stay in that model's runner | the shared builders must serve all six identically |
-| NegotiationToM intention rows total **4,618**, not 4,760 | odd-length dialogues have one target, not two |
-| 156 unannotated rows each are excluded from desire and belief | they have no correct answer |
+| Model-specific prompt tweaks stay in that model's runner | the shared builders must serve every model identically |
+| Row totals and exclusions match the benchmark's page, not another benchmark's | `benchmarks/<group>/<name>.md` holds the counts; a total that "looks about right" is how a returning bug survives review |
