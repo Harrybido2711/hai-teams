@@ -5,7 +5,8 @@ built from src/configs, the JSON parse, the record shape, the CSV outputs, the r
 checkpoint — is deliberately identical, so this run stays comparable with the five providers already
 finished. Six things differ, and each is a decision rather than an accident:
 
-  1. Hidden thinking is capped — thinking_level="minimal" — and the cap is not conditional on
+  1. Hidden thinking is capped — thinking_budget=128 where the SDK exposes it, thinking_level
+     "minimal" where it does not — and the cap is not conditional on
      anything. The hidden half is where the money goes: on this project's finished runs, uncapped
      models averaged 466 and 567 output tokens per call against 14-15 for capped ones, on a task
      whose visible answer is about 15 tokens.
@@ -61,10 +62,15 @@ if not api_key:
 client = genai.Client(api_key=api_key)
 LETTERS = string.ascii_uppercase
 
-THINKING_LEVEL = "minimal"   # API-side ceiling; --thinking-level overrides
+THINKING_LEVEL = "minimal"   # used only where the SDK exposes thinking_level
+THINKING_BUDGET = 128        # preferred cap. 0 is rejected 400 on flash-lite; 128 spends none
 
 AUTH_MARKERS = ("API key not valid", "ACCESS_TOKEN_TYPE_UNSUPPORTED", "PERMISSION_DENIED",
                 "API_KEY_INVALID", "UNAUTHENTICATED")
+
+# Permanent request-shape failures. Retrying these three times per item across 400 items is how a
+# run spends hours proving the same thing over and over.
+FATAL_MARKERS = ("INVALID_ARGUMENT", "Extra inputs are not permitted", "validation error")
 
 
 # ── helpers — identical to the 2.5 runner ─────────────────────────────────────
@@ -123,20 +129,33 @@ def parse_json(text):
 
 # ── API call ──────────────────────────────────────────────────────────────────
 
-def _thinking_config(level):
-    """Thinking capped at the API, and returned so it can be recorded.
+def _thinking_config(level, budget):
+    """Thinking capped at the API. Returns (config, description) so the cap lands on every row.
 
-    Failing loudly on an SDK that lacks these fields is deliberate: silently dropping the cap would
-    let the run proceed at whatever the model chooses to think, which is what the cap prevents.
+    **Chosen from what this SDK supports, not from a guessed exception type.** The previous version
+    tried thinking_level and caught TypeError; google-genai is pydantic and raises ValidationError,
+    so on Quest's 1.49.0 the guard never fired, every call raised, and call_api retried a permanent
+    config error three times before writing an empty row. 400 items would have cost three hours to
+    produce nothing.
+
+    thinking_budget is preferred where both exist, which is also model-parameters.md rule 1: a
+    numeric budget where one exists, a level where it does not. On gemini-3.5-flash-lite a budget of
+    0 is rejected with 400 INVALID_ARGUMENT — thinking cannot be switched off, minimal is the floor
+    — and 128 measured zero thought tokens, i.e. the same effective condition as the OpenRouter
+    route's "minimal".
     """
-    try:
-        return types.ThinkingConfig(thinking_level=level, include_thoughts=True)
-    except TypeError as e:
-        sys.exit(
-            f"This google-genai build does not accept thinking_level/include_thoughts ({e}). "
-            f"Upgrade the SDK, or decide explicitly to run without a thinking cap and record that "
-            f"decision — do not remove this guard."
-        )
+    fields = set(getattr(types.ThinkingConfig, "model_fields", None) or {})
+    if not fields:                                    # very old SDK: no introspection available
+        fields = {"thinking_budget", "include_thoughts"}
+    if "thinking_budget" in fields:
+        return types.ThinkingConfig(thinking_budget=budget, include_thoughts=True), f"thinking_budget={budget}"
+    if "thinking_level" in fields:
+        return types.ThinkingConfig(thinking_level=level, include_thoughts=True), f"thinking_level={level}"
+    sys.exit(
+        f"This google-genai build exposes no thinking cap (ThinkingConfig fields: {sorted(fields)}). "
+        f"Upgrade the SDK, or decide explicitly to run without a cap and record that decision — do "
+        f"not remove this guard."
+    )
 
 
 def split_parts(resp):
@@ -157,8 +176,9 @@ def split_parts(resp):
     return "".join(answer), "".join(thought)
 
 
-def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, max_retries=3):
-    """Returns (text, finish_reason, thinking_tokens, thought_summary)."""
+def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, budget, max_retries=3):
+    """Returns (text, finish_reason, thinking_tokens, thought_summary, usage)."""
+    cfg, _cap = _thinking_config(level, budget)
     for attempt in range(max_retries):
         try:
             resp = client.models.generate_content(
@@ -166,7 +186,7 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, max_retri
                 contents=user_prompt,
                 config=types.GenerateContentConfig(
                     system_instruction=sys_prompt,
-                    thinking_config=_thinking_config(level),
+                    thinking_config=cfg,
                     max_output_tokens=max_output_tokens,
                 ),
             )
@@ -176,8 +196,16 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, max_retri
                 finish = str(resp.candidates[0].finish_reason or "")
             except Exception:
                 pass
+            # Recorded per call, because cost cannot be compared between two routes from prices
+            # alone. thoughts_token_count is None when nothing was thought, which is not zero-cost
+            # by assumption — it is zero because the meter said so.
+            usage = {"prompt_tokens": None, "output_tokens": None, "thinking_tokens": None}
             try:
-                reasoning = resp.usage_metadata.thoughts_token_count
+                um = resp.usage_metadata
+                usage = {"prompt_tokens": um.prompt_token_count,
+                         "output_tokens": um.candidates_token_count,
+                         "thinking_tokens": um.thoughts_token_count}
+                reasoning = um.thoughts_token_count
             except Exception:
                 pass
 
@@ -189,10 +217,10 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, max_retri
             if not text and "MAX_TOKENS" in finish.upper():
                 print(f"    empty response, finish_reason={finish}, "
                       f"thinking_tokens={reasoning} — raise --max-output-tokens", flush=True)
-                return "", finish, reasoning, thought
+                return "", finish, reasoning, thought, usage
 
             time.sleep(2.0)
-            return text, finish, reasoning, thought
+            return text, finish, reasoning, thought, usage
 
         except Exception as e:
             err = str(e)
@@ -202,7 +230,16 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, max_retri
                     f"AQ. auth keys are reported to fail against generativelanguage.googleapis.com. "
                     f"Probe this route before rerunning, or use the OpenRouter runner instead."
                 )
-            print(f"API error (attempt {attempt+1}/{max_retries}): {e}")
+            # A malformed request is not transient. Retrying it burns the whole run to learn one
+            # fact — which is exactly what happened on 2026-08-23, when an SDK that does not accept
+            # thinking_level produced 20 empty rows before anyone looked.
+            if any(m in err for m in FATAL_MARKERS) or type(e).__name__ == "ValidationError":
+                sys.exit(
+                    f"Request rejected as invalid and will not be retried: {type(e).__name__}: {e}\n"
+                    f"This is a configuration error, not a transient one. Check the installed "
+                    f"google-genai against what this runner sends before resubmitting."
+                )
+            print(f"API error (attempt {attempt+1}/{max_retries}): {e}", flush=True)
             wait = 5.0
             m = re.search(r'retry_delay.*?seconds:\s*([\d.]+)', err)
             if m:
@@ -212,9 +249,9 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, max_retri
                 if m2:
                     wait = float(m2.group(1)) / 1000 if m2.group(2) == "ms" else float(m2.group(1))
                     wait = max(wait + 1, 1)
-            print(f"Retrying in {wait:.1f}s...")
+            print(f"Retrying in {wait:.1f}s...", flush=True)
             time.sleep(wait)
-    return None, "", None, ""
+    return None, "", None, "", {"prompt_tokens": None, "output_tokens": None, "thinking_tokens": None}
 
 
 # ── evaluation + CSV output — identical to the 2.5 runner ─────────────────────
@@ -269,7 +306,7 @@ def evaluate(results, task, model_name):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, save_every, max_output_tokens, level, use_cot, cot_source,
+def run_task(task, model, save_every, max_output_tokens, level, budget, use_cot, cot_source,
              limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
@@ -302,7 +339,8 @@ def run_task(task, model, save_every, max_output_tokens, level, use_cot, cot_sou
         print(f"[{task}-en] Processing {len(data)} samples")
 
     sys_prompt = build_system_prompt(task, use_cot)
-    print(f"[{task}-en] thinking_level={level}  use_cot={use_cot}")
+    _, cap = _thinking_config(level, budget)
+    print(f"[{task}-en] thinking cap: {cap}  use_cot={use_cot}", flush=True)
 
     def save_checkpoint():
         with open(out_path, "w", encoding="utf-8") as f:
@@ -316,8 +354,8 @@ def run_task(task, model, save_every, max_output_tokens, level, use_cot, cot_sou
             continue
 
         user_prompt = build_user_prompt(task, sample)
-        raw, finish, thinking, thought = call_api(
-            sys_prompt, user_prompt, model, max_output_tokens, level)
+        raw, finish, thinking, thought, usage = call_api(
+            sys_prompt, user_prompt, model, max_output_tokens, level, budget)
         parsed = parse_json(raw) if raw else None
 
         common = {
@@ -332,7 +370,10 @@ def run_task(task, model, save_every, max_output_tokens, level, use_cot, cot_sou
             # response, unreadable in the results unless it is stored.
             "reasoning": thought,
             # The two ceilings are part of the condition, so they travel with the row.
-            "thinking_level": level,
+            "thinking_cap": cap,
+            # Metered, not assumed — the only way two routes can be compared on cost.
+            "prompt_tokens": usage.get("prompt_tokens"),
+            "output_tokens": usage.get("output_tokens"),
             "use_cot": use_cot,
             "use_cot_source": cot_source,
             # Visible reasoning, returned as a JSON field in CoT mode. Distinct from the hidden
@@ -383,6 +424,8 @@ if __name__ == "__main__":
     # copied: 50 visible tokens is right, but thinking would eat the budget first and return a billed
     # empty response. 2048 is headroom, not a measured value — watch the empty count on the pilot.
     parser.add_argument("--max-output-tokens", type=int, default=2048)
+    parser.add_argument("--thinking-budget", type=int, default=THINKING_BUDGET,
+                        help="numeric thinking cap, used wherever the SDK exposes it")
     parser.add_argument("--thinking-level", type=str, default=THINKING_LEVEL,
                         choices=["minimal", "low", "medium", "high"])
     # Deliberately no default. Rule 3 says the benchmark decides whether reasoning is shown, so
@@ -407,4 +450,5 @@ if __name__ == "__main__":
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_output_tokens,
-                 args.thinking_level, args.use_cot, cot_source, args.limit)
+                 args.thinking_level, args.thinking_budget, args.use_cot, cot_source,
+                 args.limit)
