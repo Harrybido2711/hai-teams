@@ -110,7 +110,7 @@ def parse_json(text):
 # ── API call ──────────────────────────────────────────────────────────────────
 
 def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, max_retries=3):
-    """Returns (text, finish_reason, reasoning_tokens, served_by, reasoning_text)."""
+    """Returns (text, finish_reason, reasoning_tokens, served_by, reasoning_text, usage)."""
     for attempt in range(max_retries):
         try:
             resp = client.chat.completions.create(
@@ -130,8 +130,24 @@ def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, max_retr
             served = getattr(resp, "provider", "") or ""
 
             reasoning = None
+            # Metered per call, not derived from a price list. The first run of this runner could
+            # not be costed at all: it recorded reasoning tokens, which are neither prompt nor
+            # completion tokens, so there was nothing to multiply a price by. OpenRouter also
+            # returns the actual dollar cost of the call, which was being discarded.
+            usage = {"prompt_tokens": None, "output_tokens": None, "thinking_tokens": None,
+                     "call_cost": None}
             try:
-                reasoning = resp.usage.completion_tokens_details.reasoning_tokens
+                u = resp.usage
+                usage["prompt_tokens"] = u.prompt_tokens
+                usage["output_tokens"] = u.completion_tokens
+                usage["call_cost"] = getattr(u, "cost", None)
+                try:
+                    reasoning = u.completion_tokens_details.reasoning_tokens
+                except Exception:
+                    pass
+                # 0 rather than None when nothing was thought, so the column stays summable. The
+                # native runner writes None here and the two will not aggregate together.
+                usage["thinking_tokens"] = reasoning if reasoning is not None else 0
             except Exception:
                 pass
 
@@ -140,10 +156,10 @@ def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, max_retr
                 # "the provider returned nothing", and those need different fixes.
                 print(f"    empty response, finish_reason={finish}, provider={served}, "
                       f"reasoning_tokens={reasoning}", flush=True)
-                return "", finish, reasoning, served, thought
+                return "", finish, reasoning, served, thought, usage
 
             time.sleep(2.0)
-            return text, finish, reasoning, served, thought
+            return text, finish, reasoning, served, thought, usage
 
         except Exception as e:
             err = str(e)
@@ -157,7 +173,8 @@ def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, max_retr
                 wait = max(wait + 1, 1)
             print(f"Retrying in {wait:.1f}s...")
             time.sleep(wait)
-    return None, "", None, "", ""
+    return None, "", None, "", "", {"prompt_tokens": None, "output_tokens": None,
+                                    "thinking_tokens": None, "call_cost": None}
 
 
 # ── evaluation + CSV output — identical to the 2.5 runner ─────────────────────
@@ -259,7 +276,7 @@ def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, cot_so
             continue
 
         user_prompt = build_user_prompt(task, sample)
-        raw, finish, thinking, served, thought = call_api(
+        raw, finish, thinking, served, thought, usage = call_api(
             sys_prompt, user_prompt, model, max_tokens, reasoning_cfg)
         parsed = parse_json(raw) if raw else None
 
@@ -272,6 +289,9 @@ def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, cot_so
             "finish_reason": finish,
             "thinking_tokens": thinking,
             "served_by": served,
+            "prompt_tokens": usage.get("prompt_tokens"),
+            "output_tokens": usage.get("output_tokens"),
+            "call_cost": usage.get("call_cost"),
             # The model's own reasoning, as BBH keeps its visible chain.
             "reasoning": thought,
             # The two ceilings are part of the condition, so they travel with the row.

@@ -11,7 +11,7 @@
 
 module purge
 
-/projects/p32983/pythonenvs/hai-teams/bin/python gemini35lite_or_emo_eval.py \
+/projects/p32983/pythonenvs/hai-teams/bin/python -u gemini35lite_or_emo_eval.py \
     --model google/gemini-3.5-flash-lite \
     --task all \
     --save-every 20 \
