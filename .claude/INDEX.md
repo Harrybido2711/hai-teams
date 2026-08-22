@@ -53,12 +53,6 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 | **halt marker** | `BILLING_HALT` / `QUOTA_HALT` / `FAILURE_HALT` in a model folder — the cheapest signal there is, cleared at the start of each run so one that exists is about the current run |
 | **checkpoint** | resume skips any UID already present. After a prompt or decoding change, **archive** it rather than resuming, or one result set holds two configurations |
 
-## Two directions that are not symmetric
-
-**Code flows up to Quest, results flow down.** Never the reverse. A Qwen pilot burned 3h10m for 315
-rows because the fix never left the laptop; four finished runs — 56,774 rows — later lived only on
-the cluster for hours because nothing pulled them down.
-
 ## Last major change
 
 **2026-08-19** — benchmarks reorganised into the four team-process folders (`269bbfe`). **Quest's

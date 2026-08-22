@@ -15,8 +15,9 @@ start counting; `.claude/references/script-skeleton.md` has the conventions the 
 ## How to answer
 
 - Lead with the conclusion, then the evidence. The caller wants the finding, not a file tour.
-- **Quantify.** "4,618 intention rows, expected 4,618" beats "the row counts look right". Read the
-  data and count rather than describing what the code intends to do.
+- **Quantify against a stated expectation.** "N rows, expected N per the benchmark's page" beats
+  "the row counts look right". Read the data and count rather than describing what the code intends
+  to do, and name where the expectation came from.
 - Cite `path:line` for anything a reader might want to verify.
 - Report what is actually there, including the parts that contradict the caller's premise. A stale
   doc, a duplicated script, a results directory whose contents predate the current code — these are

@@ -129,9 +129,6 @@ dispatch another. Workflows are committed so they outlive the session that wrote
   recorded each copy's upstream URL and commit is no longer in the tree**, so vendored provenance is
   currently unrecorded — re-establish it before relying on any claim about which upstream a folder
   came from.
-- **Code flows up to Quest, results flow down.** Never the reverse.
-- **Stage explicit paths.** Never `git add -A` at the root; an unattended watcher once swept
-  unreviewed work into commits named "watcher checkpoint" and pushed them to both remotes.
 - **Remotes:** `origin` and `backup` are ours and both get pushed; `upstream` (cpzambo/hai-teams) is
   the collaborator's and is fetch-only in practice.
 
@@ -151,3 +148,11 @@ dispatch another. Workflows are committed so they outlive the session that wrote
    vendored but have no per-provider harness, no SLURM script, and no results.
 4. **Provider coverage is uneven.** DocVQA has two providers where bbh and mmlu have seven; whether
    that gap is closed is a scope decision, not an oversight to fix silently.
+5. **The pre-submit Quest gate covers one benchmark.** `check_quest_sync.py` hardcodes
+   NegotiationToM and globs `NEG_*`, so an `sbatch` for any other benchmark gets *in sync* from a
+   comparison that never looked at it. Deferred on 2026-08-22 because the working scope is local;
+   **fix it before the first non-NegotiationToM submit**, by taking the benchmark as an argument and
+   reading its remote path and globs from its page.
+6. **`quest-cluster.md` is 7.5 KB, past the ~5 KB split rule.** Declared in
+   `.claude/doc-exceptions.json` rather than excused: the split has a decision in it — transfer and
+   the gate on one side, SLURM and reading live state on the other.

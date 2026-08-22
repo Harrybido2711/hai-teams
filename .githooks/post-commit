@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Layer 3: a finished change is pushed to origin AND backup. This only reminds; it never pushes
+# on its own, because pushing publishes and that stays a decision someone makes.
+branch=$(git rev-parse --abbrev-ref HEAD)
+for r in origin backup; do
+  if [ -n "$(git log --oneline "$r/$branch..$branch" 2>/dev/null)" ]; then
+    echo "unpushed -> $r/$branch  ($(git log --oneline "$r/$branch..$branch" | wc -l | tr -d ' ') commit(s))"
+  fi
+done

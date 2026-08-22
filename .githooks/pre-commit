@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Layer 1 of the three-layer sync rule: local files stay consistent with each other.
+# The commit is the checkpoint because every finished change has to be committed anyway.
+# Escape hatch: git commit --no-verify. Use it when the fix is the next commit, not never.
+if ! python3 "$(git rev-parse --show-toplevel)/.claude/scripts/check_docs.py"; then
+  echo ""
+  echo "commit blocked: the documentation is inconsistent with itself."
+  echo "Fix the finding, or declare it in .claude/doc-exceptions.json with a reason."
+  exit 1
+fi

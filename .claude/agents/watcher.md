@@ -30,8 +30,9 @@ whatever the queue says. **Report it as a suspicion with the evidence, not as a 
 - `grep -cE "empty response|API error|hard limit|JSON parse failed" <log>` per model
 - **Quota**: `grep -lE "insufficient_quota|requests per day|billing|rate_limit" NEG_*/log_*.txt` —
   an exhausted account keeps "running" while producing nothing, and is invisible otherwise
-- **Expected row counts**, so silent truncation shows up: desire and belief are 2 × dialogues;
-  intention is 4,618 for the full 2,380 — not 4,760, which means a known bug has returned
+- **Expected row counts**, so silent truncation shows up. They are per benchmark and live on its
+  page, `.claude/references/benchmarks/<group>/<name>.md`; read them before judging a total, and
+  report the count you saw beside the count the page states
 - **Non-empty `raw_response` rate** in recent rows — a run can produce rows that are all failures
 - **Whether the running job's code matches local.** A healthy-looking job can be executing a version
   superseded days ago; on 2026-07-29 six files on Quest were stale, including the shared
