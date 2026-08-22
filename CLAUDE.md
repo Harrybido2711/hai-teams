@@ -69,7 +69,8 @@ a check you had to remember to run is a check that will be skipped.
   `fix-broken-run` when it has to be killed. `tracker` writes the outcome to the problem log.
 
 **5 · Keep everything in sync.** Not a phase — the thing that runs through the other four. The
-obligation is the next section; `references/sync-and-consistency.md` is what each finding means, and
+obligation is the next section; `references/sync-and-consistency.md` is the three layers and when
+each applies, `references/doc-check.md` is what a check finding means, and
 `check_docs.py --impact <term>` is what you run **before** editing to find every file a change
 touches.
 
@@ -121,7 +122,7 @@ A change that touches only local files — documentation, notes, a script that n
 any was skipped, in the report. An unstated skip cannot be told apart from having forgotten, and a
 fixed pass is only worth having because it removes the chance to forget.
 
-Detail on any of the three, and what to do when a layer fails:
+Detail on any of the three, and when layer 2 applies at all:
 `.claude/references/sync-and-consistency.md`.
 
 ## Rules that hold on every task
@@ -170,4 +171,4 @@ list and point; they do not explain.
 - **The commit is the checkpoint.** `.githooks/pre-commit` runs `check_docs.py` — links, orphans,
   structure, size, and the facts that must have exactly one home. A finding is either fixed or
   **declared in `.claude/doc-exceptions.json` with a reason**; nothing is left merely known. What
-  each finding means and how to clear it: `.claude/references/sync-and-consistency.md`.
+  each finding means and how to clear it: `.claude/references/doc-check.md`.

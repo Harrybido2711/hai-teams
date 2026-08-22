@@ -5,6 +5,11 @@
 is what each finding means. The three sync layers it belongs to are in
 [sync-and-consistency.md](sync-and-consistency.md).
 
+**Read the report before you commit, not in the same command as the commit.** The first time this
+report ran it correctly listed the files that needed the same edit, and they were still shipped
+stale, because the check and the `git commit` were chained together and the output arrived after the
+commit had landed. Run the check, read it, then commit.
+
 ## The findings
 
 | Check | What happened | The fix |
