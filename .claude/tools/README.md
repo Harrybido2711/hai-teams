@@ -17,10 +17,11 @@ Multi-agent procedures, committed so they outlive the session. Invoke by path:
 | `verify-change` | attack a change for the paths where it does nothing | a guard/retry/scoring fix is written, not yet proven wrong | [→](verify-change.md) |
 | `scale-shards` | climb a shard ladder, keep the highest healthy rung | throughput-bound on the provider, parallelism unknown | [→](scale-shards.md) |
 | `compare-providers` | one pilot on two providers, tabled from their logs | which provider is actually faster | [→](compare-providers.md) |
+| `watch-live-runs` | health of several live runs at once, plus cost and finish-time | two+ jobs of one benchmark are running and one may be in trouble | [→](watch-live-runs.md) |
 | `harvest-patterns` | sweep GitHub, refute, record adopted and rejected | looking outside this repo. Proposes only | [→](harvest-patterns.md) |
 | `create-workflow` | the constraints a new workflow must satisfy | writing or editing a workflow | [→](create-workflow.md) |
 
-`check-status` reports, `fix-broken-run` kills, `run-model` starts.
+`check-status` and `watch-live-runs` report, `fix-broken-run` kills, `run-model` starts.
 
 ## Agents
 
