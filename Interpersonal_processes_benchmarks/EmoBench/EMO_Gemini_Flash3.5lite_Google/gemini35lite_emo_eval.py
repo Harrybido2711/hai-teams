@@ -5,11 +5,12 @@ built from src/configs, the JSON parse, the record shape, the CSV outputs, the r
 checkpoint — is deliberately identical, so this run stays comparable with the five providers already
 finished. Four things differ, and each is a decision rather than an accident:
 
-  1. Thinking is ON and bounded by a numeric budget, not by a level. thinking_budget is the only
-     lever that caps the expensive part in tokens: measured on this model, budget=256 spent 127
-     thinking tokens where level=high spent 315, and no config at all spent 0. A level names an
-     intention; a budget names a ceiling.
-     thinking_budget and thinking_level are mutually exclusive — sending both is an error.
+  1. Two independent ceilings on thinking, by request: thinking_level="minimal" at the API, and a
+     sentence limit in the prompt. Either alone would do on this workload — measured, minimal spends
+     zero thinking tokens on EmoBench — and the pair is deliberate belt and braces.
+     thinking_level and thinking_budget are mutually exclusive, so choosing the level gives up the
+     numeric budget. The budget is the stronger lever where thinking actually fires; use
+     --thinking-level to change this.
   2. temperature is NOT set. The 2.5 runner uses 0.6; Google's 3.x guidance is to remove temperature,
      top_p and top_k rather than tune them. This is a real difference from the 2.5 numbers and must
      be stated wherever the two are compared.
@@ -49,7 +50,17 @@ if not api_key:
 client = genai.Client(api_key=api_key)
 LETTERS = string.ascii_uppercase
 
-THINKING_BUDGET = 512   # default ceiling on thinking tokens; --thinking-budget overrides
+THINKING_LEVEL = "minimal"   # API-side ceiling; --thinking-level overrides
+
+# Prompt-side ceiling, the second half of the belt and braces. Appended to the upstream system
+# prompt rather than edited into it, so the unmodified condition is one flag away.
+#
+# It changes the prompt, and therefore the measurement: EmoBench's own contract says "Do not provide
+# any additional information or explanations", and the five providers already finished ran without
+# this line. A run with it and a run without it do not belong in the same results table.
+# --no-prompt-ceiling restores the comparable condition.
+PROMPT_CEILING = ("\n\nThink briefly. Use at most two short sentences of internal reasoning before "
+                  "you answer, then give the JSON and nothing else.")
 AUTH_MARKERS = ("API key not valid", "ACCESS_TOKEN_TYPE_UNSUPPORTED", "PERMISSION_DENIED",
                 "API_KEY_INVALID", "UNAUTHENTICATED")
 
@@ -65,13 +76,13 @@ def rank_choices(choices):
     return "\n".join(f"{LETTERS[i]}) {c}" for i, c in enumerate(choices))
 
 
-def build_system_prompt(task):
+def build_system_prompt(task, prompt_ceiling=True):
     prompts = load_yaml("src/configs/prompts.yaml")
     response = load_yaml("src/configs/response.yaml")
     statement = response["base"]["en"]
     conditions = response[task]["en"]
     fmt = f"\n{statement}\n```json\n    {{\n    {conditions}\n    }}\n```"
-    return prompts["sys"]["en"] + fmt
+    return prompts["sys"]["en"] + fmt + (PROMPT_CEILING if prompt_ceiling else "")
 
 
 def build_user_prompt(task, sample):
@@ -103,17 +114,17 @@ def parse_json(text):
 
 # ── API call ──────────────────────────────────────────────────────────────────
 
-def _thinking_config(budget):
-    """Thinking on, capped in tokens, and returned so it can be recorded.
+def _thinking_config(level):
+    """Thinking capped at the API, and returned so it can be recorded.
 
     Failing loudly on an SDK that lacks these fields is deliberate: silently dropping the cap would
     let the run proceed at whatever the model chooses to think, which is what the cap prevents.
     """
     try:
-        return types.ThinkingConfig(thinking_budget=budget, include_thoughts=True)
+        return types.ThinkingConfig(thinking_level=level, include_thoughts=True)
     except TypeError as e:
         sys.exit(
-            f"This google-genai build does not accept thinking_budget/include_thoughts ({e}). "
+            f"This google-genai build does not accept thinking_level/include_thoughts ({e}). "
             f"Upgrade the SDK, or decide explicitly to run without a thinking cap and record that "
             f"decision — do not remove this guard."
         )
@@ -137,7 +148,7 @@ def split_parts(resp):
     return "".join(answer), "".join(thought)
 
 
-def call_api(sys_prompt, user_prompt, model, max_output_tokens, budget, max_retries=3):
+def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, max_retries=3):
     """Returns (text, finish_reason, thinking_tokens, thought_summary)."""
     for attempt in range(max_retries):
         try:
@@ -146,7 +157,7 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, budget, max_retr
                 contents=user_prompt,
                 config=types.GenerateContentConfig(
                     system_instruction=sys_prompt,
-                    thinking_config=_thinking_config(budget),
+                    thinking_config=_thinking_config(level),
                     max_output_tokens=max_output_tokens,
                 ),
             )
@@ -249,7 +260,7 @@ def evaluate(results, task, model_name):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, save_every, max_output_tokens, budget, limit=0):
+def run_task(task, model, save_every, max_output_tokens, level, ceiling, limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -280,7 +291,8 @@ def run_task(task, model, save_every, max_output_tokens, budget, limit=0):
     else:
         print(f"[{task}-en] Processing {len(data)} samples")
 
-    sys_prompt = build_system_prompt(task)
+    sys_prompt = build_system_prompt(task, ceiling)
+    print(f"[{task}-en] thinking_level={level}  prompt_ceiling={ceiling}")
 
     def save_checkpoint():
         with open(out_path, "w", encoding="utf-8") as f:
@@ -295,7 +307,7 @@ def run_task(task, model, save_every, max_output_tokens, budget, limit=0):
 
         user_prompt = build_user_prompt(task, sample)
         raw, finish, thinking, thought = call_api(
-            sys_prompt, user_prompt, model, max_output_tokens, budget)
+            sys_prompt, user_prompt, model, max_output_tokens, level)
         parsed = parse_json(raw) if raw else None
 
         common = {
@@ -309,6 +321,9 @@ def run_task(task, model, save_every, max_output_tokens, budget, limit=0):
             # The model's own reasoning, as BBH keeps its visible chain: the expensive half of the
             # response, unreadable in the results unless it is stored.
             "reasoning": thought,
+            # The two ceilings are part of the condition, so they travel with the row.
+            "thinking_level": level,
+            "prompt_ceiling": ceiling,
         }
         if task == "EU":
             res = {
@@ -354,11 +369,13 @@ if __name__ == "__main__":
     # is a few tokens of JSON, and the rest is headroom for minimal thinking. Watch the empty-response
     # count on the pilot before trusting it.
     parser.add_argument("--max-output-tokens", type=int, default=2048)
-    parser.add_argument("--thinking-budget", type=int, default=THINKING_BUDGET,
-                        help="ceiling on thinking tokens; thinking stays on, 0 turns it off")
+    parser.add_argument("--thinking-level", type=str, default=THINKING_LEVEL,
+                        choices=["minimal", "low", "medium", "high"])
+    parser.add_argument("--no-prompt-ceiling", action="store_true",
+                        help="drop the added sentence limit and run the upstream prompt unmodified")
     args = parser.parse_args()
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_output_tokens,
-                 args.thinking_budget, args.limit)
+                 args.thinking_level, not args.no_prompt_ceiling, args.limit)
