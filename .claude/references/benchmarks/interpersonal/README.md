@@ -17,7 +17,7 @@ What the two share, and what a third benchmark in this folder would be expected 
 | Benchmark | Page | Tasks | Items | Scoring |
 |---|---|---|---|---|
 | NegotiationToM | [negotiationtom.md](negotiationtom.md) | desire · belief · intention | 14,138 rows per full run | EM + micro/macro F1 |
-| EmoBench | [emobench.md](emobench.md) | EA · EU | 400 each, 800 total | MCQ accuracy |
+| EmoBench | [emobench.md](emobench.md) | EA · EU | 200 scored each (400 lines, half Chinese) | MCQ accuracy |
 
 NegotiationToM is the one every generic reference was originally written around, so it is also the
 one whose facts leaked furthest. If a generic file states a row count, suspect it.

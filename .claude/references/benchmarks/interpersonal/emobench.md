@@ -26,8 +26,13 @@ runner can be transferred alone.
 
 ## Expected counts
 
-**400 items per task, 800 total** (`wc -l data/*.jsonl`, verified 2026-08-22). Tasks are `EA` and
-`EU`. A run that produces materially fewer has skipped items, not finished early.
+**200 scored items per task, 400 total.** Each `data/*.jsonl` holds 400 lines, but **half are
+Chinese and every runner filters to `language == "en"`** — a run of 200 per task is complete, not
+truncated. Confirmed against the finished 2.5 run: 200 rows in each of `results/EA` and `results/EU`
+(verified 2026-08-22). Tasks are `EA` and `EU`.
+
+Counting the file instead of the English subset is the mistake here: it makes a finished run look
+half done.
 
 ## Output and logs
 
