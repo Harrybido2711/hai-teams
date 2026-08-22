@@ -14,7 +14,7 @@ What this folder's benchmarks share, and how they differ from the process benchm
 | Benchmark | Page | Unit | Scoring |
 |---|---|---|---|
 | DocVQA | [docvqa.md](docvqa.md) | 5,349 validation questions + page images | ANLS |
-| BIG-Bench Hard | [bbh.md](bbh.md) | 20 task files | exact match |
+| BIG-Bench Hard | [bbh.md](bbh.md) · [bbh-parameters.md](bbh-parameters.md) | 20 task files | exact match — but see the page, there are two scorers |
 | MMLU | [mmlu.md](mmlu.md) | 13 subject files | accuracy |
 
 DocVQA is the outlier: it is sharded, it carries 3.5 GB of page images, and it is the only one here

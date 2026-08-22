@@ -32,8 +32,9 @@ and four with a six-branch lenient matcher** that accepts `B` for `(B)`, an opti
 letter, and comma-vs-space differences. The four strict-scored models are penalised for formatting
 rather than reasoning, and nothing in the result CSVs records which scorer produced them.
 
-Every generation parameter each runner sets, with `file:line`, is the BBH table in the repo's
-[`README.md`](../../../../README.md). Read it before comparing any two providers here.
+Every generation parameter each runner sets, with `file:line`:
+[bbh-parameters.md](bbh-parameters.md). Read it before comparing any two providers here — it is also
+where the two-file caveat above is spelled out per model.
 
 ## Its own traps
 

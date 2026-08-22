@@ -107,19 +107,29 @@ def check_structure():
 
 
 def check_benchmarks():
-    """Every page listed in the index, every indexed page present. Both directions."""
+    """Nothing under benchmarks/ is unreachable.
+
+    A benchmark page is linked from the master index; a supporting detail file beside one need
+    only be linked from its group index. Either router counts — what is forbidden is neither.
+    """
     root = os.path.join(REPO, ".claude", "references", "benchmarks")
     index = os.path.join(root, "README.md")
     if not os.path.exists(index):
         return [("benchmarks", rel(root), "no README.md index")]
-    body = open(index).read()
+    master = open(index).read()
     out = []
     for p in sorted(glob.glob(os.path.join(root, "*", "*.md"))):
         if os.path.basename(p) == "README.md":
             continue
-        link = "%s/%s" % (os.path.basename(os.path.dirname(p)), os.path.basename(p))
-        if link not in body:
-            out.append(("benchmarks", rel(p), "page exists but the index does not link it"))
+        group_dir = os.path.dirname(p)
+        name = os.path.basename(p)
+        group_index = os.path.join(group_dir, "README.md")
+        group = open(group_index).read() if os.path.exists(group_index) else ""
+        in_master = "%s/%s" % (os.path.basename(group_dir), name) in master
+        if not in_master and name not in group:
+            out.append(("benchmarks", rel(p),
+                        "neither the master index nor %s/README.md links it"
+                        % os.path.basename(group_dir)))
     return out
 
 
