@@ -38,8 +38,8 @@ four `<think>` spellings**, not one; a missing opening tag and a pipe-delimited 
 
 ## `gemini-3.5-flash-lite` — two routes, neither used here yet
 
-**Not called by any runner in this repo.** Everything below is from documentation and must be
-confirmed by one call before a run depends on it.
+**Not called by any runner here.** Everything below is from documentation and needs one call to
+confirm before a run depends on it.
 
 **Route A · Google AI Studio, native SDK.** Two API surfaces exist in `google-genai`; the 3.5 docs
 use the newer one:
@@ -54,8 +54,9 @@ config=types.GenerateContentConfig(system_instruction=, …))`. **Check which th
 supports before writing.**
 
 - `thinking_level`: **`minimal` is both the default and the floor** for Flash-Lite — "as close as
-  possible to a zero budget for thinking but still requires thought signatures". There is no off.
-  Set it anyway, to pin it against a default that can move.
+  possible to a zero budget for thinking but still requires thought signatures". There is no off, so
+  set it to pin the default **and** add the prompt ceiling from
+  [model-parameters.md](model-parameters.md); on this model the prompt is the only lever left.
 - **Omit `temperature`, `top_p` and `top_k`** — the 3.x guidance is to remove them, not tune them.
 - The key is an `AQ.` auth key, and those are reported to 401 against
   `generativelanguage.googleapis.com` with `ACCESS_TOKEN_TYPE_UNSUPPORTED`. **Probe before committing
@@ -69,10 +70,9 @@ client.chat.completions.create(model="google/gemini-3.5-flash-lite", messages=me
                                extra_body={"reasoning": {"effort": "minimal"}})
 ```
 
-`Authorization: Bearer sk-or-v1-…`. `reasoning.effort` maps to Gemini's thinking level. 1,048,576
-context, 65,536 max output, **$0.30/M input and $2.50/M output**, and thinking bills at the output
-rate. Do not confuse it with `gemini-3.5-flash`, a different model at $1.50/M and $9.00/M whose
-thinking defaults to `medium` rather than `minimal`.
+`Authorization: Bearer sk-or-v1-…`. `reasoning.effort` maps to the thinking level. 1,048,576 context,
+65,536 max output, **$0.30/M in and $2.50/M out**, thinking billed at the output rate. Not to be
+confused with `gemini-3.5-flash`: a different model at $1.50/M and $9.00/M, defaulting to `medium`.
 
 Served by Google AI Studio *and* Google Vertex (US) with failover, so **the serving path can change
 mid-run**. Record which one answered.
@@ -94,5 +94,4 @@ client.chat.completions.create(model=model, messages=messages, temperature=0, ma
 - **`deepseek-reasoner` is an alias, not a model id.** What it resolves to can change under you;
   record the resolved identity with the results.
 
-There is no reasoning knob. To spend less, the levers are the prompt ceiling
-([model-parameters.md](model-parameters.md)) or a different model.
+No reasoning knob — the levers are in [model-parameters.md](model-parameters.md).
