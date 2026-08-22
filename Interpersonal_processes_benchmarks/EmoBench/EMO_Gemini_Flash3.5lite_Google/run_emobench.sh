@@ -15,4 +15,5 @@ module purge
     --model gemini-3.5-flash-lite \
     --task all \
     --save-every 20 \
-    --max-output-tokens 2048
+    --max-output-tokens 2048 \
+    --thinking-budget 512

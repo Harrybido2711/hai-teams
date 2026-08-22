@@ -15,4 +15,5 @@ module purge
     --model google/gemini-3.5-flash-lite \
     --task all \
     --save-every 20 \
-    --max-tokens 2048
+    --max-tokens 2048 \
+    --thinking-budget 512

@@ -5,17 +5,21 @@ built from src/configs, the JSON parse, the record shape, the CSV outputs, the r
 checkpoint — is deliberately identical, so this run stays comparable with the five providers already
 finished. Four things differ, and each is a decision rather than an accident:
 
-  1. thinking_level="minimal". Flash-Lite's default is already minimal AND minimal is its floor, so
-     this buys no reduction; it pins the value against a provider-side default that can move. There
-     is no way to turn thinking off on this model.
+  1. Thinking is ON and bounded by a numeric budget, not by a level. thinking_budget is the only
+     lever that caps the expensive part in tokens: measured on this model, budget=256 spent 127
+     thinking tokens where level=high spent 315, and no config at all spent 0. A level names an
+     intention; a budget names a ceiling.
+     thinking_budget and thinking_level are mutually exclusive — sending both is an error.
   2. temperature is NOT set. The 2.5 runner uses 0.6; Google's 3.x guidance is to remove temperature,
      top_p and top_k rather than tune them. This is a real difference from the 2.5 numbers and must
      be stated wherever the two are compared.
   3. max_output_tokens is set, and it INCLUDES thinking tokens. Too low and the model is billed for
      thinking and returns nothing — see the finish_reason handling below.
-  4. Auth failures are fatal, not retried. This key is an AQ. auth key, and those are reported to
-     401 against generativelanguage.googleapis.com with ACCESS_TOKEN_TYPE_UNSUPPORTED. Retrying an
-     auth failure 3x per item for 800 items wastes an hour to learn one fact.
+  4. Auth failures are fatal, not retried. Retrying an auth failure 3x per item across 400 items
+     wastes an hour to learn one fact.
+  5. include_thoughts=True, and the thought summary is stored per item. It is a summary rather than
+     the raw chain, and it does not change what is billed — but without it the expensive half of
+     every response is invisible in the results.
 
 The prompt is NOT modified. EmoBench's own contract says "Do not provide any additional information
 or explanations", which is the opposite of the show-your-reasoning rule that applies to BBH; the
@@ -45,7 +49,7 @@ if not api_key:
 client = genai.Client(api_key=api_key)
 LETTERS = string.ascii_uppercase
 
-THINKING_LEVEL = "minimal"          # the floor for Flash-Lite; there is no off
+THINKING_BUDGET = 512   # default ceiling on thinking tokens; --thinking-budget overrides
 AUTH_MARKERS = ("API key not valid", "ACCESS_TOKEN_TYPE_UNSUPPORTED", "PERMISSION_DENIED",
                 "API_KEY_INVALID", "UNAUTHENTICATED")
 
@@ -99,26 +103,42 @@ def parse_json(text):
 
 # ── API call ──────────────────────────────────────────────────────────────────
 
-def _thinking_config():
-    """thinking_level moved from a numeric budget to a string level in 3.x.
+def _thinking_config(budget):
+    """Thinking on, capped in tokens, and returned so it can be recorded.
 
-    Older google-genai builds have ThinkingConfig without the field, and passing an unknown kwarg
-    raises rather than being ignored. Failing loudly here is deliberate: silently dropping the cap
-    would let the run proceed at whatever the model chooses to think, which is the thing the cap
-    exists to prevent.
+    Failing loudly on an SDK that lacks these fields is deliberate: silently dropping the cap would
+    let the run proceed at whatever the model chooses to think, which is what the cap prevents.
     """
     try:
-        return types.ThinkingConfig(thinking_level=THINKING_LEVEL)
+        return types.ThinkingConfig(thinking_budget=budget, include_thoughts=True)
     except TypeError as e:
         sys.exit(
-            f"This google-genai build does not accept thinking_level ({e}). Upgrade the SDK, or "
-            f"decide explicitly to run without a thinking cap and record that decision — do not "
-            f"remove this guard."
+            f"This google-genai build does not accept thinking_budget/include_thoughts ({e}). "
+            f"Upgrade the SDK, or decide explicitly to run without a thinking cap and record that "
+            f"decision — do not remove this guard."
         )
 
 
-def call_api(sys_prompt, user_prompt, model, max_output_tokens, max_retries=3):
-    """Returns (text, finish_reason, reasoning_tokens). text is None when every attempt failed."""
+def split_parts(resp):
+    """Answer and thought summary, kept apart.
+
+    With include_thoughts on, resp.text concatenates thought parts with the answer, which would feed
+    the reasoning prose straight into json.loads and fail every parse. Read the parts directly.
+    """
+    answer, thought = [], []
+    try:
+        for part in resp.candidates[0].content.parts:
+            text = getattr(part, "text", None)
+            if not text:
+                continue
+            (thought if getattr(part, "thought", False) else answer).append(text)
+    except Exception:
+        return (getattr(resp, "text", "") or ""), ""
+    return "".join(answer), "".join(thought)
+
+
+def call_api(sys_prompt, user_prompt, model, max_output_tokens, budget, max_retries=3):
+    """Returns (text, finish_reason, thinking_tokens, thought_summary)."""
     for attempt in range(max_retries):
         try:
             resp = client.models.generate_content(
@@ -126,7 +146,7 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, max_retries=3):
                 contents=user_prompt,
                 config=types.GenerateContentConfig(
                     system_instruction=sys_prompt,
-                    thinking_config=_thinking_config(),
+                    thinking_config=_thinking_config(budget),
                     max_output_tokens=max_output_tokens,
                 ),
             )
@@ -141,17 +161,18 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, max_retries=3):
             except Exception:
                 pass
 
-            text = (resp.text or "").strip() if getattr(resp, "text", None) else ""
+            text, thought = split_parts(resp)
+            text = text.strip()
 
             # Thinking consumed the whole budget: billed, and nothing to score. Distinguish it from
             # a wrong answer, because the fix is a larger cap rather than a better prompt.
             if not text and "MAX_TOKENS" in finish.upper():
                 print(f"    empty response, finish_reason={finish}, "
                       f"thinking_tokens={reasoning} — raise --max-output-tokens", flush=True)
-                return "", finish, reasoning
+                return "", finish, reasoning, thought
 
             time.sleep(2.0)
-            return text, finish, reasoning
+            return text, finish, reasoning, thought
 
         except Exception as e:
             err = str(e)
@@ -173,7 +194,7 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, max_retries=3):
                     wait = max(wait + 1, 1)
             print(f"Retrying in {wait:.1f}s...")
             time.sleep(wait)
-    return None, "", None
+    return None, "", None, ""
 
 
 # ── evaluation + CSV output — identical to the 2.5 runner ─────────────────────
@@ -228,7 +249,7 @@ def evaluate(results, task, model_name):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, save_every, max_output_tokens, limit=0):
+def run_task(task, model, save_every, max_output_tokens, budget, limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -273,7 +294,8 @@ def run_task(task, model, save_every, max_output_tokens, limit=0):
             continue
 
         user_prompt = build_user_prompt(task, sample)
-        raw, finish, thinking = call_api(sys_prompt, user_prompt, model, max_output_tokens)
+        raw, finish, thinking, thought = call_api(
+            sys_prompt, user_prompt, model, max_output_tokens, budget)
         parsed = parse_json(raw) if raw else None
 
         common = {
@@ -284,6 +306,9 @@ def run_task(task, model, save_every, max_output_tokens, limit=0):
             "model_response": raw or "",
             "finish_reason": finish,
             "thinking_tokens": thinking,
+            # The model's own reasoning, as BBH keeps its visible chain: the expensive half of the
+            # response, unreadable in the results unless it is stored.
+            "reasoning": thought,
         }
         if task == "EU":
             res = {
@@ -329,8 +354,11 @@ if __name__ == "__main__":
     # is a few tokens of JSON, and the rest is headroom for minimal thinking. Watch the empty-response
     # count on the pilot before trusting it.
     parser.add_argument("--max-output-tokens", type=int, default=2048)
+    parser.add_argument("--thinking-budget", type=int, default=THINKING_BUDGET,
+                        help="ceiling on thinking tokens; thinking stays on, 0 turns it off")
     args = parser.parse_args()
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
-        run_task(task, args.model, args.save_every, args.max_output_tokens, args.limit)
+        run_task(task, args.model, args.save_every, args.max_output_tokens,
+                 args.thinking_budget, args.limit)

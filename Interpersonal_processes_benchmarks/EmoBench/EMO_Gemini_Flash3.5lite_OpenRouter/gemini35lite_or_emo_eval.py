@@ -6,9 +6,10 @@ differs here is only the transport:
 
   * OpenAI client against https://openrouter.ai/api/v1, so the system prompt is a system *message*
     rather than google-genai's system_instruction. Same text either way.
-  * The thinking cap is OpenRouter's unified parameter, reasoning={"effort": "minimal"}, which maps
-    to Gemini's thinking level. exclude:true is NOT used — excluded reasoning is still billed as
-    output, so it hides the trace without saving anything.
+  * Thinking is ON and capped in tokens: reasoning={"max_tokens": N}. Measured on this model, a
+    256-token budget spent 258 reasoning tokens where effort="high" spent 397 — the numeric form is
+    the one that bounds the bill. exclude:true is NOT used: excluded reasoning is still billed as
+    output, so it would hide the trace without saving anything, and the trace is worth keeping.
   * max_tokens caps visible output. Unlike the native route it does not bound thinking, so the two
     runners bound cost differently and their bills are not directly comparable even though their
     scores are.
@@ -44,7 +45,7 @@ if not api_key:
 client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key, timeout=300)
 LETTERS = string.ascii_uppercase
 
-REASONING = {"effort": "minimal"}   # maps to Gemini's thinking level; "none" is not offered here
+THINKING_BUDGET = 512   # default ceiling on reasoning tokens; --thinking-budget overrides
 AUTH_MARKERS = ("No auth credentials", "invalid_api_key", "Unauthorized", "401")
 
 
@@ -97,8 +98,8 @@ def parse_json(text):
 
 # ── API call ──────────────────────────────────────────────────────────────────
 
-def call_api(sys_prompt, user_prompt, model, max_tokens, max_retries=3):
-    """Returns (text, finish_reason, reasoning_tokens, served_by)."""
+def call_api(sys_prompt, user_prompt, model, max_tokens, budget, max_retries=3):
+    """Returns (text, finish_reason, reasoning_tokens, served_by, reasoning_text)."""
     for attempt in range(max_retries):
         try:
             resp = client.chat.completions.create(
@@ -106,11 +107,14 @@ def call_api(sys_prompt, user_prompt, model, max_tokens, max_retries=3):
                 messages=[{"role": "system", "content": sys_prompt},
                           {"role": "user", "content": user_prompt}],
                 max_tokens=max_tokens,
-                extra_body={"reasoning": REASONING},
+                extra_body={"reasoning": {"max_tokens": budget}},
             )
 
             choice = resp.choices[0]
             text = (choice.message.content or "").strip()
+            # OpenRouter returns the reasoning as readable text in its own field, so unlike the
+            # native route it never contaminates the answer — but it is only there if asked for.
+            thought = getattr(choice.message, "reasoning", None) or ""
             finish = str(choice.finish_reason or "")
             served = getattr(resp, "provider", "") or ""
 
@@ -125,10 +129,10 @@ def call_api(sys_prompt, user_prompt, model, max_tokens, max_retries=3):
                 # "the provider returned nothing", and those need different fixes.
                 print(f"    empty response, finish_reason={finish}, provider={served}, "
                       f"reasoning_tokens={reasoning}", flush=True)
-                return "", finish, reasoning, served
+                return "", finish, reasoning, served, thought
 
             time.sleep(2.0)
-            return text, finish, reasoning, served
+            return text, finish, reasoning, served, thought
 
         except Exception as e:
             err = str(e)
@@ -142,7 +146,7 @@ def call_api(sys_prompt, user_prompt, model, max_tokens, max_retries=3):
                 wait = max(wait + 1, 1)
             print(f"Retrying in {wait:.1f}s...")
             time.sleep(wait)
-    return None, "", None, ""
+    return None, "", None, "", ""
 
 
 # ── evaluation + CSV output — identical to the 2.5 runner ─────────────────────
@@ -197,7 +201,7 @@ def evaluate(results, task, model_name):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, save_every, max_tokens, limit=0):
+def run_task(task, model, save_every, max_tokens, budget, limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -242,7 +246,8 @@ def run_task(task, model, save_every, max_tokens, limit=0):
             continue
 
         user_prompt = build_user_prompt(task, sample)
-        raw, finish, thinking, served = call_api(sys_prompt, user_prompt, model, max_tokens)
+        raw, finish, thinking, served, thought = call_api(
+            sys_prompt, user_prompt, model, max_tokens, budget)
         parsed = parse_json(raw) if raw else None
 
         common = {
@@ -254,6 +259,8 @@ def run_task(task, model, save_every, max_tokens, limit=0):
             "finish_reason": finish,
             "thinking_tokens": thinking,
             "served_by": served,
+            # The model's own reasoning, as BBH keeps its visible chain.
+            "reasoning": thought,
         }
         if task == "EU":
             res = {
@@ -297,8 +304,11 @@ if __name__ == "__main__":
                         help="process only the first N items per task; 0 means all")
     # Visible output only on this route — thinking is not bounded by it.
     parser.add_argument("--max-tokens", type=int, default=2048)
+    parser.add_argument("--thinking-budget", type=int, default=THINKING_BUDGET,
+                        help="ceiling on reasoning tokens; thinking stays on")
     args = parser.parse_args()
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
-        run_task(task, args.model, args.save_every, args.max_tokens, args.limit)
+        run_task(task, args.model, args.save_every, args.max_tokens,
+                 args.thinking_budget, args.limit)
