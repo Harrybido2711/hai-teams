@@ -1,7 +1,6 @@
 # Keeping things in sync
 
-One instruction usually touches more files than it names, and drift is silent by default. Three
-layers, each with its own enforcement point and its own failure mode.
+One instruction usually touches more files than it names, and drift is silent by default.
 
 | Layer | What must match | Enforced by | Fires |
 |---|---|---|---|
@@ -11,6 +10,22 @@ layers, each with its own enforcement point and its own failure mode.
 
 Layer 1 rides on layer 3 on purpose: since every finished change has to be committed, the commit is
 the one moment every change reliably passes through.
+
+## Does layer 2 apply to this task?
+
+Layers 1 and 3 always run. Layer 2 is the only conditional one, and the test is narrow: **did this
+task change a file that also exists on the cluster?** A runner, a shared core, an sbatch script or a
+config: yes. Documentation, a benchmark page, a local-only script, a note: no.
+
+Two ways to get the test wrong, both of which have a cost:
+
+- **Answering "no" because nothing is running.** A job's absence is irrelevant — the question is
+  whether the file exists in both places, because the next submit reads whatever is there.
+- **Answering "yes" and transferring under a live job.** That is not layer 2, it is a wasted
+  transfer: the running process has already imported its modules. Cancel first, then transfer.
+
+Whichever way it goes, **state it**. "Layer 2 skipped, documentation only" is a report; silence is
+indistinguishable from having forgotten.
 
 ## Layer 1 — what each finding means
 
@@ -34,8 +49,8 @@ python3 .claude/scripts/check_docs.py --impact "<the term you are changing>"
 ```
 
 The output is the work list. The checker catches broken structure afterwards; only this catches the
-file that should have changed and did not, because nothing there is *broken* — it is merely stale,
-and staleness is invisible to every mechanical check.
+file that should have changed and did not — nothing there is *broken*, merely stale, and staleness
+is invisible to every mechanical check.
 
 ## Declaring an exception
 
@@ -43,13 +58,12 @@ and staleness is invisible to every mechanical check.
 point, and it has to answer *why two copies is the right answer here*, not merely restate the
 finding.
 
-Reasons that have held up: a sweep log quotes an incident as evidence and editing it would falsify
-the record; a group index quotes a member's headline number so a reader can route without opening
-two files; an agent cannot rely on receiving `CLAUDE.md`, so a rule its judgement depends on must be
+Reasons that have held up: editing a sweep log to satisfy a uniqueness rule would falsify the
+record; an agent cannot rely on receiving `CLAUDE.md`, so a rule its judgement depends on has to be
 in its own prompt. A reason that has not: "this one is fine".
 
-An exception whose finding disappears is reported as no longer needed — delete it then, so the file
-stays a list of live decisions rather than an archive.
+An exception whose finding disappears is reported as no longer needed. Delete it then: the file is
+a list of live decisions, not an archive.
 
 ## Layer 2 — know what it does not cover
 
@@ -58,9 +72,6 @@ contract of the hook, are in [quest-cluster.md](quest-cluster.md). Closing the s
 of `PLAN.md` § Open work and is required before the first submit for any other benchmark. A gate
 that reports *in sync* after comparing someone else's files is worse than no gate, because nobody
 doubts a green result.
-
-Sync is also not something to do continuously: a live job has already imported its modules, so
-replacing code under it changes nothing until it is cancelled and resubmitted.
 
 ## Layer 3
 

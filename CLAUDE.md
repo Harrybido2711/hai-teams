@@ -33,6 +33,27 @@ burned 3h10m for 315 rows and 105 empty responses because the real fix had never
 **Decide the checkpoint's disposition before resubmitting, and say which you chose.** Resume keeps
 every row the old code wrote. One result set holding two configurations is worse than redoing rows.
 
+## Every task ends with a sync pass
+
+Synchronisation is not something big changes get and small ones skip. It is how this project stays
+coherent, so **a task is not finished until the pass is done** — the same pass, every time.
+
+| Layer | When it applies | What "done" means |
+|---|---|---|
+| 1 · local ↔ local | **always** | the consistency check passes, or every finding is declared with a reason |
+| 2 · local ↔ Quest | **only when the task changed something that also exists on Quest** — a runner, a shared core, an sbatch script, a config | Quest matches local, proven with `md5sum`, core and runners transferred together |
+| 3 · local ↔ git | **always** | committed and pushed to `origin` and `backup` |
+
+A change that touches only local files — documentation, notes, a script that never leaves the laptop
+— skips layer 2 and nothing else.
+
+**Skipping is a judgement you state, not one you make silently.** Say which layers you ran and why
+any was skipped, in the report. An unstated skip cannot be told apart from having forgotten, and a
+fixed pass is only worth having because it removes the chance to forget.
+
+Detail on any of the three, and what to do when a layer fails:
+`.claude/references/sync-and-consistency.md`.
+
 ## Rules that hold on every task
 
 - **Never submit without proving Quest matches local.** Two ways the automatic hook does not save
