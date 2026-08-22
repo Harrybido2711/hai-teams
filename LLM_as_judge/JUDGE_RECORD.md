@@ -225,7 +225,7 @@ vendored 2026-08-19; package name `wonderbread` (`setup.py`). Access via the `op
 default `OPENAI_API_KEY`. **Read by this project on 2026-08-19; never executed here.** The committed
 `question_answering_all_results.csv` (480 rows: 120 items × GPT4 / GeminiPro / Claude3 / Human) is
 the authors' output, not ours.
-· Source: `setup.py`, `wonderbread/helpers.py:454-456`, `VENDORED_SOURCES.md`
+· Source: `setup.py`, `wonderbread/helpers.py:454-456`, `PLAN.md` (benchmark index)
 
 ### Judge 2 — SOP Generation (the "semantic" Precision / Recall)
 
@@ -532,7 +532,7 @@ from the raw CSV without changing the score path.
 `torch==2.5.1`. Access via the OpenAI API with `OPENAI_API_KEY` from a `.env` at repo root. **Read on
 2026-08-19; never executed here.** No MultiChallenge run has been submitted from this repo and no
 number from it is in `Results.xlsx`.
-· Source: `requirements.txt`, `README.md` setup section, `VENDORED_SOURCES.md`
+· Source: `requirements.txt`, `README.md` setup section, `PLAN.md` (benchmark index)
 
 ### MultiChallenge — discrepancies and decisions
 
@@ -801,7 +801,7 @@ this repo.** Paper: arXiv 2401.17882v2, 16 Feb 2024. **Read on 2026-08-05 and 20
 AwareBench generation or judging has been executed here**, so this section documents a design, not an
 observation. That distinction is itself a C3 field: reading code is not the same evidence as running
 it — and here we have not even read the judge's code.
-· Source: `README.md:20-86`, `VENDORED_SOURCES.md`, `AWARENESS_NOTES.md` header
+· Source: `README.md:20-86`, `PLAN.md` (benchmark index), `AWARENESS_NOTES.md` header
 
 ### AwareBench — discrepancies and decisions
 

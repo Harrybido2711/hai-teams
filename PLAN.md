@@ -31,9 +31,8 @@ hai-teams/
 ├── LLM_as_judge/                        judge methodology, not a benchmark
 │   ├── JUDGE_RECORD.md                  the filled record for all three judged benchmarks
 │   └── JUDGE_SUMMARY.md                 its two-page version, for discussion
-├── .claude/                             agents, references, workflows (see below)
-├── CLAUDE.md                            planner rules — role split, kill-and-resync, sync check
-├── VENDORED_SOURCES.md                  upstream URL + commit for every vendored folder
+├── .claude/                             INDEX, tools, agents, references, workflows (see below)
+├── CLAUDE.md                            planner rules only; `.claude/INDEX.md` is the entry point
 ├── PLAN.md                              this file
 ├── README.md · Results.xlsx             the shared workbook every reported number lands in
 └── quest_pull.log                       gitignored
@@ -44,18 +43,18 @@ drives this project, so a benchmark's folder states which team process it is evi
 
 ## Benchmark index
 
-| Folder | Benchmark | Team process | Upstream | LLM judge? | Result files present for |
-|---|---|---|---|---|---|
-| `Transition_.../Awareness_in_LLM` | AwareBench | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM | **yes** — 60 of 4,075 rows | none yet; output templates and the paper baseline are in place |
-| `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval | goal specification | AddleseeHQ/mpgt-eval | no — human review | none yet (vendored 2026-08-19) |
-| `Transition_.../LLMs-Planning_bench` | PlanBench | strategy formulation | karthikv792/LLMs-Planning | no — VAL/PDDL validator | none yet |
-| `Action_.../Wonderbread_bench` | Wonderbread | monitoring progress toward goals | HazyResearch/wonderbread | **yes** — QA, SOP generation, SOP improvement | none yet (vendored 2026-08-19) |
-| `Action_.../Multi-challenge_bench` | MultiChallenge | coordination | ekwinox117/multi-challenge | **yes** — every item | none yet (vendored 2026-08-19) |
-| `Interpersonal_.../NegotiationToM` | NegotiationToM | conflict management | HKUST-KnowComp/NegotiationToM | no — EM + micro/macro F1 | GPT, Gemini, Gemma, Qwen, Deepseek, XAI |
-| `Interpersonal_.../EmoBench` | EmoBench | affect management | Sahandfer/EmoBench | no — MCQ accuracy | OpenAI, Gemini, Gemma, Qwen, Deepseek, XAI |
-| `Tasks_.../DocVQA` | DocVQA | general task ability | docvqa.org | no — ANLS | OpenAI, Gemini |
-| `Tasks_.../bbh` | BIG-Bench Hard | general task ability | BIG-Bench Hard | no — exact match | 7 providers incl. Llama |
-| `Tasks_.../mmlu` | MMLU | general task ability | hendrycks/test | no — accuracy | 7 providers incl. Llama |
+| Folder                                             | Benchmark      | Team process                               | Upstream                      | LLM judge?                                           | Result files present for                                       |
+| -------------------------------------------------- | -------------- | ------------------------------------------ | ----------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
+| `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | **yes** — 60 of 4,075 rows                    | none yet; output templates and the paper baseline are in place |
+| `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval      | goal specification                         | AddleseeHQ/mpgt-eval          | no — human review                                   | none yet (vendored 2026-08-19)                                 |
+| `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | none yet                                                       |
+| `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | none yet (vendored 2026-08-19)                                 |
+| `Action_.../Multi-challenge_bench`               | MultiChallenge | coordination                               | ekwinox117/multi-challenge    | **yes** — every item                          | none yet (vendored 2026-08-19)                                 |
+| `Interpersonal_.../NegotiationToM`               | NegotiationToM | conflict management                        | HKUST-KnowComp/NegotiationToM | no — EM + micro/macro F1                            | GPT, Gemini, Gemma, Qwen, Deepseek, XAI                        |
+| `Interpersonal_.../EmoBench`                     | EmoBench       | affect management                          | Sahandfer/EmoBench            | no — MCQ accuracy                                   | OpenAI, Gemini, Gemma, Qwen, Deepseek, XAI                     |
+| `Tasks_.../DocVQA`                               | DocVQA         | general task ability                       | docvqa.org                    | no — ANLS                                           | OpenAI, Gemini                                                 |
+| `Tasks_.../bbh`                                  | BIG-Bench Hard | general task ability                       | BIG-Bench Hard                | no — exact match                                    | 7 providers incl. Llama                                        |
+| `Tasks_.../mmlu`                                 | MMLU           | general task ability                       | hendrycks/test                | no — accuracy                                       | 7 providers incl. Llama                                        |
 
 "Result files present" means CSV/JSONL output exists on disk under that provider's name — it is not a
 claim that the run is complete or that its numbers have been audited. `LLM_as_judge/JUDGE_RECORD.md`
@@ -86,40 +85,50 @@ all (`CLAUDE.md`).
 
 Each file is authoritative on one thing; nothing is duplicated between them.
 
-| File | Authoritative on |
-|---|---|
-| `CLAUDE.md` | planner rules — who does what, kill-and-resync authorisation, the local↔Quest md5 check, saved workflows |
-| `LLM_as_judge/JUDGE_DOCUMENTATION_RULE.md` | the thirteen fields that must be recorded about any judge before its numbers are used |
-| `LLM_as_judge/JUDGE_RECORD.md` | the filled record — every judge in the suite: what it is, what it is shown, what its numbers mean, and which seven benchmarks need no record |
-| `LLM_as_judge/JUDGE_SUMMARY.md` | the two-page version of that record: the findings, the cost per model, and the open decisions |
-| `LLM_as_judge/GPT_LLM_AS_JUDGE_GUIDE.md` | how to *build* a judge with GPT — pairwise setup, structured output, position bias |
-| `VENDORED_SOURCES.md` | which upstream commit each vendored folder came from |
-| `Interpersonal_.../NegotiationToM/negotiation.md` | current NegotiationToM results, dataset traps, reasoning-token cost, silent-failure catalogue |
-| `Interpersonal_.../NegotiationToM/ISSUES.md` | problems already hit, what was rejected, what shipped |
-| `Interpersonal_.../NegotiationToM/DATA_NOTES.md` | cutoff tiling, the `"None"` sentinel, expected row counts |
-| `Transition_.../Awareness_in_LLM/AWARENESS_NOTES.md` | AwareBench task-by-task anatomy, its traps, and the run plan |
-| `Tasks_.../DocVQA/OPENAI_EVAL_NOTES.md` | the DocVQA quota incident and its fix |
-| `.claude/references/*.md` | operating knowledge — Quest/SLURM, provider gotchas, runner skeleton, handoffs |
+| File                                                   | Authoritative on                                                                                                                              |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CLAUDE.md`                                          | planner **rules** only — who decides, the kill-and-resync authorisation, the invariants that hold on every task, and the discipline that keeps the docs usable |
+| `.claude/INDEX.md`                                   | the entry point: project goal and stage in one page, the terms this project uses in a specific way, and the three files always read first |
+| `.claude/tools/README.md`                            | the dictionary of what can be dispatched — nine workflows and six agents, one row each, with a detail file per workflow |
+| `.claude/references/benchmarks/<group>/<name>.md`    | per-benchmark operating detail: Quest path, layout, verified counts, output naming, run order, its own traps — one page for each of the ten, plus a group page for what a process folder's benchmarks share. The rest of `.claude/` is benchmark-agnostic on purpose |
+| `LLM_as_judge/JUDGE_DOCUMENTATION_RULE.md`           | the thirteen fields that must be recorded about any judge before its numbers are used                                                         |
+| `LLM_as_judge/JUDGE_RECORD.md`                       | the filled record — every judge in the suite: what it is, what it is shown, what its numbers mean, and which seven benchmarks need no record |
+| `LLM_as_judge/JUDGE_SUMMARY.md`                      | the two-page version of that record: the findings, the cost per model, and the open decisions                                                 |
+| `LLM_as_judge/GPT_LLM_AS_JUDGE_GUIDE.md`             | how to*build* a judge with GPT — pairwise setup, structured output, position bias                                                          |
+| `Interpersonal_.../NegotiationToM/negotiation.md`    | current NegotiationToM results, dataset traps, reasoning-token cost, silent-failure catalogue                                                 |
+| `Interpersonal_.../NegotiationToM/ISSUES.md`         | problems already hit, what was rejected, what shipped                                                                                         |
+| `Interpersonal_.../NegotiationToM/DATA_NOTES.md`     | cutoff tiling, the`"None"` sentinel, expected row counts                                                                                    |
+| `Transition_.../Awareness_in_LLM/AWARENESS_NOTES.md` | AwareBench task-by-task anatomy, its traps, and the run plan                                                                                  |
+| `Tasks_.../DocVQA/OPENAI_EVAL_NOTES.md`              | the DocVQA quota incident and its fix                                                                                                         |
+| `.claude/references/*.md`                            | operating knowledge — Quest/SLURM, provider gotchas, runner skeleton, handoffs                                                               |
 
 ## The agent layer
 
 ```
 .claude/
+├── INDEX.md      orientation — read first; routes to the two READMEs below
+├── tools/        what can be dispatched: README (index) + one detail file per workflow
+├── references/   what to read before acting: README (map) + quest-cluster · provider-gotchas
+│                 script-skeleton · handoffs · shared-context · external-patterns
+│   └── benchmarks/  one page per benchmark, grouped by process folder — transition · action
+│                     interpersonal · tasks. Everything true of one benchmark and not the others
 ├── agents/       watcher · evaluator · executor · reviewer · tracker · summarizer
-├── references/   quest-cluster · provider-gotchas · script-skeleton · handoffs · shared-context
 ├── workflows/    run-model · run-fast · fix-broken-run · verify-change · scale-shards
 │                 compare-providers · check-status · harvest-patterns
 └── memory/       gitignored — personal environment only
 ```
 
-The main session is the planner; no subagent can dispatch another. Workflows are committed so they
-outlive the session that wrote them. Details in `CLAUDE.md`.
+Three layers, each with one job: `CLAUDE.md` states rules, `INDEX.md` orients, the two READMEs route.
+A README lists and points; it never explains. The main session is the planner; no subagent can
+dispatch another. Workflows are committed so they outlive the session that wrote them.
 
 ## Conventions worth not rediscovering
 
 - **A vendored folder carries no `.git`.** A nested repo is recorded by the parent as a bare gitlink,
-  so not one of its files would be committed. Strip `.git`, then record the commit in
-  `VENDORED_SOURCES.md` — that file is the only surviving provenance.
+  so not one of its files would be committed. Strip `.git` before adding one. **The file that
+  recorded each copy's upstream URL and commit is no longer in the tree**, so vendored provenance is
+  currently unrecorded — re-establish it before relying on any claim about which upstream a folder
+  came from.
 - **Code flows up to Quest, results flow down.** Never the reverse.
 - **Stage explicit paths.** Never `git add -A` at the root; an unattended watcher once swept
   unreviewed work into commits named "watcher checkpoint" and pushed them to both remotes.
