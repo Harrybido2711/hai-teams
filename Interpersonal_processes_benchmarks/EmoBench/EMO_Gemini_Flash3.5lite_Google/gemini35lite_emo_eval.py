@@ -5,16 +5,17 @@ built from src/configs, the JSON parse, the record shape, the CSV outputs, the r
 checkpoint — is deliberately identical, so this run stays comparable with the five providers already
 finished. Six things differ, and each is a decision rather than an accident:
 
-  1. Hidden thinking is capped at the API and visible reasoning is switched on. They are different
-     things: the thinking cap bounds the expensive invisible half, while --use-cot is upstream's own
-     supported condition in which the model returns its step-by-step reasoning as a JSON field.
-     Capping one does not suppress the other.
-  2. Chain-of-thought follows upstream exactly rather than an invented instruction. src/utils.py
-     swaps response.yaml's "base" statement for "cot" and prepends the "reasoning" key to the JSON
-     conditions; this runner calls the same config the same way. Upstream defaults use_cot to False
-     (src/main.py:32) and the five providers already finished ran without it, so **a CoT run is a
-     different condition** — --no-cot restores the comparable one, and the flag is recorded on
-     every row.
+  1. Hidden thinking is capped — thinking_level="minimal" — and the cap is not conditional on
+     anything. The hidden half is where the money goes: on this project's finished runs, uncapped
+     models averaged 466 and 567 output tokens per call against 14-15 for capped ones, on a task
+     whose visible answer is about 15 tokens.
+  2. Visible reasoning is OFF, because that is EmoBench's decision and not this project's.
+     src/main.py:32 defaults use_cot to False, and the base statement it selects says "Do not
+     provide any additional information or explanations" — an explicit instruction, not silence.
+     --use-cot turns on upstream's own opt-in branch, built from its config the way src/utils.py
+     builds it: response.yaml's "cot" statement, with a "reasoning" key prepended to the JSON. The
+     two are different conditions, the five finished providers ran without it, and the flag is
+     written onto every row so the condition travels with the data.
   3. temperature is NOT set. The 2.5 runner uses 0.6; Google's 3.x guidance is to remove temperature,
      top_p and top_k rather than tune them. This is a real difference from the 2.5 numbers and must
      be stated wherever the two are compared.
@@ -70,7 +71,7 @@ def rank_choices(choices):
     return "\n".join(f"{LETTERS[i]}) {c}" for i, c in enumerate(choices))
 
 
-def build_system_prompt(task, use_cot=True):
+def build_system_prompt(task, use_cot=False):
     """Upstream's own construction, both branches — src/utils.py::get_response_format.
 
     With CoT the statement changes and a "reasoning" key is prepended to the JSON conditions, so the
@@ -369,18 +370,19 @@ if __name__ == "__main__":
     parser.add_argument("--save-every", type=int, default=20)
     parser.add_argument("--limit", type=int, default=0,
                         help="process only the first N items per task; 0 means all")
-    # Includes thinking tokens. 2048 is a starting point, not a measured value: the expected answer
-    # is a few tokens of JSON, and the rest is headroom for minimal thinking. Watch the empty-response
-    # count on the pilot before trusting it.
+    # Includes thinking tokens, which is why upstream's own 50 (src/model.py:75, non-CoT) is not
+    # copied: 50 visible tokens is right, but thinking would eat the budget first and return a billed
+    # empty response. 2048 is headroom, not a measured value — watch the empty count on the pilot.
     parser.add_argument("--max-output-tokens", type=int, default=2048)
     parser.add_argument("--thinking-level", type=str, default=THINKING_LEVEL,
                         choices=["minimal", "low", "medium", "high"])
-    parser.add_argument("--no-cot", action="store_true",
-                        help="upstream's default: no visible reasoning, and comparable with the "
-                             "five providers already finished")
+    parser.add_argument("--use-cot", action="store_true",
+                        help="upstream's opt-in visible-reasoning condition (src/main.py:32). Off by "
+                             "default because EmoBench's own prompt forbids explanations, and the "
+                             "five finished providers ran without it")
     args = parser.parse_args()
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_output_tokens,
-                 args.thinking_level, not args.no_cot, args.limit)
+                 args.thinking_level, args.use_cot, args.limit)

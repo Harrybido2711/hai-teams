@@ -6,11 +6,10 @@ differs here is only the transport:
 
   * OpenAI client against https://openrouter.ai/api/v1, so the system prompt is a system *message*
     rather than google-genai's system_instruction. Same text either way.
-  * Hidden thinking is capped at the API while visible reasoning is switched on — different things,
-    and capping one does not suppress the other. Chain-of-thought is upstream's own condition, built
-    from its config the way src/utils.py builds it, not an invented instruction. Upstream defaults
-    it off (src/main.py:32) and the five finished providers ran without it, so **a CoT run is a
-    different condition**; --no-cot restores the comparable one and the flag is on every row.
+  * Hidden thinking is capped unconditionally; visible reasoning is off, because that is EmoBench's
+    decision. Its base statement says "Do not provide any additional information or explanations"
+    and src/main.py:32 defaults use_cot to False. --use-cot turns on upstream's own branch, built
+    from its config; it is a different condition and the flag is written onto every row.
   * max_tokens caps visible output. Unlike the native route it does not bound thinking, so the two
     runners bound cost differently and their bills are not directly comparable even though their
     scores are.
@@ -61,7 +60,7 @@ def rank_choices(choices):
     return "\n".join(f"{LETTERS[i]}) {c}" for i, c in enumerate(choices))
 
 
-def build_system_prompt(task, use_cot=True):
+def build_system_prompt(task, use_cot=False):
     """Upstream's own construction, both branches — src/utils.py::get_response_format.
 
     With CoT the statement changes and a "reasoning" key is prepended to the JSON conditions, so the
@@ -317,15 +316,17 @@ if __name__ == "__main__":
     parser.add_argument("--save-every", type=int, default=20)
     parser.add_argument("--limit", type=int, default=0,
                         help="process only the first N items per task; 0 means all")
-    # Visible output only on this route — thinking is not bounded by it.
+    # Visible output only on this route — thinking is not bounded by it. Upstream uses 50 for
+    # non-CoT and 2048 for CoT (src/model.py:75); 2048 covers both without risking truncation.
     parser.add_argument("--max-tokens", type=int, default=2048)
     parser.add_argument("--reasoning-effort", type=str, default=REASONING_EFFORT,
                         choices=["minimal", "low", "medium", "high"])
     parser.add_argument("--reasoning-max-tokens", type=int, default=0,
                         help="use a numeric reasoning budget instead of an effort level")
-    parser.add_argument("--no-cot", action="store_true",
-                        help="upstream's default: no visible reasoning, and comparable with the "
-                             "five providers already finished")
+    parser.add_argument("--use-cot", action="store_true",
+                        help="upstream's opt-in visible-reasoning condition (src/main.py:32). Off by "
+                             "default because EmoBench's own prompt forbids explanations, and the "
+                             "five finished providers ran without it")
     args = parser.parse_args()
 
     reasoning_cfg = ({"max_tokens": args.reasoning_max_tokens} if args.reasoning_max_tokens
@@ -334,4 +335,4 @@ if __name__ == "__main__":
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_tokens,
-                 reasoning_cfg, not args.no_cot, args.limit)
+                 reasoning_cfg, args.use_cot, args.limit)

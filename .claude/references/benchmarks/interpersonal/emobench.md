@@ -58,7 +58,11 @@ prompt edit**. `src/utils.py::get_response_format` swaps `response.yaml`'s `base
 data. Upstream also raises its own output cap from 50 to 2048 tokens for that branch.
 
 **It is off by default upstream, and the five finished providers ran without it** — a CoT run and a
-non-CoT run are different conditions and do not share a results table.
+non-CoT run are different conditions and do not share a results table. The author did not merely
+stay silent: the default `base` statement says *"Do not provide any additional information or
+explanations"*. So for EmoBench the visibility question is already answered, and the flash-lite
+runners default to off, with `--use-cot` to opt in. Their non-CoT prompt is byte-identical to the
+2.5 runner's, checked rather than assumed.
 
 Two things this changes for a runner:
 
