@@ -60,8 +60,9 @@ leaving a copy behind. The seven fields worth having, in the order they get used
    `results/` shipped with a vendored copy is upstream's and is not ours to report.
 6. **Run order** — the exact scripts, in sequence.
 7. **What its README says about showing reasoning.** Every benchmark decides this for itself — a
-   flag, a prompt that asks for a chain, or silence. Establish it from the upstream README before
-   writing a runner, and name the upstream mode rather than inventing an instruction. Capping the
-   model's *hidden* reasoning is not a per-benchmark question: that is always done
-   ([../model-parameters.md](../model-parameters.md)).
+   flag, a prompt that asks for a chain, or silence. Quote the line, name the upstream mode rather
+   than inventing an instruction, and have the runner **resolve it from the README at run time**
+   instead of hardcoding what the line says today (EmoBench's `reasoning_visibility.py` is the
+   pattern). Capping the model's *hidden* reasoning is not a per-benchmark question: that is always
+   done ([../model-parameters.md](../model-parameters.md)).
 8. **Its own traps** — the ones that produce wrong numbers that look right.
