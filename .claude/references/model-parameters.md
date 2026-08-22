@@ -1,6 +1,6 @@
 # Model parameters — what every runner must set
 
-**Applies to every benchmark, not one** — keyed by model, because the same providers are called from
+**Applies to every benchmark, not one** — keyed by model, because the same providers serve
 NegotiationToM, EmoBench, bbh, mmlu and DocVQA. Read before writing or changing any runner.
 
 ## The standing rule
@@ -12,32 +12,19 @@ Set by the user on 2026-08-22:
    Thinking stays on; what is bounded is what it may spend. Independent of rule 3: capping the
    hidden half never depends on whether the visible half is shown.
 2. **A model that does not reason gets an explicit output cap.** `max_tokens` on every call.
-3. **Whether reasoning is *shown* is the benchmark's decision, read from its own README.** BBH's
-   prompt asks for a visible chain; EmoBench ships `--use_cot` and defaults it off. Use the upstream
-   mode rather than writing your own instruction, and keep the other branch reachable — they are
-   different conditions and do not share a results table. Either way **record what was reasoned**:
+3. **Whether reasoning is *shown* is the benchmark's decision, read from its own README — at run
+   time, not frozen into the runner.** Resolve it from the README and record the line it came from.
+   A literal `True`/`False` stops tracking the README, and the next runner copied from that one
+   carries the answer into a benchmark that decided otherwise. EmoBench's resolver is
+   `reasoning_visibility.py`; it raises when a README declares nothing, rather than guessing. Use
+   the upstream mode instead of writing your own instruction, and keep the other branch behind a
+   flag — different conditions do not share a results table. Either way **record what was reasoned**:
    the visible chain where there is one, the hidden summary always
    ([reasoning-cost.md](reasoning-cost.md)).
 4. **Set the value even when it equals the default.** A default belongs to the provider and can move;
    a pinned value records what the run used.
-5. **No API limit? Set it in the prompt.** The last column says which models.
-
-## When the knob does not exist, the prompt is the knob
-
-Some models expose no thinking parameter at all. **They are not exempt from rule 1** — the ceiling
-goes into the prompt:
-
-```text
-Think briefly. Use at most <N> sentences of reasoning before your final line.
-Then end your response with:
-"Final Answer: <your concise answer here>"
-```
-
-The same applies to output length where `max_tokens` is unavailable or unsafe to set tightly.
-
-- **A request, not a limit.** Verify from `usage.completion_tokens_details.reasoning_tokens`, never
-  from how long the answer looks.
-- **It changes the prompt, so it changes the measurement.** Record the wording with the score.
+5. **No API limit? Set it in the prompt.** The last column says which models; the wording and
+   its caveats are in [prompt-ceiling.md](prompt-ceiling.md).
 
 ## Per model
 
@@ -54,9 +41,9 @@ The same applies to output length where `max_tokens` is unavailable or unsafe to
 | `google/gemma-4-31B-it` | bbh, EmoBench, NegotiationToM | no as served | n/a | `max_tokens` | n/a **on DeepInfra, which serves it with thinking already off — passing `reasoning_effort` turns it back on.** On Together it is on by default and must be disabled |
 | `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | bbh | no | n/a | `max_tokens` | n/a. `max_tokens` is enforced |
 
-"Called by" lists where the model id appears in a runner today; it is not a claim that every one of
-those runs is current. `gemini-3.5-flash` is listed only so it is not mistaken for Flash-Lite — it is
-a different, dearer model at $1.50/M input and $9.00/M output.
+"Called by" lists where the model id appears in a runner today, not that the run is current.
+`gemini-3.5-flash` is listed only so it is not mistaken for Flash-Lite — a dearer model at $1.50/M
+in and $9.00/M out.
 
 **An unestablished knob counts as no knob.** Where the last column says *not established*, apply the
 prompt ceiling and keep it until one call proves the API can do it. The failure this avoids is
@@ -68,5 +55,5 @@ assuming a knob exists, setting nothing, and finding out from the bill.
 accuracy and cost together. Measured budgets and the four ways capping backfires:
 [reasoning-cost.md](reasoning-cost.md).
 
-**Nothing in this table has been applied to a runner yet.** What each runner currently sets is
-recorded on its benchmark's page; this file is what they must be changed to.
+**Applied so far only in EmoBench's two flash-lite runners.** What every other runner currently
+sets is on its benchmark's page; this file is what they must be changed to.

@@ -9,13 +9,15 @@ finished. Six things differ, and each is a decision rather than an accident:
      anything. The hidden half is where the money goes: on this project's finished runs, uncapped
      models averaged 466 and 567 output tokens per call against 14-15 for capped ones, on a task
      whose visible answer is about 15 tokens.
-  2. Visible reasoning is OFF, because that is EmoBench's decision and not this project's.
-     src/main.py:32 defaults use_cot to False, and the base statement it selects says "Do not
-     provide any additional information or explanations" — an explicit instruction, not silence.
-     --use-cot turns on upstream's own opt-in branch, built from its config the way src/utils.py
-     builds it: response.yaml's "cot" statement, with a "reasoning" key prepended to the JSON. The
-     two are different conditions, the five finished providers ran without it, and the flag is
-     written onto every row so the condition travels with the data.
+  2. Visible reasoning is not decided in this file. It is read from EmoBench's own README when the
+     runner starts (reasoning_visibility.resolve), and today that answers False: README.md:79
+     documents --use_cot as "Defaults to `False`", src/main.py:32 implements it, and the base
+     statement it selects says "Do not provide any additional information or explanations".
+     Writing that False in here would behave identically today and still be wrong — the value would
+     stop tracking the README, and the next runner copied from this one would carry EmoBench's
+     answer into a benchmark that decided otherwise. --use-cot and --no-use-cot override it.
+     Whichever way it was settled is written onto every row, because a CoT run and a non-CoT run
+     are different conditions and do not share a results table.
   3. temperature is NOT set. The 2.5 runner uses 0.6; Google's 3.x guidance is to remove temperature,
      top_p and top_k rather than tune them. This is a real difference from the 2.5 numbers and must
      be stated wherever the two are compared.
@@ -47,6 +49,11 @@ from google.genai import types
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv(os.path.join(ROOT, ".env"))
 
+# ROOT is the benchmark folder — the one holding upstream's README and the resolver that
+# reads it. Nothing in this file decides whether reasoning is shown.
+sys.path.insert(0, ROOT)
+import reasoning_visibility  # noqa: E402 — needs ROOT on the path first
+
 # Its own key, not GEMINI_API_KEY: that one is the 2.5 run's and is a different quota.
 api_key = os.getenv("GEMINI_FLASH_LITE_API_KEY")
 if not api_key:
@@ -71,7 +78,7 @@ def rank_choices(choices):
     return "\n".join(f"{LETTERS[i]}) {c}" for i, c in enumerate(choices))
 
 
-def build_system_prompt(task, use_cot=False):
+def build_system_prompt(task, use_cot):
     """Upstream's own construction, both branches — src/utils.py::get_response_format.
 
     With CoT the statement changes and a "reasoning" key is prepended to the JSON conditions, so the
@@ -262,7 +269,8 @@ def evaluate(results, task, model_name):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, save_every, max_output_tokens, level, use_cot, limit=0):
+def run_task(task, model, save_every, max_output_tokens, level, use_cot, cot_source,
+             limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -326,6 +334,7 @@ def run_task(task, model, save_every, max_output_tokens, level, use_cot, limit=0
             # The two ceilings are part of the condition, so they travel with the row.
             "thinking_level": level,
             "use_cot": use_cot,
+            "use_cot_source": cot_source,
             # Visible reasoning, returned as a JSON field in CoT mode. Distinct from the hidden
             # thought summary above: one is what the model showed, the other what it was billed for.
             "reasoning_visible": (parsed or {}).get("reasoning", ""),
@@ -376,13 +385,26 @@ if __name__ == "__main__":
     parser.add_argument("--max-output-tokens", type=int, default=2048)
     parser.add_argument("--thinking-level", type=str, default=THINKING_LEVEL,
                         choices=["minimal", "low", "medium", "high"])
-    parser.add_argument("--use-cot", action="store_true",
-                        help="upstream's opt-in visible-reasoning condition (src/main.py:32). Off by "
-                             "default because EmoBench's own prompt forbids explanations, and the "
-                             "five finished providers ran without it")
+    # Deliberately no default. Rule 3 says the benchmark decides whether reasoning is shown, so
+    # the value is read from EmoBench's own README at run time rather than frozen here — a
+    # literal True or False would be this project overruling the benchmark, and the next runner
+    # copied from this one would inherit the wrong answer silently. Either flag overrides, and
+    # whichever way it was decided is written onto every row.
+    parser.add_argument("--use-cot", dest="use_cot", action="store_true", default=None,
+                        help="force upstream's opt-in visible-reasoning branch (src/main.py:32)")
+    parser.add_argument("--no-use-cot", dest="use_cot", action="store_false",
+                        help="force the non-CoT branch")
     args = parser.parse_args()
+
+    # What the benchmark says, or what the operator overrode it with — recorded either way.
+    if args.use_cot is None:
+        args.use_cot, cot_source = reasoning_visibility.resolve(ROOT)
+        cot_source = "README " + cot_source
+    else:
+        cot_source = "--use-cot" if args.use_cot else "--no-use-cot"
+    print(f"visible reasoning: use_cot={args.use_cot}  ({cot_source})")
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_output_tokens,
-                 args.thinking_level, args.use_cot, args.limit)
+                 args.thinking_level, args.use_cot, cot_source, args.limit)

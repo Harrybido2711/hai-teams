@@ -8,7 +8,7 @@ providers have results.
 | | Path |
 |---|---|
 | Local | `Interpersonal_processes_benchmarks/EmoBench` |
-| Quest | `/gpfs/projects/p32983/EmoBench-master` — **the remote name is not the local one** |
+| Quest | `/gpfs/projects/p32983/Interpersonal_processes_benchmarks/EmoBench` — **the remote name is not the local one** |
 
 ## Layout
 
@@ -60,9 +60,14 @@ data. Upstream also raises its own output cap from 50 to 2048 tokens for that br
 **It is off by default upstream, and the five finished providers ran without it** — a CoT run and a
 non-CoT run are different conditions and do not share a results table. The author did not merely
 stay silent: the default `base` statement says *"Do not provide any additional information or
-explanations"*. So for EmoBench the visibility question is already answered, and the flash-lite
-runners default to off, with `--use-cot` to opt in. Their non-CoT prompt is byte-identical to the
-2.5 runner's, checked rather than assumed.
+explanations"*.
+
+The flash-lite runners **do not hardcode that answer**. They call `reasoning_visibility.resolve()`
+(in this benchmark folder), which reads `README.md:79` — *"`--use_cot`: enables chain-of-thought
+reasoning. Defaults to `False`."* — and returns both the value and the line, which is written onto
+every row as `use_cot_source`. `--use-cot` / `--no-use-cot` override it and are recorded as the
+source instead. With the flag unset, the prompt is byte-identical to the 2.5 runner's for EA and EU,
+checked rather than assumed.
 
 Two things this changes for a runner:
 

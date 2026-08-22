@@ -6,10 +6,9 @@ differs here is only the transport:
 
   * OpenAI client against https://openrouter.ai/api/v1, so the system prompt is a system *message*
     rather than google-genai's system_instruction. Same text either way.
-  * Hidden thinking is capped unconditionally; visible reasoning is off, because that is EmoBench's
-    decision. Its base statement says "Do not provide any additional information or explanations"
-    and src/main.py:32 defaults use_cot to False. --use-cot turns on upstream's own branch, built
-    from its config; it is a different condition and the flag is written onto every row.
+  * Hidden thinking is capped unconditionally. Visible reasoning is not decided here: it is read
+    from EmoBench's own README at start-up (reasoning_visibility.resolve), which today answers
+    False. --use-cot / --no-use-cot override it, and how it was decided is written onto every row.
   * max_tokens caps visible output. Unlike the native route it does not bound thinking, so the two
     runners bound cost differently and their bills are not directly comparable even though their
     scores are.
@@ -38,6 +37,11 @@ from openai import OpenAI
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv(os.path.join(ROOT, ".env"))
 
+# ROOT is the benchmark folder — the one holding upstream's README and the resolver that
+# reads it. Nothing in this file decides whether reasoning is shown.
+sys.path.insert(0, ROOT)
+import reasoning_visibility  # noqa: E402 — needs ROOT on the path first
+
 api_key = os.getenv("OPENROUTER_API_KEY")
 if not api_key:
     sys.exit("OPENROUTER_API_KEY is not set in EmoBench/.env")
@@ -60,7 +64,7 @@ def rank_choices(choices):
     return "\n".join(f"{LETTERS[i]}) {c}" for i, c in enumerate(choices))
 
 
-def build_system_prompt(task, use_cot=False):
+def build_system_prompt(task, use_cot):
     """Upstream's own construction, both branches — src/utils.py::get_response_format.
 
     With CoT the statement changes and a "reasoning" key is prepended to the JSON conditions, so the
@@ -208,7 +212,8 @@ def evaluate(results, task, model_name):
 
 # ── main loop ─────────────────────────────────────────────────────────────────
 
-def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, limit=0):
+def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, cot_source,
+             limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -272,6 +277,7 @@ def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, limit=
             # The two ceilings are part of the condition, so they travel with the row.
             "reasoning_cfg": json.dumps(reasoning_cfg),
             "use_cot": use_cot,
+            "use_cot_source": cot_source,
             # Visible reasoning, returned as a JSON field in CoT mode. Distinct from the hidden
             # thought summary above: one is what the model showed, the other what it was billed for.
             "reasoning_visible": (parsed or {}).get("reasoning", ""),
@@ -323,11 +329,24 @@ if __name__ == "__main__":
                         choices=["minimal", "low", "medium", "high"])
     parser.add_argument("--reasoning-max-tokens", type=int, default=0,
                         help="use a numeric reasoning budget instead of an effort level")
-    parser.add_argument("--use-cot", action="store_true",
-                        help="upstream's opt-in visible-reasoning condition (src/main.py:32). Off by "
-                             "default because EmoBench's own prompt forbids explanations, and the "
-                             "five finished providers ran without it")
+    # Deliberately no default. Rule 3 says the benchmark decides whether reasoning is shown, so
+    # the value is read from EmoBench's own README at run time rather than frozen here — a
+    # literal True or False would be this project overruling the benchmark, and the next runner
+    # copied from this one would inherit the wrong answer silently. Either flag overrides, and
+    # whichever way it was decided is written onto every row.
+    parser.add_argument("--use-cot", dest="use_cot", action="store_true", default=None,
+                        help="force upstream's opt-in visible-reasoning branch (src/main.py:32)")
+    parser.add_argument("--no-use-cot", dest="use_cot", action="store_false",
+                        help="force the non-CoT branch")
     args = parser.parse_args()
+
+    # What the benchmark says, or what the operator overrode it with — recorded either way.
+    if args.use_cot is None:
+        args.use_cot, cot_source = reasoning_visibility.resolve(ROOT)
+        cot_source = "README " + cot_source
+    else:
+        cot_source = "--use-cot" if args.use_cot else "--no-use-cot"
+    print(f"visible reasoning: use_cot={args.use_cot}  ({cot_source})")
 
     reasoning_cfg = ({"max_tokens": args.reasoning_max_tokens} if args.reasoning_max_tokens
                      else {"effort": args.reasoning_effort})
@@ -335,4 +354,4 @@ if __name__ == "__main__":
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_tokens,
-                 reasoning_cfg, args.use_cot, args.limit)
+                 reasoning_cfg, args.use_cot, cot_source, args.limit)

@@ -18,27 +18,28 @@ This file is the map. It holds no knowledge of its own.
 
 ## Routing table
 
-**Not advisory.** Read every row whose trigger appears in the task, *before* acting. Each line in
-these files was paid for by a run that failed. If two rows match, read both — reading the wrong one
-and proceeding anyway is the failure this table exists to prevent.
+**Not advisory.** Read every row whose trigger appears in the task, *before* acting. Each line here
+was paid for by a run that failed. If two rows match, read both — reading the wrong one and
+proceeding is the failure this table prevents.
 
 | Triggered by | Read | Cost |
 |---|---|---|
-| anything at all, before deciding what is true about this repo | [shared-context.md](shared-context.md) | 4 KB — every task |
-| working on a named benchmark — its paths, expected counts, tasks, output layout, run order, traps | [benchmarks/](benchmarks/README.md) then that benchmark's group and page | 3 KB + page |
-| `ssh`, transfer, `md5sum`, `sbatch`, `scancel`, `squeue`, `sacct`, partition, shard, array, "pull results", a Quest path | [quest-cluster.md](quest-cluster.md) | 7 KB |
-| a provider name (GPT, Gemini, Gemma, Qwen, Deepseek, XAI/grok), client, timeout, empty response, reasoning tokens, halt marker | [provider-gotchas.md](provider-gotchas.md) | 3 KB |
-| **writing a runner for a model** — which client, `base_url`, key, model id and non-optional parameters | [model-calls.md](model-calls.md) — the invocation recipe, measured where we have run it | 5 KB |
+| anything at all, before deciding what is true about this repo | [shared-context.md](shared-context.md) | 4 KB — always |
+| a named benchmark — its paths, expected counts, tasks, output layout, run order, traps | [benchmarks/](benchmarks/README.md), then that benchmark's group and page | 3 KB + page |
+| `ssh`, transfer, `md5sum`, `sbatch`, `scancel`, `squeue`, partition, shard, array, "pull results", a Quest path | [quest-cluster.md](quest-cluster.md) | 7 KB |
+| a provider name (GPT, Gemini, Gemma, Qwen, Deepseek, grok), client, timeout, empty response, reasoning tokens, halt marker | [provider-gotchas.md](provider-gotchas.md) | 3 KB |
+| **writing a runner for a model** — which client, `base_url`, key, model id, non-optional parameters | [model-calls.md](model-calls.md) — the invocation recipe, measured where we have run it | 5 KB |
 | **writing or changing any runner** — which decoding, thinking and output limits it must set | [model-parameters.md](model-parameters.md) — applies to every benchmark | 4 KB |
-| a reasoning bill that looks too high, or how a thinking/output cap behaves and backfires | [reasoning-cost.md](reasoning-cost.md) | 3 KB |
-| writing or changing an eval script — retries, checkpoints, resume, normalisation, scoring, a benchmark's shared core | [script-skeleton.md](script-skeleton.md) | 5 KB |
-| deciding whether a change needs a Quest sync, or what the three sync layers oblige | [sync-and-consistency.md](sync-and-consistency.md) | 4 KB |
-| a commit blocked by the doc check, whether two copies of a fact are allowed, or "which files does this change touch" | [doc-check.md](doc-check.md) | 3 KB |
-| dispatching a subagent or reading its report — what to pass, `STATUS:` values, rewriting an ambiguous instruction | [handoffs.md](handoffs.md) | 4 KB |
-| what can be dispatched at all — the workflow and agent roster | [../tools/README.md](../tools/README.md) | 3 KB |
-| borrowing a pattern from an outside repo, or "was this already screened and rejected" | [external-patterns.md](external-patterns.md) | **28 KB** — the most expensive file here; for a sweep only |
+| a reasoning bill that looks too high, or how a thinking/output cap backfires | [reasoning-cost.md](reasoning-cost.md) | 3 KB |
+| the model offers **no thinking or output parameter**, so the cap goes in the prompt | [prompt-ceiling.md](prompt-ceiling.md) | 1 KB |
+| writing or changing an eval script — retries, checkpoints, resume, normalisation, scoring, a shared core | [script-skeleton.md](script-skeleton.md) | 5 KB |
+| whether a change needs a Quest sync, or what the three sync layers oblige | [sync-and-consistency.md](sync-and-consistency.md) | 4 KB |
+| a commit blocked by the doc check, whether two copies of a fact are allowed, "what does this change touch" | [doc-check.md](doc-check.md) | 3 KB |
+| dispatching a subagent or reading its report — what to pass, `STATUS:` values, fixing a vague instruction | [handoffs.md](handoffs.md) | 4 KB |
+| what can be dispatched at all — the workflow and agent list | [../tools/README.md](../tools/README.md) | 3 KB |
+| borrowing a pattern from an outside repo, or "was this already screened and rejected" | [external-patterns.md](external-patterns.md) | **28 KB** — the most expensive here; for a sweep only |
 
-Sizes are a cost hint for deciding what to open, not a checksum; they drift as the files grow.
+Sizes hint at cost when choosing what to open, not a checksum; they drift.
 
 ## Authority when two documents disagree
 
