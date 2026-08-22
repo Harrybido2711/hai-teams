@@ -14,7 +14,8 @@ providers have results.
 
 ```
 EmoBench/
-├── EMO_{Gemini,Gemma,Qwen,Deepseek,XAI}/   <provider>_emo_eval.py · run_emobench.sh · results/
+├── EMO_{Gemini_Flash2.5,Gemma,Qwen,Deepseek,XAI}/  <provider>_emo_eval.py · run_emobench.sh · results/
+├── EMO_Gemini_Flash3.5lite_{Google,OpenRouter}/    two routes to one model, written 2026-08-22
 ├── OpenAI_result/                          the sixth provider, named differently
 ├── data/EA.jsonl · data/EU.jsonl           the two tasks
 ├── src/ · Output template/                 vendored upstream, and the result templates

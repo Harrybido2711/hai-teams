@@ -40,7 +40,7 @@ The same applies to output length wherever `max_tokens` is unavailable or unsafe
 
 | Model | Called by | Reasoning? | Thinking cap | Output cap | Can it be lowered? If not → prompt |
 |---|---|---|---|---|---|
-| `gemini-3.5-flash-lite` | EmoBench (planned) | yes, at the floor | `thinking_level="minimal"` | `max_output_tokens` | **No — `minimal` is the floor**, "as close as possible to a zero budget… but still requires thought signatures". **Prompt ceiling on thinking and on output.** Thinking bills at $2.50/M |
+| `gemini-3.5-flash-lite` | EmoBench (planned) | yes, at the floor | `thinking_level="minimal"` | `max_output_tokens` | **No — `minimal` is the floor.** Measured on EmoBench it produced **zero thinking tokens**, so add a prompt ceiling only where thinking actually fires. Thinking bills at $2.50/M |
 | `gemini-3.5-flash` | not used | yes | `thinking_level`, default `medium` | `max_output_tokens` | **Yes** — `medium` → `minimal`. Measure the step; do not assume it is free |
 | `gemini-2.5-flash` | EmoBench, bbh, NegotiationToM, DocVQA | yes | thinking budget | `max_output_tokens` | **Not established** for this generation → treat as no. **Prompt ceiling** until a call proves otherwise |
 | `grok-3-mini` | bbh, EmoBench, NegotiationToM | yes | `reasoning_effort` | provider default | **No — reasoning is the model.** **Prompt ceiling on thinking and on output** |

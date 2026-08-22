@@ -1,11 +1,11 @@
 # How to call each model
 
-Which client, `base_url`, key, model id, and the non-optional parameters. What limits a runner must
-set: [model-parameters.md](model-parameters.md). How each client fails:
+Which client, `base_url`, key, model id, and the non-optional parameters. Limits a runner must set:
+[model-parameters.md](model-parameters.md). How each client fails:
 [provider-gotchas.md](provider-gotchas.md).
 
-Recipes for models already run here are taken from that runner and are *measured*; the rest come from
-documentation and say so — a documented shape is a hypothesis until one call confirms it.
+Recipes are *measured* — from a runner that has run, or from a probe. A documented shape is a
+hypothesis until one call confirms it.
 
 ## `google/gemma-4-31B-it` — DeepInfra
 
@@ -26,41 +26,33 @@ measured 15–17 token answers, no `<think>` tags. It *accepts* `reasoning_effor
 turns thinking back **on**. The one reasoning-capable model here with no knob to set; adding one
 helpfully is a regression.
 
-**The same checkpoint on Together behaves oppositely** — reasoning on by default, switched off with
-`reasoning={"enabled": False}`. Measured A/B, 12 calls per arm, `max_tokens` held constant: on gave
-6/12 completions at 9.3 s and 517 output tokens; off gave 11/12 at 0.3 s and 16. Capping `max_tokens`
-is no substitute — every call that returned stopped on its own.
-· Source: `NEG_Gemma/gemma_neg_eval.py:21-53`
+**The same checkpoint on Together is the opposite** — reasoning on by default, off via
+`reasoning={"enabled": False}`. Measured A/B, 12 calls per arm: on gave 6/12 completions at 9.3 s and
+517 output tokens; off gave 11/12 at 0.3 s and 16. Capping `max_tokens` is no substitute — every call
+that returned stopped on its own. · Source: `NEG_Gemma/gemma_neg_eval.py:21-53`
 
-Across both: **SIGALRM at 120 s is the primary guard**, deliberately below the 300 s socket timeout
-so a hang is classified the same either way — Together ignores `timeout=` outright. And **tolerate
-four `<think>` spellings**, not one; a missing opening tag and a pipe-delimited variant both occur.
+Across both: **SIGALRM at 120 s is the primary guard**, below the 300 s socket timeout so a hang is
+classified the same either way — Together ignores `timeout=` outright. And **tolerate four `<think>`
+spellings**, not one.
 
-## `gemini-3.5-flash-lite` — two routes, neither used here yet
+## `gemini-3.5-flash-lite` — two routes, both probed
 
-**Not called by any runner here.** Everything below is from documentation and needs one call to
-confirm before a run depends on it.
+**Both confirmed 2026-08-22** on one real EmoBench item each: HTTP 200, finish STOP, the exact JSON
+asked for, gold answer. Per item: 192/18 tokens native, 194/18 via OpenRouter at **$0.0001032** — a
+400-item run costs about four cents. **`minimal` produced zero thinking tokens** on this workload.
 
-**Route A · Google AI Studio, native SDK.** Two API surfaces exist in `google-genai`; the 3.5 docs
-use the newer one:
+**Route A · Google AI Studio, native SDK.** `client.models.generate_content(model=, contents=,
+config=types.GenerateContentConfig(system_instruction=, thinking_config=types.ThinkingConfig(
+thinking_level="minimal"), max_output_tokens=…))` — the shape every runner here already uses. The 3.5
+docs also show a newer `client.interactions.create` surface; the older one is what was probed.
 
-```python
-client.interactions.create(model="gemini-3.5-flash-lite", input=prompt,
-                           generation_config={"thinking_level": "minimal"})
-```
-
-Every existing runner here uses the older `client.models.generate_content(model=, contents=,
-config=types.GenerateContentConfig(system_instruction=, …))`. **Check which the installed SDK
-supports before writing.**
-
-- `thinking_level`: **`minimal` is both the default and the floor** for Flash-Lite — "as close as
-  possible to a zero budget for thinking but still requires thought signatures". There is no off, so
-  set it to pin the default **and** add the prompt ceiling from
-  [model-parameters.md](model-parameters.md); on this model the prompt is the only lever left.
-- **Omit `temperature`, `top_p` and `top_k`** — the 3.x guidance is to remove them, not tune them.
-- The key is an `AQ.` auth key, and those are reported to 401 against
-  `generativelanguage.googleapis.com` with `ACCESS_TOKEN_TYPE_UNSUPPORTED`. **Probe before committing
-  to this route.**
+- `thinking_level`: **`minimal` is the default and the floor** — there is no off, and the response
+  carries a `thoughtSignature` either way. REST accepts `thinkingConfig.thinkingLevel` in both cases
+  (`MINIMAL` and `minimal` both returned 200). Set it to pin the default; on a structured task it
+  already costs nothing, so the prompt ceiling is only needed where thinking actually fires.
+- **Omit `temperature`, `top_p`, `top_k`** — 3.x guidance is to remove, not tune.
+- The key is an `AQ.` auth key. Those are *reported* to 401 here, and **this project's key does
+  not** — probed, HTTP 200. Check per key; it is not a property of AQ. keys.
 
 **Route B · OpenRouter, OpenAI-compatible.** The same client shape as DeepInfra and DeepSeek:
 
@@ -75,7 +67,8 @@ client.chat.completions.create(model="google/gemini-3.5-flash-lite", messages=me
 confused with `gemini-3.5-flash`: a different model at $1.50/M and $9.00/M, defaulting to `medium`.
 
 Served by Google AI Studio *and* Google Vertex (US) with failover, so **the serving path can change
-mid-run**. Record which one answered.
+mid-run** — the probe was answered by Google AI Studio. Record which one answered; the response
+carries `provider` and a per-call `usage.cost`.
 
 ## `deepseek-reasoner`
 
