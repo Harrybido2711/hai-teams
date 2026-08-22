@@ -6,7 +6,9 @@ one benchmark and not the others lives here** — one page per benchmark, groupe
 it belongs to, with a group page for what its neighbours genuinely share.
 
 A number carried from one page to another is the failure this split exists to prevent. 14,138 rows is
-NegotiationToM's; 400 items per task is EmoBench's; neither is a property of the suite.
+NegotiationToM's; 200 scored items per task is EmoBench's; neither is a property of the suite. Read
+the count off the page, and check what the runner filters — EmoBench's files hold twice what it
+scores.
 
 | Group | Benchmarks |
 |---|---|
