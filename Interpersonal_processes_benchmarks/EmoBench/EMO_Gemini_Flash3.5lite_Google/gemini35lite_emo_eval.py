@@ -176,7 +176,8 @@ def split_parts(resp):
     return "".join(answer), "".join(thought)
 
 
-def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, budget, max_retries=3):
+def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, budget, temperature=None,
+             seed=None, max_retries=3):
     """Returns (text, finish_reason, thinking_tokens, thought_summary, usage)."""
     cfg, _cap = _thinking_config(level, budget)
     for attempt in range(max_retries):
@@ -188,6 +189,12 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, budget, m
                     system_instruction=sys_prompt,
                     thinking_config=cfg,
                     max_output_tokens=max_output_tokens,
+                    # Both omitted unless asked for. temperature: 3.x guidance is to remove rather
+                    # than tune it. seed: measured to make this model reproducible — three identical
+                    # calls without it returned two different answers on one EmoBench item, which is
+                    # the run-to-run noise that made a 3-point score gap meaningless.
+                    **({"temperature": temperature} if temperature is not None else {}),
+                    **({"seed": seed} if seed is not None else {}),
                 ),
             )
 
@@ -256,12 +263,20 @@ def call_api(sys_prompt, user_prompt, model, max_output_tokens, level, budget, m
 
 # ── evaluation + CSV output — identical to the 2.5 runner ─────────────────────
 
+RESULTS_TAG = ""   # set from --tag; keeps a sweep arm out of the baseline directory
+
+
+def _results_dir(task):
+    name = "results" + (("_" + RESULTS_TAG) if RESULTS_TAG else "")
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), name, task)
+
+
 def evaluate(results, task, model_name):
     if not results:
         return
 
     df = pd.DataFrame(results)
-    out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", task)
+    out_dir = _results_dir(task)
 
     for col in ["answer", "emo_answer", "cause_answer", "label", "emo_label", "cause_label"]:
         if col in df.columns:
@@ -307,7 +322,7 @@ def evaluate(results, task, model_name):
 # ── main loop ─────────────────────────────────────────────────────────────────
 
 def run_task(task, model, save_every, max_output_tokens, level, budget, use_cot, cot_source,
-             limit=0):
+             temperature=None, seed=None, limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -323,7 +338,7 @@ def run_task(task, model, save_every, max_output_tokens, level, budget, use_cot,
         print(f"[{task}-en] --limit {limit}: smoke test, not a run")
 
     model_name = model.replace(".", "_").replace("/", "-")
-    results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", task)
+    results_dir = _results_dir(task)
     os.makedirs(results_dir, exist_ok=True)
     out_path = os.path.join(results_dir, f"{model_name}_en.jsonl")
 
@@ -355,7 +370,7 @@ def run_task(task, model, save_every, max_output_tokens, level, budget, use_cot,
 
         user_prompt = build_user_prompt(task, sample)
         raw, finish, thinking, thought, usage = call_api(
-            sys_prompt, user_prompt, model, max_output_tokens, level, budget)
+            sys_prompt, user_prompt, model, max_output_tokens, level, budget, temperature, seed)
         parsed = parse_json(raw) if raw else None
 
         common = {
@@ -371,6 +386,8 @@ def run_task(task, model, save_every, max_output_tokens, level, budget, use_cot,
             "reasoning": thought,
             # The two ceilings are part of the condition, so they travel with the row.
             "thinking_cap": cap,
+            "temperature": temperature,
+            "seed": seed,
             # Metered, not assumed — the only way two routes can be compared on cost.
             "prompt_tokens": usage.get("prompt_tokens"),
             "output_tokens": usage.get("output_tokens"),
@@ -424,6 +441,12 @@ if __name__ == "__main__":
     # copied: 50 visible tokens is right, but thinking would eat the budget first and return a billed
     # empty response. 2048 is headroom, not a measured value — watch the empty count on the pilot.
     parser.add_argument("--max-output-tokens", type=int, default=2048)
+    parser.add_argument("--temperature", type=float, default=None,
+                        help="omitted entirely when unset, which is the 3.x default")
+    parser.add_argument("--seed", type=int, default=None,
+                        help="makes the run reproducible; verified identical across repeats")
+    parser.add_argument("--tag", type=str, default="",
+                        help="write to results_<tag>/ instead of results/, for sweeps")
     parser.add_argument("--thinking-budget", type=int, default=THINKING_BUDGET,
                         help="numeric thinking cap, used wherever the SDK exposes it")
     parser.add_argument("--thinking-level", type=str, default=THINKING_LEVEL,
@@ -447,8 +470,9 @@ if __name__ == "__main__":
         cot_source = "--use-cot" if args.use_cot else "--no-use-cot"
     print(f"visible reasoning: use_cot={args.use_cot}  ({cot_source})")
 
+    RESULTS_TAG = args.tag
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_output_tokens,
                  args.thinking_level, args.thinking_budget, args.use_cot, cot_source,
-                 args.limit)
+                 args.temperature, args.seed, args.limit)
