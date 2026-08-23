@@ -49,7 +49,12 @@ there raises a pydantic **`ValidationError` on every call**.
 - **A malformed request must be fatal.** `INVALID_ARGUMENT`, `Extra inputs are not permitted` and
   `ValidationError` are not transient; retrying them spends the run to learn one fact.
 - On `gemini-3.5-flash-lite`, `thinking_budget=0` is rejected **400 INVALID_ARGUMENT** — thinking
-  cannot be switched off — and **128 spends none**, the same effective condition as `minimal`.
+  cannot be switched off.
+- **`thinking_budget` is a request, not a ceiling.** With it set to 128 over a 400-item EmoBench run,
+  48 items thought anyway and 25 went past the budget, one to 532 tokens. A six-item probe had shown
+  zero and was simply too small to see it. OpenRouter's `reasoning.effort="minimal"` on the *same
+  model* produced zero across all 400 — so the two routes are not the same condition, and a run
+  capped this way still needs its thinking tokens summed from the rows rather than assumed.
 
 ## Health checks must use real prompts
 
