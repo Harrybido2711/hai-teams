@@ -109,7 +109,8 @@ def parse_json(text):
 
 # ── API call ──────────────────────────────────────────────────────────────────
 
-def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, max_retries=3):
+def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, temperature=None,
+             seed=None, max_retries=3):
     """Returns (text, finish_reason, reasoning_tokens, served_by, reasoning_text, usage)."""
     for attempt in range(max_retries):
         try:
@@ -119,6 +120,13 @@ def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, max_retr
                           {"role": "user", "content": user_prompt}],
                 max_tokens=max_tokens,
                 extra_body={"reasoning": reasoning_cfg},
+                # Omitted entirely unless asked for, so the default path is unchanged. seed is
+                # measured to make this route reproducible: three identical unseeded calls returned
+                # two different answers to one EmoBench item, three seeded ones were identical.
+                # Untested across an OpenRouter backend switch -- every seeded probe landed on
+                # Google AI Studio, which is not the same as having checked.
+                **({"temperature": temperature} if temperature is not None else {}),
+                **({"seed": seed} if seed is not None else {}),
             )
 
             choice = resp.choices[0]
@@ -179,12 +187,20 @@ def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, max_retr
 
 # ── evaluation + CSV output — identical to the 2.5 runner ─────────────────────
 
+RESULTS_TAG = ""   # set from --tag; keeps a sweep arm out of the baseline directory
+
+
+def _results_dir(task):
+    name = "results" + (("_" + RESULTS_TAG) if RESULTS_TAG else "")
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), name, task)
+
+
 def evaluate(results, task, model_name):
     if not results:
         return
 
     df = pd.DataFrame(results)
-    out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", task)
+    out_dir = _results_dir(task)
 
     for col in ["answer", "emo_answer", "cause_answer", "label", "emo_label", "cause_label"]:
         if col in df.columns:
@@ -230,7 +246,7 @@ def evaluate(results, task, model_name):
 # ── main loop ─────────────────────────────────────────────────────────────────
 
 def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, cot_source,
-             limit=0):
+             temperature=None, seed=None, limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -246,7 +262,7 @@ def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, cot_so
         print(f"[{task}-en] --limit {limit}: smoke test, not a run")
 
     model_name = model.replace(".", "_").replace("/", "-")
-    results_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results", task)
+    results_dir = _results_dir(task)
     os.makedirs(results_dir, exist_ok=True)
     out_path = os.path.join(results_dir, f"{model_name}_en.jsonl")
 
@@ -277,7 +293,7 @@ def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, cot_so
 
         user_prompt = build_user_prompt(task, sample)
         raw, finish, thinking, served, thought, usage = call_api(
-            sys_prompt, user_prompt, model, max_tokens, reasoning_cfg)
+            sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, temperature, seed)
         parsed = parse_json(raw) if raw else None
 
         common = {
@@ -292,6 +308,8 @@ def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, cot_so
             "prompt_tokens": usage.get("prompt_tokens"),
             "output_tokens": usage.get("output_tokens"),
             "call_cost": usage.get("call_cost"),
+            "temperature": temperature,
+            "seed": seed,
             # The model's own reasoning, as BBH keeps its visible chain.
             "reasoning": thought,
             # The two ceilings are part of the condition, so they travel with the row.
@@ -345,6 +363,12 @@ if __name__ == "__main__":
     # Visible output only on this route — thinking is not bounded by it. Upstream uses 50 for
     # non-CoT and 2048 for CoT (src/model.py:75); 2048 covers both without risking truncation.
     parser.add_argument("--max-tokens", type=int, default=2048)
+    parser.add_argument("--temperature", type=float, default=None,
+                        help="omitted entirely when unset, which is the 3.x default")
+    parser.add_argument("--seed", type=int, default=None,
+                        help="makes the run reproducible; verified identical across repeats")
+    parser.add_argument("--tag", type=str, default="",
+                        help="write to results_<tag>/ instead of results/, for sweeps")
     parser.add_argument("--reasoning-effort", type=str, default=REASONING_EFFORT,
                         choices=["minimal", "low", "medium", "high"])
     parser.add_argument("--reasoning-max-tokens", type=int, default=0,
@@ -371,7 +395,9 @@ if __name__ == "__main__":
     reasoning_cfg = ({"max_tokens": args.reasoning_max_tokens} if args.reasoning_max_tokens
                      else {"effort": args.reasoning_effort})
 
+    RESULTS_TAG = args.tag
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_tokens,
-                 reasoning_cfg, args.use_cot, cot_source, args.limit)
+                 reasoning_cfg, args.use_cot, cot_source, args.temperature, args.seed,
+                 args.limit)
