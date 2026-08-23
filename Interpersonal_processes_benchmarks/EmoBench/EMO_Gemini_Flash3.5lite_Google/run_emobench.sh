@@ -14,5 +14,6 @@ module purge
 /projects/p32983/pythonenvs/hai-teams/bin/python -u gemini35lite_emo_eval.py \
     --model gemini-3.5-flash-lite \
     --task all \
+    --seed 42 \
     --save-every 20 \
     --max-output-tokens 2048

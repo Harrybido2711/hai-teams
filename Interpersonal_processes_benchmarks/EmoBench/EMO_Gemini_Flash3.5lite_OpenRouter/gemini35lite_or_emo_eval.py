@@ -109,8 +109,23 @@ def parse_json(text):
 
 # ── API call ──────────────────────────────────────────────────────────────────
 
+def _extra_body(reasoning_cfg, provider):
+    """Reasoning config, plus an optional hard pin to one upstream backend.
+
+    **On this route a seed alone does not reproduce.** Measured: four calls at seed=42 to the same
+    prompt returned three identical answers from Google AI Studio and a different one from Google —
+    OpenRouter had failed over mid-probe. Pinning the backend made 4/4 identical. So reproducibility
+    here needs both, and allow_fallbacks is False on purpose: a run that silently switches backend is
+    the thing being prevented, and a failed call is more honest than a quietly different one.
+    """
+    body = {"reasoning": reasoning_cfg}
+    if provider:
+        body["provider"] = {"order": [provider], "allow_fallbacks": False}
+    return body
+
+
 def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, temperature=None,
-             seed=None, max_retries=3):
+             seed=None, provider=None, max_retries=3):
     """Returns (text, finish_reason, reasoning_tokens, served_by, reasoning_text, usage)."""
     for attempt in range(max_retries):
         try:
@@ -119,7 +134,7 @@ def call_api(sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, temperat
                 messages=[{"role": "system", "content": sys_prompt},
                           {"role": "user", "content": user_prompt}],
                 max_tokens=max_tokens,
-                extra_body={"reasoning": reasoning_cfg},
+                extra_body=_extra_body(reasoning_cfg, provider),
                 # Omitted entirely unless asked for, so the default path is unchanged. seed is
                 # measured to make this route reproducible: three identical unseeded calls returned
                 # two different answers to one EmoBench item, three seeded ones were identical.
@@ -246,7 +261,7 @@ def evaluate(results, task, model_name):
 # ── main loop ─────────────────────────────────────────────────────────────────
 
 def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, cot_source,
-             temperature=None, seed=None, limit=0):
+             temperature=None, seed=None, provider=None, limit=0):
     data = []
     data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
     with open(data_path, encoding="utf-8") as f:
@@ -293,7 +308,8 @@ def run_task(task, model, save_every, max_tokens, reasoning_cfg, use_cot, cot_so
 
         user_prompt = build_user_prompt(task, sample)
         raw, finish, thinking, served, thought, usage = call_api(
-            sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, temperature, seed)
+            sys_prompt, user_prompt, model, max_tokens, reasoning_cfg, temperature, seed,
+            provider)
         parsed = parse_json(raw) if raw else None
 
         common = {
@@ -363,6 +379,8 @@ if __name__ == "__main__":
     # Visible output only on this route — thinking is not bounded by it. Upstream uses 50 for
     # non-CoT and 2048 for CoT (src/model.py:75); 2048 covers both without risking truncation.
     parser.add_argument("--max-tokens", type=int, default=2048)
+    parser.add_argument("--provider", type=str, default=None,
+                        help="pin one OpenRouter backend, e.g. \"Google AI Studio\"; required for reproducibility because a seed alone does not survive a failover")
     parser.add_argument("--temperature", type=float, default=None,
                         help="omitted entirely when unset, which is the 3.x default")
     parser.add_argument("--seed", type=int, default=None,
@@ -400,4 +418,4 @@ if __name__ == "__main__":
     for task in tasks:
         run_task(task, args.model, args.save_every, args.max_tokens,
                  reasoning_cfg, args.use_cot, cot_source, args.temperature, args.seed,
-                 args.limit)
+                 args.provider, args.limit)
