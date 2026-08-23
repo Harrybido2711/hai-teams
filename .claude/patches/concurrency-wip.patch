@@ -1,0 +1,504 @@
+diff --git a/NegotiationToM/neg_eval_core.py b/NegotiationToM/neg_eval_core.py
+index e69afbe..03a1a62 100644
+--- a/NegotiationToM/neg_eval_core.py
++++ b/NegotiationToM/neg_eval_core.py
+@@ -8,16 +8,33 @@ import random
+ import re
+ import signal
+ import sys
++import threading
+ import time
++from concurrent.futures import ThreadPoolExecutor
+ 
+ import pandas as pd
+ from sklearn.metrics import f1_score
+ 
+ 
++# Guards every mutation of STATS and of note_outcome's rolling window.
++#
++# Only contended when --concurrency > 1; at the default of 1 this is an uncontended lock acquisition
++# per call, which is nanoseconds against a multi-second HTTP request. It is not optional even so:
++# `STATS["calls"] += 1` is a read-modify-write that the interpreter may suspend between, so parallel
++# workers would silently undercount, and an undercounted denominator inflates every rate the health
++# report prints — including the failure rate that note_outcome halts on.
++_stats_lock = threading.Lock()
++
++
+ # Per-1M-token USD prices, filled in by whoever runs the pilot. Left empty on purpose so the
+ # pilot never reports an invented cost — with no entry it reports token counts only.
+ PRICE_PER_1M = {
+     # "gpt-4o-mini": {"in": 0.0, "out": 0.0},
++    # DeepInfra, from its own model page 2026-08-06. Keyed by the --model string the runner passes,
++    # which is the same "google/gemma-4-31B-it" that Together uses — the two providers share the
++    # model id but not the serving stack (Together serves FP8, DeepInfra bf16), so a price looked up
++    # by this key is only right for whichever runner is executing.
++    "google/gemma-4-31B-it": {"in": 0.13, "out": 0.38},
+ }
+ 
+ # Runtime counters, reported by the pilot. Runners update these through record_* below.
+@@ -57,16 +74,17 @@ def record_call(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_r
+     visible: a response cut off at max_tokens is otherwise indistinguishable from a wrong answer,
+     which is how a too-tight budget silently lowers a score.
+     """
+-    STATS["calls"] += 1
+-    STATS["prompt_tokens"] += prompt_tokens or 0
+-    STATS["completion_tokens"] += completion_tokens or 0
+-    if usage_seen:
+-        STATS["usage_seen"] += 1
+-        STATS["completion_lengths"].append(completion_tokens or 0)
+-    if finish_reason is not None:
+-        STATS["finish_reason_seen"] += 1
+-        if finish_reason == "length":
+-            STATS["truncated"] += 1
++    with _stats_lock:
++        STATS["calls"] += 1
++        STATS["prompt_tokens"] += prompt_tokens or 0
++        STATS["completion_tokens"] += completion_tokens or 0
++        if usage_seen:
++            STATS["usage_seen"] += 1
++            STATS["completion_lengths"].append(completion_tokens or 0)
++        if finish_reason is not None:
++            STATS["finish_reason_seen"] += 1
++            if finish_reason == "length":
++                STATS["truncated"] += 1
+ 
+ 
+ def record_usage(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_reason=None):
+@@ -76,15 +94,16 @@ def record_usage(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_
+     output budget and return empty content. They must count toward cost without being reported as
+     successful calls.
+     """
+-    STATS["prompt_tokens"] += prompt_tokens or 0
+-    STATS["completion_tokens"] += completion_tokens or 0
+-    if usage_seen:
+-        STATS["usage_seen"] += 1
+-        STATS["completion_lengths"].append(completion_tokens or 0)
+-    if finish_reason is not None:
+-        STATS["finish_reason_seen"] += 1
+-        if finish_reason == "length":
+-            STATS["truncated"] += 1
++    with _stats_lock:
++        STATS["prompt_tokens"] += prompt_tokens or 0
++        STATS["completion_tokens"] += completion_tokens or 0
++        if usage_seen:
++            STATS["usage_seen"] += 1
++            STATS["completion_lengths"].append(completion_tokens or 0)
++        if finish_reason is not None:
++            STATS["finish_reason_seen"] += 1
++            if finish_reason == "length":
++                STATS["truncated"] += 1
+ 
+ 
+ def finish_reason_from(response):
+@@ -120,11 +139,13 @@ def percentiles(values):
+ 
+ 
+ def record_empty():
+-    STATS["empty"] += 1
++    with _stats_lock:
++        STATS["empty"] += 1
+ 
+ 
+ def record_error():
+-    STATS["errors"] += 1
++    with _stats_lock:
++        STATS["errors"] += 1
+ 
+ 
+ # A run in which every call fails should stop, not spend hours producing empty rows that look like
+@@ -360,26 +381,37 @@ def note_outcome(ok):
+     the way through — which a cumulative rate would dilute below any sane threshold.
+     """
+     global _consecutive_failures
+-    _recent_outcomes.append(bool(ok))
+-    if ok:
+-        _consecutive_failures = 0
+-    else:
+-        _consecutive_failures += 1
+-        if _consecutive_failures >= CONSECUTIVE_FAILURE_LIMIT:
+-            _halt("CONSECUTIVE FAILURE", "FAILURE_HALT.txt",
+-                  f"{_consecutive_failures} consecutive items returned nothing. The provider is "
+-                  "almost certainly refusing every call (credits, quota or an outage).",
+-                  _prune_advice())
+-
+-    if len(_recent_outcomes) >= FAILURE_WINDOW:
+-        failed = sum(1 for outcome in _recent_outcomes if not outcome)
+-        rate = failed / len(_recent_outcomes)
+-        if rate >= FAILURE_WINDOW_LIMIT:
+-            _halt("FAILURE RATE", "FAILURE_HALT.txt",
+-                  f"{failed} of the last {len(_recent_outcomes)} items returned nothing "
+-                  f"({rate:.0%}). The provider is failing intermittently, which produces a "
+-                  "full-length result set full of zeros rather than an obvious crash.",
+-                  _prune_advice())
++    # Decide under the lock, halt outside it. _halt raises SystemExit, and raising while holding a
++    # lock that the halting path itself might want is how a shutdown turns into a hang.
++    consecutive = None
++    window = None
++    with _stats_lock:
++        _recent_outcomes.append(bool(ok))
++        if ok:
++            _consecutive_failures = 0
++        else:
++            _consecutive_failures += 1
++            if _consecutive_failures >= CONSECUTIVE_FAILURE_LIMIT:
++                consecutive = _consecutive_failures
++        if len(_recent_outcomes) >= FAILURE_WINDOW:
++            failed = sum(1 for outcome in _recent_outcomes if not outcome)
++            rate = failed / len(_recent_outcomes)
++            if rate >= FAILURE_WINDOW_LIMIT:
++                window = (failed, len(_recent_outcomes), rate)
++
++    if consecutive is not None:
++        _halt("CONSECUTIVE FAILURE", "FAILURE_HALT.txt",
++              f"{consecutive} consecutive items returned nothing. The provider is "
++              "almost certainly refusing every call (credits, quota or an outage).",
++              _prune_advice())
++
++    if window is not None:
++        failed, total, rate = window
++        _halt("FAILURE RATE", "FAILURE_HALT.txt",
++              f"{failed} of the last {total} items returned nothing "
++              f"({rate:.0%}). The provider is failing intermittently, which produces a "
++              "full-length result set full of zeros rather than an obvious crash.",
++              _prune_advice())
+ 
+ 
+ def usage_from(response):
+@@ -562,6 +594,9 @@ def _raise_timeout(signum, frame):
+ _deadline = [None]
+ _slept = [0.0]
+ 
++# One-shot flag so the "watchdog inactive" notice appears once per run rather than once per call.
++_warned_unarmed = [False]
++
+ 
+ def backoff_sleep(seconds):
+     """Wait between retries without the watchdog counting the wait as a hung call.
+@@ -599,8 +634,33 @@ def guarded_call(call_api, messages, model):
+     that never return at all. The fixes are opposite — cap max_tokens for the first, lower the
+     ceiling for the second — so guessing between them wastes a run.
+     """
+-    if not hasattr(signal, "SIGALRM"):
+-        return call_api(messages, model)          # not POSIX; fall back
++    # SIGALRM is a main-thread-only facility: signal.signal() raises ValueError anywhere else, and
++    # signal.alarm fires on the main thread no matter which thread armed it. So under
++    # --concurrency > 1 the watchdog cannot be used at all, and the guard falls back to whatever
++    # timeout= the runner gave its client.
++    #
++    # That is a real reduction in protection, not a formality — this watchdog exists because
++    # Together's client ignored timeout= and sat in one request for over two hours. Any runner used
++    # with concurrency > 1 must therefore be on a provider whose client honours its own timeout.
++    # The warning below prints once so this is never silently in effect.
++    armed = hasattr(signal, "SIGALRM") and threading.current_thread() is threading.main_thread()
++    if not armed:
++        if hasattr(signal, "SIGALRM") and not _warned_unarmed[0]:
++            _warned_unarmed[0] = True
++            print(f"[{model}] NOTE: running off the main thread, so the {HARD_CALL_TIMEOUT}s "
++                  f"SIGALRM watchdog is inactive; the client's own timeout= is the only guard "
++                  f"against a hung connection.", flush=True)
++        started = time.time()
++        try:
++            result = call_api(messages, model)
++            with _stats_lock:
++                STATS["call_seconds"].append(max(0.0, time.time() - started))
++            return result
++        finally:
++            with _stats_lock:
++                STATS["wall_seconds"] += time.time() - started
++            _pulse()
++
+     previous = signal.signal(signal.SIGALRM, _raise_timeout)
+     signal.alarm(HARD_CALL_TIMEOUT)
+     started = time.time()
+@@ -610,17 +670,20 @@ def guarded_call(call_api, messages, model):
+         result = call_api(messages, model)
+         # Deliberate back-off is not provider latency; excluding it keeps the percentiles usable
+         # for sizing the ceiling. Total elapsed goes to wall_seconds in the finally below.
+-        STATS["call_seconds"].append(max(0.0, time.time() - started - _slept[0]))
++        with _stats_lock:
++            STATS["call_seconds"].append(max(0.0, time.time() - started - _slept[0]))
+         return result
+     except CallTimeout:
+-        STATS["timeouts"] += 1
++        with _stats_lock:
++            STATS["timeouts"] += 1
+         raise
+     finally:
+         signal.alarm(0)
+         signal.signal(signal.SIGALRM, previous)
+         # Every path — returned, hung, or raised — contributes its real elapsed time. This is the
+         # only honest denominator for throughput.
+-        STATS["wall_seconds"] += time.time() - started
++        with _stats_lock:
++            STATS["wall_seconds"] += time.time() - started
+         _deadline[0] = None
+         # Pulse from here, not from save_checkpoint, so the diagnostic is driven by the clock
+         # rather than by progress — a run that completes no rows at all must still report.
+@@ -920,7 +983,86 @@ def write_task_outputs(task, rows, out_dir, stem):
+     )
+ 
+ 
+-def run_desire(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False):
++def _pending(rows, uid_of, done):
++    """Items still to do, in dataset order, with any duplicate uid dropped.
++
++    The sequential loops added each uid to `done` as they went, which also protected against the
++    same uid appearing twice in one shard. Filtering up front has to keep that property, or a
++    duplicate would be called twice and written twice.
++    """
++    seen = set(done)
++    out = []
++    for item in rows:
++        uid = uid_of(item)
++        if uid in seen:
++            continue
++        seen.add(uid)
++        out.append((uid, item))
++    return out
++
++
++def _run_items(pending, work, checkpoint, results, save_every, concurrency):
++    """Run work(uid, item) over `pending`, sequentially or across a thread pool.
++
++    Rows are appended to `results` in **dataset order**, never completion order, so a run's CSV does
++    not depend on which call happened to finish first. Two runs of the same shard at different
++    concurrencies produce the same file.
++
++    concurrency == 1 is the original code path, byte for byte: append as you go, checkpoint every
++    `save_every`. The five existing runners never pass anything else, so they are untouched.
++
++    Above 1, three things have to hold that the sequential loop got for free:
++
++    - **Completed work survives an abort.** A halt raised inside a worker must not discard the rows
++      other workers already finished, so results are extended in a `finally` and the exception is
++      re-raised afterwards.
++    - **A halt actually stops the run.** `_halt` raises SystemExit, which in a worker thread ends
++      only that thread; the pool would calmly run the remaining 14,000 items against a provider that
++      is refusing every call. The stop Event makes queued items return immediately.
++    - **Checkpoint writes are serialised.** Two threads writing the same .jsonl interleave lines and
++      corrupt the file that resume depends on.
++    """
++    if concurrency <= 1:
++        for uid, item in pending:
++            results.append(work(uid, item))
++            if len(results) % save_every == 0:
++                save_checkpoint(checkpoint, results)
++        return
++
++    slots = [None] * len(pending)
++    save_lock = threading.Lock()
++    stop = threading.Event()
++    state = {"done": 0}
++
++    def run_one(indexed):
++        position, (uid, item) = indexed
++        if stop.is_set():
++            return
++        try:
++            slots[position] = work(uid, item)
++        except BaseException:
++            stop.set()
++            raise
++        with save_lock:
++            state["done"] += 1
++            if state["done"] % save_every == 0:
++                save_checkpoint(checkpoint, results + [s for s in slots if s is not None])
++
++    error = None
++    try:
++        with ThreadPoolExecutor(max_workers=concurrency) as pool:
++            for _ in pool.map(run_one, list(enumerate(pending))):
++                pass
++    except BaseException as exc:
++        error = exc
++    finally:
++        results.extend(s for s in slots if s is not None)
++    if error is not None:
++        raise error
++
++
++def run_desire(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False,
++               concurrency=1):
+     rows = []
+     for sample in data:
+         for agent, prefix in (("agent_1", "agent1_desire"), ("agent_2", "agent2_desire")):
+@@ -937,18 +1079,16 @@ def run_desire(data, call_api, model, script_dir, shard, total_shards, save_ever
+     rows = shard_slice(rows, shard, total_shards)
+     out_dir, stem, checkpoint = output_paths(script_dir, "desire", model, shard, total_shards, pilot)
+     done, results = load_checkpoint(checkpoint)
++    pending = _pending(rows, lambda it: f"{it['dialogue_id']}_{it['agent']}_desire", done)
++
++    def work(uid, item):
++        raw, pred = call_and_parse(call_api, desire_messages(item["dialogue"], item["agent"]), model)
++        return {"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
++                "gold_desire": item["gold_desire"], "pred": pred,
++                "raw_response": raw or "", "desire_em": desire_em(pred, item["gold_desire"])}
++
+     try:
+-        for item in rows:
+-            uid = f"{item['dialogue_id']}_{item['agent']}_desire"
+-            if uid in done:
+-                continue
+-            raw, pred = call_and_parse(call_api, desire_messages(item["dialogue"], item["agent"]), model)
+-            results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
+-                            "gold_desire": item["gold_desire"], "pred": pred,
+-                            "raw_response": raw or "", "desire_em": desire_em(pred, item["gold_desire"])})
+-            done.add(uid)
+-            if len(results) % save_every == 0:
+-                save_checkpoint(checkpoint, results)
++        _run_items(pending, work, checkpoint, results, save_every, concurrency)
+     finally:
+         # Runs even when a halt raises SystemExit mid-loop, so an abort never
+         # discards the up-to-save_every-1 items completed since the last write.
+@@ -956,7 +1096,8 @@ def run_desire(data, call_api, model, script_dir, shard, total_shards, save_ever
+     write_task_outputs("desire", results, out_dir, stem)
+ 
+ 
+-def run_belief(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False):
++def run_belief(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False,
++               concurrency=1):
+     rows = []
+     for sample in data:
+         for agent, opponent, prefix in (
+@@ -970,21 +1111,19 @@ def run_belief(data, call_api, model, script_dir, shard, total_shards, save_ever
+     rows = shard_slice(rows, shard, total_shards)
+     out_dir, stem, checkpoint = output_paths(script_dir, "belief", model, shard, total_shards, pilot)
+     done, results = load_checkpoint(checkpoint)
++    pending = _pending(rows, lambda it: f"{it['dialogue_id']}_{it['agent']}_belief", done)
++
++    def work(uid, item):
++        messages = belief_messages(item["dialogue"], item["agent"], item["opponent"])
++        raw, pred = call_and_parse(call_api, messages, model)
++        return {"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
++                "opponent": item["opponent"], "gold_high": item["gold_high"],
++                "gold_med": item["gold_med"], "gold_low": item["gold_low"], "pred": pred,
++                "belief_em": belief_em(pred, item["gold_high"], item["gold_med"], item["gold_low"]),
++                "raw_response": raw or ""}
++
+     try:
+-        for item in rows:
+-            uid = f"{item['dialogue_id']}_{item['agent']}_belief"
+-            if uid in done:
+-                continue
+-            messages = belief_messages(item["dialogue"], item["agent"], item["opponent"])
+-            raw, pred = call_and_parse(call_api, messages, model)
+-            results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
+-                            "opponent": item["opponent"], "gold_high": item["gold_high"],
+-                            "gold_med": item["gold_med"], "gold_low": item["gold_low"], "pred": pred,
+-                            "belief_em": belief_em(pred, item["gold_high"], item["gold_med"], item["gold_low"]),
+-                            "raw_response": raw or ""})
+-            done.add(uid)
+-            if len(results) % save_every == 0:
+-                save_checkpoint(checkpoint, results)
++        _run_items(pending, work, checkpoint, results, save_every, concurrency)
+     finally:
+         # Runs even when a halt raises SystemExit mid-loop, so an abort never
+         # discards the up-to-save_every-1 items completed since the last write.
+@@ -992,7 +1131,8 @@ def run_belief(data, call_api, model, script_dir, shard, total_shards, save_ever
+     write_task_outputs("belief", results, out_dir, stem)
+ 
+ 
+-def run_intention(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False):
++def run_intention(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False,
++                  concurrency=1):
+     rows = []
+     for sample in data:
+         turns = sample["dialogue"]
+@@ -1011,23 +1151,21 @@ def run_intention(data, call_api, model, script_dir, shard, total_shards, save_e
+     rows = shard_slice(rows, shard, total_shards)
+     out_dir, stem, checkpoint = output_paths(script_dir, "intention", model, shard, total_shards, pilot)
+     done, results = load_checkpoint(checkpoint)
++    pending = _pending(rows, lambda it: f"{it['dialogue_id']}_utt{it['utt_idx']}_intention", done)
++
++    def work(uid, item):
++        raw, pred = call_and_parse(call_api, intention_messages(item["dialogue"], item["target"]), model)
++        pred_intents = (pred or {}).get("intents", [])
++        if isinstance(pred_intents, str):
++            pred_intents = [part.strip() for part in pred_intents.split(",") if part.strip()]
++        return {"uid": uid, "dialogue_id": item["dialogue_id"], "utt_idx": item["utt_idx"],
++                "target_utterance": item["target"], "gold_intent": item["gold_intent"],
++                "gold_bitmask": intent_bitmask(item["gold_intent"]),
++                "pred_intents": pred_intents, "pred_bitmask": intent_bitmask(pred_intents),
++                "raw_response": raw or ""}
++
+     try:
+-        for item in rows:
+-            uid = f"{item['dialogue_id']}_utt{item['utt_idx']}_intention"
+-            if uid in done:
+-                continue
+-            raw, pred = call_and_parse(call_api, intention_messages(item["dialogue"], item["target"]), model)
+-            pred_intents = (pred or {}).get("intents", [])
+-            if isinstance(pred_intents, str):
+-                pred_intents = [part.strip() for part in pred_intents.split(",") if part.strip()]
+-            results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "utt_idx": item["utt_idx"],
+-                            "target_utterance": item["target"], "gold_intent": item["gold_intent"],
+-                            "gold_bitmask": intent_bitmask(item["gold_intent"]),
+-                            "pred_intents": pred_intents, "pred_bitmask": intent_bitmask(pred_intents),
+-                            "raw_response": raw or ""})
+-            done.add(uid)
+-            if len(results) % save_every == 0:
+-                save_checkpoint(checkpoint, results)
++        _run_items(pending, work, checkpoint, results, save_every, concurrency)
+     finally:
+         # Runs even when a halt raises SystemExit mid-loop, so an abort never
+         # discards the up-to-save_every-1 items completed since the last write.
+@@ -1163,9 +1301,25 @@ def budget_report():
+             print(f"          suggested timeout: set_call_timeout({floor})  (2x the slowest real "
+                   f"call); at this hang rate that recovers "
+                   f"{STATS['timeouts'] * (HARD_CALL_TIMEOUT - floor) / 60:.0f} min")
++        elif tok_rate and tok_rate < 5.0:
++            # A long call that generated almost nothing was not generating. Gemma's full run made
++            # this branch necessary: max latency reached 119.4s of a 120s ceiling while the largest
++            # response was 34 tokens and nothing truncated, i.e. 0.3 tok/s. The earlier version of
++            # this code keyed on latency alone and told all 15 shards to "cap max_tokens first" —
++            # advice the runner's own comments already record as tried and rejected, and which
++            # would have sent the next reader down a path this project has walked twice.
++            print(f"          diagnosis        : QUEUEING, not generation — the slowest call that "
++                  f"returned took {seconds['max']:.0f}s but the whole run averaged only "
++                  f"{tok_rate:.1f} output tok/s, and nothing was truncated. The time is spent "
++                  f"waiting for the provider to start, not producing tokens.")
++            print(f"          do NOT lower the ceiling to ~{max(20, int(seconds['p99'] * 2))}s on "
++                  f"the strength of p99 {seconds['p99']:.0f}s: the max is {seconds['max']:.0f}s, "
++                  f"and a ceiling under that converts legitimate slow calls into recorded hangs. "
++                  f"Size it from the MAX, not the p99. max_tokens is not the lever here.")
+         else:
+-            print("          diagnosis        : calls are genuinely running to the ceiling — cap "
+-                  "max_tokens first, and only then lower the timeout")
++            print(f"          diagnosis        : calls are running close to the ceiling AND "
++                  f"generating at {tok_rate:.1f} tok/s, so the budget really is the binding "
++                  f"constraint — cap max_tokens first, and only then lower the timeout")
+ 
+ 
+ def run_cli(call_api, default_model, script_file):
+@@ -1178,6 +1332,11 @@ def run_cli(call_api, default_model, script_file):
+     parser.add_argument("--shard", type=int, default=0)
+     parser.add_argument("--total-shards", type=int, default=1)
+     parser.add_argument("--save-every", type=int, default=20)
++    parser.add_argument(
++        "--concurrency", type=int, default=1,
++        help="in-flight calls per process (default 1 = the original sequential path). Above 1 the "
++             "SIGALRM watchdog cannot be armed, so only use it with a provider whose client honours "
++             "timeout=. Multiplies with --total-shards rather than replacing it.")
+     parser.add_argument("--pilot", action="store_true",
+                         help="run a fraction of the data, write to results/pilot/, print a report")
+     parser.add_argument("--pilot-frac", type=float, default=0.10)
+@@ -1207,12 +1366,18 @@ def run_cli(call_api, default_model, script_file):
+     set_run_context(args.model, script_dir)
+     clear_stale_halt_markers(script_dir)
+ 
++    if args.concurrency < 1:
++        parser.error("--concurrency must be >= 1")
++    if args.concurrency > 1:
++        print(f"[concurrency] {args.concurrency} in-flight calls per process"
++              f"{f' x {args.total_shards} shards' if args.total_shards > 1 else ''}", flush=True)
++
+     tasks = ["desire", "belief", "intention"] if args.task == "all" else [args.task]
+     started = time.time()
+     for task in tasks:
+         globals()[f"run_{task}"](
+             data, call_api, args.model, script_dir, args.shard, args.total_shards,
+-            args.save_every, args.pilot,
++            args.save_every, args.pilot, args.concurrency,
+         )
+     elapsed = time.time() - started
+ 

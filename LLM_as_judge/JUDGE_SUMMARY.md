@@ -141,14 +141,14 @@ number and a 1-attempt number are different metrics and must never share a colum
 axes are unequal (113 / 69 / 50 / 41) but weigh the same, so one item in the smallest axis counts 2.8×
 one in the largest. Two models, every axis rate between 34% and 75%:
 
-| Axis | n | Model A | Model B |
-|---|---:|---:|---:|
-| INFERENCE_MEMORY | 113 | 85 (75%) | 62 (55%) |
-| INSTRUCTION_RETENTION | 69 | 52 (75%) | 38 (55%) |
-| SELF_COHERENCE | 50 | 18 (36%) | 35 (70%) |
-| RELIABLE_VERSION_EDITING | 41 | 14 (34%) | 29 (71%) |
-| **micro — conversations answered correctly** | 273 | **61.9%** | 60.1% |
-| **macro — what the benchmark reports** | | 55.2% | **62.7%** |
+| Axis                                                |   n |         Model A |         Model B |
+| --------------------------------------------------- | --: | --------------: | --------------: |
+| INFERENCE_MEMORY                                    | 113 |        85 (75%) |        62 (55%) |
+| INSTRUCTION_RETENTION                               |  69 |        52 (75%) |        38 (55%) |
+| SELF_COHERENCE                                      |  50 |        18 (36%) |        35 (70%) |
+| RELIABLE_VERSION_EDITING                            |  41 |        14 (34%) |        29 (71%) |
+| **micro — conversations answered correctly** | 273 | **61.9%** |           60.1% |
+| **macro — what the benchmark reports**       |     |           55.2% | **62.7%** |
 
 **Model A answers more questions correctly and loses by 7.5 points.** The macro choice is defensible —
 it stops the largest axis dominating — but "MultiChallenge accuracy" is not the fraction of
@@ -156,11 +156,11 @@ conversations handled correctly and must not be described as one.
 
 **Output handling — malformed replies are uncaught, and each benchmark mishandles them differently.**
 
-| | What happens | Direction |
-|---|---|---|
-| Wonderbread QA | raw judge string stored as the score; answers under 5 chars become `"NA"` and **leave the denominator** | **flatters** — 1 is the best score, so failures vanish |
-| AwareBench | `'yes' in response.lower()` — `"yes and no"` passes; refusals and empty strings are indistinguishable from misalignment | either |
-| MultiChallenge | schema-enforced verdict, but **any exception becomes `NO`** — an API timeout is recorded as a model failure | **penalises** |
+|                | What happens                                                                                                                 | Direction                                                     |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Wonderbread QA | raw judge string stored as the score; answers under 5 chars become`"NA"` and **leave the denominator**               | **flatters** — 1 is the best score, so failures vanish |
+| AwareBench     | `'yes' in response.lower()` — `"yes and no"` passes; refusals and empty strings are indistinguishable from misalignment | either                                                        |
+| MultiChallenge | schema-enforced verdict, but**any exception becomes `NO`** — an API timeout is recorded as a model failure          | **penalises**                                           |
 
 Our runs count parse and call failures as their own category in every case, and report that count
 beside the score.
@@ -183,12 +183,12 @@ One real row from the authors' committed results (task 216, model under test GPT
 The answer is not merely incomplete — **it is backwards**: it names the wrong workflow and recommends
 the longer search term. The scores, on a scale where **1 is best and 3 is worst**:
 
-| Criterion | Sees the gold? | Score |
-|---|:--:|:--:|
-| completeness | ✅ | **3** — worst |
-| soundness | ✅ | **3** — worst |
-| clarity | ❌ | **1** — best |
-| compactness | ❌ | **1** — best |
+| Criterion    | Sees the gold? |        Score        |
+| ------------ | :------------: | :------------------: |
+| completeness |       ✅       | **3** — worst |
+| soundness    |       ✅       | **3** — worst |
+| clarity      |       ❌       | **1** — best |
+| compactness  |       ❌       | **1** — best |
 
 **Half the rubric gave a factually inverted answer full marks**, and the judge behaved exactly as
 specified: clarity and compactness are *defined* without reference to ground truth. **27 of the 480
@@ -284,11 +284,11 @@ input.
 complete upstream, but the demonstrations are a separate Zenodo download and the repo does not state
 their size. Measured directly from the archive headers on 2026-08-19:
 
-| | Size | What it is |
-|---|---:|---|
-| `demos.zip` | **132.7 GB** | all 2,928 demonstrations |
-| `gold_demos.zip` | **33.0 GB** | 724 demos / 162 "Gold" tasks — the realistic target |
-| `debug_demos.zip` | 0.94 GB | 24 demos, for checking the pipeline runs |
+|                     |               Size | What it is                                           |
+| ------------------- | -----------------: | ---------------------------------------------------- |
+| `demos.zip`       | **132.7 GB** | all 2,928 demonstrations                             |
+| `gold_demos.zip`  |  **33.0 GB** | 724 demos / 162 "Gold" tasks — the realistic target |
+| `debug_demos.zip` |            0.94 GB | 24 demos, for checking the pipeline runs             |
 
 Inside `gold_demos.zip`, **90% is screen recordings and key frames** (24.3 GB of `.mp4`, 5.5 GB of
 `.png`). The parts a text-only run needs — the gold SOPs and the processed action traces — are
@@ -437,7 +437,6 @@ Return only the number corresponding to the rating, nothing else.
 
 ### Variant 3 of 4 — clarity (`prompts.py:102-146`)
 
-
 Note the retained *"human label"* sentence and the third example's stray `Human Label:` line; neither field is interpolated into this prompt.
 
 ```text
@@ -534,7 +533,6 @@ Here are the details for the question you need to evaluate:
 Return only the number corresponding to the rating, nothing else.
 ```
 
-
 ---
 
 ## Appendix B — Wonderbread SOP-Generation entailment prompt
@@ -558,7 +556,6 @@ Query: {query_line}
 List of Lines:
 {list_of_lines_str}
 ```
-
 
 ---
 
