@@ -1,5 +1,7 @@
 # External patterns
 
+<!-- size-budget: 30000 -->
+
 Findings from periodic sweeps of outside repositories — other agentic-coding tool suites, ML
 pipeline/orchestration frameworks, SLURM job-submission libraries — screened for patterns that
 might improve hai-teams' agent architecture or its SLURM/eval pipeline. Each sweep is a dated

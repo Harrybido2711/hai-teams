@@ -166,7 +166,11 @@ list and point; they do not explain.
   decide which is right.
 - **Adding a file means adding its routing row in the same edit**, phrased as a condition an agent
   can recognise in its own task, not as a topic name. Nothing routes to it means nothing reads it.
-- **Past ~5 KB, split.** That is the rule that produced this structure in the first place.
+- **Size is a signal, not a wall.** ~5 KB is the default nudge to consider splitting, and a file
+  that is legitimately bigger declares its own with `<!-- size-budget: N -->`. The check reports it
+  and never blocks. It used to block, and the cost was real: one file hit the limit four times in
+  two days and each fix deleted the sentence explaining *why* a rule existed. Split when a file has
+  two jobs, not when it crosses a number.
 - **When a run exposes something an agent should have known, edit the file** — the reference for
   knowledge, the workflow for a check that should have caught it. A lesson left in a transcript dies
   with the session.

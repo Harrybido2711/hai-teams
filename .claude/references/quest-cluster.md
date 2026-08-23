@@ -1,5 +1,7 @@
 # Quest
 
+<!-- size-budget: 8000 -->
+
 Northwestern's cluster. Key-based SSH to `uwr0681@login.quest.northwestern.edu`
 (`~/.ssh/id_ed25519`); project space `/gpfs/projects/p32983/`. **Each benchmark's remote path is on
 its page in [benchmarks/](benchmarks/README.md)** — the remote layout is flat and did not follow the

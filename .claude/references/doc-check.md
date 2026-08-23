@@ -18,7 +18,7 @@ commit had landed. Run the check, read it, then commit.
 | `orphan` | a file in `references/` or `tools/` that no index links to | add its routing row, phrased as a condition an agent can recognise — or delete the file |
 | `structure` | a workflow with no row or no detail file, or a detail file whose four sections drifted | add the row and the page in the same edit; keep the sections Input / Output / Preflight / When it fails |
 | `benchmarks` | a page exists that the benchmark index does not list | add it to the index table |
-| `size` | past the ~5 KB split rule | split it, or declare it with the split recorded as open work |
+| `size` *(advisory — prints as `note`, never fails)* | past this file's budget: `<!-- size-budget: N -->`, or ~5 KB if it declares none | split it if it has two jobs; raise its budget if it is legitimately one long thing. Ignoring it is also allowed |
 | `canary … is owned by X` | a fact that must have one home grew a second one | delete the copy, or declare the second home with a reason |
 | `canary … left its owner` | the fact moved and the owner was not updated | change the owner in `CANARIES`. This is the normal aftermath of a deliberate move, not an error |
 | `exceptions … carry no why` | a declaration with no reason | write the reason. A silent exception is the thing this mechanism exists to prevent |

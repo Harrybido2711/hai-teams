@@ -1,31 +1,42 @@
 [
-  { "check": "size", "target": ".claude/references/external-patterns.md",
-    "why": "A chronological sweep log, not a read-before-acting reference. It is opened only by harvest-patterns, and splitting a log by size would destroy the property that makes it useful — that one file answers 'was this repo already judged'." },
-
-  { "check": "size", "target": ".claude/references/quest-cluster.md",
-    "why": "7.5 KB and genuinely over the limit. Splitting it is real work with a real decision in it (transfer+gate vs SLURM+live state), so it is recorded as open work in PLAN.md rather than excused indefinitely. Revisit when that item is done." },
-
-  { "check": "canary", "target": "56,774 @ .claude/references/external-patterns.md",
-    "why": "Historical record of an external-pattern sweep that cited the incident as evidence. Editing a log to satisfy a uniqueness rule would falsify what was written at the time." },
-
-  { "check": "canary", "target": "4,618 @ .claude/references/external-patterns.md",
-    "why": "Same: a quoted example inside a sweep record, not a live statement of the count." },
-
-  { "check": "canary", "target": "watcher checkpoint @ .claude/references/external-patterns.md",
-    "why": "Same: the incident is quoted as evidence in a sweep record." },
-
-  { "check": "canary", "target": "14,138 @ .claude/references/benchmarks/README.md",
-    "why": "This is the worked illustration of why per-benchmark pages exist — 'a number carried from one page to another is the failure this split prevents; 14,138 is NegotiationToM's'. Removing the number removes the lesson." },
-
-  { "check": "canary", "target": "14,138 @ .claude/references/benchmarks/interpersonal/README.md",
-    "why": "The group index quotes each member's headline count so a reader can route without opening both pages. The page remains authoritative; if the two ever disagree the page wins." },
-
-  { "check": "canary", "target": "3h10m @ .claude/agents/evaluator.md",
-    "why": "A subagent is not guaranteed to receive CLAUDE.md, so an agent whose judgement depends on this incident must carry it in its own prompt. The same reason applies to any agent-file duplicate of a planner rule." },
-
-  { "check": "canary", "target": "3h10m @ .claude/references/benchmarks/interpersonal/negotiationtom.md",
-    "why": "On the card it is an operating trap for one provider (Qwen needs reasoning disabled), not the rationale for the kill-and-resync authorisation. Same incident, two different jobs." },
-
-  { "check": "canary", "target": "watcher checkpoint @ .claude/agents/executor.md",
-    "why": "executor is the only agent that stages for git, and it cannot rely on receiving CLAUDE.md. The prohibition has to be in its own prompt to be binding." }
+  {
+    "check": "canary",
+    "target": "56,774 @ .claude/references/external-patterns.md",
+    "why": "Historical record of an external-pattern sweep that cited the incident as evidence. Editing a log to satisfy a uniqueness rule would falsify what was written at the time."
+  },
+  {
+    "check": "canary",
+    "target": "4,618 @ .claude/references/external-patterns.md",
+    "why": "Same: a quoted example inside a sweep record, not a live statement of the count."
+  },
+  {
+    "check": "canary",
+    "target": "watcher checkpoint @ .claude/references/external-patterns.md",
+    "why": "Same: the incident is quoted as evidence in a sweep record."
+  },
+  {
+    "check": "canary",
+    "target": "14,138 @ .claude/references/benchmarks/README.md",
+    "why": "This is the worked illustration of why per-benchmark pages exist — 'a number carried from one page to another is the failure this split prevents; 14,138 is NegotiationToM's'. Removing the number removes the lesson."
+  },
+  {
+    "check": "canary",
+    "target": "14,138 @ .claude/references/benchmarks/interpersonal/README.md",
+    "why": "The group index quotes each member's headline count so a reader can route without opening both pages. The page remains authoritative; if the two ever disagree the page wins."
+  },
+  {
+    "check": "canary",
+    "target": "3h10m @ .claude/agents/evaluator.md",
+    "why": "A subagent is not guaranteed to receive CLAUDE.md, so an agent whose judgement depends on this incident must carry it in its own prompt. The same reason applies to any agent-file duplicate of a planner rule."
+  },
+  {
+    "check": "canary",
+    "target": "3h10m @ .claude/references/benchmarks/interpersonal/negotiationtom.md",
+    "why": "On the card it is an operating trap for one provider (Qwen needs reasoning disabled), not the rationale for the kill-and-resync authorisation. Same incident, two different jobs."
+  },
+  {
+    "check": "canary",
+    "target": "watcher checkpoint @ .claude/agents/executor.md",
+    "why": "executor is the only agent that stages for git, and it cannot rely on receiving CLAUDE.md. The prohibition has to be in its own prompt to be binding."
+  }
 ]
