@@ -29,34 +29,29 @@ Set by the user on 2026-08-22:
    **Both flash-lite routes accept it**; unestablished elsewhere, so probe. Untested across an
    OpenRouter backend switch.
 
-## Per model
-
-| Model | Called by | Reasoning? | Thinking cap | Output cap | Can it be lowered? If not → prompt |
-|---|---|---|---|---|---|
-| `gemini-3.5-flash-lite` | EmoBench (planned) | yes, at the floor | `thinking_level="minimal"` | `max_output_tokens` | **No, but `thinking_budget` bounds it in tokens** — 256 spent 127. `minimal` produces zero on EmoBench, which is thinking off in all but name. Bills at $2.50/M |
-| `gemini-3.5-flash` | not used | yes | `thinking_level`, default `medium` | `max_output_tokens` | **Yes** — `medium` → `minimal`. Measure the step; do not assume it is free |
-| `gemini-2.5-flash` | EmoBench, bbh, NegotiationToM, DocVQA | yes | thinking budget | `max_output_tokens` | **Not established** for this generation → treat as no. **Prompt ceiling** until a call proves otherwise |
-| `grok-3-mini` | bbh, EmoBench, NegotiationToM | yes | `reasoning_effort` | provider default | **No — reasoning is the model.** **Prompt ceiling on thinking and on output** |
-| `deepseek-reasoner` | bbh, EmoBench, NegotiationToM | yes | none exposed | `max_tokens` | **No knob at all.** **Prompt ceiling**, or change model |
-| `Qwen/Qwen3.5-9B` | bbh, EmoBench, NegotiationToM | hybrid | `reasoning={"enabled": False}` | `max_tokens` | **Yes** — measured off: 11/12 vs 6/12 completions, 16 vs 517 output tokens |
-| `kimi-k2.5` | bbh | not established | verify before assuming | `max_tokens` | **Not established → treat as no.** Prompt ceiling until verified |
-| `gpt-4o-mini-2024-07-18` | bbh, DocVQA | no | n/a | `max_tokens` | n/a. `max_tokens` is enforced, so no prompt fallback is needed |
-| `google/gemma-4-31B-it` | bbh, EmoBench, NegotiationToM | no as served | n/a | `max_tokens` | n/a **on DeepInfra, which serves it with thinking already off — passing `reasoning_effort` turns it back on.** On Together it is on by default and must be disabled |
-| `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | bbh | no | n/a | `max_tokens` | n/a. `max_tokens` is enforced |
-
-"Called by" lists where the model id appears in a runner today, not that the run is current.
-`gemini-3.5-flash` is listed only so it is not mistaken for Flash-Lite — a dearer model at $1.50/M
-in and $9.00/M out.
-
-**An unestablished knob counts as no knob.** Where the last column says *not established*, apply the
-prompt ceiling and keep it until one call proves the API can do it. The failure this avoids is
-assuming a knob exists, setting nothing, and finding out from the bill.
-
 ## Choosing the number
 
-**Measure, do not reason from the parameter name.** One small slice at two or three settings,
-accuracy and cost together. Measured budgets and the four ways capping backfires:
-[reasoning-cost.md](reasoning-cost.md).
+Which knob each model has: [model-capabilities.md](model-capabilities.md).
 
-**Applied so far only in EmoBench's two flash-lite runners.** What every other runner currently
-sets is on its benchmark's page; this file is what they must be changed to.
+**Measure, do not reason from the parameter name** — one slice at two or three settings, accuracy
+and cost together ([reasoning-cost.md](reasoning-cost.md)). Applied so far only in EmoBench's two
+flash-lite runners; what the others set is on their benchmark pages.
+
+## Settled — `gemini-3.5-flash-lite` on OpenRouter
+
+Measured over EmoBench, 200 EU items an arm, adopted 2026-08-23.
+
+```python
+max_tokens=2048, seed=42, extra_body={"reasoning": {"effort": "minimal"}}   # temperature unset
+```
+
+- **`effort: "minimal"`** — 0 thinking tokens over 400 items. Dynamic thinking was measured and
+  rejected: 30.5 thinking tokens per token of answer, 31× cost, 4× wall clock, for +6 points that
+  never reached significance (p=0.21).
+- **`seed=42`** — without it 22.5% of items change between runs. **Not sufficient alone here:** the
+  answer follows the serving backend and OpenRouter fails over mid-run. `--provider "Google AI
+  Studio"` makes four seeded calls identical; going without is a deliberate choice, so this route is
+  reproducible only as far as the routing holds.
+- **no `temperature`** — unset, `0.0` and `0.6` scored the same and agreed on all 200 items.
+- The native route is the same, except the cap is `thinking_budget=128` (`thinking_level` is absent
+  from Quest's SDK) and its seed reproduces exactly, 120/120.
