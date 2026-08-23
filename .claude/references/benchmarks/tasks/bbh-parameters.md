@@ -34,7 +34,8 @@ What the table shows:
 3. **Twelve parameters are set by no runner anywhere** — `top_p`, `top_k`, both penalties,
    `repetition_penalty`, `seed`, `stop`, `response_format`, `tools`, `tool_choice`, `reasoning`,
    `reasoning_effort`, `verbosity`. No `seed` plus one model at `temperature=1` means nothing here is
-   reproducible.
+   reproducible. `seed` is measured working elsewhere — see
+   [../../model-parameters.md](../../model-parameters.md) rule 6 — so probe it per provider.
 4. **A reasoning-capable model name is not a reasoning setting.** No runner passes a reasoning
    configuration, so no model's internal behaviour may be recorded as a `reasoning_effort` value.
 

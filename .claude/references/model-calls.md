@@ -46,7 +46,8 @@ real item, not a toy one.
 **OpenRouter switches backend mid-run.** It serves this model from Google AI Studio *and* Google
 Vertex (US) with failover: over a finished 400-item run `provider` came back `Google AI Studio` 110
 times and `Google` 90, on one task alone. Record which answered — the response carries `provider` and
-a per-call `usage.cost`. Neither route is deterministic: no seed is offered, temperature is unset.
+a per-call `usage.cost`. **Both routes take `seed`** and are reproducible with one — rule 6,
+[model-parameters.md](model-parameters.md). Untested across a backend switch.
 
 **Route A · Google AI Studio, native SDK.** `client.models.generate_content(model=, contents=,
 config=types.GenerateContentConfig(system_instruction=, thinking_config=types.ThinkingConfig(

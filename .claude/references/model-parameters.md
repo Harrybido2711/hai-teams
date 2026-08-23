@@ -13,18 +13,21 @@ Set by the user on 2026-08-22:
    hidden half never depends on whether the visible half is shown.
 2. **A model that does not reason gets an explicit output cap.** `max_tokens` on every call.
 3. **Whether reasoning is *shown* is the benchmark's decision, read from its own README — at run
-   time, not frozen into the runner.** Resolve it from the README and record the line it came from.
-   A literal `True`/`False` stops tracking the README, and the next runner copied from that one
-   carries the answer into a benchmark that decided otherwise. EmoBench's resolver is
-   `reasoning_visibility.py`; it raises when a README declares nothing, rather than guessing. Use
-   the upstream mode instead of writing your own instruction, and keep the other branch behind a
-   flag — different conditions do not share a results table. Either way **record what was reasoned**:
-   the visible chain where there is one, the hidden summary always
-   ([reasoning-cost.md](reasoning-cost.md)).
+   time, not frozen into the runner.** Record the line it came from. A literal `True`/`False` stops
+   tracking the README, and the next runner copied from it carries the wrong benchmark's answer.
+   EmoBench's resolver is `reasoning_visibility.py`; it raises rather than guessing. Use the upstream
+   mode, keep the other branch behind a flag — different conditions do not share a results table —
+   and **record what was reasoned** ([reasoning-cost.md](reasoning-cost.md)).
 4. **Set the value even when it equals the default.** A default belongs to the provider and can move;
    a pinned value records what the run used.
 5. **No API limit? Set it in the prompt.** The last column says which models; the wording and
    its caveats are in [prompt-ceiling.md](prompt-ceiling.md).
+6. **Pin a seed wherever the provider offers one, and write it on every row.** Without one a score
+   difference cannot be told from the sampler: `gemini-3.5-flash-lite` gave two different answers to
+   one EmoBench item in three identical calls, byte-identical ones under `seed=42`. That noise is
+   worth ~3 points at n=200 — the size of the gaps we interpret, and it already produced one.
+   **Both flash-lite routes accept it**; unestablished elsewhere, so probe. Untested across an
+   OpenRouter backend switch.
 
 ## Per model
 
