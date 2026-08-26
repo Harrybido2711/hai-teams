@@ -1,6 +1,9 @@
 # Model parameters — what every runner must set
 
-<!-- size-budget: 7000 -->
+<!-- size-budget: 9000 -->
+<!-- Deliberately one file: the standing rules, the per-model capability table read against
+     them, and the settled config for each model in use. Splitting it was tried and reverted —
+     the halves are always read together. It grows by one block per model adopted. -->
 
 **Applies to every benchmark, not one** — keyed by model, because the same providers serve
 NegotiationToM, EmoBench, bbh, mmlu and DocVQA. Read before writing or changing any runner.
@@ -42,7 +45,8 @@ Set by the user on 2026-08-22:
 | `deepseek-reasoner`                                 | bbh, Emo, NegToM         | yes               | none exposed                           | `max_tokens`                         | **No knob at all.** **Prompt ceiling**, or change model                                                                                  |
 | `Qwen/Qwen3.5-9B`                                   | bbh, Emo, NegToM         | hybrid            | `reasoning={"enabled": False}`       | `max_tokens`                         | **Yes** — measured off: 11/12 vs 6/12 completions, 16 vs 517 output tokens                                                                    |
 | `kimi-k2.5`                                         | bbh                      | not established   | verify before assuming                 | `max_tokens`                         | **Not established → no.** Prompt ceiling                                                                                                      |
-| `gpt-4o-mini-2024-07-18`                            | bbh, DocVQA              | no                | n/a                                    | `max_tokens`                         | n/a —`max_tokens` is enforced                                                                                                                     |
+| `gpt-5.6-luna` **← the project's GPT** | Emo | **yes** | `reasoning_effort="none"` | **`max_completion_tokens`** | **Yes, and not free by default** — its own default is `medium` (~129 reasoning tokens an item); `none` measured 0. `minimal` is refused. $0.20/M in, $1.20/M out |
+| `gpt-4o-mini-2024-07-18` — **superseded** | still in the bbh and DocVQA runners | no | n/a | `max_tokens` | n/a — `max_tokens` is enforced |
 | `google/gemma-4-31B-it`                             | bbh, Emo, NegToM         | no as served      | n/a                                    | `max_tokens`                         | n/a**on DeepInfra: served with thinking off, and `reasoning_effort` turns it back on.** On Together it is on by default and must be disabled |
 | `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | bbh                      | no                | n/a                                    | `max_tokens`                         | n/a — enforced                                                                                                                                      |
 
@@ -58,6 +62,35 @@ and finding out from the bill.
 **Measure, do not reason from the parameter name** — one slice at two or three settings, accuracy
 and cost together ([reasoning-cost.md](reasoning-cost.md)). Applied so far only in EmoBench's two
 flash-lite runners; what the others set is on their benchmark pages.
+
+## Settled — the project's GPT
+
+**`gpt-5.6-luna` on the OpenAI platform, `reasoning_effort="none"`.** Set 2026-08-26; it replaces
+`gpt-4o-mini` wherever a GPT is called.
+
+```python
+max_completion_tokens=2048, reasoning_effort="none", seed=42   # temperature unsettable
+```
+
+**Its parameter surface is narrower than 4o-mini's, and the published page overstates it.** Probed
+against 4o-mini, which accepted everything it was given:
+
+| | `gpt-5.6-luna` | `gpt-4o-mini` |
+|---|---|---|
+| token cap | **`max_completion_tokens`** (`max_tokens` refused) | either |
+| `temperature` | **only the default 1** | any |
+| `top_p`, `frequency_penalty`, `presence_penalty`, `stop`, `logprobs` | **all refused** | all accepted |
+| `seed`, `n`, `service_tier` | accepted | accepted |
+| `verbosity` | accepted (`low`) | refused |
+| `reasoning_effort` | `none`/`low`/`medium`/`high`/`xhigh` — **not** `minimal`, **not** `max` | not a parameter |
+
+The model page lists `top_p`, `frequency_penalty`, `presence_penalty`, `stop` and `logprobs` as
+supported and names a `max` effort level. **Five of those are refused in practice and `max` is
+refused too** — the probe is what a runner should be built on, not the page.
+
+Measured reasoning tokens on one EmoBench-shaped item: `none` 0, `medium` 129, `low` 203, `high`
+512, `xhigh` 512. **A refused value is not a refused parameter** — dropping `reasoning_effort`
+because it rejected `minimal` would have run the benchmark at the default `medium`, uncapped.
 
 ## Settled — the project's Gemini
 
