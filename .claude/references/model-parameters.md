@@ -1,6 +1,6 @@
 # Model parameters — what every runner must set
 
-<!-- size-budget: 9000 -->
+<!-- size-budget: 12000 -->
 <!-- Deliberately one file: the standing rules, the per-model capability table read against
      them, and the settled config for each model in use. Splitting it was tried and reverted —
      the halves are always read together. It grows by one block per model adopted. -->
@@ -27,7 +27,17 @@ Set by the user on 2026-08-22:
    a pinned value records what the run used.
 5. **No API limit? Set it in the prompt.** The last column says which models; the wording and
    its caveats are in [prompt-ceiling.md](prompt-ceiling.md).
-6. **Pin a seed wherever the provider offers one, and write it on every row.** Without one a score
+6. **Probe the parameter surface; the model page is a hypothesis.** For `gpt-5.6-luna` the page
+   listed `top_p`, `frequency_penalty`, `presence_penalty`, `stop` and `logprobs` as supported and
+   named a `max` reasoning level — **six claims, all refused by the API.** One probe call before a
+   run costs nothing; discovering it per item across 400 items costs the run.
+7. **A refused *value* is not a refused *parameter*, and conflating them silently removes a cap.**
+   `gpt-5.6-luna` refuses `reasoning_effort="minimal"` while supporting the parameter perfectly
+   well. A negotiator that saw the name in the error and dropped the parameter would have run every
+   item at the model's default `medium` — uncapped, breaching rule 1, with nothing in the log saying
+   so. Read the supported list out of the error and pick from it; drop a parameter only when the
+   error says the *parameter* is unsupported.
+8. **Pin a seed wherever the provider offers one, and write it on every row.** Without one a score
    difference cannot be told from the sampler: `gemini-3.5-flash-lite` gave two different answers to
    one EmoBench item in three identical calls, byte-identical ones under `seed=42`. That noise is
    worth ~3 points at n=200 — the size of the gaps we interpret, and it already produced one.
@@ -66,7 +76,8 @@ flash-lite runners; what the others set is on their benchmark pages.
 ## Settled — the project's GPT
 
 **`gpt-5.6-luna` on the OpenAI platform, `reasoning_effort="none"`.** Set 2026-08-26; it replaces
-`gpt-4o-mini` wherever a GPT is called.
+`gpt-4o-mini` wherever a GPT is called. A reasoning model: 1,050,000 context, 128,000 max output,
+$0.20/M in ($0.02/M cached) and $1.20/M out.
 
 ```python
 max_completion_tokens=2048, reasoning_effort="none", seed=42   # temperature unsettable

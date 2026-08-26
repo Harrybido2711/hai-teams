@@ -18,6 +18,8 @@ Workflow({scriptPath: ".claude/workflows/watch-live-runs.js", args: {
     {label: "Google",     dir: "EMO_Gemini_Flash3.5lite_Google",     jobId: 3810331},
     {label: "OpenRouter", dir: "EMO_Gemini_Flash3.5lite_OpenRouter", jobId: 3810332,
      priceIn: 0.30, priceOut: 2.50},
+    // sweep arms of ONE model share a directory and differ only by --tag:
+    {label: "effort=low", dir: "EMO_GPT_5.6_Luna", resultsDir: "results_eLow", jobId: 4511556},
   ],
   expected: {EU: 200, EA: 200},
   sinceMinutes: 0,
@@ -27,6 +29,11 @@ Workflow({scriptPath: ".claude/workflows/watch-live-runs.js", args: {
 `runs` needs at least two entries — for one, use `check-status`. `priceIn`/`priceOut` are $/M tokens
 and are optional: **omit them rather than guessing**, and the cost cell reports *not established*
 instead of a number that looks measured.
+
+`resultsDir` defaults to `results`. **Sweep arms of one model need it**, because they live in the
+same folder and are separated only by the runner's `--tag`. Two runs resolving to the same path are
+refused up front: identical rows would otherwise be reported as two arms agreeing, which reads as a
+finding rather than as the misconfiguration it is.
 
 ## Output
 

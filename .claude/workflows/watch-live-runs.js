@@ -18,6 +18,10 @@ export const meta = {
 //     { label: "OpenRouter", dir: "EMO_..._OpenRouter", jobId: 3810332,
 //       priceIn: 0.30, priceOut: 2.50 },
 //   ],
+//   // resultsDir is optional and defaults to "results". Sweep arms of ONE model share a
+//   // directory and differ only by --tag, so they need it: {dir: "EMO_GPT", resultsDir:
+//   // "results_eLow"}. Without it every arm is read from the same path and reported identical,
+//   // which looks like agreement rather than a bug.
 //   expected:     { EU: 200, EA: 200 }   rows per task, per run
 //   sinceMinutes: 0                      rate over the last N minutes only, so a bad first hour
 //                                        does not drag the estimate
@@ -51,6 +55,13 @@ for (const r of RUNS) {
     return { status: 'cannot-tell', aborted: `every run needs {label, dir}; got ${JSON.stringify(r)}` }
   }
 }
+// Two arms reading the same path would be reported as agreeing rather than as misconfigured.
+const paths = RUNS.map((r) => `${r.dir}/${r.resultsDir || 'results'}`)
+if (new Set(paths).size !== paths.length) {
+  return { status: 'cannot-tell',
+           aborted: `two runs point at the same results directory (${paths.join(', ')}); ` +
+                    `sweep arms of one model need distinct resultsDir values` }
+}
 
 const TASKS = Object.keys(EXPECTED)
 const PER_RUN = Object.values(EXPECTED).reduce((a, b) => a + b, 0)
@@ -83,6 +94,7 @@ const observations = await parallel(RUNS.map((run) => () => agent(
 no interpretation beyond what the numbers force.
 
 Remote directory: ${QDIR}/${run.dir}
+Results directory: ${QDIR}/${run.dir}/${run.resultsDir || 'results'}
 SLURM job id: ${run.jobId === undefined ? '(not supplied — find it by name in squeue)' : run.jobId}
 Expected rows per task: ${JSON.stringify(EXPECTED)} (${PER_RUN} total for this run)
 ${READONLY}
@@ -93,7 +105,8 @@ Collect and report:
 1. **Queue.** squeue for uwr0681: this job's state, elapsed, node. If it has left the queue, get
    State, ExitCode and Elapsed from sacct — **a job can exit COMPLETED 0:0 with every row empty**,
    so its absence from the queue is not success.
-2. **Rows per task**, counted on Quest from the .jsonl under ${QDIR}/${run.dir}/results/<task>/,
+2. **Rows per task**, counted on Quest from the .jsonl under
+   ${QDIR}/${run.dir}/${run.resultsDir || 'results'}/<task>/,
    never from the CSV: model output contains embedded newlines and naive CSV line-counting has
    already produced a false alarm on this project. Report count per task, and the file's mtime.
 3. **Throughput.** Rows now, and rows ${SINCE ? `in the last ${SINCE} minutes` : 'since the job started'}.
