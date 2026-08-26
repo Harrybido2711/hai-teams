@@ -18,5 +18,5 @@ module purge
     --task all \
     --seed 42 \
     --save-every 20 \
-    --reasoning-effort none \
+    --reasoning-effort low \
     --max-tokens 2048

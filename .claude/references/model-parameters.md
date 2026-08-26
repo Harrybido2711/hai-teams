@@ -55,7 +55,7 @@ Set by the user on 2026-08-22:
 | `deepseek-reasoner`                                 | bbh, Emo, NegToM         | yes               | none exposed                           | `max_tokens`                         | **No knob at all.** **Prompt ceiling**, or change model                                                                                  |
 | `Qwen/Qwen3.5-9B`                                   | bbh, Emo, NegToM         | hybrid            | `reasoning={"enabled": False}`       | `max_tokens`                         | **Yes** — measured off: 11/12 vs 6/12 completions, 16 vs 517 output tokens                                                                    |
 | `kimi-k2.5`                                         | bbh                      | not established   | verify before assuming                 | `max_tokens`                         | **Not established → no.** Prompt ceiling                                                                                                      |
-| `gpt-5.6-luna` **← the project's GPT** | Emo | **yes** | `reasoning_effort="none"` | **`max_completion_tokens`** | **Yes, and not free by default** — its own default is `medium` (~129 reasoning tokens an item); `none` measured 0. `minimal` is refused. $0.20/M in, $1.20/M out |
+| `gpt-5.6-luna` **← the project's GPT** | Emo | **yes** | `reasoning_effort="low"` | **`max_completion_tokens`** | **Yes, but do not set it to `none`** — that is removal, not a cap, and costs 9–11 points (p≤0.003). `minimal` and `max` are refused. $0.20/M in, $1.20/M out |
 | `gpt-4o-mini-2024-07-18` — **superseded** | still in the bbh and DocVQA runners | no | n/a | `max_tokens` | n/a — `max_tokens` is enforced |
 | `google/gemma-4-31B-it`                             | bbh, Emo, NegToM         | no as served      | n/a                                    | `max_tokens`                         | n/a**on DeepInfra: served with thinking off, and `reasoning_effort` turns it back on.** On Together it is on by default and must be disabled |
 | `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | bbh                      | no                | n/a                                    | `max_tokens`                         | n/a — enforced                                                                                                                                      |
@@ -75,13 +75,30 @@ flash-lite runners; what the others set is on their benchmark pages.
 
 ## Settled — the project's GPT
 
-**`gpt-5.6-luna` on the OpenAI platform, `reasoning_effort="none"`.** Set 2026-08-26; it replaces
+**`gpt-5.6-luna` on the OpenAI platform, `reasoning_effort="low"`.** Set 2026-08-26; it replaces
 `gpt-4o-mini` wherever a GPT is called. A reasoning model: 1,050,000 context, 128,000 max output,
 $0.20/M in ($0.02/M cached) and $1.20/M out.
 
 ```python
-max_completion_tokens=2048, reasoning_effort="none", seed=42   # temperature unsettable
+max_completion_tokens=2048, reasoning_effort="low", seed=42   # temperature unsettable
 ```
+
+**`low`, not `none`, and the difference is measured.** EU, 200 items, seed pinned, paired McNemar:
+
+| effort | accuracy | thinking/row | cost / 200 items |
+|---|---|---|---|
+| `none` | 0.565 | 0 | $0.0189 |
+| **`low`** | **0.650** | median 40 | **$0.0366** |
+| `medium` (the model's default) | 0.675 | median 48 | $0.0430 |
+
+`none` vs `low` **p=0.0033**, `none` vs `medium` **p=0.0003** — both significant. `low` vs `medium`
+**p=0.332**, not significant. So switching thinking off costs 9–11 accuracy points to save two cents,
+while `low` takes the entire significant gain at 85% of `medium`'s output tokens.
+
+**This is where rule 1 gets misread.** The rule bounds *what thinking may spend*; it does not say
+switch thinking off. `none` is removal, not a cap. On `gemini-3.5-flash-lite` the distinction did not
+matter — capping cost nothing measurable — and copying that shape onto this model is exactly how
+`none` got adopted here before the sweep ran.
 
 **Its parameter surface is narrower than 4o-mini's, and the published page overstates it.** Probed
 against 4o-mini, which accepted everything it was given:

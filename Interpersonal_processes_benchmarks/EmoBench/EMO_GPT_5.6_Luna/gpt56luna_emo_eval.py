@@ -14,12 +14,12 @@ What is specific to this runner, and why:
      reasoning_effort and seed this model takes, prints the answer, and writes it onto every row.
   2. **A rejected parameter is fatal, not retried.** Retrying an invalid request 400 times to learn
      one fact is the failure above.
-  3. **Hidden reasoning is capped at reasoning_effort="none"**, measured 0 reasoning tokens. Rule 1
-     of references/model-parameters.md is unconditional, and here it is not free: this model's own
-     default is "medium", which spent ~129 reasoning tokens on a single EmoBench-shaped item, so an
-     unset run is an uncapped run. "minimal" — the value the Gemini runners use — is refused
-     outright by this model, which is why negotiate() distinguishes a refused value from a refused
-     parameter instead of dropping the cap.
+  3. **Hidden reasoning is bounded at reasoning_effort="low"** — median 40 tokens a row, against
+     the model's own default of "medium". Rule 1 of references/model-parameters.md is unconditional,
+     but it bounds what thinking may spend rather than switching it off: "none" measured 9-11
+     accuracy points worse over 200 items (p<=0.003) to save two cents. "minimal" — the value the
+     Gemini runners use — is refused outright here, which is why negotiate() distinguishes a refused
+     value from a refused parameter instead of dropping the cap and running uncapped.
   4. **temperature is not set.** Consistent with the Gemini runners, where unset, 0.0 and 0.6 were
      measured identical on all 200 items, and with newer OpenAI reasoning models that reject any
      value but the default.
@@ -59,12 +59,16 @@ if not api_key:
 client = OpenAI(api_key=api_key, timeout=300)
 LETTERS = string.ascii_uppercase
 
-# Measured on this model, not copied from the Gemini runners: "minimal" is rejected outright, and
-# the documented set is none/low/medium/high/xhigh (the docs also list "max", which this model
-# refuses). The default is medium and spends ~129 reasoning tokens an item, so leaving it unset
-# would breach rule 1 quietly. "none" measured exactly 0.
-REASONING_EFFORT = "none"
-EFFORT_FALLBACKS = ("none", "low", "medium")   # preference order if a value is refused
+# Measured on this model, not copied from the Gemini runners. "minimal" is rejected outright; the
+# accepted set is none/low/medium/high/xhigh (the docs also list "max", which this model refuses).
+#
+# "low", not "none". Over 200 EU items with the seed pinned: none 0.565, low 0.650, medium 0.675;
+# none-vs-low p=0.0033 and none-vs-medium p=0.0003, both significant, while low-vs-medium p=0.332
+# is not. Switching thinking off costs 9-11 accuracy points to save two cents. Rule 1 bounds what
+# thinking may SPEND — "none" is removal, not a cap, and it was adopted here only by copying the
+# Gemini shape onto a model where thinking actually earns its tokens.
+REASONING_EFFORT = "low"
+EFFORT_FALLBACKS = ("low", "medium", "none")   # preference order if a value is refused
 RESULTS_TAG = ""               # set from --tag; keeps a sweep arm out of the baseline directory
 
 AUTH_MARKERS = ("invalid_api_key", "Incorrect API key", "Unauthorized", "401",
