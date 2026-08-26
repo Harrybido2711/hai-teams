@@ -33,18 +33,18 @@ Set by the user on 2026-08-22:
 
 ## Per model
 
-| Model | Called by | Reasoning? | Thinking cap | Output cap | Can it be lowered? If not → prompt |
-|---|---|---|---|---|---|
-| `gemini-3.5-flash-lite` | Emo | yes, at the floor | see **Settled** below | `max_tokens` / `max_output_tokens` | **No off switch; `thinking_budget` does not bind** — only `-1` changes the regime. $2.50/M |
-| `gemini-3.5-flash` | not used | yes | `thinking_level`, default `medium` | `max_output_tokens` | **Yes** — `medium` → `minimal`. Measure the step |
-| `gemini-2.5-flash` | Emo, bbh, NegToM, DocVQA | yes | thinking budget | `max_output_tokens` | **Not established** → treat as no. **Prompt ceiling** until a call proves otherwise |
-| `grok-3-mini` | bbh, Emo, NegToM | yes | `reasoning_effort` | provider default | **No — reasoning is the model.** **Prompt ceiling on thinking and on output** |
-| `deepseek-reasoner` | bbh, Emo, NegToM | yes | none exposed | `max_tokens` | **No knob at all.** **Prompt ceiling**, or change model |
-| `Qwen/Qwen3.5-9B` | bbh, Emo, NegToM | hybrid | `reasoning={"enabled": False}` | `max_tokens` | **Yes** — measured off: 11/12 vs 6/12 completions, 16 vs 517 output tokens |
-| `kimi-k2.5` | bbh | not established | verify before assuming | `max_tokens` | **Not established → no.** Prompt ceiling |
-| `gpt-4o-mini-2024-07-18` | bbh, DocVQA | no | n/a | `max_tokens` | n/a — `max_tokens` is enforced |
-| `google/gemma-4-31B-it` | bbh, Emo, NegToM | no as served | n/a | `max_tokens` | n/a **on DeepInfra: served with thinking off, and `reasoning_effort` turns it back on.** On Together it is on by default and must be disabled |
-| `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | bbh | no | n/a | `max_tokens` | n/a — enforced |
+| Model                                                 | Called by                | Reasoning?        | Thinking cap                           | Output cap                             | Can it be lowered? If not → prompt                                                                                                                  |
+| ----------------------------------------------------- | ------------------------ | ----------------- | -------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gemini-3.5-flash-lite` **← the project's Gemini** | Emo; OpenRouter route | yes, at the floor | `{"effort": "minimal"}` — see **Settled** | `max_tokens` / `max_output_tokens` | **No off switch; `thinking_budget` does not bind** — only `-1` changes the regime. $2.50/M                                                |
+| `gemini-3.5-flash`                                  | not used                 | yes               | `thinking_level`, default `medium` | `max_output_tokens`                  | **Yes** — `medium` → `minimal`. Measure the step                                                                                         |
+| `gemini-2.5-flash` — **superseded** | still in the bbh, NegToM and DocVQA runners | yes | thinking budget | `max_output_tokens`                  | **Not established** → treat as no. **Prompt ceiling** until a call proves otherwise                                                     |
+| `grok-3-mini`                                       | bbh, Emo, NegToM         | yes               | `reasoning_effort`                   | provider default                       | **No — reasoning is the model.** **Prompt ceiling on thinking and on output**                                                           |
+| `deepseek-reasoner`                                 | bbh, Emo, NegToM         | yes               | none exposed                           | `max_tokens`                         | **No knob at all.** **Prompt ceiling**, or change model                                                                                  |
+| `Qwen/Qwen3.5-9B`                                   | bbh, Emo, NegToM         | hybrid            | `reasoning={"enabled": False}`       | `max_tokens`                         | **Yes** — measured off: 11/12 vs 6/12 completions, 16 vs 517 output tokens                                                                    |
+| `kimi-k2.5`                                         | bbh                      | not established   | verify before assuming                 | `max_tokens`                         | **Not established → no.** Prompt ceiling                                                                                                      |
+| `gpt-4o-mini-2024-07-18`                            | bbh, DocVQA              | no                | n/a                                    | `max_tokens`                         | n/a —`max_tokens` is enforced                                                                                                                     |
+| `google/gemma-4-31B-it`                             | bbh, Emo, NegToM         | no as served      | n/a                                    | `max_tokens`                         | n/a**on DeepInfra: served with thinking off, and `reasoning_effort` turns it back on.** On Together it is on by default and must be disabled |
+| `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | bbh                      | no                | n/a                                    | `max_tokens`                         | n/a — enforced                                                                                                                                      |
 
 "Called by" is where the id appears in a runner today, not that the run is current.
 `gemini-3.5-flash` is listed only so it is not mistaken for Flash-Lite — dearer, $1.50/M and $9.00/M.
@@ -59,9 +59,15 @@ and finding out from the bill.
 and cost together ([reasoning-cost.md](reasoning-cost.md)). Applied so far only in EmoBench's two
 flash-lite runners; what the others set is on their benchmark pages.
 
-## Settled — `gemini-3.5-flash-lite` on OpenRouter
+## Settled — the project's Gemini
 
-Measured over EmoBench, 200 EU items an arm, adopted 2026-08-23.
+**`gemini-3.5-flash-lite`, served by OpenRouter, thinking at `minimal`.** Set by the user on
+2026-08-23; it replaces `gemini-2.5-flash` wherever a Gemini is called. Two decisions inside it:
+**OpenRouter, not the native SDK** — the routes measured the same speed (2.92 vs 2.76 s an item) and
+Quest's google-genai is a version behind, so the OpenAI-compatible client is the one to keep working.
+And **thinking at `minimal`, dynamic thinking off** — see the numbers below.
+
+Measured over EmoBench, 200 EU items an arm.
 
 ```python
 max_tokens=2048, seed=42, extra_body={"reasoning": {"effort": "minimal"}}   # temperature unset
@@ -71,8 +77,7 @@ max_tokens=2048, seed=42, extra_body={"reasoning": {"effort": "minimal"}}   # te
   rejected: 30.5 thinking tokens per token of answer, 31× cost, 4× wall clock, for +6 points that
   never reached significance (p=0.21).
 - **`seed=42`** — without it 22.5% of items change between runs. **Not sufficient alone here:** the
-  answer follows the serving backend and OpenRouter fails over mid-run. `--provider "Google AI
-  Studio"` makes four seeded calls identical; going without is a deliberate choice, so this route is
+  answer follows the serving backend and OpenRouter fails over mid-run. `--provider "Google AI Studio"` makes four seeded calls identical; going without is a deliberate choice, so this route is
   reproducible only as far as the routing holds.
 - **no `temperature`** — unset, `0.0` and `0.6` scored the same and agreed on all 200 items.
 - The native route is the same, except the cap is `thinking_budget=128` (`thinking_level` is absent

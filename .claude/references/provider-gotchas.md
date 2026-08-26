@@ -1,3 +1,6 @@
+<!-- size-budget: 6000 -->
+<!-- One row per provider plus its failure modes; it grows when a provider is added or
+     replaced, which is the file working, not the file sprawling. -->
 # Provider gotchas
 
 Every one of these has cost a debugging cycle, and most fail with **HTTP 200 and no exception** —
@@ -7,7 +10,8 @@ the run looks complete while scoring 0.
 |---|---|---|
 | OpenAI `gpt-4o-mini` | `openai.OpenAI` | baseline |
 | DeepSeek `deepseek-v4-flash` | `openai.OpenAI`, `base_url="https://api.deepseek.com"`, `timeout=7200` | legacy `deepseek-reasoner` retired 2026-07-24; pass `extra_body={"thinking":{"type":"disabled"}}` for this classification benchmark |
-| Gemini `gemini-2.5-flash` | `google.genai.Client` | no `system` role in messages; use `thinking_budget=0`; do **not** set `max_output_tokens` (256 truncated JSON mid-object) |
+| Gemini `gemini-3.5-flash-lite` **via OpenRouter** | `openai.OpenAI`, `base_url="https://openrouter.ai/api/v1"` | the project's Gemini since 2026-08-23. `extra_body={"reasoning":{"effort":"minimal"}}`; a seed alone does not reproduce, the backend decides (below) |
+| ~~Gemini `gemini-2.5-flash`~~ *(superseded, still in the bbh/NegToM/DocVQA runners)* | `google.genai.Client` | no `system` role in messages; `thinking_budget=0`; do **not** set `max_output_tokens` (256 truncated JSON mid-object) |
 | xAI `grok-3-mini` | `xai_sdk.Client` | no message dicts — `chat.create(model=...)`, `chat.append(xai_system(...))`, `chat.append(xai_user(...))`, `chat.sample()`. It does accept `max_tokens`/`temperature` |
 | Qwen `Qwen/Qwen3.5-9B` | `together.Together`, **`timeout=180`** | hybrid model: pass `reasoning={"enabled": False}`; retain `max_tokens=8192` for visible JSON headroom |
 | Gemma `google/gemma-4-31B-it` | `together.Together`, **`timeout=300`** | intermittent empty string at HTTP 200 — retry up to 5× |

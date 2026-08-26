@@ -49,6 +49,10 @@ where the two-file caveat above is spelled out per model.
 - **One failed call discards a whole task, in seven of eight.** A `None` response reaches `re.search`
   and raises `TypeError`; the per-split handler catches it and moves to the next split, dropping the
   rows collected so far without writing a CSV. `gemma_finish.py` returns `""` and is the exception.
+- **`gemini_eval.py` still calls `gemini-2.5-flash`,** which was superseded on 2026-08-23 by
+  `gemini-3.5-flash-lite` on OpenRouter ([../../model-parameters.md](../../model-parameters.md)).
+  The runner has not been changed, so this table still describes what it does — updating the page
+  without updating the code would make it a lie. Change both, or neither.
 - **No script sets `seed`, and one runs at `temperature=1`.** Nothing here is reproducible — and
   that is now a gap rather than a limitation: `seed` is measured working on both Gemini flash-lite
   routes, so probe each provider here rather than assuming it is unavailable
