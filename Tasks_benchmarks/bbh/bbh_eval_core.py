@@ -251,8 +251,58 @@ def write_overall(model_dir, model_id, summaries):
 # ---------------------------------------------------------------- the loop
 
 
+def parse_config(text):
+    out = {}
+    for part in (text or "").split(";"):
+        if "=" in part:
+            k, v = part.split("=", 1)
+            out[k] = v
+    return out
+
+
+def load_checkpoint(out_path, config, verbose=True):
+    """Rows already done for this task, keyed by idx — or refuse if the config has changed.
+
+    Two lessons this project paid for, both in `CLAUDE.md`:
+
+    * **A config change means archive, not resume.** Resuming across one leaves a single result set
+      holding two configurations, which no column in it can distinguish. So a stored row whose
+      run-level config differs from this run's is fatal here, not a warning. Keys the run adds
+      per row (the OpenRouter backend) are ignored in the comparison — they are expected to vary.
+    * **An empty row is not a done row.** A plain resume adds every stored uid to the done set
+      regardless of whether the response was usable, so rows that came back empty are skipped
+      forever. They are dropped here and retried.
+    """
+    if not os.path.exists(out_path):
+        return {}
+    want = {k: str(v) for k, v in (config or {}).items()}
+    done, empty = {}, 0
+    with open(out_path) as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            r = json.loads(line)
+            have = parse_config(r.get("config", ""))
+            differs = {k: (v, have.get(k)) for k, v in want.items() if have.get(k) != v}
+            if differs:
+                raise SystemExit(
+                    f"{out_path}\n  refusing to resume: the stored rows were produced with a "
+                    f"different config.\n  differences (wanted, stored): {differs}\n"
+                    f"  Archive the results directory to a timestamped name and start clean — "
+                    f"resuming here would put two configurations in one result set.")
+            if str(r.get("model_response", "")).strip():
+                done[r["idx"]] = r
+            else:
+                empty += 1
+    if verbose and (done or empty):
+        print(f"  resume: {len(done)} row(s) done, {empty} empty row(s) will be retried",
+              flush=True)
+    return done
+
+
 def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=True, limit=0,
-              config=None, per_row_config=None):
+              config=None, per_row_config=None, save_every=20, resume=True):
     """Drive `call(prompt) -> str` over the requested tasks and write results per task.
 
     A failed call yields `""` for that ITEM and the task continues. The old runners let a `None`
@@ -269,8 +319,21 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
             examples = examples[:limit]
             if verbose:
                 print(f"[{task}] --limit {limit}: smoke test, not a run", flush=True)
-        records = []
+        out_path = os.path.join(task_dir(model_dir, task), f"{model_slug(model_id)}.jsonl")
+        done = load_checkpoint(out_path, config, verbose) if (resume and not limit) else {}
+
+        def flush(recs):
+            """Written every `save_every` items so a killed job keeps its paid calls, and so
+            progress is visible at all — the old behaviour wrote nothing until a whole 250-item
+            task finished, which left no rows to judge the run by for minutes at a time."""
+            with open(out_path, "w") as fh:
+                for r in sorted(recs, key=lambda x: x["idx"]):
+                    fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+        records = list(done.values())
         for i, ex in enumerate(examples):
+            if i in done:
+                continue
             q, gold = ex["input"], ex["target"]
             try:
                 resp = call(PROMPT.format(question=q))
@@ -295,6 +358,11 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
             })
             if sleep_between:
                 time.sleep(sleep_between)
+            if save_every and len(records) % save_every == 0:
+                flush(records)
+                if verbose:
+                    print(f"  [{task}] {len(records)}/{len(examples)}", flush=True)
+        records.sort(key=lambda r: r["idx"])
         s = write_task_results(model_dir, task, model_id, records, config=config)
         summaries.append(s)
         if verbose:
