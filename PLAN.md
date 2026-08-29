@@ -73,17 +73,19 @@ the warning under the table.
 | Gemma | `google/gemma-4-31B-it` | DeepInfra | `references/model-calls.md` |
 | Deepseek | `deepseek-reasoner` | DeepSeek | `references/model-calls.md` |
 
-**A column header is a slot, not a model, so every sheet carries a `Model / config` row under it.**
-That row is where a cell's identity actually lives, and it is the first thing to read — the two
-re-pointed slots hold a different model on `Emo` than they do on the other sheets.
+**Row 2 of every sheet names the model behind each column.** In `Final_Result.xlsx` it is `Model` —
+one settled model id per slot, the same six on every sheet. In `Results.xlsx` it is `Model / config`,
+because there a slot can hold a different model on one sheet than on another, and the config that
+produced the number is part of what the number means.
 
-**`gemini-2.5-flash` and `gpt-4o-mini-2024-07-18` are superseded and are not among the six**, but
-they are still what the bbh, MMLU, DocVQA and NegotiationToM runners call. Those benchmarks were run
-before the re-point and the new pair has not been run on them, so their `Gemini` and `OpenAI` cells
-are still the old models' numbers and say so in row 2. **`Emo` is the one sheet that has been run on
-the current pair**, and there the two slots hold `gemini-3.5-flash-lite` and `gpt-5.6-luna`, with the
-superseded pair kept beside them in `Results.xlsx` as columns of their own. Closing the gap on the
-other three means re-running them, not editing a header.
+**`Final_Result.xlsx` never borrows a number from a model that is not selected. A blank means the
+selected model has not been run on that sheet**, and it stays blank until it is. That rule is what
+makes the two files different in practice: `gemini-2.5-flash` and `gpt-4o-mini-2024-07-18` are
+superseded but are still what the bbh, MMLU, DocVQA and NegotiationToM runners call, so on those
+three sheets the `Gemini` and `OpenAI` columns of `Final_Result.xlsx` are **empty**. Nothing is lost
+— those runs keep their columns in `Results.xlsx`. **`Emo` is the one sheet already run on the
+current pair**, so there the two slots are filled. Closing the other three means re-running them, not
+editing a header.
 
 One caveat inside that: the `Emo` result for `gpt-5.6-luna` is the **default `medium`** arm.
 The settled effort is `low`, and `results_eLow` has EU (0.650) but no EA, so **no complete EmoBench
