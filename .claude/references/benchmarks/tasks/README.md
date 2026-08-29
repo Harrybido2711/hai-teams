@@ -5,14 +5,19 @@ be read against what the model can do at all. None uses an LLM judge.
 
 What this folder's benchmarks share, and how they differ from the process benchmarks:
 
-- **Layout is per-model in bbh, mixed in the other two.** **bbh was converted on 2026-08-29**: one
-  `<model>/` folder per provider holds its runner, its job script, its result CSVs and its own SLURM
-  logs, with the task JSONs shared at the benchmark root. This page previously said not to convert
-  it, because "the summary CSVs read the flat names" — that reason did not hold: nothing outside the
-  folder opened a bbh CSV by path, and each runner writes only its own `<provider>_overall_results.csv`.
-  **mmlu is half-converted** (`gemma/ xai/ openai/ llama/` exist; the other providers are still flat
-  beside the data) and **DocVQA has per-model folders** (`gemma_DocVQA/`, `qwen_DocVQA/`). Check the
+- **bbh now has EmoBench's shape; the other two do not.** **bbh was rebuilt on 2026-08-29** onto
+  `BBH_<Slot>/` folders — `<vendor>_bbh_eval.py`, `run_bbh.sh`, `log.txt`/`log.err`, and
+  `results/<task>/<model-slug>.{jsonl,csv}` + `_overall.csv` — with the task JSONs in `data/` and a
+  shared `bbh_eval_core.py` holding the scorer. This page previously said not to convert it, because
+  "the summary CSVs read the flat names"; that reason did not hold — nothing outside the folder ever
+  opened a bbh CSV by path. **mmlu is half-converted** (`gemma/ xai/ openai/ llama/` exist; the other
+  providers are still flat beside the data, and their runners have not been checked for the cwd bug
+  below) and **DocVQA has per-model folders** (`gemma_DocVQA/`, `qwen_DocVQA/`). Check the
   benchmark's own page before assuming either shape.
+- **One scorer per benchmark, imported from its core** (`CLAUDE.md`). bbh is where this was broken
+  and is now the worked example: five of its eight runners scored strictly, and rescoring the same
+  stored responses moved three models by 0.19–0.64. Neither mmlu nor DocVQA has a shared core yet —
+  check before comparing their models.
 - **A runner that moves into a subfolder must stop resolving paths against the cwd**, or it finds no
   data and writes an empty result while the job still exits `COMPLETED 0:0`. `bbh/kimi/kimi_outlog`
   is that failure, recorded: 20 splits, every one `No such file or directory`. bbh's runners now

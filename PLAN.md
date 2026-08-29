@@ -150,11 +150,12 @@ NegotiationToM/                          EmoBench/  ·  bbh/       mmlu/  ·  Do
 └── NegotiationToM.json (data)
 ```
 
-**bbh left the right-hand column on 2026-08-29** and now has the middle shape: one `<model>/`
-folder per provider holding that model's runner, its SLURM job script, its result CSVs and its own
-logs, with the 20 task JSONs staying at the benchmark root and shared. Its runners resolve every
-path from `__file__`, so they no longer depend on the directory the job was submitted from —
-`Tasks_benchmarks/bbh/README.md`.
+**bbh left the right-hand column on 2026-08-29** and was rebuilt on the middle one's convention:
+`BBH_<Slot>/` per model holding `<vendor>_bbh_eval.py`, `run_bbh.sh`, `log.txt`/`log.err` and
+`results/<task>/<model-slug>.{jsonl,csv}`, with the 20 task JSONs in `data/` and a shared
+`bbh_eval_core.py` that owns the scorer. Two slots are named for the superseded model they call
+(`BBH_Gemini_Flash2.5`, `BBH_GPT_4o_mini`) so their numbers are not read as the current slots'.
+Details, and why Gemini's rows there cannot be used: `Tasks_benchmarks/bbh/README.md`.
 
 One rule matters more than the layout: the per-provider runners **import the shared core**, so a
 runner transferred to Quest without `neg_eval_core.py` fails at import. Sync them together or not at

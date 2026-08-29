@@ -160,6 +160,11 @@ Detail on any of the three, and when layer 2 applies at all:
 - **Stage explicit paths for git. Never `git add -A`** — an unattended loop that did swept unreviewed
   work into commits named "watcher checkpoint" and pushed them to both remotes. The rule above raises
   how *often* you commit; it does not relax what you are allowed to stage.
+- **One scorer per benchmark, and it is the lenient one.** Standing rule from the user, 2026-08-29.
+  Every model in a benchmark is judged by the same matcher, imported from that benchmark's shared
+  core rather than copied into each runner. A strict scorer measures formatting, not reasoning:
+  rescoring bbh's stored responses moved three models by 0.19–0.64. `references/script-skeleton.md`
+  rule 7.
 - **Judge a run by rows written, not by job state.** SLURM reports RUNNING for a process hung inside
   an API call, and a job can exit `COMPLETED 0:0` with every row empty.
 - **Report evidence, not assertion.** Include the output. A partial result described accurately beats

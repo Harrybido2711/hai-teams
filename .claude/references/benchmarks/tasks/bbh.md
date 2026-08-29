@@ -1,14 +1,10 @@
-<!-- size-budget: 7500 -->
-<!-- The card carries one job, not two: the scorer split and the workbook-provenance rule are
-     both answers to "can I trust this number", and splitting them apart is how a reader ends
-     up refreshing a column from a degraded _overall_results.csv. The six matcher branches and
-     the folder layout already live in Tasks_benchmarks/bbh/README.md. -->
 # BIG-Bench Hard — benchmark card
 
 <!-- size-budget: 6000 -->
-<!-- One job, not two: this is the card for one benchmark. It runs long because bbh carries eight
-     providers, two different scorers and five recorded traps; the split that would shrink it
-     (parameters) already happened into bbh-parameters.md. -->
+<!-- One job, not two: the card for one benchmark. It runs long because bbh carries eight
+     providers, a broken run that must not be read as a result, and the incident that produced the
+     project's one-scorer rule. The split that would shrink it already happened into
+     bbh-parameters.md and the benchmark's own README. -->
 
 General task ability. Exact match against a `"Final Answer: <answer>"` prompt contract. No LLM judge.
 
@@ -17,93 +13,58 @@ General task ability. Exact match against a `"Final Answer: <answer>"` prompt co
 | | Path |
 |---|---|
 | Local | `Tasks_benchmarks/bbh` |
-| Quest | not verified — nothing points to a remote copy, but Quest was not checked (out of scope 2026-08-22). Confirm before assuming a remote path |
+| Quest | `/projects/p32983/bbh`, and it belongs to **`cpz1698`, not this account**. The 2026-08-29 restructure is local-only and has not been pushed there; do not transfer into it without asking |
 
-## Layout
+## Layout — rebuilt 2026-08-29 on the EmoBench convention
 
-**One folder per model since 2026-08-29.** `<bbh>/<model>/` — `deepseek gemini gemma kimi llama
-openai qwen xai` — holds that model's `<model>_eval.py`, its `<model>_eval_script.sh`, its
-`<model>_<task>.csv` results, its `<model>_overall_results.csv` and its own `_outlog`/`_errlog`.
-The **20 task JSONs stay at the benchmark root** and are shared; so is `.env`. A vendored `bin/` +
-`dotenv/` pip install is also there.
+`BBH_<Slot>/` per model, holding `<vendor>_bbh_eval.py`, `run_bbh.sh`, `log.txt`/`log.err` and
+`results/<task>/<model-slug>.{jsonl,csv}` + `_overall.csv`, plus a `<model-slug>_bbh_overall.csv`
+roll-up. The 20 task JSONs live in `data/` and are shared. **Result files are named after the model,
+not the folder**, and `--model` sets both what is called and what is written, so a copied folder
+cannot relabel another model's numbers.
 
-**Submit from the bbh root** (`<model>/<model>_eval_script.sh`): the job script's `--output` and
-`--error` are relative to the submit directory. The runners themselves are cwd-independent — they
-resolve every read and write from `__file__` via `MODEL_DIR` / `BBH_ROOT`.
+Slots: `BBH_Deepseek` · `BBH_Gemma` · `BBH_Qwen` · `BBH_XAI` · `BBH_Kimi` · `BBH_Llama` ·
+`BBH_Gemini_Flash2.5` · `BBH_GPT_4o_mini`. The last two are named for the superseded models they
+call, so their numbers are not mistaken for the current Gemini and OpenAI slots.
 
-`<model>/_superseded/` exists in `gemma/` and `kimi/` and holds an older duplicate that was parked
-rather than deleted. Never read a number out of it.
+Full tree, the six matcher branches and the task inventory: **`Tasks_benchmarks/bbh/README.md`** —
+the benchmark's own committed notes, and the place to read before touching it.
 
-## Provider coverage — the files on disk are not the answer
+## Scoring — one matcher, imported, for every model
 
-Result CSVs exist for **eight** prefixes: `deepseek gemini gemma kimi llama openai qwen xai`.
-`PLAN.md` says seven. Both are correct: **this benchmark was run against more models than are
-reported, and some of those runs were abandoned** (user, 2026-08-22). A leftover CSV is not a
-retracted result and was not deleted, so it is still on disk.
+`bbh_eval_core.py::score_response` is the only scorer here and every runner imports it. **This is
+the benchmark where the project's one-scorer rule came from** (`CLAUDE.md`; `script-skeleton.md`
+rule 7): until 2026-08-29 five runners compared with `==` and three used the lenient matcher, and
+rescoring the identical stored responses moved deepseek 0.448 → 0.961, kimi 0.243 → 0.884,
+gpt-4o-mini 0.308 → 0.834, xai 0.509 → 0.940, llama 0.726 → 0.910. Gemma and Qwen did not move.
 
-Take the coverage claim from `PLAN.md` and the workbooks, never from `ls *.csv`. bbh is the one
-benchmark here where counting files overstates what was run on purpose. Which workbook depends on the
-question: `Results.xlsx` for what was run at all, `Final_Result.xlsx` for the six selected models that
-are actually reported (`PLAN.md`).
-
-## Scoring — two different scorers, not one
-
-Every runner extracts the text after `Final Answer:`, then **five score with strict case-folded
-equality** (`deepseek`, `gemini`, `kimi`, `llama`, `openai`) **and three with a six-branch lenient
-matcher** (`xai`, `gemma`, `qwen`). *(This page said four and four until 2026-08-29; recounted from
-the code it is five and three — by file 5 and 5, since gemma and qwen each have a `_finish` twin.)*
-
-The five strict-scored models are penalised for formatting rather than reasoning, and nothing in a
-result CSV records which scorer produced it. **Both workbooks now carry that split as a row on their
-`Provenance` sheet**, because the bbh sheet is the one place where six columns are not scored the
-same way. **What the six branches do, what the marker-missing
-fallback costs, and which of the 20 tasks each branch rescues: `Tasks_benchmarks/bbh/README.md`.
-Read it before comparing any two providers here.**
-
-**`<model>/<model>_overall_results.csv` is not where the workbook's bbh numbers come from** —
-established 2026-08-29 while rebuilding the workbooks. For five of the eight those files record a
-later, degraded re-run: `gemini` has `date_understanding` at 0.064 where the workbook has 0.936, and
-`xai` has `reasoning_about_colored_objects` at 0.12 where the workbook has 0.988. The shape gives the
-cause away — near-zero on every lettered-choice task, unharmed on the short free-form ones — which is
-the marker-missing fallback scoring whole responses after the model stopped emitting `Final Answer:`.
-Several are also short, for the narrowed-`splits` reason below. **Do not refresh a bbh column from one
-of these files without checking it against the per-task CSVs first.**
-
-`gemma` is the exception, and checking is what established it: 20 tasks, 4,833 rows, an empty
-`errlog`, and every per-task CSV mean equal to the overall CSV. That is why `Gemma` has a bbh column
-from 2026-08-29 and the other seven columns do not come from these files.
-
-Every generation parameter each runner sets, with `file:line`:
-[bbh-parameters.md](bbh-parameters.md) — also where the two-file caveat above is spelled out per model.
+Every `_overall.csv` now carries a `scorer` column, so a number cannot be read without knowing what
+produced it.
 
 ## Its own traps
 
-- **Two of the eight `.sh` files do not submit the file their name implies.** `gemma_eval_script.sh`
-  runs `gemma_finish.py` and `qwen_eval_script.sh` runs `qwen_finish.py`, and the `_finish` twins
-  differ from the `_eval` ones in `max_tokens`, client timeout, retry behaviour and task list. **Read
-  the `.sh` before reading any runner here** — documenting these two from the `_eval.py` file gets
-  four columns wrong, which is exactly how the first version of the inventory came out wrong.
-- **The `splits` list in several submitted scripts is a narrowed re-run list** — `deepseek` runs 5
-  tasks of 20, `gemma_eval.py` 4, `kimi` 1, `openai` 14, `qwen_finish.py` 3 — never restored. A CSV present is not evidence the script beside it would regenerate it, and no
-  result file records which script version wrote it.
-- **One failed call discards a whole task, in eight of the ten runner files.** A `None` response
-  reaches `re.search` and raises `TypeError`; the per-split handler catches it and moves to the next
-  split, dropping the rows collected so far without writing a CSV. `gemma_finish.py` and
-  `qwen_finish.py` return `""` and are the exceptions.
-- **`gemini_eval.py` still calls `gemini-2.5-flash`,** which was superseded on 2026-08-23 by
-  `gemini-3.5-flash-lite` on OpenRouter ([../../model-parameters.md](../../model-parameters.md)).
-  The runner has not been changed, so this table still describes what it does — updating the page
-  without updating the code would make it a lie. Change both, or neither.
-- **No script sets `seed`, and one runs at `temperature=1`.** Nothing here is reproducible — and
-  that is now a gap rather than a limitation: `seed` is measured working on both Gemini flash-lite
-  routes, so probe each provider here rather than assuming it is unavailable
-  ([../../model-parameters.md](../../model-parameters.md) rule 6).
+- **Gemini's results are a broken run, not a low score.** 62% of its 4,833 responses (3,002) stop
+  mid-reasoning and never emit `Final Answer:`. The rescore gives ~0.34 against the ~0.93 the
+  workbook reports, and the gap does **not** close leniently — the data is truncated, so the
+  workbook's Gemini column came from a run that is not in this folder. **Re-run, do not rescore.**
+  No output cap is set in the runner, so raising one is not the fix.
+- **The other five reported models reproduce `Final_Result.xlsx` exactly** — 102 of 120 cells, all
+  18 misses Gemini. The workbook already held the lenient numbers; the code and the stored `score`
+  columns were what had not caught up.
+- **`kimi-k2.5` and `Llama-4-Maverick` are not among the six.** bbh is the only benchmark either ran
+  on; Kimi has 10 of 20 tasks. `PLAN.md` and `Final_Result.xlsx` are the coverage claim, never
+  `ls`.
+- **`_superseded/` in `BBH_Gemma` and `BBH_Kimi`** holds older duplicates in the pre-restructure
+  format, parked rather than deleted. Never read a number out of one.
+- **No `seed` anywhere, Kimi at `temperature=1`, and no reasoning or output cap on any runner.**
+  Nothing here is reproducible. The caps are **deliberately still open**: setting one changes what
+  the models emit and would make new rows incomparable with the 4,833 on disk. Cap them when bbh is
+  re-run. Per-model parameters, with `file:line`: [bbh-parameters.md](bbh-parameters.md).
 
-## Where the client details live
+## Fixed on 2026-08-29 — do not re-report these
 
-`Tasks_benchmarks/bbh/README.md` is the benchmark's own committed notes: the 20 tasks and their
-sizes, the answer shapes, the six matcher branches, and the layout. *(An earlier version of this
-page pointed at `BBH_MODEL_PARAMS.md` in the benchmark folder. No such file exists — checked
-2026-08-29.)* `EmoBench/EMO_SCRIPT.md` §1 also
-tables the BBH runners' model ids and SDKs — it predates the inventory and covers six of the eight;
-where they disagree, the inventory was read later and cites lines.
+Four traps this page used to carry are gone with the rewrite, and are recorded only so a stale memory
+of them is not acted on: the two `.sh` files that submitted a `_finish` twin rather than the runner
+their name implied; the narrowed `splits` re-run lists (`--task all` is now the default and the task
+list is a single constant in the core); the `None` response that raised inside the per-split handler
+and discarded a whole 250-item task; and the per-runner copies of the scorer.

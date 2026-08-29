@@ -1,0 +1,52 @@
+"""XAI — BIG-Bench Hard runner.
+
+**There is no scorer in this file.** Scoring is `bbh_eval_core.score_response`, the one lenient
+matcher every model in this benchmark is judged by, so no runner can score its model more or less
+generously than another. Everything model-specific lives below: a client and a `call`.
+
+The xAI SDK takes no message dicts: `chat.create(...)`, `chat.append(user(...))`, `chat.sample()`. Reasoning is the model and cannot be turned off.
+"""
+
+import argparse
+import os
+import sys
+
+from dotenv import load_dotenv
+from xai_sdk import Client
+from xai_sdk.chat import user
+
+MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.dirname(MODEL_DIR))
+import bbh_eval_core as core  # noqa: E402
+
+DEFAULT_MODEL = "grok-3-mini"
+MODEL = DEFAULT_MODEL
+load_dotenv(core.ENV_PATH)
+client = Client(api_key=os.getenv("GROK_API_KEY"), timeout=3600)
+
+
+def call(prompt):
+    def once():
+        chat = client.chat.create(model=MODEL)
+        chat.append(user(prompt))
+        return chat.sample().content
+    return core.retry(once, label="xai")
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser(description="Run BIG-Bench Hard for XAI.")
+    ap.add_argument("--model", default=DEFAULT_MODEL,
+                    help="model id; it is BOTH what is called and what the result files are named "
+                         "after, so a copied folder cannot silently relabel another model's numbers")
+    ap.add_argument("--task", default="all", help="'all' or a comma-separated list of task names")
+    ap.add_argument("--sleep", type=float, default=0.0, help="seconds between calls")
+    args = ap.parse_args()
+
+    MODEL = args.model
+    tasks = core.TASKS if args.task == "all" else [t.strip() for t in args.task.split(",")]
+    unknown = [t for t in tasks if t not in core.TASKS]
+    if unknown:
+        raise SystemExit("unknown task(s): %s\nknown: %s" % (unknown, core.TASKS))
+
+    print("XAI: model=%s tasks=%d" % (MODEL, len(tasks)), flush=True)
+    core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep)
+    print("done ->", os.path.join(MODEL_DIR, "results"), flush=True)

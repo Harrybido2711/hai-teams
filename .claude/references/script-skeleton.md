@@ -1,5 +1,9 @@
 # Eval script skeleton
 
+<!-- size-budget: 6500 -->
+<!-- One job: the runner shape, as a numbered checklist a diff is checked against. It grew when
+     rule 7 stopped being a style note and became the fairness rule, which needs its evidence. -->
+
 The order below is the shape every runner in this project follows; NegotiationToM's six are the
 worked example. Copy the closest existing folder and swap the client rather than starting from this
 list.
@@ -50,9 +54,18 @@ Always persist the raw response so failures can be inspected.
 > Rows written *empty* are skipped forever by a plain resume too, because `load_checkpoint` adds
 > every uid to the done set regardless of whether its response was usable. Prune before resubmitting.
 
-**7. Normalisation — copy the bbh approach.** Generous about how an answer is written, strict about
-what it says. `bbh/xai/xai_eval.py::score_response` is the reference; the extracted version is
-`neg_eval_core.py::clean_surface`:
+**7. Normalisation — every model in a benchmark is scored by the SAME lenient matcher.** Generous
+about how an answer is written, strict about what it says. This is a standing rule from the user
+(2026-08-29) and it applies to every benchmark, not just the one being written: a strict scorer and
+a lenient one produce numbers that cannot be compared, and the difference is not small. bbh scored
+five of its eight models strictly and three leniently; rescoring the identical stored responses with
+the one lenient matcher moved deepseek from 0.448 to 0.961, kimi from 0.243 to 0.884 and
+gpt-4o-mini from 0.308 to 0.834. Those models were being scored on whether they wrote `(B)` or `B`.
+
+**Put the matcher in the shared core and import it — never copy it into a runner.** A copied scorer
+is a scorer that can drift; an imported one cannot be opted out of.
+`bbh/bbh_eval_core.py::score_response` is the reference implementation; the extracted, generalised
+version is `neg_eval_core.py::clean_surface`:
 
 ```python
 text = value.strip().strip("\"'`").strip()   # quotes and backticks are packaging
