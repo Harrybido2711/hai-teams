@@ -54,12 +54,22 @@ TASKS = [
     "word_sorting",
 ]
 
-PROMPT = """You are a helpful assistant.
-Question: {question}
+# The prompt is byte-for-byte what `openai_eval.py` and `gemini_eval.py` sent, indentation
+# included, because six of the eight old runners sent exactly this and the rows on disk were
+# produced with it. Do not "tidy" the leading whitespace: it changes the token stream, and a new
+# run would then differ from the existing 4,833 rows by the prompt as well as by the model.
+#
+# It was NOT uniform before. gemma and qwen — via the `_finish` twins their jobs actually
+# submitted — sent the same text indented eight spaces instead of four, so their existing rows
+# came from a different prompt than everyone else's. Same class of problem as the two scorers,
+# found the same way; unified here, and their old rows carry the difference.
+PROMPT = """
+    You are a helpful assistant.
+    Question: {question}
 
-Please show your reasoning, then end your response with:
-"Final Answer: <your concise answer here>"
-"""
+    Please show your reasoning, then end your response with:
+    "Final Answer: <your concise answer here>"
+    """
 
 
 def model_slug(model_id):
@@ -152,7 +162,21 @@ def score_response(model_response, gold_answer, question=""):
 # ---------------------------------------------------------------- output
 
 
-FIELDS = ["idx", "question", "gold_answer", "model_response", "final_answer", "has_marker", "score"]
+FIELDS = ["idx", "question", "gold_answer", "model_response", "final_answer", "has_marker",
+          "score", "config"]
+
+
+def config_string(config):
+    """The generation config, flattened onto every row — `model-parameters.md` rule 8.
+
+    "Pin a seed wherever the provider offers one, **and write it on every row**." A config that
+    lives only in a job script cannot be recovered from a result file six weeks later, and on
+    OpenRouter a seed is not even sufficient on its own: the backend decides, and it switches
+    mid-run. So the backend goes on the row too, where the caller supplies one.
+    """
+    if not config:
+        return ""
+    return ";".join(f"{k}={v}" for k, v in sorted(config.items()))
 
 
 def task_dir(model_dir, task):
@@ -161,7 +185,7 @@ def task_dir(model_dir, task):
     return d
 
 
-def write_task_results(model_dir, task, model_id, records):
+def write_task_results(model_dir, task, model_id, records, config=None):
     """One `.jsonl`, one `.csv` and one `_overall.csv` per sub-task, named after the model."""
     d = task_dir(model_dir, task)
     slug = model_slug(model_id)
@@ -182,8 +206,10 @@ def write_task_results(model_dir, task, model_id, records):
     blank = sum(1 for r in records if not str(r["model_response"]).strip())
     with open(os.path.join(d, f"{slug}_overall.csv"), "w", newline="") as fh:
         w = csv.writer(fh)
-        w.writerow(["model", "task", "n", "score_sum", "average_score", "no_marker", "empty_response", "scorer"])
-        w.writerow([model_id, task, n, scored, round(scored / n, 4) if n else "", missing, blank, "lenient_v1"])
+        w.writerow(["model", "task", "n", "score_sum", "average_score", "no_marker",
+                    "empty_response", "scorer", "config"])
+        w.writerow([model_id, task, n, scored, round(scored / n, 4) if n else "", missing, blank,
+                    "lenient_v1", config_string(config)])
 
     return {
         "model": model_id, "task": task, "n": n,
@@ -214,7 +240,8 @@ def write_overall(model_dir, model_id, summaries):
 # ---------------------------------------------------------------- the loop
 
 
-def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=True, limit=0):
+def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=True, limit=0,
+              config=None, per_row_config=None):
     """Drive `call(prompt) -> str` over the requested tasks and write results per task.
 
     A failed call yields `""` for that ITEM and the task continues. The old runners let a `None`
@@ -241,16 +268,23 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
                     print(f"[{task}#{i}] call failed: {e}", flush=True)
                 resp = ""
             resp = resp if isinstance(resp, str) else ""
+            # per_row_config() lets a runner add something only known after the call — the
+            # OpenRouter backend that answered, which changes mid-run and which a seed does not
+            # pin down (`.claude/references/provider-gotchas.md`).
+            row_cfg = dict(config or {})
+            if per_row_config:
+                row_cfg.update(per_row_config() or {})
             records.append({
                 "idx": i, "question": q, "gold_answer": gold,
                 "model_response": resp,
                 "final_answer": extract_final_answer(resp),
                 "has_marker": has_marker(resp),
                 "score": score_response(resp, gold, q),
+                "config": config_string(row_cfg),
             })
             if sleep_between:
                 time.sleep(sleep_between)
-        s = write_task_results(model_dir, task, model_id, records)
+        s = write_task_results(model_dir, task, model_id, records, config=config)
         summaries.append(s)
         if verbose:
             print(f"{task}: {s['average_score']}  (n={s['n']}, no_marker={s['no_marker']}, "

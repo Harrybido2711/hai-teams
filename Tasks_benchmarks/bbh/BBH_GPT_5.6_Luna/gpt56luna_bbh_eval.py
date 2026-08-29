@@ -82,5 +82,7 @@ if __name__ == "__main__":
         json.dump({"model": MODEL, "asked": WANTED, "accepted": PARAMS, "notes": notes}, fh, indent=2)
 
     print("GPT-5.6-Luna: model=%s tasks=%d" % (MODEL, len(tasks)), flush=True)
-    core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep, limit=args.limit)
+    # rule 8: the config goes on every row, not only into the job script
+    core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep,
+                   limit=args.limit, config=dict(PARAMS, model=MODEL))
     print("done ->", os.path.join(MODEL_DIR, "results"), flush=True)

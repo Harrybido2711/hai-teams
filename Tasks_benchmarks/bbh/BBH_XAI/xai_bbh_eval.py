@@ -25,6 +25,12 @@ load_dotenv(core.ENV_PATH)
 client = Client(api_key=os.getenv("GROK_API_KEY"), timeout=3600)
 
 
+# What this runner actually passes, written onto every row it produces
+# (`.claude/references/model-parameters.md` rule 8). No seed anywhere here — that is
+# the gap, not an omission in this line.
+CONFIG = {"timeout": 3600}
+
+
 def call(prompt):
     def once():
         chat = client.chat.create(model=MODEL)
@@ -51,5 +57,5 @@ if __name__ == "__main__":
 
     print("XAI: model=%s tasks=%d" % (MODEL, len(tasks)), flush=True)
     core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep,
-                   limit=args.limit)
+                   limit=args.limit, config=dict(CONFIG, model=MODEL))
     print("done ->", os.path.join(MODEL_DIR, "results"), flush=True)

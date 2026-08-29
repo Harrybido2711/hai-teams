@@ -39,6 +39,7 @@ DEFAULT_MODEL = "google/gemini-3.5-flash-lite"
 MODEL = DEFAULT_MODEL
 PARAMS = {}
 BACKENDS = collections.Counter()
+LAST_BACKEND = {"provider": None}
 
 # `reasoning.effort` goes through extra_body, not as a named parameter, so it is not part of the
 # negotiation — OpenRouter passes it to the backend rather than validating it here.
@@ -61,7 +62,9 @@ def call(prompt):
             extra_body=EXTRA_BODY,
             **PARAMS,
         )
-        BACKENDS[getattr(r, "provider", None) or "unreported"] += 1
+        provider = getattr(r, "provider", None) or "unreported"
+        BACKENDS[provider] += 1
+        LAST_BACKEND["provider"] = provider
         return r.choices[0].message.content
     return core.retry(once, label="gemini35lite")
 
@@ -96,8 +99,14 @@ if __name__ == "__main__":
 
     print("Gemini 3.5 Flash-Lite (OpenRouter): model=%s tasks=%d" % (MODEL, len(tasks)), flush=True)
     try:
+        # rule 8: config on every row. The backend goes on too, per row rather than per run,
+        # because a seed alone does not reproduce here — OpenRouter picks the backend and
+        # switches mid-run (`.claude/references/provider-gotchas.md`).
         core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep,
-                       limit=args.limit)
+                       limit=args.limit,
+                       config=dict(PARAMS, model=MODEL,
+                                   reasoning_effort=EXTRA_BODY["reasoning"]["effort"]),
+                       per_row_config=lambda: {"backend": LAST_BACKEND["provider"]})
     finally:
         # written even on a wall-clock kill: which backend answered is not recoverable afterwards
         with open(os.path.join(MODEL_DIR, "results", "backend_providers.json"), "w") as fh:

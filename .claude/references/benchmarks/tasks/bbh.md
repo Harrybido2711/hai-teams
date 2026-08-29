@@ -45,8 +45,14 @@ rule 7): until 2026-08-29 five runners compared with `==` and three used the len
 rescoring the identical stored responses moved deepseek 0.448 → 0.961, kimi 0.243 → 0.884,
 gpt-4o-mini 0.308 → 0.834, xai 0.509 → 0.940, llama 0.726 → 0.910. Gemma and Qwen did not move.
 
-Every `_overall.csv` now carries a `scorer` column, so a number cannot be read without knowing what
-produced it.
+Every `_overall.csv` now carries a `scorer` column and every row a `config` column (rule 8), so a
+number cannot be read without knowing what produced it.
+
+**The prompt had the same problem as the scorer.** Six of the eight old runners sent a four-space
+indented prompt; gemma and qwen sent the same text indented eight, through the `_finish` twins their
+jobs submitted. The core now sends the six-runner original byte-for-byte — including the
+indentation, which must not be tidied, or a new run differs from the rows on disk by the prompt as
+well as the model.
 
 ## Its own traps
 
