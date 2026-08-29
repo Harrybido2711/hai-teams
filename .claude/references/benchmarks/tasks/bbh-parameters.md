@@ -1,10 +1,11 @@
 # BBH — model call parameters, as they are today
 
-<!-- size-budget: 6000 -->
+<!-- size-budget: 7000 -->
 <!-- One job: the as-is parameter record for eight runners. The prose that would be cut to fit
-     is the two-values-were-wrong note, which is the reason the page is trustworthy at all. -->
+     is the two-values-were-wrong note and the not-yet-confirmed note, which are the reasons
+     the page is trustworthy at all. Ten rows now, not eight. -->
 
-This is the **as-is record** for bbh's eight runners. What every runner *must* be changed to is
+This is the **as-is record** for bbh's ten runners — eight with results, and the two current-model slots added 2026-08-29 that have none. What every runner *must* be changed to is
 [model-parameters.md](../../model-parameters.md), which is keyed by model and covers every
 benchmark. Do not read this page as a target.
 
@@ -28,6 +29,15 @@ previous version of this page got wrong (see the note under the table).
 | `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | Together Chat Completions | [`llama_bbh_eval.py`](../../../../Tasks_benchmarks/bbh/BBH_Llama/llama_bbh_eval.py#L28) | `0` | — | — | — | — | `False` | `0` |
 | `Qwen/Qwen3.5-9B` | Together Chat Completions | [`qwen_bbh_eval.py`](../../../../Tasks_benchmarks/bbh/BBH_Qwen/qwen_bbh_eval.py#L28) | `0` | `12500` | — | — | — | `False` | `1` |
 | `kimi-k2.5` | Moonshot, OpenAI-compatible | [`kimi_bbh_eval.py`](../../../../Tasks_benchmarks/bbh/BBH_Kimi/kimi_bbh_eval.py#L29) | `1` | — | — | — | `7200` | — | `5` |
+| **`gpt-5.6-luna`** *(current OpenAI slot, not yet run)* | OpenAI Chat Completions | [`gpt56luna_bbh_eval.py`](../../../../Tasks_benchmarks/bbh/BBH_GPT_5.6_Luna/gpt56luna_bbh_eval.py#L44) | — | `16384` **as `max_completion_tokens`** | `42` | `reasoning_effort="low"` | `300` | — | `0` |
+| **`google/gemini-3.5-flash-lite`** *(current Gemini slot, not yet run)* | OpenRouter, OpenAI-compatible | [`gemini35lite_bbh_eval.py`](../../../../Tasks_benchmarks/bbh/BBH_Gemini_Flash3.5lite_OpenRouter/gemini35lite_bbh_eval.py#L50) | — | `8192` | `42` | `extra_body={"reasoning": {"effort": "minimal"}}` | `300` | — | `0` |
+
+**The last two rows are asked-for, not confirmed.** Both runners `negotiate` their surface at
+startup rather than trusting this table — `gpt-5.6-luna` refuses `max_tokens` by name and refuses
+the *value* `reasoning_effort="minimal"` — and each writes `results/negotiated_params.json` with
+what was actually accepted. **Read that file, not this row, once either has run.** Their caps are
+also chosen rather than measured; a pilot (`--limit 20`) showing `no_marker` near zero is what turns
+them into facts.
 
 **Two values on this page were wrong before 2026-08-29**, both because they were read from a file
 that was never the one submitted. Gemma's client `timeout` is `4800` (`gemma_finish.py:19`, the file
