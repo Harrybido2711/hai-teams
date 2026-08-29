@@ -23,9 +23,16 @@ roll-up. The 20 task JSONs live in `data/` and are shared. **Result files are na
 not the folder**, and `--model` sets both what is called and what is written, so a copied folder
 cannot relabel another model's numbers.
 
-Slots: `BBH_Deepseek` · `BBH_Gemma` · `BBH_Qwen` · `BBH_XAI` · `BBH_Kimi` · `BBH_Llama` ·
-`BBH_Gemini_Flash2.5` · `BBH_GPT_4o_mini`. The last two are named for the superseded models they
-call, so their numbers are not mistaken for the current Gemini and OpenAI slots.
+Slots **with results**: `BBH_Deepseek` · `BBH_Gemma` · `BBH_Qwen` · `BBH_XAI` · `BBH_Kimi` ·
+`BBH_Llama` · `BBH_Gemini_Flash2.5` · `BBH_GPT_4o_mini`. The last two are named for the superseded
+models they call, so their numbers are not mistaken for the current slots'.
+
+Slots **with a runner and no results**, added 2026-08-29:
+`BBH_Gemini_Flash3.5lite_OpenRouter` (`google/gemini-3.5-flash-lite`, the settled route) and
+`BBH_GPT_5.6_Luna` (`gpt-5.6-luna`, `reasoning_effort="low"`). These are two of the six. **Neither
+has been piloted and their output caps are chosen rather than measured** — `--limit 20` and check
+`no_marker` first. They are also the only two runners here that comply with the model-parameter
+rule; the other eight set no reasoning or output cap, deliberately, so their rows stay comparable.
 
 Full tree, the six matcher branches and the task inventory: **`Tasks_benchmarks/bbh/README.md`** —
 the benchmark's own committed notes, and the place to read before touching it.

@@ -214,7 +214,7 @@ def write_overall(model_dir, model_id, summaries):
 # ---------------------------------------------------------------- the loop
 
 
-def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=True):
+def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=True, limit=0):
     """Drive `call(prompt) -> str` over the requested tasks and write results per task.
 
     A failed call yields `""` for that ITEM and the task continues. The old runners let a `None`
@@ -225,6 +225,12 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
     summaries = []
     for task in tasks:
         examples = load_task(task)
+        if limit:
+            # Smoke-test lever. It truncates the work list, so what it writes is a PARTIAL run at
+            # the same config — never report from it, and delete it before a real run.
+            examples = examples[:limit]
+            if verbose:
+                print(f"[{task}] --limit {limit}: smoke test, not a run", flush=True)
         records = []
         for i, ex in enumerate(examples):
             q, gold = ex["input"], ex["target"]
@@ -271,3 +277,72 @@ def retry(fn, tries=5, base_sleep=2.0, label=""):
         if attempt < tries - 1:
             time.sleep(base_sleep * (2 ** attempt))
     return ""
+
+
+# ---------------------------------------------------------------- capability negotiation
+
+AUTH_MARKERS = ("authentication", "api key", "invalid_api_key", "insufficient_quota",
+                "billing", "401", "403")
+
+# Preference order when a provider refuses the effort VALUE but supports the parameter. Lowest
+# first: the point of the cap is to spend less, so accept the cheapest offered rather than the
+# first named. `none` is never here — that is removal, not a cap, and on gpt-5.6-luna it costs
+# 9-11 points (`.claude/references/model-parameters.md`).
+EFFORT_FALLBACKS = ("minimal", "low", "medium", "high")
+
+
+def negotiate(client, model, wanted, verbose=True):
+    """Find which of `wanted` this model actually accepts, in one probe call before the run.
+
+    Ported from `EmoBench/EMO_GPT_5.6_Luna/gpt56luna_emo_eval.py`. Hardcoding the surface is what
+    the model page invites and what gets a run killed on item 1; try/except per item discovers the
+    same permanent rejection 4,833 times. OpenAI names the offending parameter, and often its
+    replacement, so a rejection is actionable.
+
+    Returns (params, notes). Raises on anything that is not a parameter problem — an unknown model
+    or a bad key is not something to negotiate around.
+    """
+    params, notes = dict(wanted), []
+    for _ in range(len(wanted) + 2):
+        try:
+            client.chat.completions.create(
+                model=model, messages=[{"role": "user", "content": "Reply with: ok"}], **params)
+            return params, notes
+        except Exception as e:
+            err = str(e)
+            if any(m in err.lower() for m in AUTH_MARKERS):
+                raise SystemExit(f"Authentication or quota failure, not negotiated around: {e}")
+            offender = next((k for k in params if f"'{k}'" in err), None)
+            if offender is None:
+                raise
+
+            # A refused VALUE is not a refused PARAMETER, and conflating them is how a cap gets
+            # dropped instead of corrected: gpt-5.6-luna refuses reasoning_effort="minimal" while
+            # supporting the parameter perfectly. Dropping it there runs the whole benchmark at the
+            # model default, uncapped.
+            if "Unsupported value" in err or "does not support" in err:
+                m = re.search(r"[Ss]upported values are:?\s*([^.}]+)", err)
+                options = re.findall(r"'([^']+)'", m.group(1)) if m else []
+                pick = next((v for v in EFFORT_FALLBACKS if v in options),
+                            options[0] if options else None)
+                if pick is not None:
+                    asked = params[offender]
+                    params[offender] = pick
+                    notes.append(f"{offender}={pick} (asked {asked!r}, refused)")
+                    if verbose:
+                        print(f"  negotiate: {offender} refused {asked!r}; supported {options}, "
+                              f"using {pick!r}", flush=True)
+                    continue
+
+            value = params.pop(offender)
+            rename = re.search(r"[Uu]se '([A-Za-z_]+)' instead", err)
+            if rename:
+                params[rename.group(1)] = value
+                notes.append(f"{offender} -> {rename.group(1)}")
+                if verbose:
+                    print(f"  negotiate: {offender} rejected, using {rename.group(1)}", flush=True)
+            else:
+                notes.append(f"{offender} unsupported, DROPPED")
+                if verbose:
+                    print(f"  negotiate: {offender} unsupported, dropped", flush=True)
+    raise SystemExit(f"no working parameter set for {model}; last tried {params}")

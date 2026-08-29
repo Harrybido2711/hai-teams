@@ -34,8 +34,12 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 - **Running now:** nothing is assumed. Check, don't remember — `check-status`, or `squeue -u uwr0681`.
 - **All ten benchmarks have a knowledge-base page**; three of them have no runner at all, so work
   there starts at phase 1 or 2 rather than 3.
-- **No runner currently complies with the model-parameter rule** — none sets a thinking or output
-  cap. See [`references/model-parameters.md`](references/model-parameters.md).
+- **Two runners comply with the model-parameter rule; every other one does not.** bbh's
+  `BBH_GPT_5.6_Luna` and `BBH_Gemini_Flash3.5lite_OpenRouter` (added 2026-08-29) negotiate their
+  surface and set a cap — but are unpiloted, and their caps are chosen rather than measured. The
+  rest set no thinking or output cap, and bbh's eight leave it open **deliberately**: setting one
+  changes what the model emits and would make new rows incomparable with the 4,833 already on disk.
+  See [`references/model-parameters.md`](references/model-parameters.md).
 - Per-benchmark state, provider coverage and open work: `PLAN.md`.
 
 ## Terms this project uses in a specific way

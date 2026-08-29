@@ -71,7 +71,9 @@ and finding out from the bill.
 
 **Measure, do not reason from the parameter name** — one slice at two or three settings, accuracy
 and cost together ([reasoning-cost.md](reasoning-cost.md)). Applied so far only in EmoBench's two
-flash-lite runners; what the others set is on their benchmark pages.
+flash-lite runners; what the others set is on their benchmark pages. bbh's two new runners **declare** a cap but have not measured one —
+`BBH_GPT_5.6_Luna` at `max_completion_tokens=16384` and `BBH_Gemini_Flash3.5lite_OpenRouter` at
+`max_tokens=8192`. A declared cap is a hypothesis until a pilot shows `no_marker` near zero.
 
 ## Settled — the project's GPT
 

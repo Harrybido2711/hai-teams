@@ -42,6 +42,8 @@ if __name__ == "__main__":
                          "after, so a copied folder cannot silently relabel another model's numbers")
     ap.add_argument("--task", default="all", help="'all' or a comma-separated list of task names")
     ap.add_argument("--sleep", type=float, default=0.0, help="seconds between calls")
+    ap.add_argument("--limit", type=int, default=0,
+                    help="only the first N items of each task — a smoke test, not a run")
     args = ap.parse_args()
 
     MODEL = args.model
@@ -51,5 +53,6 @@ if __name__ == "__main__":
         raise SystemExit("unknown task(s): %s\nknown: %s" % (unknown, core.TASKS))
 
     print("Llama: model=%s tasks=%d" % (MODEL, len(tasks)), flush=True)
-    core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep)
+    core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep,
+                   limit=args.limit)
     print("done ->", os.path.join(MODEL_DIR, "results"), flush=True)

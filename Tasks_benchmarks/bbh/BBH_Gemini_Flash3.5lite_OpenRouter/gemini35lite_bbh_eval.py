@@ -1,0 +1,106 @@
+"""Gemini 3.5 Flash-Lite via OpenRouter — BIG-Bench Hard runner. **The project's Gemini slot.**
+
+**There is no scorer in this file.** Scoring is `bbh_eval_core.score_response`, the one lenient
+matcher every model in this benchmark is judged by.
+
+The folder carries the route because there are two and only one is settled: OpenRouter, set by the
+user 2026-08-23 (`.claude/references/model-calls.md`). The native Google AI Studio route runs at the
+same speed but takes a different config shape, and Quest's SDK has no `thinking_level` field.
+
+This slot has never been run on bbh. The existing `BBH_Gemini_Flash2.5/` holds `gemini-2.5-flash`,
+which is superseded **and whose rows are a broken run** — 62% of them stop mid-reasoning and never
+emit `Final Answer:`. That is the column this runner is meant to replace, and the reason
+`has_marker` is worth watching from the first pilot.
+
+**`minimal` is the thinking floor; there is no off.** `thinking_budget=0` is rejected 400
+INVALID_ARGUMENT on this model, and on a structured task thinking already spends close to zero.
+**Omit `temperature`, `top_p`, `top_k`** — 3.x guidance is to remove, not tune.
+
+**OpenRouter switches backend mid-run.** It serves this model from Google AI Studio *and* Google
+Vertex with failover; over one 400-item run the split was 110/90. The response carries `provider`,
+so this runner counts them and writes the tally beside the results — a score that moved may be a
+backend change rather than the model.
+"""
+
+import argparse
+import collections
+import json
+import os
+import sys
+
+from dotenv import load_dotenv
+from openai import OpenAI
+
+MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.dirname(MODEL_DIR))
+import bbh_eval_core as core  # noqa: E402
+
+DEFAULT_MODEL = "google/gemini-3.5-flash-lite"
+MODEL = DEFAULT_MODEL
+PARAMS = {}
+BACKENDS = collections.Counter()
+
+# `reasoning.effort` goes through extra_body, not as a named parameter, so it is not part of the
+# negotiation — OpenRouter passes it to the backend rather than validating it here.
+EXTRA_BODY = {"reasoning": {"effort": "minimal"}}
+# 8192 visible tokens, matching the other bbh runners so the models stay comparable. Thinking is
+# billed at the output rate but spends ~0 at `minimal`. NOT MEASURED YET on BBH prompts — run
+# --limit 20 and check `no_marker` before committing 4,833 items.
+WANTED = {"max_tokens": 8192, "seed": 42}
+
+load_dotenv(core.ENV_PATH)
+client = OpenAI(base_url="https://openrouter.ai/api/v1",
+                api_key=os.getenv("OPENROUTER_API_KEY"), timeout=300)
+
+
+def call(prompt):
+    def once():
+        r = client.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            extra_body=EXTRA_BODY,
+            **PARAMS,
+        )
+        BACKENDS[getattr(r, "provider", None) or "unreported"] += 1
+        return r.choices[0].message.content
+    return core.retry(once, label="gemini35lite")
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser(description="Run BIG-Bench Hard for Gemini 3.5 Flash-Lite (OpenRouter).")
+    ap.add_argument("--model", default=DEFAULT_MODEL,
+                    help="model id; it is BOTH what is called and what the result files are named "
+                         "after, so a copied folder cannot silently relabel another model's numbers")
+    ap.add_argument("--task", default="all", help="'all' or a comma-separated list of task names")
+    ap.add_argument("--sleep", type=float, default=0.0, help="seconds between calls")
+    ap.add_argument("--limit", type=int, default=0,
+                    help="only the first N items of each task — a smoke test, not a run")
+    args = ap.parse_args()
+
+    MODEL = args.model
+    tasks = core.TASKS if args.task == "all" else [t.strip() for t in args.task.split(",")]
+    unknown = [t for t in tasks if t not in core.TASKS]
+    if unknown:
+        raise SystemExit("unknown task(s): %s\nknown: %s" % (unknown, core.TASKS))
+
+    print("negotiating parameter surface for %s ..." % MODEL, flush=True)
+    PARAMS, notes = core.negotiate(client, MODEL, WANTED)
+    print("  accepted: %s%s" % (PARAMS, ("  [%s]" % "; ".join(notes)) if notes else ""), flush=True)
+    if "seed" not in PARAMS:
+        print("  WARNING: seed was dropped — this run is NOT reproducible "
+              "(model-parameters.md rule 8)", flush=True)
+    os.makedirs(os.path.join(MODEL_DIR, "results"), exist_ok=True)
+    with open(os.path.join(MODEL_DIR, "results", "negotiated_params.json"), "w") as fh:
+        json.dump({"model": MODEL, "asked": WANTED, "accepted": PARAMS,
+                   "extra_body": EXTRA_BODY, "notes": notes}, fh, indent=2)
+
+    print("Gemini 3.5 Flash-Lite (OpenRouter): model=%s tasks=%d" % (MODEL, len(tasks)), flush=True)
+    try:
+        core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep,
+                       limit=args.limit)
+    finally:
+        # written even on a wall-clock kill: which backend answered is not recoverable afterwards
+        with open(os.path.join(MODEL_DIR, "results", "backend_providers.json"), "w") as fh:
+            json.dump(dict(BACKENDS), fh, indent=2)
+        print("backends:", dict(BACKENDS), flush=True)
+    print("done ->", os.path.join(MODEL_DIR, "results"), flush=True)
