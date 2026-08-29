@@ -1,6 +1,6 @@
 # Quest
 
-<!-- size-budget: 8000 -->
+<!-- size-budget: 9500 -->
 
 Northwestern's cluster. Key-based SSH to `uwr0681@login.quest.northwestern.edu`
 (`~/.ssh/id_ed25519`); project space `/gpfs/projects/p32983/`. **Each benchmark's remote path is on
@@ -93,10 +93,32 @@ export PYTHONUNBUFFERED=1        # or the log stays empty while the job runs
 Measured partition ceilings (`sinfo`): `short` 4h, `normal` 2 days, `long` 7 days.
 `sbatch` / `squeue -u uwr0681` / `sacct -X` / `scancel <id>`.
 
-Prefer a single job. Shard only when a run is genuinely too long. `--array=0-4` is convention, not a
-limit — measured `MaxJobsPU` is **5000**, and 22 jobs have run concurrently. Shard outputs **must**
-carry a shard tag (`{model}_shard{N}of{M}.jsonl`); writing an `_overall.csv` without one made each
-shard overwrite the last, leaving only one category's results.
+Prefer a single job. Shard only when a run is genuinely too long. Shard outputs **must** carry a
+shard tag (`{model}_shard{N}of{M}.jsonl`); writing an `_overall.csv` without one made each shard
+overwrite the last, leaving only one category's results.
+
+**How many shards is the maximum? Neither ceiling you would think to check is the one that binds.**
+Measured 2026-08-26:
+
+| Ceiling | Value | Shards it allows |
+|---|---|---|
+| Quest `MaxArraySize` | 20,000 | 20,000 |
+| Quest `MaxJobsPU` / association `MaxJobs` | 5,000 | 5,000 |
+| OpenAI key: 5,000 RPM | at a measured 15.7 calls/min a shard | ~318 |
+| OpenAI key: 2,000,000 TPM | at a measured 379 tokens a call | ~336 |
+
+So the provider allows roughly **300 shards** and Quest allows thousands. **What actually binds is
+the benchmark's own size and per-job startup.** EmoBench is 400 items; at 40 shards each job does 10
+items — about 38 s of work behind ~15 s of interpreter, pandas import and data load, so 40% of the
+allocation is overhead. **Keep at least ~25 items a shard**: 400 items → **16 shards is the practical
+maximum**, and 4–8 is the sensible range. `--array=0-4` is convention, not a limit; 22 jobs have run
+concurrently here without trouble.
+
+**Before adding shards, look at the sleep.** These runners `time.sleep(2.0)` between items, which is
+over half of a 3.8 s/item cycle — 400 items spend 13 of their 25 minutes deliberately idle. That
+throttle was sized for an older key. At 5,000 RPM one unsharded shard could run at 83 calls/min and
+still be inside the limit, so **lowering the sleep buys more than sharding does, and costs no extra
+jobs.** Measure it on a slice before changing it in a runner that is producing numbers.
 
 **Run order:** preflight → pilot (a small fraction of the data, reviewed before anything else) →
 full run → merge if sharded. The exact script names are on the benchmark's page.
