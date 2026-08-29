@@ -107,12 +107,25 @@ Measured 2026-08-26:
 | OpenAI key: 5,000 RPM | at a measured 15.7 calls/min a shard | ~318 |
 | OpenAI key: 2,000,000 TPM | at a measured 379 tokens a call | ~336 |
 
-So the provider allows roughly **300 shards** and Quest allows thousands. **What actually binds is
-the benchmark's own size and per-job startup.** EmoBench is 400 items; at 40 shards each job does 10
-items — about 38 s of work behind ~15 s of interpreter, pandas import and data load, so 40% of the
-allocation is overhead. **Keep at least ~25 items a shard**: 400 items → **16 shards is the practical
-maximum**, and 4–8 is the sensible range. `--array=0-4` is convention, not a limit; 22 jobs have run
-concurrently here without trouble.
+**The standing answer is 5, and it is a fix rather than a convention.** `DocVQA/OPENAI_EVAL_NOTES.md`
+records the incident: at 10 shards, 850 tokens an image × 30 req/min ≈ 255,000 TPM against a
+**200,000 TPM** limit, plus a Tier-1 **10,000 requests/day** ceiling that retries were burning three
+at a time. The fix was `--array=0-9` → `--array=0-4` and a 2.5 s sleep, giving ≈126,000 TPM. **Do not
+raise it above 5 on the strength of the table above.** Two things in it have changed and one has not
+been rechecked:
+
+- **TPM is now 2,000,000, ten times the limit that produced the 5.** The account is no longer Tier 1.
+- **RPD is not in the response headers and is unestablished.** It was the *harder* constraint in that
+  incident, and 5,349-question DocVQA is where it bit. A 400-item EmoBench run cannot reach it; a
+  DocVQA rerun still might.
+- Per-job startup binds before any of this on a small benchmark: at 40 shards EmoBench's 400 items
+  give each job 10 items, ~38 s of work behind ~15 s of interpreter, pandas import and data load.
+  **Keep at least ~25 items a shard.**
+
+So: **5 stays the default.** Going higher is a measured decision per benchmark — establish RPD first,
+and prefer `scale-shards`, which climbs a ladder and keeps the highest rung that stayed healthy,
+over reasoning from a headline number. 22 jobs have run concurrently here without trouble, so Quest
+is not what will stop you.
 
 **Before adding shards, look at the sleep.** These runners `time.sleep(2.0)` between items, which is
 over half of a 3.8 s/item cycle — 400 items spend 13 of their 25 minutes deliberately idle. That
