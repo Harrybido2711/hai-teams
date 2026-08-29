@@ -22,8 +22,10 @@ Result CSVs exist for **eight** prefixes: `deepseek gemini gemma kimi llama open
 reported, and some of those runs were abandoned** (user, 2026-08-22). A leftover CSV is not a
 retracted result and was not deleted, so it is still on disk.
 
-Take the coverage claim from `PLAN.md` and `Results.xlsx`, never from `ls *.csv`. bbh is the one
-benchmark here where counting files overstates what was run on purpose.
+Take the coverage claim from `PLAN.md` and the workbooks, never from `ls *.csv`. bbh is the one
+benchmark here where counting files overstates what was run on purpose. Which workbook depends on the
+question: `Results.xlsx` for what was run at all, `Final_Result.xlsx` for the six selected models that
+are actually reported (`PLAN.md`).
 
 ## Scoring — two different scorers, not one
 

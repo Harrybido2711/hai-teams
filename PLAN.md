@@ -4,7 +4,8 @@ What this repo holds: a benchmark suite for evaluating LLMs against the **team-p
 (transition / action / interpersonal processes, plus general task ability). Each benchmark is a
 vendored copy of an upstream project plus this project's own runners; the runs execute on the
 **Quest** SLURM cluster against six commercial providers, and the reported numbers converge in
-`Results.xlsx`.
+`Final_Result.xlsx` — with `Results.xlsx` holding the wider record of every model ever run (see
+[Two workbooks](#two-workbooks-results-is-wide-final_result-is-what-is-reported)).
 
 Last verified against the working tree on 2026-08-19, after the reorganisation in `269bbfe`.
 
@@ -34,12 +35,35 @@ hai-teams/
 ├── .claude/                             INDEX, tools, agents, references, workflows (see below)
 ├── CLAUDE.md                            planner rules only; `.claude/INDEX.md` is the entry point
 ├── PLAN.md                              this file
-├── README.md · Results.xlsx             the shared workbook every reported number lands in
+├── README.md
+├── Results.xlsx                         every model ever run — the wide record
+├── Final_Result.xlsx                    the six selected models — what gets reported
 └── quest_pull.log                       gitignored
 ```
 
 The four category folders are **not** arbitrary grouping: they are the rows of the tracker that
 drives this project, so a benchmark's folder states which team process it is evidence for.
+
+## Two workbooks: Results is wide, Final_Result is what is reported
+
+Stated by the user, 2026-08-29. Both workbooks carry the same five sheets — `Big Bench Hard`,
+`MMLU`, `DocVQA`, `Emo`, `Awareness` — and differ only in which model columns they are allowed to
+hold.
+
+- **`Results.xlsx` records every model that has appeared in an experiment**, including ones that
+  were tried and then dropped. Its `Emo` sheet is the visible case: eight columns, the six below
+  plus `Gemini-3.5-Flash-Lite (OR)` and `GPT-5.6-Luna (effort=medium)`. A leftover column is not a
+  retracted result, the same way a leftover CSV is not — see `.claude/references/benchmarks/tasks/bbh.md`.
+- **`Final_Result.xlsx` records only the six selected models** — Gemini, OpenAI, XAI, Qwen, Gemma,
+  Deepseek — and it is the workbook a reported number is taken from.
+
+So running a new model adds a column to `Results.xlsx` and **does not** earn one in
+`Final_Result.xlsx` unless that model is one of the six. Numbers still land in `Results.xlsx` first;
+`Final_Result.xlsx` is the selection made from it, not a separate measurement.
+
+**As of 2026-08-29 the two files are byte-identical** (`md5 4dd3902b…`) — `Final_Result.xlsx` was
+copied from `Results.xlsx` and has not yet been trimmed to the six, so its `Emo` sheet still carries
+the two extra columns. It is a copy waiting to be narrowed, not yet the selection it describes.
 
 ## Benchmark index
 

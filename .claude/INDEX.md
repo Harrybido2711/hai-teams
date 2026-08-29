@@ -2,7 +2,8 @@
 
 **Goal, in one line:** evaluate LLMs against the *team-process taxonomy* (transition / action /
 interpersonal processes, plus general task ability), running on Northwestern's **Quest** SLURM
-cluster against six commercial providers, with every reported number landing in `Results.xlsx`.
+cluster against six commercial providers, with every reported number taken from `Final_Result.xlsx`
+— the six selected models — while `Results.xlsx` keeps a column for every model ever run (`PLAN.md`).
 
 Read this file, then only what the task needs. Nothing else is loaded up front — that is the design,
 not an omission.

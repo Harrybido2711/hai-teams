@@ -7,7 +7,9 @@ A benchmark suite measuring whether LLMs can do the things a **team-process taxo
 (monitoring progress, coordination), *interpersonal* processes (conflict, affect) — with general task
 ability alongside them as a baseline. Ten benchmarks, each a vendored upstream repo plus this
 project's own per-model runners. Runs execute on Northwestern's **Quest** SLURM cluster against eight
-commercial models, and every reported number lands in `Results.xlsx`.
+commercial models. Every model that runs gets a column in `Results.xlsx`; the six selected models
+are what `Final_Result.xlsx` holds, and that is where a reported number is taken from. `PLAN.md` has
+the split.
 
 The work is empirical and the failures are quiet: a job that reports success while writing empty
 rows, a scorer that penalises formatting, a number carried from one benchmark to another. Most rules
