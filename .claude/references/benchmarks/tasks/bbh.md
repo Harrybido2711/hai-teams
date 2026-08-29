@@ -55,6 +55,19 @@ gpt-4o-mini 0.308 → 0.834, xai 0.509 → 0.940, llama 0.726 → 0.910. Gemma a
 Every `_overall.csv` carries a `scorer` column — `SCORER_VERSION`, today **`lenient_v2`** — and
 every row a `config` column (rule 8), so a number cannot be read without knowing what produced it.
 
+**v3, 2026-08-29:** four branches for a concise answer with something wrapped around it — LaTeX
+math, a unit noun after a number, a restated Yes/No, an option letter at the end. **+766 rows, 0
+losses, across five models.** They fire only when the model emitted the marker, so a stray letter in
+un-marked reasoning is never read as a choice. It found a real failure: Luna scored **0.000 on two
+whole tasks** — `object_counting` and `web_of_lies` — with `no_marker=0` and `empty=0`, because it
+answers `8 musical instruments` and `No, Ka does not tell the truth.`. **A task at exactly 0.000
+with nothing empty is a scorer bug, not a result.** Luna's macro went 0.8102 → 0.9213.
+
+Still unfixed and deliberately so: 48 Luna rows answer `Elanor does not tell the truth.` for gold
+`No`. Crediting those needs negation parsing specific to `web_of_lies` — measured at +92 rows and 0
+losses, but it would make the matcher task-aware rather than packaging-tolerant. Not adopted; the
+user's call.
+
 **v2, 2026-08-29:** the matcher also strips markdown emphasis. A Luna pilot answered
 `**bootlegging, indifferent, trainman**` to gold `bootlegging indifferent trainman` and scored 0.
 Across all 36,348 stored rows the fix gains 31 and loses 0. It moved two reported cells, both now

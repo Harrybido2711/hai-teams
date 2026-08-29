@@ -1,0 +1,1781 @@
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
+0,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [",] ],"The sequence contains two opening square brackets, so each must be closed in reverse order with two closing square brackets.
+
+Final Answer: `] ]`",] ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+1,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ [",] ] >,"The opening symbols are nested: `<` contains `[`, which contains another `[`. To close them properly, close the innermost bracket first, then the outer bracket, and finally the angle bracket:
+
+Final Answer: `< [ [ ] ] >`",< [ [ ] ] >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+2,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { [ ] } } { < [ { { < > } } [ ( ) ( ) ] [ [ [ [ ( { < ( < ( [ ] ) > ) > } ) ] ] ] ] ] ( ) ( [ ] { } ) > } > [ { ( ( ) ) } ]",},"Reasoning: Reading the sequence from left to right and tracking opening brackets with a stack, every opening symbol is matched by the correct closing symbol:
+
+- `{}` pairs close correctly.
+- `<>` pairs close correctly.
+- `[]` pairs close correctly.
+- `()` pairs close correctly.
+
+The stack is empty at the end, so the sequence is already complete and properly balanced. No additional characters are needed.
+
+Final Answer: No additional brackets are needed.",No additional brackets are needed.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+3,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ] { < ( ) > } [ ] ( { }",) >,"Track the opening and closing symbols from left to right:
+
+- `<` remains open.
+- `[ ]` is properly closed.
+- `{ < ( ) > }` is properly nested and closed.
+- `[ ]` is properly closed.
+- `( { }` leaves `(` open, while the initial `<` is also still open.
+
+The remaining symbols must therefore close the innermost opening first:
+
+**Final Answer: ) >**",) >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+4,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( < > ) ) ( { { } [ { } ] [ ] < ( ) > } ) )",>,"Reasoning: All inner brackets are properly matched:
+
+- `< >`
+- Parentheses around the nested groups are balanced.
+- `{ { } [ { } ] [ ] < ( ) > }` is balanced.
+- The only unmatched opening bracket is the initial `<`, so it must be closed at the end with `>`.
+
+Final Answer: `< ( ( ( < > ) ) ( { { } [ { } ] [ ] < ( ) > } ) ) >`",< ( ( ( < > ) ) ( { { } [ { } ] [ ] < ( ) > } ) ) >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+5,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ { } ] ] { < [ < [ { } ] > ] > }",] ),"Reasoning: Matching brackets from the inside out:
+
+- `{ }` closes correctly.
+- The next two `]` close two nested square brackets.
+- The remaining nested structures `{ < [ < [ { } ] > ] > }` close correctly.
+- The original outer `[` and `(` are still open, so they must be closed with `]` and `)`.
+
+Final Answer: `] )`",] ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+6,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { } }",),"The two opening braces `{ {` are closed by the two closing braces `} }`. The opening parenthesis `(` still needs a closing parenthesis.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+7,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( [ { } ] )",) ) >,"The brackets close in last-in, first-out order:
+
+- `{ }` is complete.
+- `[ ]` is complete.
+- The first `)` closes the innermost `(`.
+- Two `(` remain, followed by the opening `<`.
+
+So append `))>`.
+
+Final Answer: `< ( ( ( [ { } ] ) ) )>`",< ( ( ( [ { } ] ) ) )>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+8,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] [ [ < > ]",],"The sequence contains a complete group, followed by a nested group:
+
+- `[ <> ]`
+- `[ [ <> ]`
+
+The outer opening bracket of the second group is still unclosed, so add `]`.
+
+Final Answer: `[ < > ] [ [ < > ] ]`",[ < > ] [ [ < > ] ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+9,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] ( [ [ { < { { ( < > [ ] ) } } < > > } ] ] { }",),"Reasoning: Reading left to right, each opening bracket is properly matched by its corresponding closing bracket:
+
+- `[ ]`
+- `( [ [ { ... } ] ] { }`
+- The nested angle brackets and braces also close in the correct order.
+
+Therefore, the sequence is already complete and properly balanced. No additional brackets are needed.
+
+Final Answer: No additional brackets needed.",No additional brackets needed.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+10,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] ( ) ( ( { { } } ) ) < { < > } > [ ] > ] < ( ) > ( ( ( ) ) ) ( < >",),"Reasoning: Scanning the sequence from left to right, all brackets are properly matched except for the final opening parenthesis in `( < >`. The angle brackets inside it are already closed, so the remaining parenthesis must be closed.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+11,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < ( ) > }",],"The brackets are nested in this order: `[`, `{`, `<`, `(`, then closed by `)`, `>`, `}`, so the remaining closing bracket is `]`.
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+12,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ( ( ) < ( ) > ( { { } } [ [ [ < ( [ ] ) ( ) > ] ] ] { { { { { } } } { { } { < [ [ ] ] > } } { } } } ) ) ] >",],"The brackets are balanced in nested order until the end:
+
+- The final `)` closes the remaining open parentheses.
+- The final `]` closes the `[`.
+- The final `>` closes the `<`.
+- The initial `[` is still open and therefore needs one closing bracket.
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+13,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( [ < > { [ { ( ) } ] < { < { } > [ ( < > ) ] } > } [ < > ] ] ) { { ( { ( ( [ ( [ ] ) ] < { } > ) ) { { ( [ [ ] ] ) } [ ( ) ] { { [ ] } } } } ) } ( { } ) }",) >,"Reasoning: Treat each opening bracket as being placed on a stack and remove it when its matching closing bracket appears. All brackets in the sequence match correctly except for the initial `<` and its corresponding `(`, which remain open at the end. Therefore, they must be closed in reverse order: first `)`, then `>`.
+
+Final Answer: `)>`",)>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+14,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { ( ( < { ( ( ( { < > ( ) } ) ) [ { } ] { { ( ) } } ) } < > >",) ) },"Reasoning: Reading left to right and matching each closing symbol with the most recent opening symbol, the sequence ends with three unmatched openings: `(`, `(`, and `{`. Therefore, close them in reverse order with `)`, `)`, and `}`.
+
+Final Answer: `))}`",))},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+15,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < > } { (",) } >,"The symbols are nested, so each opening bracket must be closed in reverse order:
+
+- `(` closes with `)`
+- `{` closes with `}`
+- The outer `<` closes with `>`
+
+Thus, append `) } >`.
+
+Final Answer: `< { < > } { ( ) } >`",< { < > } { ( ) } >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+16,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < < { } >",> ] ],"The opening brackets are nested as:
+
+- `[`
+- `[`
+- `<`
+- `<`
+- `{`, which is already closed by `}`
+- The remaining `<` must be closed by `>`
+- Then close the two `[` brackets with `] ]`
+
+Final Answer: `[[<<{}>>]]`",[[<<{}>>]],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+17,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( )",) >,"The sequence opens an angle bracket and two parentheses: `< ( (`. One parenthesis is already closed, so one more `)` is needed, followed by `>` to close the angle bracket.
+
+Final Answer: `))>`",))>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+18,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ) ) [ { ( < > ) }",],"The first parentheses pair is closed: `( ( ) )`.  
+Then `[ { ( < > ) }` leaves the square bracket `[` open, while all other brackets are properly closed. Therefore, add `]`.
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+19,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > > < ( < < < [ [ [ [ ] ] ] ] > > > ) [ < < [ ] > > ] { [ < > ] < > [ ( ) ] } { [ ]",} > ],"Track the unmatched opening symbols from left to right:
+
+- The initial `[`
+- An unmatched `<` inside it
+- The final `{` after `{ [ ]`
+
+The final `[ ]` pair is already closed, so the remaining symbols must be closed in reverse order:
+
+1. `}` closes `{`
+2. `>` closes `<`
+3. `]` closes the initial `[`
+
+Final Answer: `}>]`",}>],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+20,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < [ < > ]",> ) },"Reading the brackets from left to right:
+
+- `{` opens first, so it must close last.
+- `(` opens next.
+- `<` opens next.
+- `[` opens next.
+- The inner `< >` pair is already closed.
+- `]` closes `[`.
+- The remaining open brackets are `<`, `(`, and `{`, which must close in reverse order.
+
+Final Answer: `< ) }`",< ) },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+21,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ ] )",},"The brackets close in reverse order of opening:
+
+- `[` is closed by `]`
+- `(` is closed by `)`
+- `{` remains open, so it needs `}`
+
+Final Answer: `}`",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+22,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < > ) } ( ( [ ] ) < [ ( [ [ ] ] [ { } ] { } [ < { [ ] } > ] ( ) ) ]",> ),"Track the unmatched opening delimiters from left to right:
+
+- The initial `{ ( < > ) }` is balanced.
+- In the second group, all nested brackets close correctly.
+- At the end, the `<` remains open, followed by the outermost `(`.
+
+Therefore, append `>` to close the angle bracket, then `)` to close the outer parenthesis.
+
+Final Answer: `>)`",>),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+23,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < [ [ ( { } ) ] ]",> } >,"Reasoning: Match each closing bracket with the most recent unmatched opening bracket:
+
+- `{ }` matches
+- `( )` matches
+- `[ ] ]` matches the two square brackets
+- The remaining opening brackets are `< { <`, which must close in reverse order as `> } >`
+
+Final Answer: `> } >`",> } >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+24,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ [ ] ( ) ]",) },"Reading the brackets from left to right:
+
+- `{` opens a curly bracket.
+- `(` opens a parenthesis.
+- `[` opens a square bracket.
+- `[` opens another square bracket, then `]` closes it.
+- `(` opens and `)` closes it.
+- The next `]` closes the remaining square bracket.
+- Still open are `(` and `{`, so close them in reverse order: `)` then `}`.
+
+Final Answer: `] ) }`",] ) },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+25,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { [ ] } >",],"The symbols open in this order: `[`, `<`, `{`, `[`.  
+They close in reverse order: `]`, `}`, `>`, so the remaining outer `[` must be closed with `]`.
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+26,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < >",) ),"Reading from left to right:
+
+- The first `(` opens an outer parenthesis.
+- The second `(` opens an inner parenthesis.
+- The `< >` pair is already properly closed.
+- Close the inner parenthesis, then the outer parenthesis: `))`.
+
+Final Answer: `))`",)),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+27,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { ( < ( ) > ) }",> >,"Reading the delimiters from left to right:
+
+- The innermost `( )` is already closed.
+- The `< >`, `( )`, and `{ }` pairs are also closed.
+- Two opening angle brackets remain at the beginning: `< <`, so they need two closing angle brackets in reverse order.
+
+Final Answer: `< < { ( < ( ) > ) } > >`",< < { ( < ( ) > ) } > >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+28,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ [ ] ] > ] ] { } { ( { ( ( ) ) ( ) { { [ [ ( { < { [ { [ ( < ( ( < < < [ ( ) ] [ ] > > > ) ) > < [ < { < ( ) > } > ] > ) ] } ] } > ( ( ) ) } ) [ ( ) ] ] ( < > ) ] } } } ) } [",],"Reasoning: Read the sequence from left to right, pushing each opening bracket onto a stack and removing its matching opening bracket whenever a closing bracket appears. All brackets in the given sequence match correctly except for the final opening square bracket `[`.
+
+Therefore, it must be closed with `]`.
+
+Final Answer: ]",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+29,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { } ( ( ) )",},"The inner `{ }` pair is closed, and the parentheses `( ( ) )` are balanced. The first `{` is still open, so add `}`.
+
+Final Answer: `}`",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+30,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { < ( ) > { < { } > ( < ( ) > { < [ ( { { ( < [ ] > ) } } { ( ( [ [ { } [ ] ] ] ) ) } ) ] > } ) } }",} ] >,"Reasoning: Track each opening delimiter and remove it when its matching closing delimiter appears. After processing the given sequence, the remaining unmatched opening delimiters are:
+
+`< [ {`
+
+They must be closed in reverse order:
+
+`}` closes `{`, `]` closes `[`, and `>` closes `<`.
+
+Final Answer: `} ] >`",} ] >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+31,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ ( )",] > ),"Reading from left to right, each opening symbol must be closed in reverse order:
+
+- The inner `(` is closed by `)`.
+- Then `[` is closed by `]`.
+- Then `<` is closed by `>`.
+- Finally, the outer `(` is closed by `)`.
+
+Final Answer: `] > )`",] > ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+32,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ( [ < > ] { < > } [ [ ] ] ) ]",> ],"Reasoning:  
+- The inner `[` is closed by `]`.  
+- The `{` block is closed by `}`.  
+- The nested `[ [ ] ]` is properly closed.  
+- The `(` is closed by `)`.  
+- The remaining open symbols are `[` and `<`, so they must close in reverse order with `>` and then `]`.
+
+Final Answer: `[ < [ ( [ < > ] { < > } [ [ ] ] ) ] > ]`",[ < [ ( [ < > ] { < > } [ [ ] ] ) ] > ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+33,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( [ ( [ ] ) ] ) )",>,"Reasoning: The square brackets and parentheses are already properly matched and closed:
+
+- `[ ]`
+- `( [ ] )`
+- `[ ( [ ] ) ]`
+- `( ( [ ( [ ] ) ] ) )`
+
+The only remaining unmatched opening delimiter is `<`, so it must be closed with `>`.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+34,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ]",>,"The square brackets `[ ]` are already properly closed. The angle bracket `<` still needs its matching closing bracket `>`.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+35,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { } ) } < < ( ) { { < [ { [ ( ) ] } ] > } } > >",],"Reading from left to right:
+
+- The `{ ( { } ) }` section is balanced.
+- The nested `< ... >` sections are also balanced.
+- The initial `[` is the only opening bracket left unmatched.
+
+Therefore, append:
+
+**Final Answer: ]**",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+36,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { }",) ),"The `{` is already closed by `}`, so the two open parentheses remain. Close them in reverse order with `))`.
+
+Final Answer: `))`",)),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+37,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ [ [ < { ( ) } ( ) > { ( ) } ] { ( ) }",] ] ],"The unmatched opening brackets remaining at the end are three square brackets: `[ [ [`. Therefore, close them in reverse order with `] ] ]`.
+
+Final Answer: `[ [ [ [ < { ( ) } ( ) > { ( ) } ] { ( ) } ] ] ]`",[ [ [ [ < { ( ) } ( ) > { ( ) } ] { ( ) } ] ] ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+38,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { } < { } < > (",) >,"Reading the symbols as nested brackets:
+
+- `{ }` closes correctly.
+- The first `<` remains open.
+- `{ }` closes correctly.
+- The second `< >` closes correctly.
+- `(` is still open, so it must close before the earlier unmatched `<`.
+
+Thus, the missing symbols are `)` followed by `>`.
+
+Final Answer: `)>`",)>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+39,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ < < > [ < { } > ] { < [ ] > ( ( ( [ [ { < > } ] ] ) ) ) ( < < > > ) } > ]",) ),"Reading the symbols from left to right and matching each closing bracket with the most recent unmatched opening bracket:
+
+- The final `]` closes the opening `[`.
+- Before that, the remaining unmatched opening brackets are:
+  - `<`
+  - `(`
+  - `(`
+- Therefore, they must be closed in reverse order with `>))`.
+
+Final Answer: `>))`",>)),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+40,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { } > { (",) } },"Reading the symbols from left to right:
+
+- `{` opens a curly brace.
+- `<` opens an angle bracket.
+- `{ }` is already properly closed.
+- `>` closes the angle bracket.
+- The final `{ (` open a curly brace and parenthesis, so they must be closed in reverse order: `)` then `}`.
+
+Final Answer: ) }",) },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+41,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ { < > { } { } < < < < { } > > ( < ( ( ) ) [ ( [ ] ) ] > ) > > { } } [ < < > > ] < ( ) > ] ]",),"Reasoning: Matching each opening bracket with its corresponding closing bracket shows that all inner brackets are properly paired. After the final `] ]`, the initial opening parenthesis `(` remains unclosed, so one closing parenthesis must be added.
+
+Final Answer: `( [ [ { < > { } { } < < < < { } > > ( < ( ( ) ) [ ( [ ] ) ] > ) > > { } } [ < < > > ] < ( ) > ] ] )`",( [ [ { < > { } { } < < < < { } > > ( < ( ( ) ) [ ( [ ] ) ] > ) > > { } } [ < < > > ] < ( ) > ] ] ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+42,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < <",> > },"The sequence contains one opening curly brace `{` and two opening angle brackets `<`. Close them in reverse order: first the two angle brackets, then the curly brace.
+
+Final Answer: `> > }`",> > },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+43,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { } }",},"There are three opening braces `{` and only two closing braces `}`. One more closing brace is needed to balance the sequence.
+
+Final Answer: `}`",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+44,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { } [ [ ( ( < { < { [ ] } > } > ) )",] ] >,"Reasoning: Matching each closing symbol with the most recent unmatched opening symbol leaves these openings unresolved:
+
+- `<`
+- `[`
+- `[`
+
+They must be closed in reverse order: `] ] >`.
+
+Final Answer: `< { } [ [ ( ( < { < { [ ] } > } > ) ) ] ] >`",< { } [ [ ( ( < { < { [ ] } > } > ) ) ] ] >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+45,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( ( )",) } >,"The brackets are opened in this order: `<`, `{`, `(`, `(`. One inner parenthesis is already closed, so close the remaining outer parenthesis, then the brace, then the angle bracket:
+
+Final Answer: `< { ( ( ) ) } >`",< { ( ( ) ) } >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+46,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < { [ ( ) ] } >",) ],"The brackets are nested in this order:
+
+- `[` opens first
+- `(` opens inside it
+- `<`, `{`, `[`, and `(` open and then close properly
+- After `>` closes `<`, the remaining open brackets are `(` and `[`.
+
+They must close in reverse order: first `)`, then `]`.
+
+Final Answer: `) ]`",) ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+47,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < { < { < > } > } > } ) ( ) ( { [ ( < ( < < { ( { < > } ) } > > ) > ) { ( { < ( { [ ] } ( ) ) > } < { < { { ( ) } } > { < [ { ( ) } ] > } } > ) } [ [ ( ) ] ] ]",} ) ),"Reasoning: Each opening delimiter is matched by its corresponding closing delimiter throughout the sequence. At the end, the final closing brackets `] ] ]` correctly close the nested bracket groups, but the opening parenthesis beginning the last major group remains unclosed.
+
+Therefore, append one closing parenthesis:
+
+**Final Answer: `)`**",),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+48,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < { < { [ ( ) ] } > }",>,"The brackets are properly nested until the final outer `<`, which remains open:
+
+- `[ ]` closes correctly.
+- The inner `{ < { [ ( ) ] } > }` also closes correctly.
+- The remaining opening bracket is `<`.
+
+Therefore, append `>`.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+49,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] > ] [ { [ ] }",],"The first group is balanced:
+
+- `[ < [ ] > ]` closes correctly.
+- In `[ { [ ] }`, the inner `[ ]` and `{ }` are closed, but the outer `[` remains open.
+
+Therefore, append a closing square bracket:
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+50,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > ( [ ( )",] ) ),"Reading the delimiters from left to right:
+
+- The `< >` pair is already closed.
+- The innermost `( )` pair is closed.
+- The remaining open brackets are `[` and the outer `(`, so they must close in reverse order: `]` then `)`.
+
+Final Answer: `] )`",] ),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+51,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { ( ) { } } ( < > ) >",),"Reasoning: Matching each closing bracket from the inside out leaves the initial opening parenthesis unmatched. Therefore, append `)` to close it.
+
+Final Answer: `( < { ( ) { } } ( < > ) > )`",( < { ( ) { } } ( < > ) > ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+52,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( < >",) > >,"Reading the symbols as nested delimiters:
+
+- The last `>` closes the innermost `<`.
+- Then `)` closes `(`.
+- The next two `>` symbols close the remaining `<` symbols.
+
+So the completed sequence is:
+
+`< < ( < > ) > >`
+
+Final Answer: `< < ( < > ) > >`",< < ( < > ) > >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+53,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { } ( ( < > )",) },"Track the opening symbols and close them in reverse order:
+
+- The first `{` remains open.
+- The second `{` is already closed by `}`.
+- The first `(` remains open after the inner `(` is closed.
+- `< >` is properly matched.
+- The inner `(` is closed by the final `)`.
+
+Therefore, close the remaining `(` with `)` and the remaining `{` with `}`.
+
+Final Answer: `) }`",) },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+54,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < { } > { { ( [ ( { } ) ( ( [ ( [ ( { [ { } ] } ) ] ) ] ) ) [ < [ [ [ [ [ < > ] [ { [ [ { ( ( < [ ] > ) [ ( [ ] ) ] < { [ ] } > ) } ] ] } ] { < ( < > ) > } ] ] ] ] > ] ] ) } } } >",),"Reasoning: Match the brackets from the inside outward. The nested brackets in the middle are properly balanced, and the ending sequence
+
+`) } } } >`
+
+closes the remaining inner `(`, three `{` brackets, and the outer `<`. The only unmatched opening bracket left is the very first `(`, so it must be closed with `)`.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+55,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < < >",> > ),"The sequence starts with one opening parenthesis and three opening angle brackets:
+
+`( < < < >`
+
+One angle bracket pair is closed, so two more `>` symbols are needed. Finally, close the opening parenthesis with `)`.
+
+Final Answer: `> > )`",> > ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+56,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ( ) ] >",>,"The brackets close in reverse order of opening:
+
+- `(` is closed by `)`
+- `[` is closed by `]`
+- The inner `<` is closed by `>`
+- The remaining outer `<` needs one more `>`
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+57,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > {",},"The angle brackets are already a complete pair: `< >`. The curly bracket is opened with `{`, so it must be closed with `}`.
+
+Final Answer: < > { }",< > { },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+58,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( [ [ [ [ ( ) ] ] { } ] ] )",>,"Reading the brackets from left to right:
+
+- `<` opens an angle bracket.
+- `(` opens and is properly closed at the end.
+- The nested `[` brackets are properly closed.
+- `{}` is properly paired.
+- After the final `)`, only the initial `<` remains open.
+
+Therefore, close it with `>`.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+59,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ < > ]",>,"The brackets are nested as follows:
+
+- `<` opens an outer angle bracket.
+- `[` opens a square bracket inside it.
+- `< >` is a complete inner angle-bracket pair.
+- `]` closes the square bracket.
+- The remaining outer `<` must be closed with `>`.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+60,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ [ [ ( ) ] ] ] ]",},"The brackets are nested in this order:
+
+- `{` opens first.
+- Four `[` brackets open and are then closed.
+- `(` is opened and closed correctly.
+- The outer `{` remains unclosed.
+
+Therefore, add a closing curly brace:
+
+**Final Answer: }**",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+61,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { ( { [ ] } ) } > { } ( [ { { { ( [ < > ] ) } } } ] ) { { ( { } ) } }",},"Reasoning: Reading from left to right, each opening delimiter is matched by the correctly corresponding closing delimiter:
+
+- `{ [ ] }`, `{ ( ... ) }`, and `< ... >` are properly nested.
+- The middle section `( [ { { { ( [ < > ] ) } } } ] )` is balanced.
+- The final section `{ { ( { } ) } }` is also balanced.
+
+The sequence ends with an empty stack, so no additional brackets are needed.
+
+Final Answer: No additional characters are needed; the sequence is already properly closed.",No additional characters are needed; the sequence is already properly closed.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+62,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < [ { { } } ] > { } ) ( < > ) [ ( < > ) ] <",> ),"Reading from left to right, each opening bracket is matched with its corresponding closing bracket:
+
+- The nested brackets before the final `<` are all properly closed.
+- The initial outer `(` remains open.
+- The final `<` is also open and must be closed first.
+
+Therefore, append `>` to close `<`, followed by `)` to close the remaining `(`.
+
+Final Answer: `>)`",>),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+63,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < { } > < > > ( )",],"Reasoning:
+- `[` opens a square-bracket group.
+- The angle brackets and braces inside it are properly matched:
+  - `< < { } > < > >`
+- `( )` is also properly matched.
+- The only unmatched opening bracket is the initial `[`, so it must be closed with `]`.
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+64,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( < < > [ ] ( ) >",) > ],"Reading the symbols as nested brackets, each closing bracket must match the most recently opened bracket:
+
+- `[` matches `]`
+- `<` matches `>`
+- `(` matches `)`
+
+After processing the given sequence, the still-open brackets are:
+
+`[ < (`
+
+They must be closed in reverse order:
+
+`) > ]`
+
+Final Answer: `) > ]`",) > ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+65,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ { < ( ) > } ] >",] },"Reading the brackets from left to right, the already-closed pairs are:
+
+- `( )`
+- `< >`
+- `{ }`
+- `[ ]`
+- `< >`
+
+The remaining unmatched opening brackets are `{ [ <`, so they must be closed in reverse order:
+
+`> ] }`
+
+Final Answer: `> ] }`",> ] },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+66,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < > < [ ] > [ < { } > ] [ ( { } ) ] [ ] [ ( ) ] ( ) < { { < { { { { { ( { } ) } ( { < > } ) } } } } > } }",> } ],"Reasoning: Treating each opening bracket as needing a matching closing bracket, all brackets are properly matched except for the outermost structures remaining at the end:
+
+- The final `<` needs `>`.
+- The initial `{` then needs `}`.
+- The initial `[` finally needs `]`.
+
+Therefore, append:
+
+**Final Answer: `>}]`**",>}],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+67,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ( [ < [ ] > ] ) ] > ] ( { }",) ],"Reading the sequence from left to right, each closing symbol matches the most recently opened symbol:
+
+- The nested `< [ ... ] >` structures close correctly.
+- After `{ }`, the remaining unclosed symbols are:
+  - `(`  
+  - the inner `[`  
+  - the outer `[`  
+
+They must be closed in reverse order: `) ] ]`.
+
+Final Answer: `) ] ]`",) ] ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+68,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ ( )",] ),"Reading the brackets from left to right:
+
+- `(` opens a parenthesis.
+- `[` opens a square bracket.
+- `(` opens another parenthesis.
+- `)` closes the innermost parenthesis.
+- The remaining open brackets are `[` and `(`, so close them with `]` and `)`.
+
+Final Answer: `([()] )`",([()] ),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+69,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { { < { < > } > } < { } > < < < [ < [ ] > ] > > >",} ) },"Reasoning: Match each closing bracket to the most recent unmatched opening bracket. After all given symbols are matched, three opening brackets remain unclosed: `{`, `(`, and `{`. They must be closed in reverse order:
+
+`}` closes `{`, `)` closes `(`, and `}` closes the outer `{`.
+
+Final Answer: `} ) }`",} ) },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+70,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ < { < { } > } > ( ( < { [ ] } > { { } } ) { } ) ] > ]",},"Reasoning: Matching brackets from the inside out, all brackets close correctly except for the initial outer `{`, which remains open after the final `]`.
+
+Therefore, append a closing curly brace:
+
+**Final Answer: `}`**",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+71,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ [ { [ [ ( [ < < > > ( ( [ ( ) ( { ( < [ ] > ) } ) ] ) ) ] ) ] ( ) ] } { [ [ ] ] } ] ] } > [ { < > } ]",) ),"The remaining unclosed parentheses are the two outer opening parentheses.
+
+Final Answer: `) )`",) ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+72,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ { < { } > } ( ) ]",} },"Reading the brackets from left to right:
+
+- `{ { [ { < {` opens several nested groups.
+- `}` closes the innermost `{`.
+- `>` closes `<`.
+- `}` closes the next `{`.
+- `( )` is properly matched.
+- `]` closes `[`.
+- Two outer `{` brackets remain open, so they must be closed with `}}`.
+
+Final Answer: `}}`",}},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+73,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ] > ( ( ( { { { { ( ( { { } } ) ) } ( { } ) } } { { { [ { ( ) } ( ) ( ( { [ < < > > ] < < > > } ) ) ] ( { } { } ) } } } } )",) ),"Reasoning:
+
+- The initial `< [ ] >` is balanced.
+- Each opening parenthesis, brace, bracket, and angle bracket is matched by the corresponding closing symbol in last-in, first-out order.
+- The nested sections such as `{ { } }`, `( { } )`, and `{ [ < < > > ] < < > > }` are all properly closed.
+- The final closing symbols `} } } } } )` close the remaining outer structures.
+
+Therefore, no additional symbols are needed.
+
+Final Answer: No additional symbols; the sequence is already properly closed.",No additional symbols; the sequence is already properly closed.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+74,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ < ( < [ ] > ) < > < { } > { < > { } { { < [ < < { } [ { } ] < > > > ] < > > } < [ [ ] ] > } } > ] [ ( ) ] > } [ { ( < ( ( ( [ { } ] ) ) ) > ) } ] [ < ( ) ( ( { ( ) [ { { ( { } ) } } ] } ) ) >",],"Reasoning: Track each opening bracket with a stack and remove its matching closer as it appears. The first two large groups are completely balanced. In the final group,
+
+- `[` opens an outer square-bracket group.
+- `<` opens a nested angle-bracket group.
+- All parentheses and braces inside are properly closed.
+- The final `>` closes the angle bracket.
+- The initial `[` is still open.
+
+Therefore, the missing closing bracket is:
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+75,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( ) > [ { [ { ( ) } ] } ] ] > [ { } ] ( < { < [ { } ] > } > ) ) ( ( < ( ) > [ ] [ < { ( ) } > ] [ { } ] [",] ) ),"Reading the sequence from left to right, all brackets are properly matched until the ending:
+
+`... ( ( < ( ) > [ ] [ < { ( ) } > ] [ { } ] [`
+
+The remaining unmatched opening brackets are:
+
+1. `[`  
+2. `(`  
+3. `(`  
+
+They must be closed in reverse order:
+
+`] ) )`
+
+Final Answer: `] ))`",] )),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+76,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } < > { < { ( < > ) } >",} ),"Reading the symbols from left to right:
+
+- The inner `< >`, `( )`, and `{ }` pairs are already closed.
+- The remaining unclosed symbols are `{` and the initial `(`.
+- They must be closed in reverse order: `}` then `)`.
+
+Final Answer: `} )`",} ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+77,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ] > ( < > ) <",> >,"Track the opening and closing delimiters:
+
+- The first `<` remains open.
+- The second `<` is closed by the first `>` after `[ ]`.
+- `( < > )` is properly balanced.
+- The final `<` is still open, so it must close first, followed by the initial `<`.
+
+Final Answer: `>>`",>>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+78,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { [ { [ { ( ( ) ) } ] } ( < < ( < > ) > { } [ [ [ ( < { } > ) ] ] ] { } > ) ( { } ) { } ] }",} ] >,"Reasoning:
+
+- The sequence is valid until the final `]`.
+- At that point, the unmatched opening delimiters are:
+
+  `< [ { { [ {`
+
+- The innermost unmatched delimiter is `{`, so the next closing delimiter must be `}`, not `]`.
+- Therefore, the sequence contains a mismatched closing bracket and cannot be completed correctly without correction.
+
+If the final portion is corrected, the remaining delimiters should close in this order:
+
+` } ] } } ] >`
+
+Final Answer: The sequence is invalid as written: the final `]` should not occur while `{` is still open. The required closing sequence for the remaining openings is `} ] } } ] >`.",The sequence is invalid as written: the final `]` should not occur while `{` is still open. The required closing sequence for the remaining openings is `} ] } } ] >`.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+79,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ]",) ] >,"Reading from left to right, each opening bracket is matched with its corresponding closing bracket:
+
+- Parentheses `()` are matched.
+- Square brackets `[]` are matched.
+- Angle brackets `< >` are matched except for the first `<`.
+- Curly braces `{}` are matched.
+
+After all given symbols are processed, the only unmatched opening bracket is the initial `<`, so it must be closed with `>`.
+
+Final Answer: `>`",>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+80,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { { < > [ ( ) ] ( ( ) ) } } ] > ] { { { ( < > )",} } },"Track the opening brackets and remove each one when its matching closing bracket appears:
+
+- The first group `[ < [ { { < > [ ( ) ] ( ( ) ) } } ] > ]` is fully balanced.
+- The remaining group `{ { { ( < > )` closes the `< >` pair and the parentheses, leaving three unmatched `{` brackets.
+- Therefore, close them with `} } }`.
+
+Final Answer: } } }",} } },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+81,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > ( [ < { { } } ( ) > ] ) [ ( ) ] [ ] [ { } ] >",),"Reasoning: Read the brackets from left to right, matching each closing symbol with the most recent unmatched opener:
+
+- The nested `{ { } }` and `( )` pairs close correctly.
+- The `< ... >`, `[ ... ]`, and `( ... )` groups also close correctly.
+- Near the end, the final `>` closes the remaining `<`.
+- One unmatched opening `(` from the beginning remains, so it must be closed with `)`.
+
+Final Answer: `( < < > ( [ < { { } } ( ) > ] ) [ ( ) ] [ ] [ { } ] > )`",( < < > ( [ < { { } } ( ) > ] ) [ ( ) ] [ ] [ { } ] > ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+82,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( { } ) < > }",>,"Reading the brackets in order:
+
+- `<` opens and remains open.
+- `{` opens, then the inner `{ }` pair closes.
+- `( )` closes properly.
+- `< >` closes properly.
+- The final `}` closes the earlier `{`.
+- The initial `<` is still unclosed, so it needs `>`.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+83,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ ]",> },"The brackets are nested: `{` contains `<`, which contains `[`. The `[` is already closed by `]`, so close the remaining `<` with `>` and `{` with `}`.
+
+Final Answer: > }",> },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+84,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } ) < { < { } >",} >,"Reasoning:  
+- `( { } )` is already balanced.  
+- The remaining part, `< { < { } >`, has an unclosed `{` and an unclosed outer `<`.  
+- Close them in reverse order: `}` then `>`.
+
+Final Answer: `( { } ) < { < { } > } >`",( { } ) < { < { } > } >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+85,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( { < > } )",) >,"Track the opening brackets from left to right:
+
+- `<` opens
+- `(` opens
+- `(` opens
+- `{` opens
+- `<` opens, then `>` closes it
+- `}` closes `{`
+- `)` closes the innermost `(`
+
+The remaining unclosed brackets are `(` and `<`, so they must be closed in reverse order: `)` then `>`.
+
+Final Answer: ) >",) >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+86,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ) )",),"There are 3 opening parentheses and 2 closing parentheses, so one closing parenthesis is needed to balance the sequence.
+
+Final Answer: `((()))`",((())),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+87,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > >",] ],"Reading the sequence from left to right and matching each closing symbol with the most recent unmatched opening symbol, all brackets close correctly except for the first two opening square brackets:
+
+- Remaining unmatched symbols: `[ [`
+- Therefore, they must be closed in reverse order with: `] ]`
+
+Final Answer: `] ]`",] ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+88,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < { } < ( ( < > ) ) > > } } { [ [ { } ] ] [ ] < < { } > [ ( ) { ( { } ) } ] > ( [ < [ ( ( { } ( ) < > < [ < < { { ( [ { } ] ) } } { } { } > > ] > ( ) ) ) < > ] > ] )",} },"I tracked each opening bracket using a stack and matched every closing bracket in order. All nested brackets near the end close correctly, but two opening curly braces remain unmatched: the outermost `{` and the later `{` after the initial nested section.
+
+Therefore, two closing curly braces must be appended:
+
+Final Answer: `}}`",}},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+89,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ { { < ( ) > } } ]",],"The brackets close in reverse order of opening:
+
+- `( )` is closed
+- `< >` is closed
+- The two `{ }` pairs are closed
+- One `]` has closed, so the remaining outer `[` needs one more `]`
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+90,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ( ( [ < { ( { } ) } < < > > > ] ) ) ] ) >",},"Reading the symbols as properly nested delimiters:
+
+- The opening `{` at the very beginning remains unmatched.
+- All other brackets and parentheses close in the correct order.
+- Therefore, one final `}` is needed.
+
+Final Answer: }",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+91,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { ( { [ [ { < [ ] > } ] ] } ) [ ( < { < > } > ) ]",} },"Reasoning: Each closing symbol must match the most recently opened symbol.
+
+- The nested groups inside the first two `{` symbols are already properly closed.
+- The second sequence beginning with `[` is also properly closed through its final `]`.
+- Two opening `{` symbols at the very beginning remain unmatched, so they must be closed in reverse order with two `}` symbols.
+
+Final Answer: `} }`",} },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+92,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ] > ] ] <",>,"Reading the brackets from left to right:
+
+- `[ [ < [ ] > ] ]` are properly matched and closed.
+- The final `<` is still open, so it must be closed with `>`.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+93,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > [ [ < [ ] > ]",] ],"Reasoning: The brackets are properly matched except for the first opening square bracket `[`, which remains unclosed at the end. Therefore, append a closing square bracket `]`.
+
+Final Answer: ]",],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+94,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } }",) ),"Reading the symbols from left to right and removing each matching pair, all brackets close correctly except for:
+
+- One extra `}` near the end
+- Two unmatched opening parentheses `((`
+
+Therefore, after removing the extra `}`, the remaining parentheses should be closed with:
+
+**Final Answer: `))`**",)),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+95,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ < [ < [ ( [ { < ( < ( ( ) ) { } [ ] > ) > } ] ) { < > } ] [ < [ { ( < < { { [ < { [ [ < > [ ] ] ] } > ] { { } } } } > > ) } ] > { < > { } } ] > ( [ ] ) ] > ] ) ( )",) ),"Reasoning: Matching each closing symbol with the most recently opened symbol shows that all nested brackets are properly closed except for the first two opening parentheses. The final existing `( )` closes a separate pair, so two additional closing parentheses are needed.
+
+Final Answer: `) )`",) ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+96,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { } >",>,"The brackets are nested: the inner `{` is closed first, then the inner `<` is closed. One outer `<` remains open, so add `>`.
+
+Final Answer: `< < { } > >`",< < { } > >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+97,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < >",),"The parentheses contain a complete angle-bracket pair, but the opening parenthesis is still unclosed. Add a closing parenthesis:
+
+Final Answer: ( < > )",( < > ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+98,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( )",} ),"Reading from left to right:
+
+- `(` opens a parenthesis.
+- `{` opens a brace.
+- `(` opens another parenthesis.
+- `)` closes the innermost parenthesis.
+
+The remaining `{` and outer `(` must be closed in reverse order: first `}`, then `)`.
+
+Final Answer: `{ )`",{ ),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+99,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ( [ [ < [ { { [ ] } } ] > ] ] ( ) ) )",) ),"Reasoning: The brackets inside the square, angle, and curly brackets are already properly matched. There are five opening parentheses in total, but only three closing parentheses, so two additional closing parentheses are needed.
+
+Final Answer: `( ( ( ( [ [ < [ { { [ ] } } ] > ] ] ( ) ) ) ) )`",( ( ( ( [ [ < [ { { [ ] } } ] > ] ] ( ) ) ) ) ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+100,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( ( [ ] )",) > >,"The brackets opened in this order: `< < ( (`. The square brackets `[` and `]` are already matched, and one parenthesis has been closed. Therefore, close the remaining parenthesis first, followed by the two angle brackets.
+
+Final Answer: `< < ( ( [ ] ) ) > >`",< < ( ( [ ] ) ) > >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+101,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { } )",>,"The brackets close in reverse order of opening: `{` closes with `}`, `(` closes with `)`, and `<` closes with `>`.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+102,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < { < < > > } > < < { < ( < > ) < > [ [ [ < ( ( ) ) > [ ] [ ] ] ] ] < ( ) > ( ) [ ( [ [ ] ] ) ] > } { } { < [ < { ( { } ) } > ] > } { { } } > >",> >,"Reading the symbols from left to right and matching each closing bracket with the most recent compatible opening bracket, all braces, parentheses, and square brackets are properly matched. After the final two `>` symbols, one outer `<` remains open.
+
+Therefore, append one closing angle bracket:
+
+Final Answer: `>`",>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+103,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ] }",>,"The brackets close in reverse order of opening:
+
+- `[ ]` closes the square brackets.
+- `{ }` closes the curly brackets.
+- `< >` closes the angle brackets.
+
+Final Answer: `< { [ ] } >`",< { [ ] } >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+104,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ { < ( [ ] < > ) > } ]",),"Reading the brackets from left to right, every opening bracket is properly matched except the initial `(`, which remains open after the final `]`.
+
+Therefore, add a closing parenthesis:
+
+**Final Answer: )**",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+105,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < [ < > ] > }",),"The brackets close in reverse order of opening:
+
+- `< >` closes the innermost angle brackets.
+- `]` closes `[`.
+- `>` closes the earlier `<`.
+- `}` closes `{`.
+- `)` closes the outer `(`.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+106,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] )",],"Reading the brackets from left to right, each opening bracket is properly matched with its corresponding closing bracket except for the very first opening square bracket `[`. Therefore, one closing square bracket must be added.
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+107,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ] ) >",},"The brackets close in reverse order of opening:
+
+- `[` closes with `]`
+- `(` closes with `)`
+- `<` closes with `>`
+- `{` remains open, so it closes with `}`
+
+Final Answer: `}`",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+108,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( )",> } >,"The brackets are nested in this order:
+
+- `(` closes with `)`
+- The inner `<` closes with `>`
+- `{` closes with `}`
+- The outer `<` closes with `>`
+
+Final Answer: `> } >`",> } >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+109,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( ) ( < [ ] > ( ) < [ [ { } { < > } < > ] ] > ) [ ] > [ ( < { [ ] } [ ] ( { [ < > ] < < > > ( ( < { } > ) ) } ) [ [ [ < < < ( ( ) ) > > > ] < < { [ ] } > > ( [ < > ] ) ] ] > ) ] < >",),"Reading the sequence from left to right, every opening delimiter is properly matched except for the very first `(`. The final `< >` pair closes itself, leaving that initial parenthesis still open.
+
+Therefore, append:
+
+**Final Answer: )**",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+110,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ [ ] ]",) ),"The sequence contains two opening parentheses and two opening brackets. The two brackets are already closed, so the remaining two parentheses must be closed in reverse order.
+
+Final Answer: ))",)),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+111,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ) { < > { ( [ [ { } ] [ ( ) ] ] ) } [ { { { ( < [ ] > ) } { < > } } }",] } },"Reasoning: Matching each closing symbol with the most recent opening symbol leaves one unmatched opening square bracket `[` near the end of the sequence. Therefore, it must be closed with `]`.
+
+Final Answer: `]`",],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+112,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) { < < { ( ( ) { { { < > { } } [ < > ] ( ) } } ( ( ) ) ) < [ { { ( ( < > ) ) } } [ { < { } > } ] ( ) ] > } { [ ] } > > [ ] } > ( [ ] ) [ < { ( ( ( ) ( ) ) ) ( ) } > ] [ < ( )",> ],"Reading left to right and matching each closing bracket with the most recent unmatched opening bracket, all brackets are properly matched until the final segment:
+
+`[ < (`
+
+The remaining open brackets are:
+
+1. `(` → needs `)`
+2. `<` → needs `>`
+3. `[` → needs `]`
+
+Therefore, the sequence should be completed with:
+
+**Final Answer: `) > ]`**",) > ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+113,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( { } )",],"The brackets currently open in this order: `[`, `(`, `{`. The `{` and `(` are already closed, so the remaining `[` must be closed with `]`.
+
+Final Answer: ]",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+114,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { ( ) } > } { ( { [ ] } ) }",),"Track the opening brackets that remain unmatched after each closing bracket:
+
+- The first `{ < { ( ) } > }` section closes correctly.
+- In `{ ( { [ ] } )`, the `[ ]`, `{ }`, and `( )` pairs also close correctly.
+- The remaining unmatched openings are the initial `(` and the later `{`, so they must close in reverse order: `})`.
+
+Final Answer: `})`",}),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+115,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ ] [ ]",] },"The opening `{` contains two balanced square-bracket pairs: `[ ] [ ]`. Therefore, only the closing curly brace is missing.
+
+Final Answer: `} 白小姐`",} 白小姐,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+116,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( [ ( ) ] < > < ( { } ) > ) < [ ] > > ] ( ) < [ < > ] >",> ),"Reading from left to right, each closing symbol matches the most recently opened symbol:
+
+- The final `<` is still open, so it must be closed with `>`.
+- The initial `(` is still open afterward, so it must be closed with `)`.
+
+Final Answer: `> )`",> ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+117,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > > [ [ [ { { < { } ( { } ) > } } < { { { } } } < > > ] ] ( )",] ),"Track each opening bracket with a stack. The sequence ends with one unmatched `[` and the initial unmatched `(`:
+
+- The three `[` brackets are opened, but only two are closed.
+- The final `( )` pair is already balanced.
+- Therefore, close the remaining `[` first, then the initial `(`.
+
+Final Answer: `])`",]),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+118,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ( { } ) ) } ( ) ) < { (",) } >,"Reasoning: After matching the existing brackets, the remaining unclosed brackets are `< { (`. They must be closed in reverse order: `)`, then `}`, then `>`.
+
+Final Answer: `) } >`",) } >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+119,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { [ { } ] } [ ] [ ] )",>,"Reading from left to right:
+
+- `<` opens an angle bracket.
+- `(` opens and is closed by `)`.
+- The nested `{ [ { } ] }` brackets are properly matched.
+- The remaining `[ ] [ ]` pairs are also properly matched.
+- The outer `<` is still open, so it must be closed with `>`.
+
+Final Answer: `<>`",<>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+120,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ ( [ { ( { ( [ ( [ ] ) { ( < < [ ] > [ [ ] ] > ) } ] ) [ ] } ) } ] ) ] } { < [ ] > } (",) },"Reasoning: Matching each closing bracket with the most recent unmatched opening bracket, all inner groups are properly closed except for:
+
+- The final `(`, which needs `)`
+- The initial outer `{`, which then needs `}`
+
+Final Answer: `) }`",) },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+121,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ ] > ] } { ( ) [ < > ] [ [ [ ] ]",] },"Reasoning:
+
+- The first group is already balanced: `{ [ < [ ] > ] }`
+- In the second group, `( )` and `[ < > ]` are balanced.
+- The remaining portion, `[ [ [ ] ]`, has one unmatched `[` left.
+- After closing it, the outer `{` must also be closed.
+
+Final Answer: `] }`",] },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+122,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { ( < ( ( [ < < { } > < < [ ( { < < > > } ) ] > > > ] { } ) ) > ) } ] [ < < { } > ( < < ( ) < ( [ ] ) > > ( ( ) ) > ) > ] > ] < < {",} > >,"Reasoning: Reading from left to right, every closing symbol matches the most recent unmatched opening symbol. After processing the entire input, the remaining unmatched openings are:
+
+- `{`
+- `<`
+- `<`
+- `<`
+- `[`  
+
+They must be closed in reverse order: `}`, then three `>`, then `]`.
+
+Final Answer: `} > > > ]`",} > > > ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+123,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ]",> ],"The `]` closes the innermost `[`. The remaining open brackets are `<` and the outer `[`, so close them in reverse order: `>` then `]`.
+
+Final Answer: `[ < [ ] > ]`",[ < [ ] > ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+124,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ < > ] } < [ ( [ { } ] ) ] > < [ < > { } ] < ( [ ] ) > <",> > },"Reasoning: Matching brackets in last-in, first-out order, all inner brackets close correctly. The remaining unmatched openings at the end are:
+
+- `<`, which needs `>`
+- The initial `{`, which needs `}`
+
+Final Answer: `> }`",> },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+125,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { [ ( ) ] } { { [ ] } } { } < > ) } [ < [ ( ) ]",> ],"Reading left to right, each closing symbol matches the most recent unmatched opening symbol. After processing the given sequence, the remaining open symbols are:
+
+- `[`
+- `<`
+- `[`
+
+They must be closed in reverse order:
+
+- `]` closes `[`
+- `>` closes `<`
+- `]` closes `[`
+
+Final Answer: `] > ]`",] > ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+126,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < { < ( ) > } >",) },"Reading from left to right, each closing symbol matches the most recent unmatched opening symbol:
+
+- `(` matches `)`
+- `<` matches `>`
+- `{` matches `}`
+
+After `{ ( < { < ( ) > } >`, the remaining unmatched openings are `{ ( <`, so they must be closed in reverse order with `> ) }`.
+
+Final Answer: `> ) }`",> ) },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+127,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { ( ( { } ) ( ) ) } { } < { } > < > > } { } ( { ( { { } } ) [ ( ) ] } ) ) [ ( [ ]",) ],"The sequence contains mismatched closers (`}` where `>` is expected, and `)` where `}` is expected). After accounting for the remaining unmatched openings, the needed closing sequence is:
+
+**Final Answer: `) ] )`**",) ] ),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+128,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( )",>,"The sequence starts with an opening angle bracket `<`, followed by a matched pair of parentheses `( )`. To close the remaining angle bracket, add `>`.
+
+Final Answer: `< ( ) >`",< ( ) >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+129,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < ( )",> } ],"The brackets are opened in this order: `[`, `{`, `<`, `(`. They should be closed in reverse order: `)`, `>`, `}`, `]`.
+
+Final Answer: [ { < ( ) > } ]",[ { < ( ) > } ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+130,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ < [ ] > { { [ [ ] ] } } ]",) ),"Reading the brackets from left to right:
+
+- The inner `[ ]`, `< >`, nested `{ [ [ ] ] }`, and final `]` are properly matched.
+- Two opening parentheses remain unmatched: `( (`.
+
+Therefore, close them with two right parentheses:
+
+**Final Answer: `))`**",)),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+131,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( ) > { < > } ( < > ) < ( ) > [ ] < < < < ( ( ) ) < ( ) > > > > > {",} },"Reasoning: Track each opening bracket and remove it when its matching closing bracket appears. All parentheses, square brackets, and angle brackets are properly matched. The initial `{` remains open, and the final `{` is also unmatched. Therefore, close the final brace first, followed by the initial brace.
+
+Final Answer: `}}`",}},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+132,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < > ( [ ]",) >,"Reading the symbols as nested delimiters:
+
+- The second `<` is closed by `>`.
+- `(` contains `[ ]`, so it must be closed with `)`.
+- The first `<` remains open and is closed last with `>`.
+
+Final Answer: `) >`",) >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+133,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) > { } < { [ < > ]",} >,"Reasoning:
+- The first `<` is closed by the `>` after `)`.
+- `( < > )` is properly balanced.
+- `{ }` is already balanced.
+- The final nesting is `< { [ < >`, so close the innermost `[` with `]`, then `{` with `}`, and finally the outer `<` with `>`.
+
+Final Answer: `] } >`",] } >,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+134,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] > [",] ],"The brackets are nested as follows:
+
+- `[` opens
+- `<` opens and is closed by `>`
+- The inner `[` is closed by `]`
+- The final `[` must be closed by `]`
+- The first `[` must then be closed by `]`
+
+Final Answer: `]]`",]],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+135,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < ( ( < { } { < < { { { } } } > < < < > [ ] > { } ( < { { ( [ ( ) ] ) } } > ) > > } > ) ) > } >",),"Reasoning: Treat each opening symbol as being closed by its matching symbol using a stack. Reading the sequence from left to right, all nested brackets close correctly except for the very first opening parenthesis `(`. The final `>` closes the initial `<`, leaving that first parenthesis still open.
+
+Therefore, append a closing parenthesis.
+
+Final Answer: )",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+136,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ { } ] )",) ),"The brackets close in reverse order of opening:
+
+- `{` is closed by `}`
+- `[` is closed by `]`
+- One `(` is already closed by `)`
+- Two opening parentheses remain, so they need `))`
+
+Final Answer: `))`",)),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+137,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { } } ] ( < { < [ ( ( ) ) ] > } >",),"Reasoning:
+- `[ { { } } ]` is properly closed.
+- The nested `( ( ) )` is properly closed.
+- `[` is closed by `]`.
+- The inner `<` is closed by `>`.
+- `{` is closed by `}`.
+- The outer `<` is closed by `>`.
+- One opening parenthesis `(` remains unclosed, so it needs `)`.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+138,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( < < < [ < [ [ ] ( ( ) ) ] > < > ] > > > )",> },"Reasoning: Match each closing symbol with the most recently opened symbol of the same type:
+
+- The nested square brackets `[...]` close correctly.
+- The angle brackets inside them close in order.
+- The parentheses close correctly.
+- After the final `)`, the remaining unclosed symbols are the outer `<` and `{`.
+
+Therefore, close them with `>` and `}`.
+
+Final Answer: `> }`",> },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+139,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ ] ) } [ ] ( { < > } ( { } ( { { } } ) ) ( [ ] ) ( ) ( < ( { { ( < { [ ( ) ] } > ) } } [ < [ ( [ { } ] [ < > < < > > ] ) ] > ] { < { } > } < > ) > )",),"Using a stack to match each opening bracket with its corresponding closing bracket:
+
+- `{ ( [ ] ) }` is balanced.
+- `[ ]` is balanced.
+- The large parenthesized section contains properly matched `{}`, `[]`, `()`, and `<>` groups.
+- The final suffix `... { < { } > } < > ) > )` closes all remaining nested brackets.
+
+The stack is empty at the end, so no additional brackets are needed.
+
+Final Answer: No additional brackets needed.",No additional brackets needed.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+140,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < < > [ [ < > ] ] > ] ( < < < ( [ [ ] ] ) [ ( ( [ { { } } ] ) ) ] > >",> ) ),"Reasoning:
+
+- The initial `(` remains open after its nested contents are closed.
+- The second `(` contains three `<` brackets.
+- The two final `>` brackets close the last two `<` brackets.
+- One `<` remains open, followed by the two still-open parentheses.
+
+Therefore, append `>` to close the remaining angle bracket, then `))` to close the parentheses.
+
+Final Answer: `>))`",>)),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+141,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( (",) ),"There are three opening parentheses and one closing parenthesis, so two more closing parentheses are needed.
+
+Final Answer: `))`",)),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+142,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ ] > ( { [ ] } <",> ) },"Reasoning:
+- `{` opens, then `<` opens, and `[ ]` closes correctly.
+- `>` closes the `<`.
+- `(` opens, followed by `{`, then `[ ]`, and `}` closes the `{`.
+- The final `<` is still open.
+- The remaining unclosed brackets are `{`, `(`, and `<`, so they must be closed in reverse order: `>`, `)`, `}`.
+
+Final Answer: `> ) }`",> ) },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+143,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( ) >",),"Reading from left to right:
+
+- `(` opens
+- `<` opens
+- `(` opens
+- `)` closes the inner `(`
+- `>` closes the `<`
+- The first `(` is still open, so it needs `)`
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+144,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ( { ( < ( ) > ) }",) ) },"The sequence is not properly nested as written. Before the final `}`, two parentheses are still open, so the `}` appears too early. Insert `))` before it:
+
+`{ ( ( ) ( { ( < ( ) > ) ) ) }`
+
+Final Answer: Insert `))` before the final `}`.",Insert `))` before the final `}`.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+145,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ < > ] ] < ( ) > [ { } ] < [ [ ] ] > ( ) < { < [ ] < < [ [ { [ ] } ] ] > > ( [ ( ( ) ) ] ) > } > [ { { < > } } ] > < ( < { } { [ { [ ] } ] } >",) > ],"Reasoning: After matching all existing brackets, the only unclosed brackets are the initial square bracket `[` and the parenthesis `(` nested within it. They must be closed in reverse order: `)` followed by `]`.
+
+Final Answer: `)]`",)],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+146,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < < ( < < > > ) > > >",),"The sequence contains:
+
+- One outer opening parenthesis: `(`
+- A nested opening parenthesis: `(`, which is properly closed by `)`
+- Five `<` symbols and five `>` symbols, all properly matched
+- The outer parenthesis is still unclosed
+
+Therefore, append one closing parenthesis:
+
+**Final Answer: `)`**",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+147,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < >",>,"The sequence has two opening angle brackets `<` and only one closing bracket `>`. One more `>` is needed to close the remaining opening bracket.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+148,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } }",),"Reading the sequence from left to right, every bracket is properly matched except for the opening parenthesis at the very beginning. The remaining closing character should therefore be a parenthesis.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+149,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( < < { }",> > ),"The first pair, `( )`, is already complete. The remaining symbols are nested as:
+
+- `(`
+  - `<`
+    - `<`
+      - `{ }`
+
+The `{ }` pair closes first, followed by the two `<` symbols and then the `(`. Therefore, append `> > )`.
+
+Final Answer: `> > )`",> > ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+150,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ ] ) > {",} ),"Reading the brackets from left to right:
+
+- `[ ]` is matched.
+- The inner `( )` is matched.
+- `< >` is matched.
+- The remaining open brackets are `{` and the initial `(`, so they must close in reverse order: `}` then `)`.
+
+Final Answer: `} )`",} ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+151,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { } [ ] >",),"The opening parenthesis `(` is still unmatched. The angle brackets, braces, and square brackets are already properly closed, so add `)` at the end.
+
+Final Answer: ( < { } [ ] > )",( < { } [ ] > ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+152,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } ( ) [ ] {",},"The pattern repeats in groups of bracket pairs:
+
+`{ < > } ( ) [ ]`
+
+After the final `{`, continue with:
+
+`< > } ( ) [ ]`
+
+Final Answer: `< > } ( ) [ ]`",< > } ( ) [ ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+153,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { [ [ [ < ( < [ ] { [ ( [ ] ) ] [ ] < > } > ) > ] ( [ ] ) ] ] } }",] >,"Reasoning: Reading the sequence from left to right and matching each closing symbol with the most recent unmatched opening symbol, all brackets close correctly except for the initial `<` and `[` symbols. These remain open at the end, so they must be closed in reverse order:
+
+- Close `[` with `]`
+- Close `<` with `>`
+
+Final Answer: `] >`",] >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+154,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ] } > ( ) < [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ]",>,"The sequence is already properly balanced:
+
+- `< { [ ] } >` closes correctly.
+- `( )` closes correctly.
+- `< [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ]` also closes correctly.
+- Every opening bracket has a corresponding closing bracket in the correct order.
+
+No additional brackets are needed.
+
+Final Answer: No continuation needed; the sequence is already complete and properly closed.",No continuation needed; the sequence is already complete and properly closed.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+155,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < { [ < { ( [ ] ) } > { ( { } ) } ( ) ] } > } [ < < > > ] { } [ ] < { }",> >,"Reading the sequence from left to right and matching each closing symbol with its corresponding opener:
+
+- The initial `<` remains open.
+- Later, another `<` is opened near the end: `< { }`.
+- The `{ }` is already properly closed.
+- Therefore, close the most recent `<` first, followed by the initial `<`.
+
+Final Answer: `>>`",>>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+156,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ [ { } ] ] }",),"The brackets close in reverse order of opening:
+
+- `{ }` closes the innermost curly brace.
+- `] ]` closes the two square brackets.
+- `}` closes the outer curly brace.
+- The remaining opening parenthesis `(` must be closed with `)`.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+157,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ { } ] } > ) ) < {",} >,"Track the opening symbols and close them in reverse order:
+
+- The first `( ( < { [ { } ] } > ) )` portion is already balanced.
+- The remaining `< {` requires closing `}` first, then `>`.
+
+Final Answer: `} >`",} >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+158,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < [ ( ) ] >",> >,"Reading the symbols as nested brackets:
+
+- Three `<` brackets are opened.
+- `[` is opened inside them.
+- `( )` is properly closed.
+- `]` closes the square bracket.
+- The first `>` closes the innermost `<`.
+- Two more `>` symbols are needed to close the remaining `<` brackets.
+
+Final Answer: `> >`",> >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+159,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] { { } { < ( { } ) > } } > ] ( {",} ),"Reasoning:
+- The initial `[` is closed by `]`.
+- The `<` is closed by `>`.
+- The nested `{` brackets are properly matched.
+- At the end, the sequence has an open `(` containing an open `{`, so they must close in reverse order: `}` then `)`.
+
+Final Answer: `} )`",} ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+160,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < > ( [ [ { ( ( [ ] < > ) ) } ] { [ [ ] { } { [ { < > } ] } ( { { { { } } } } ) ] } ] ) (",) > },"Reading the brackets from left to right and removing each opening bracket when its matching closer appears, the remaining unclosed brackets at the end are:
+
+- `{`
+- `<`
+- `(`
+
+They must be closed in reverse order: `)`, `>`, `}`.
+
+Final Answer: `)>}`",)>},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+161,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( (",) ) },"The sequence has one opening curly brace `{` and two opening parentheses `(` `(`. Close the parentheses in reverse order first, then close the curly brace.
+
+Final Answer: `))}`",))},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+162,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ( { < ( { } ) > } )",) ],"Reasoning: Reading the brackets from left to right and matching each closing bracket with its most recent opening bracket leaves these unclosed brackets:
+
+- `[`
+- `(`
+- `(`
+
+They must be closed in reverse order: `) ) ]`.
+
+Final Answer: `) ) ]`",) ) ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+163,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < < { } > > ]",),"The brackets close in reverse order of how they were opened:
+
+- `{` closes with `}`
+- The two `<` brackets close with `>>`
+- `[` closes with `]`
+- `(` still needs `)`
+
+Final Answer: )",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+164,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) { <",> },"The parentheses `()` are already closed. The `{` opens a curly-brace block, and `<` opens an angle-bracket block. They must be closed in reverse order: first `>`, then `}`.
+
+Final Answer: `> }`",> },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+165,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ { ( < [ { ( ) { } } ] > ) < > } ]",) },"Track the opening brackets with a stack:
+
+- `{ ( [ {` remain open after the inner brackets are closed.
+- The `]` closes `[`.
+- The remaining unmatched openings are `(` and `{`, so they must be closed in reverse order.
+
+Final Answer: `) }`",) },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+166,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < { ( < > ) }",> > },"Reading the delimiters from left to right:
+
+- `{` opens a brace
+- Two `<` symbols open two angle-bracket pairs
+- `{ (` opens nested brace and parenthesis pairs
+- `< >` and `( )` are properly closed
+- `}` closes the inner brace
+
+The remaining open symbols are the two angle brackets and the outer brace, so they must be closed in reverse order with `> > }`.
+
+Final Answer: `> > }`",> > },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+167,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ [ ] { { < > [ ( ) ( [ ] ) [ ] { < > } ] } } [ { [ ] } ] { ( ) }",] } },"Scan the sequence, removing each opening bracket when its matching closing bracket appears. The brackets still left open at the end are:
+
+- `{` from the final group
+- `[` opened near the beginning
+- `{`
+- `{` from the start
+
+They must be closed in reverse order: `} ] } }`.
+
+Final Answer: `} ] } }`",} ] } },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+168,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { {",} },"There are two opening curly braces, so each must be closed with a corresponding closing curly brace. Appending two closing braces gives:
+
+**Final Answer: {{}}**",{{}},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+169,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( [ { ( < > ) } ] ) > { ( [",] ) },"Reading the sequence from left to right, the initial brackets are properly matched:
+
+- `< ( [ { ( < > ) } ] ) >` is complete.
+- The remaining opening brackets are `{ ( [`.
+- They must be closed in reverse order: `] ) }`.
+
+Final Answer: `] ) }`",] ) },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+170,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ { ( < < < < > { } > { [ { } ] } > > ) } ] [ ] } ] [ < { { } } [ [ ( ( ) ) ] ] > ] [ ( ( [ ] )",) ],"Scan the sequence while keeping track of unmatched opening brackets. Every bracket closes correctly until the final portion:
+
+`[ ( ( [ ] )`
+
+After `[ ]` is matched, the remaining unmatched openings are:
+
+- `(`  
+- `(`  
+- `[`  
+
+They must be closed in reverse order: `) ) ]`.
+
+Final Answer: `))]`",))],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+171,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( ) ( ( < > < ( ( < < > > ) ) { ( ) } > ) ) { { } }",> } >,"Reasoning: Match each closing symbol to the most recently opened corresponding symbol. After processing the given sequence, three opening symbols remain unmatched:
+
+- The inner `<` must be closed with `>`.
+- The `{` must be closed with `}`.
+- The outer `<` must be closed with `>`.
+
+Therefore, the sequence should be completed with:
+
+Final Answer: `> } >`",> } >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+172,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ < [ < { } > ] [ ] >",] } ],"Reasoning: Track the unmatched opening brackets from left to right:
+
+- `[` remains open
+- `{` remains open
+- `[` remains open
+
+The inner brackets are already properly closed. Close the remaining brackets in reverse order: `]`, `}`, `]`.
+
+Final Answer: `] } ]`",] } ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+173,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ( < [ ( { [ ( ) ] [ ( ( { [ ] } ) ) ] } ) ] > ) ] <",> > >,"Reading the symbols as properly nested brackets, every opening bracket is already matched except for the final three unmatched angle brackets:
+
+- The last `<` must close first with `>`
+- Then the second `<` closes with `>`
+- Finally, the first `<` closes with `>`
+
+Final Answer: >>>",>>>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+174,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { { } } ( < [ ] [ { } ] > ) ( { { } { { ( ) } } } ) { < { { [ ] } [ ( ) ] } ( < { [ < > ] } > ) < ( [ ] { ( < < [ ] > > ) [ { [ [ ( ( ) ) ] ] } ] } { } ) > ( { { [ [ ( ) ] ] } } )",> } >,"Reasoning: The sequence is properly balanced through the nested groups, except for two opening brackets that remain unmatched at the end:
+
+- An outer `{` remains open.
+- The initial `<` remains open beneath it.
+
+They must be closed in reverse order: first `}`, then `>`.
+
+Final Answer: `}>`",}>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+175,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ) { [ ] } [ ] [ ] { < { ( ( { } ) ) { [ { } ] } } > [ ] }",],"Reasoning: Reading from left to right, each opening delimiter is matched by the correct closing delimiter:
+
+- `(` matches `)`
+- `[` matches `]`
+- `{` matches `}`
+- `<` matches `>`
+
+The final `}` closes the initial `[`, so the sequence is already properly balanced.
+
+Final Answer: No additional characters are needed; the completed sequence is `[( ) { [ ] } [ ] [ ] { < { ( ( { } ) ) { [ { } ] } } > [ ] }`",No additional characters are needed; the completed sequence is `[( ) { [ ] } [ ] [ ] { < { ( ( { } ) ) { [ { } ] } } > [ ] },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+176,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { ( < < > > )",} ) >,"Reasoning: Match each closing symbol with the most recently opened symbol:
+
+- The two `<` symbols are closed by the two `>` symbols.
+- The given `)` closes the inner `(`.
+- The remaining open symbols are `(`, `{`, `(`, and `<`, which must be closed in reverse order as `)`, `}`, `)`, `>`.
+
+Final Answer: `< ( { ( < < > > ) ) } ) >`",< ( { ( < < > > ) ) } ) >,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+177,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < >",) >,"The sequence currently has:
+
+- An outer `<` that needs a matching `>`
+- A `(` that needs a matching `)`
+- An inner `< >` pair that is already complete
+
+So, close the parenthesis first, then the outer angle bracket:
+
+**Final Answer: `< ( < > ) >`**",< ( < > ) >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+178,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { ( { < > } ) } [ ( ) ] { } [ { { ( < > ) } <",> } ],"The brackets are balanced up to the final segment:
+
+- `[` opens
+- `{` opens
+- `{` opens
+- `(` opens, then closes with `)`
+- `<` opens and needs `>`
+- Then close the remaining `{`, `{`, and `[` in reverse order
+
+Append: `> } } ]`
+
+Final Answer: `> } } ]`",> } } ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+179,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { ( ) }",} ],"The sequence currently has:
+
+- `[` opened but not closed
+- Two `{` opened, with only the inner one closed
+- `()` properly closed
+
+Therefore, close the remaining `{` and then the `[`.  
+Final Answer: `} ]`",} ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+180,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { [ ] } ] } [ [ { { } } [ < >",] ] ],"Reasoning:
+- The first group `{ [ { [ ] } ] }` is already balanced.
+- In the remaining portion, the unmatched openings are:
+  - `[`
+  - `[`
+  - `[`
+- The `< >` pair is already balanced.
+- Close the remaining square brackets from innermost to outermost: `] ] ]`.
+
+Final Answer: `] ] ]`",] ] ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+181,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( < [ [ ] ] > )",} ],"The opening brackets are:
+
+- `[`
+- `{`
+- `(`
+- `<`
+- `[`
+- `[`
+
+The inner brackets close as `] ]`, followed by `>` and `)`. The remaining open brackets are `{` and `[`, so they close as `}` and `]`.
+
+Final Answer: `]`",],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+182,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( [ ] ) )",},"The square brackets `[ ]` are properly closed, and the two parentheses are also matched. The opening curly brace `{` remains unclosed, so add `}`.
+
+Final Answer: }",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+183,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > > < > [ ] [",] ),"Reading the sequence from left to right:
+
+- `(` is opened and remains unclosed.
+- The angle brackets `< < > > < >` are properly matched.
+- `[ ]` is properly matched.
+- The final `[` needs a closing `]`.
+- Finally, the initial `(` needs a closing `)`.
+
+Final Answer: `])`",]),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+184,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( { { ( ( ) ) } } ) [ ( [ { } ] ) ] < { { < < < > [ < [ < ( [ ( { ( ( < < < < > > > { ( { { < ( ) > ( ) } } ) } > { } ) ) } ) ] ) > ] > ] > < { } > > } ( ) < { ( ) } > } > ] [ < ( ) > ]",>,"Reasoning: Treat each opening bracket as being placed on a stack and remove it when its matching closing bracket appears. Scanning the sequence, all nested brackets close correctly. At the end, the only remaining opening bracket is the very first angle bracket `<`; every bracket opened after it is properly matched.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+185,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { { { } } }",] },"Track the opening brackets from left to right:
+
+- `{` opens
+- `[` opens
+- `{` opens
+- `{` opens
+- `{` opens
+- The two `}` close the two innermost `{` brackets.
+- The remaining open brackets are `{`, `[`, `{`, so they must be closed in reverse order: `}`, `]`, `}`.
+
+Final Answer: `} ] }`",} ] },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+186,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ ( { { ( { } ) } < < ( [ [ { } < [ { < [ { ( ) ( [ { } ] ) } ] < > > } ] ( < { ( [ ] ) } > ) > ] ( [ < ( ) > ] ) ] ) > > }",) ] ],"Reasoning: Match each closing symbol with the most recently opened symbol of the same type. The sequence is properly nested through the final `> > }`, which closes the remaining angle brackets and the outer `{`. At that point, the still-open symbols are:
+
+`[ [ (`
+
+These must be closed in reverse order:
+
+`) ] ]`
+
+Final Answer: `) ] ]`",) ] ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+187,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ (",) ],"The sequence starts with an opening square bracket `[` and an opening parenthesis `(`. Close them in reverse order: first `)`, then `]`.
+
+Final Answer: `)]`",)],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+188,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( {",} ),"The braces were opened in this order: `(`, then `{`. They must be closed in reverse order: first `}`, then `)`.
+
+Final Answer: `})`",}),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+189,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < [ [ { [ < [ < ( [ ] ) > ] < > > ( < [ < [ < ( [ ( [ ] ) < ( ) > ] [ ( { ( ) } [ < { { { ( [ ] ) } } } > ] ) ] ) > ] > ] > ) ] } ] ] > ) ( { { { } } }",) ],"Reasoning: Match each closing bracket with the most recently opened bracket of the same type. Proceeding through the sequence, all brackets close correctly except for the very first opening square bracket `[`, which remains unmatched at the end.
+
+Therefore, append a closing square bracket.
+
+Final Answer: ]",],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+190,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ < > ] (",) ] },"Track the opening brackets and close them in reverse order:
+
+- `(` closes first with `)`
+- The remaining `[` closes with `]`
+- `{` closes with `}`
+
+Final Answer: `)]}`",)]},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+191,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ) ( { { [ ] } }",) >,"Reasoning: The first `<` is still open. The first pair `( )` is complete, but the second `(` remains open. The braces and square brackets are properly matched. Therefore, close the remaining parenthesis first, then the angle bracket.
+
+Final Answer: `) >`",) >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+192,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( [ ] ) > < >",>,"Reading the symbols as nested delimiters:
+
+- The `[` is closed by `]`.
+- The `(` is closed by `)`.
+- The second `<` is closed by the first `>`.
+- The later `<` is closed by the next `>`.
+- The initial `<` remains unclosed, so it needs one final `>`.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+193,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [",] ),"The sequence starts with an opening parenthesis `(` and an opening square bracket `[`. They should be closed in reverse order: first `]`, then `)`.
+
+Final Answer: `([])`",([]),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+194,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ ( ) ( ( { < { < { { } } > } > } ) ) ] ] > ( ) { ( ) }",],"Reasoning: Reading left to right, every opening delimiter is matched by the correct closing delimiter in reverse order:
+
+- `[ < [ [` are closed by `] ] >`
+- The nested parentheses and braces are properly matched.
+- The final `( )` and `{ ( ) }` are also balanced.
+- No unmatched opening delimiters remain.
+
+Therefore, nothing needs to be added.
+
+Final Answer: No additional brackets are needed; the sequence is already complete.",No additional brackets are needed; the sequence is already complete.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+195,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > [ { [ [ ( [ ] ) [ < ( < > ) { [ ( { ( [ ( ( < ( ( < [ ] { < > } > [ ] ) ) > ) [ { } ] ) ] ) } ) ] } > ] ] ] } [ ] ] ) < [",] >,"Reasoning: Process the sequence from left to right using a stack. Each opening bracket is pushed, and each closing bracket removes its matching opening bracket from the top of the stack. All brackets match correctly until the final two symbols:
+
+- `<` remains open
+- `[` is opened inside it
+
+Therefore, the innermost `[` must be closed first with `]`, followed by the outer `<` with `>`.
+
+Final Answer: ] >",] >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+196,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( {",} ) >,"The symbols open in this order: `<`, then `(`, then `{`. They should be closed in reverse order: `}`, then `)`, then `>`.
+
+Final Answer: < ( { } ) >",< ( { } ) >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+197,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [",] ) ],"The brackets are nested in this order: `[`, then `(`, then `[`. They should be closed in reverse order: `]`, `)`, then `]`.
+
+Final Answer: ] ) ]",] ) ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+198,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < { < > } > } [ ( < < > > ) [ { < ( ) > } ] ] [ ] } < ( { [ < [ { [ ( ) ] } ] > < { ( [ [ [ { } < > { ( < { [ ] } > ( ) ) } ] ] ] ) } > ] } )",>,"Reasoning: Scanning from left to right and tracking each opening delimiter, every closing delimiter matches the most recently opened one of the same type. The outermost `{` is closed before the final `<`, and the final `)` correctly closes the last unmatched `(`. Therefore, no additional delimiters are needed.
+
+Final Answer: No additional characters are needed; the sequence is already properly closed.",No additional characters are needed; the sequence is already properly closed.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+199,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ ( { ( ( < [ { < > } ] > { { [ ] } } ) ) } ( [ [ < > ] ] ) ) ] ] ] ) ( < > < [ ( ) ] > (",) ),"Process the brackets from left to right, matching each closing symbol with the most recent unmatched opening symbol:
+
+- The nested brackets in the first large group all close correctly.
+- After that group, `( < > < [ ( ) ] > (` begins a new group.
+- Within it, `< >` closes correctly, and `< [ ( ) ] >` also closes correctly.
+- The final `(` remains unmatched.
+
+Therefore, append a closing parenthesis:
+
+**Final Answer: )**",),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+200,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( [ [ ] ] ) ( { [ { < { ( ) < [ [ < > { [ ( < ( < [ { < < ( [ ( ) ] [ ( < ( { [ ] } ) > ) ] [ < > ] ) > [ { ( < > ) } ] > } ] > ) > ) ] } ] ] > { } [ [ ] ] { } } > ( ( < > ) ) } ] }",),"Reasoning: Scanning from left to right and matching each closing symbol with the most recent unmatched opening symbol, all brackets balance except for the outermost opening parenthesis in the final large group. Therefore, one closing parenthesis must be added.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+201,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { ( ( { } ) ) ( ( [ ] ) ) } )",),"Reasoning:
+- The braces `{ }` are properly matched.
+- The square brackets `[ ]` are properly matched.
+- There are six opening parentheses but only five closing parentheses.
+- Therefore, one closing parenthesis `)` is needed at the end.
+
+Final Answer: `( ( { ( ( { } ) ) ( ( [ ] ) ) } ) )`",( ( { ( ( { } ) ) ( ( [ ] ) ) } ) ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+202,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > >",],"The two `<` brackets are closed by the two `>` brackets. The remaining open square bracket `[` needs a closing `]`.
+
+Final Answer: `[<<>>]`",[<<>>],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+203,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ [ { } ] ]",>,"The curly braces are already properly closed, and both square-bracket pairs are closed. The remaining opening angle bracket `<` needs a closing angle bracket `>`.
+
+Final Answer: >",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+204,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) [ ( [ < { { ( { } ) } } >",] ) ],"Process the brackets from left to right using a stack:
+
+- `()` closes correctly.
+- The remaining unmatched opening brackets are: `[ ( [`
+- The existing `{...}` and `<...>` brackets close correctly.
+- Close the remaining brackets in reverse order: `] ) ]`
+
+Final Answer: `] ) ]`",] ) ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+205,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] [ { < { } > { [ ( [ ( ) ] ) ]",} } ],"Reading from left to right, the remaining unclosed delimiters are:
+
+- `{` — closed by `}`
+- `[` — closed by `]`
+
+Therefore, append:
+
+**Final Answer: `} ]`**",} ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+206,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ < < [ ] > > ] )",> ),"Reasoning: Treat each opening symbol as needing a matching closing symbol in last-in, first-out order. After matching the existing symbols, the remaining unclosed symbols are:
+
+- `<`, which needs `>`
+- `(`, which needs `)`
+
+Therefore, append `>)`.
+
+Final Answer: >)",>),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+207,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { [ [ < { { { } } } > ] ] < [ { }",] > },"Reading from left to right:
+
+- `[ ]` is balanced.
+- The first `{` remains open.
+- `[ [ < { { { } } } > ] ]` is balanced.
+- The later `< [ { }` leaves `<` and `[` open.
+
+The remaining brackets must close in reverse order: `]`, then `>`, then `}`.
+
+Final Answer: `] > }`",] > },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+208,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ ( { } ) { < ( ( [ ] ) ) >",} ] ),"Reasoning:
+
+- `(`, `[`, and `(` are opened; `{}` closes the third-level pair, and `)` closes the preceding `(`.
+- `{` and `<` are then opened.
+- The nested parentheses and square brackets are properly closed by `] ))`, and `>` closes `<`.
+- The remaining unclosed symbols are, from innermost to outermost: `{`, `[`, `(`.
+- Therefore, close them with `}`, `]`, `)`.
+
+Final Answer: `( [ ( { } ) { < ( ( [ ] ) ) > } ] )`",( [ ( { } ) { < ( ( [ ] ) ) > } ] ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+209,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { { { { < < ( { ( { { < < [ < [ [ ] ] > ] [ ] > [ [ ] ] > ( < [ { < > < [ ] > } ] > ) } } ) } ) > > } } }",} } ),"The sequence is properly nested throughout. After matching all existing closing symbols, the remaining unmatched opening symbols are:
+
+- Three `{` braces
+- One outer `(` parenthesis
+
+They must be closed in reverse order:
+
+```text
+} } } )
+```
+
+Final Answer: `} } } )`",} } } ),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+210,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( [ ] ) > ] { [ { }",] },"Reasoning:  
+- The opening symbols `[ < ( [` are correctly closed by `] ) > ]`.  
+- Then `{ [ {` is followed by `}`, which closes the innermost `{`.  
+- The remaining open symbols are `[` and `{`, so they must be closed in reverse order: `] }`.
+
+Final Answer: `] }`",] },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+211,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ { }",] } ),"The innermost `{` is already closed. Close the remaining open brackets in reverse order:
+
+- `[` → `]`
+- `{` → `}`
+- `(` → `)`
+
+Final Answer: `] } )`",] } ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+212,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ { [ ] { [ [ ] ] } { ( ) } } { [ [ ( [ ] ) ] ] } ] } { < ( ) { [ [ ( ) { [ { { } } ] < > { < ( < { ( < ( [ ] ) > ) } > ) { [ ( < ( ) > ) ] } [ ] { } > } ( ) } ] [ ( ( { < > } ) ) ] ] } >",} ),"Reasoning: Matching each opening delimiter with its corresponding closing delimiter shows that all nested brackets, parentheses, and angle brackets are balanced except for the outer `{` and the initial `(`. These must be closed in reverse order: first `}`, then `)`.
+
+Final Answer: `})`",}),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+213,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( < > < [ [ ] ] > ) { } )",) >,"Track the opening delimiters in order:
+
+- `<` remains open
+- Three `(` are opened; the innermost is closed after `>`
+- The brackets `[]` and inner angle brackets are properly closed
+- `{}` is properly closed
+- One more `)` closes the next outer parenthesis
+
+The remaining open delimiters are the outer `(` and `<`, so they must be closed in reverse order: `)` then `>`.
+
+Final Answer: `)>`",)>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+214,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { { { < > } }",} ] },"Reasoning: The `< >` pair is already closed, followed by two `}` closures. The remaining unclosed brackets are `{`, `[`, and `{`, so they must be closed in reverse order: `}`, `]`, `}`.
+
+Final Answer: `} ] }`",} ] },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+215,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < > } } < > < { { ( ) } } > { } } { < ( { [ < > ] [ ( ) < ( ) > { < ( ( ( ) ) ) > [ ] } ] < > ( < { } > ) }",) > },"Reasoning: The first group is fully balanced. In the second group, after the final existing `}`, the remaining unclosed symbols are:
+
+- `(` opened after `<`
+- `<` opened after the outer `{`
+- the outer `{`
+
+They must be closed in reverse order: `)`, `>`, `}`.
+
+Final Answer: `) > }`",) > },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+216,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > { < [ ] >",} ],"Reading the symbols from left to right:
+
+- `[` opens, so it must eventually close with `]`.
+- `< >` is already properly matched.
+- `{` opens.
+- `< [ ] >` is properly nested and matched.
+- The remaining open symbols are `{` and the initial `[`, so they close in reverse order: `}` then `]`.
+
+Final Answer: `] < > { < [ ] > } ]`",] < > { < [ ] > } ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+217,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ <",> ] ],"The sequence opens two square brackets and one angle bracket:
+
+- `[` opens
+- `[` opens
+- `<` opens
+
+They must be closed in reverse order: `>`, then `]`, then `]`.
+
+Final Answer: `> ] ]`",> ] ],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+218,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { }",),"The sequence contains an opening parenthesis `(` and an opening brace `{`. The brace is already closed by `}`, but the parenthesis remains open, so it needs a closing parenthesis.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+219,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ < ( < { } > ) > ] ] [ [ ] ]",},"Reading the symbols in order, each opening delimiter is properly closed:
+
+- `< { } >` is balanced.
+- `( < { } > )` is balanced.
+- The nested square brackets are balanced.
+- The outermost `{` remains open.
+
+Therefore, add a closing curly brace:
+
+Final Answer: `}`",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+220,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < {",} >,"The symbols are opened in this order: `<` then `{`. They must be closed in reverse order: first `}`, then `>`.
+
+Final Answer: `<>`",<>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+221,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } [ ( { ( { [ < > ] } ) ( ) } ) ] { [ < > ] } [ [ ( [ ]",) ] ],"Reading the brackets from left to right and matching each closing symbol with the most recent unmatched opening symbol, all symbols match correctly until the end.
+
+The final portion is:
+
+`[ [ ( [ ]`
+
+After the `]`, the unmatched opening symbols are:
+
+- `(`
+- `[`
+- `[`
+- `[`
+
+They must be closed in reverse order:
+
+`) ] ] ]`
+
+Final Answer: `) ] ] ]`",) ] ] ],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+222,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { { { < [ ( < > { ( ) } ) ] > } } }",> >,"Reading the symbols as nested brackets, the unmatched opening brackets remaining at the end are the first two `<` symbols. They must be closed in reverse order with two `>` symbols.
+
+Final Answer: `> >`",> >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+223,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < ( )",> > },"The `(` is closed by `)`. The two `<` brackets then need `>` in reverse order, followed by `}` to close `{`.
+
+Final Answer: `>>}`",>>},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+224,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ) <",> ],"The `(` is already closed by `)`. The remaining open delimiters are `[` and `<`, so close them in reverse order: `>` then `]`.
+
+Final Answer: >]",>],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+225,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { [ < ( < [ ( ) ] > ) > ] } ) } ] [ ] [ ( { ( ) } ) ] < { ( ( ( ( ( < > ) ) ) ) ) [ < [ ( < > ) ] > [ [ ] ( ( { } { [ { < [ ] > } ] } < { } > < [ < > ] > [ ] ) ) ] ] } > { [ { ( )",} ] },"The sequence is balanced up to the final portion:
+
+- `{` opens
+- `[` opens
+- `{` opens
+- `( )` is already closed
+
+The remaining open brackets are therefore `{ [ {`, which must be closed in reverse order as `} ] }`.
+
+Final Answer: `} ] }`",} ] },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+226,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > }",> ],"Reasoning: Reading from left to right, each opening bracket is properly matched by its corresponding closing bracket:
+
+- `[` matches `]`
+- `<` matches `>`
+- `{` matches `}`
+- `(` matches `)`
+
+The nested groups also close in the correct last-in, first-out order. Therefore, the sequence is already complete and balanced; no additional brackets are needed.
+
+Final Answer: No additional characters are needed.",No additional characters are needed.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+227,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { { [ ] } < > [ ] } [ [ [ < [ [ ] ] > ] ] ] > } [ ] { { { { [ { } ] } ( < [ [ [ ] ] ] > ) < < ( { ( [ ] ) [ { { } } ] { [ ] } } ) [ [ { [ [ { ( { } ) [ ( ) { } ] { } } ] ] < > } ] ] > > }",} } ),"Reasoning: Treat each opening delimiter as a stack item and remove its matching closing delimiter as the sequence proceeds. All inner brackets, angle brackets, and parentheses are properly matched. At the end, three opening delimiters remain unmatched: two curly braces followed by the initial parenthesis. They must be closed in reverse order:
+
+- `}` closes the innermost `{`
+- `}` closes the next `{`
+- `)` closes the initial `(`
+
+Final Answer: `}})`",}}),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+228,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < (",) >,"The sequence opens with `<` and then `(`. The innermost opening parenthesis should be closed first with `)`, followed by the closing angle bracket `>`.
+
+Final Answer: `< ( ) >`",< ( ) >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+229,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < { < ( ( ) ) > } >",] },"Reasoning:
+- The two parentheses `((` are closed by `))`.
+- The inner angle bracket `<` is closed by `>`.
+- The inner curly brace `{` is closed by `}`.
+- The outer angle bracket `<` is closed by `>`.
+- The remaining open brackets are `[` and `{`, so they must be closed in reverse order: `]}`.
+
+Final Answer: `]}`",]},True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+230,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ ( [ [ ( ) ] ] ) < < [ ] > > < < >",> ],"Track the opening brackets using a stack:
+
+- The first `[ ]` is complete.
+- The next `[ ( [ [ ( ) ] ] )` is also properly nested.
+- In the remaining part, `< < [ ] > > < < >`, the first two angle-bracket pairs close properly.
+- The final `<` is still open, so it needs a matching `>`.
+
+Final Answer: `>`",>,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+231,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } ) { ( [ { ( ) } ] ( [ ] ) )",},"Track the brackets from left to right:
+
+- `( { } )` is balanced.
+- The next `{` contains a parenthesized group.
+- Inside it, `[ { ( ) } ]` is balanced.
+- The following `( [ ] )` is also balanced.
+- The final `)` closes the larger `(`, but the outer `{` is still open.
+
+Therefore, add a closing curly brace:
+
+Final Answer: `}`",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+232,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > { { { } } { } } ] < { } [ { [ ] }",] >,"Reasoning: Track the unmatched opening brackets from left to right. At the end, the remaining open brackets are:
+
+- `<`
+- `[`
+- `{`
+
+They must be closed in reverse order: `}`, then `]`, then `>`.
+
+Final Answer: `} ] >`",} ] >,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+233,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > { { ( { } ) } { { ( ( ) ) } } }",},"Track the opening symbols from left to right:
+
+- `< >` is properly matched.
+- `{ ( { } ) }` is properly nested.
+- `{ { ( ( ) ) } }` is also properly nested.
+- One outer `{` remains open at the beginning.
+
+Therefore, the sequence needs one final closing curly brace.
+
+Final Answer: `}`",},True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+234,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { ( [ ] ) { ( )",} } },"Reading from left to right:
+
+- `{ {` opens two curly-brace blocks.
+- `( [ ] )` is properly balanced.
+- `{ ( )` is also properly balanced internally.
+- The two outer `{` braces remain open.
+
+Therefore, close them in reverse order with `} }`.
+
+Final Answer: `} }`",} },True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+235,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < { [ { } < ( { ( < < < { [ ( [ ( [ { { < [ { } < ( ) > ] > } } ] ) ] ) ] } > < > > ( ( < { } > ) ) > ) } ) > ] } > )",>,"Reasoning: Treat each opening bracket as being added to a stack and remove the most recent matching opening bracket whenever a closing bracket appears. Following the sequence, all brackets are properly matched except for the very first `<`, which remains open after the final `)`.
+
+Therefore, it must be closed with `>`.
+
+Final Answer: >",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+236,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ < > ] ( ( ( ( { { } } ) ) )",) } >,"Reasoning: The innermost `< >`, `[ ]`, and `{ }` pairs are already closed. There are four opening parentheses but only three closing parentheses, so one `)` is needed. Then close the remaining outer `{` and `<`.
+
+Final Answer: `< { [ < > ] ( ( ( ( { { } } ) ) ) ) } >`",< { [ < > ] ( ( ( ( { { } } ) ) ) ) } >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+237,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < [ [ ] ( ) { < > ( [ { } { < > } { } ] ) } [ [ [ ( [ ( ) [ [ { < [ { { } } < { { < ( ) > } } > ] > } ] ] ] ) ] < < [ [ ( < < ( ) > > ) ] ] > > [ ] ] ] ] < ( [ ] ) > { ( ( < { } > ) ) } > >",],"Scan the sequence using a stack:
+
+- The initial opening brackets leave an outer `[` unmatched after all nested structures are processed.
+- The large internal section is properly balanced.
+- The final `< ( [ ] ) >` and `{ ( ( < { } > ) ) }` are balanced.
+- The final `> >` closes the two remaining `<` brackets.
+- Therefore, one outer `[` remains open and must be closed with `]`.
+
+Final Answer: `]`",],True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+238,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ < > ]",} >,"The brackets close in reverse order of opening:
+
+- `<` is closed by `>`
+- `[` is closed by `]`
+- `{` is closed by `}`
+- The outer `<` is closed by `>`
+
+Final Answer: `} >`",} >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+239,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { ( ( < ( ( ) ) > ) ) } ]",>,"Reading from left to right, each closing symbol matches the most recently opened symbol:
+
+- `)` closes the inner `(`
+- `)` closes the next `(`
+- `>` closes the inner `<`
+- `)` and `)` close the remaining parentheses
+- `}` closes `{`
+- `]` closes `[`
+- The outermost `<` is still open, so it needs a final `>`
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+240,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ) < > > { < > } { ( ) ( < ( ) > ) } < < { [ ] }",> >,"Track the opening brackets using a stack:
+
+- The first `< ( ) < > >` is balanced.
+- `{ < > }` is balanced.
+- `{ ( ) ( < ( ) > ) }` is balanced.
+- At the end, `< < { [ ] }` closes `{` and `[ ]`, leaving two unmatched `<` brackets.
+
+Therefore, close them in reverse order with two `>` brackets.
+
+Final Answer: `> >`",> >,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+241,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ { } ] ( ( )",),"The first two bracket groups are already balanced: `[ ]` and `[ { } ]`. The final group has two opening parentheses and only one closing parenthesis: `( ( )`, so one more `)` is needed.
+
+Final Answer: `)`",),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+242,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < { < > } > { (",) },"Reading from left to right:
+
+- `[ ]` is already balanced.
+- `< { < > } >` is also balanced.
+- The remaining `{ (` opens a parenthesis inside a curly brace, so close them in reverse order: `) }`.
+
+Final Answer: `) }`",) },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+243,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > < { { { [ ( ) ] } } } > ( { [ { ( [ ] { } ) } ]",} ),"Scan the brackets from left to right:
+
+- `< >` is balanced.
+- `< { { { [ ( ) ] } } } >` is balanced.
+- In the final section, all nested brackets close correctly except the initial `(`, which remains open.
+
+Therefore, add a closing parenthesis:
+
+**Final Answer: )**",),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+244,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( <",> ) },"The brackets open in this order: curly brace `{`, parenthesis `(`, then angle bracket `<`. They should close in reverse order: `>`, `)`, `}`.
+
+Final Answer: > ) }",> ) },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+245,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { { { < ( < ( [ < < > > ] < > ) > ) > } [ ] }",} ) },"Reasoning: Reading from left to right, every closing symbol matches the most recent unmatched opening symbol. After processing the given sequence, the remaining open symbols are:
+
+`{ ( {`
+
+These must be closed in reverse order:
+
+`}` for `{`, then `)` for `(`, then `}` for `{`.
+
+Final Answer: `} ) }`",} ) },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+246,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] )",} },"Scan the sequence from left to right, matching each opening bracket with its corresponding closing bracket:
+
+- The first four groups are already balanced.
+- In the final group, the inner brackets close correctly:
+  - `{ }`
+  - `[ { [ { } ] } ]`
+  - `( [ { } ] )`
+- This leaves the two outer opening braces `{ {` unmatched.
+
+Therefore, add two closing braces:
+
+Final Answer: `} }`",} },True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+247,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < < < ( ( ) ) ( [ ] ) > > { [ ] }",> ) ),"Process the symbols using a stack:
+
+- The inner parentheses and brackets close correctly.
+- Two `<` symbols are closed by `> >`.
+- The `{ [ ] }` group is fully closed.
+- The remaining unmatched openings are, from outermost to innermost: `( ( <`.
+- These must be closed in reverse order: `> ) )`.
+
+Final Answer: `> ) )`",> ) ),True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+248,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { { } }",> ],"Opening brackets are: `[`, `<`, `{`, `{`.  
+The existing `}` closes the innermost `{`. The remaining brackets must close in reverse order: `}`, `>`, `]`.
+
+Final Answer: `]`",],True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+249,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < > >",>,"There are three opening angle brackets `<` and only two closing brackets `>`. Therefore, one more `>` is needed to close the remaining opening bracket.
+
+Final Answer: `>`",>,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42

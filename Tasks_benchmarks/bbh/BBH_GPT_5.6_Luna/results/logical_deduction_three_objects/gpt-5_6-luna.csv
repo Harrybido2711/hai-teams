@@ -1,0 +1,2448 @@
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
+0,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a blue jay, a quail, and a falcon. The falcon is to the right of the blue jay. The blue jay is to the right of the quail.
+Options:
+(A) The blue jay is the second from the left
+(B) The quail is the second from the left
+(C) The falcon is the second from the left",(A),"The falcon is to the right of the blue jay, and the blue jay is to the right of the quail. Therefore, the order from left to right is:
+
+Quail → Blue jay → Falcon
+
+So, the blue jay is second from the left.
+
+Final Answer: (A) The blue jay is the second from the left",(A) The blue jay is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+1,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a motorcyle, a limousine, and a convertible. The motorcyle is newer than the limousine. The convertible is newer than the motorcyle.
+Options:
+(A) The motorcyle is the oldest
+(B) The limousine is the oldest
+(C) The convertible is the oldest",(B),"The limousine is older than the motorcycle because the motorcycle is newer than the limousine. The convertible is newer than the motorcycle, so it is the newest vehicle. Therefore, the limousine is the oldest.
+
+Final Answer: (B) The limousine is the oldest",(B) The limousine is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+2,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a blue book, an orange book, and a red book. The blue book is the rightmost. The orange book is the leftmost.
+Options:
+(A) The blue book is the second from the left
+(B) The orange book is the second from the left
+(C) The red book is the second from the left",(C),"There are three positions from left to right:
+
+- Orange book is leftmost → position 1
+- Blue book is rightmost → position 3
+- Therefore, the red book must be in position 2, second from the left.
+
+Final Answer: (C) The red book is the second from the left",(C) The red book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+3,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a robin, a blue jay, and a crow. The robin is to the right of the crow. The robin is to the left of the blue jay.
+Options:
+(A) The robin is the rightmost
+(B) The blue jay is the rightmost
+(C) The crow is the rightmost",(B),"The robin is to the right of the crow, so the order begins:
+
+crow → robin
+
+The robin is also to the left of the blue jay, giving:
+
+crow → robin → blue jay
+
+Therefore, the blue jay is rightmost.
+
+Final Answer: (B) The blue jay is the rightmost",(B) The blue jay is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+4,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a green book, a red book, and a blue book. The red book is the rightmost. The blue book is to the right of the green book.
+Options:
+(A) The green book is the rightmost
+(B) The red book is the rightmost
+(C) The blue book is the rightmost",(B),"The red book is stated to be the rightmost. Since the blue book is to the right of the green book, the order is green, blue, red.
+
+Final Answer: (B) The red book is the rightmost",(B) The red book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+5,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, peaches, and mangoes. The mangoes are less expensive than the peaches. The apples are less expensive than the mangoes.
+Options:
+(A) The apples are the second-most expensive
+(B) The peaches are the second-most expensive
+(C) The mangoes are the second-most expensive",(C),"The apples are less expensive than the mangoes, and the mangoes are less expensive than the peaches. So the order from most to least expensive is:
+
+1. Peaches  
+2. Mangoes  
+3. Apples  
+
+Final Answer: (C) The mangoes are the second-most expensive",(C) The mangoes are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+6,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a tractor, a truck, and a minivan. The minivan is newer than the truck. The tractor is older than the truck.
+Options:
+(A) The tractor is the newest
+(B) The truck is the newest
+(C) The minivan is the newest",(C),"The minivan is newer than the truck, and the truck is newer than the tractor. Therefore, the minivan is the newest.
+
+Final Answer: (C) The minivan is the newest",(C) The minivan is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+7,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eve, Rob, and Mel. Rob finished below Mel. Mel finished below Eve.
+Options:
+(A) Eve finished first
+(B) Rob finished first
+(C) Mel finished first",(A),"Rob finished below Mel, and Mel finished below Eve. Therefore, the order from highest to lowest is:
+
+1. Eve  
+2. Mel  
+3. Rob  
+
+Final Answer: (A) Eve finished first",(A) Eve finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+8,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: an orange book, a yellow book, and a blue book. The blue book is to the right of the yellow book. The orange book is the second from the left.
+Options:
+(A) The orange book is the second from the left
+(B) The yellow book is the second from the left
+(C) The blue book is the second from the left",(A),"There are three positions from left to right. The orange book is explicitly second from the left. Since the blue book is to the right of the yellow book, the yellow book must be first and the blue book third.
+
+Therefore, the orange book is second from the left.
+
+Final Answer: (A) The orange book is the second from the left",(A) The orange book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+9,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a station wagon, a minivan, and a truck. The minivan is newer than the truck. The station wagon is newer than the minivan.
+Options:
+(A) The station wagon is the newest
+(B) The minivan is the newest
+(C) The truck is the newest",(A),"The minivan is newer than the truck, and the station wagon is newer than the minivan. Therefore, the order from newest to oldest is:
+
+1. Station wagon  
+2. Minivan  
+3. Truck  
+
+Final Answer: (A) The station wagon is the newest",(A) The station wagon is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+10,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a gray book, a purple book, and a red book. The purple book is to the left of the red book. The gray book is to the left of the purple book.
+Options:
+(A) The gray book is the leftmost
+(B) The purple book is the leftmost
+(C) The red book is the leftmost",(A),"The gray book is to the left of the purple book, and the purple book is to the left of the red book. Therefore, the order is:
+
+Gray → Purple → Red
+
+So, the gray book is the leftmost.
+
+Final Answer: (A) The gray book is the leftmost",(A) The gray book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+11,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: peaches, mangoes, and apples. The peaches are more expensive than the apples. The mangoes are the cheapest.
+Options:
+(A) The peaches are the second-most expensive
+(B) The mangoes are the second-most expensive
+(C) The apples are the second-most expensive",(C),"The mangoes are the cheapest, so they are least expensive. Since the peaches cost more than the apples, the order from most to least expensive is:
+
+1. Peaches  
+2. Apples  
+3. Mangoes  
+
+Final Answer: (C) The apples are the second-most expensive",(C) The apples are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+12,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a blue jay, a falcon, and a hummingbird. The blue jay is to the right of the falcon. The hummingbird is to the left of the falcon.
+Options:
+(A) The blue jay is the second from the left
+(B) The falcon is the second from the left
+(C) The hummingbird is the second from the left",(B),"The hummingbird is to the left of the falcon, and the blue jay is to the right of the falcon. Therefore, the order from left to right is:
+
+Hummingbird → Falcon → Blue jay
+
+So, the falcon is second from the left.
+
+Final Answer: (B) The falcon is the second from the left",(B) The falcon is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+13,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a minivan, a bus, and a sedan. The minivan is newer than the sedan. The minivan is older than the bus.
+Options:
+(A) The minivan is the second-newest
+(B) The bus is the second-newest
+(C) The sedan is the second-newest",(A),"The bus is newer than the minivan, and the minivan is newer than the sedan. Therefore, from newest to oldest: bus, minivan, sedan.
+
+Final Answer: (A) The minivan is the second-newest",(A) The minivan is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+14,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a hatchback, a convertible, and a tractor. The convertible is older than the tractor. The hatchback is the second-newest.
+Options:
+(A) The hatchback is the second-newest
+(B) The convertible is the second-newest
+(C) The tractor is the second-newest",(A),"Let the vehicles be ordered from newest to oldest.
+
+- The hatchback is explicitly stated to be the second-newest.
+- Since the convertible is older than the tractor, and the hatchback occupies the middle position, the convertible must be the oldest and the tractor the newest.
+
+Therefore, the correct option is **(A)**.
+
+Final Answer: (A) The hatchback is the second-newest",(A) The hatchback is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+15,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: loquats, watermelons, and cantaloupes. The watermelons are the second-most expensive. The loquats are more expensive than the cantaloupes.
+Options:
+(A) The loquats are the most expensive
+(B) The watermelons are the most expensive
+(C) The cantaloupes are the most expensive",(A),"There are three fruits ranked by price:
+
+- Watermelons are second-most expensive.
+- Loquats cost more than cantaloupes.
+
+Since watermelons are in the middle, loquats and cantaloupes must be the most and least expensive, respectively. Because loquats cost more than cantaloupes, loquats are the most expensive.
+
+Final Answer: (A) The loquats are the most expensive",(A) The loquats are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+16,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: mangoes, watermelons, and kiwis. The watermelons are less expensive than the kiwis. The kiwis are the second-most expensive.
+Options:
+(A) The mangoes are the most expensive
+(B) The watermelons are the most expensive
+(C) The kiwis are the most expensive",(A),"The kiwis are the second-most expensive, so exactly one fruit—the most expensive—must cost more than them. Since the watermelons cost less than the kiwis, they cannot be the most expensive. Therefore, the mangoes are the most expensive.
+
+Final Answer: (A) The mangoes are the most expensive",(A) The mangoes are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+17,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a blue book, an orange book, and a red book. The blue book is the rightmost. The orange book is the leftmost.
+Options:
+(A) The blue book is the rightmost
+(B) The orange book is the rightmost
+(C) The red book is the rightmost",(A),"The orange book is leftmost and the blue book is rightmost, so the red book must be in the middle. Therefore, the blue book is the rightmost.
+
+Final Answer: (A) The blue book is the rightmost",(A) The blue book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+18,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ada, Mel, and Mya. Mya finished below Ada. Mel finished above Ada.
+Options:
+(A) Ada finished last
+(B) Mel finished last
+(C) Mya finished last",(C),"Mel finished above Ada, and Ada finished above Mya. Therefore, the order was:
+
+1. Mel  
+2. Ada  
+3. Mya  
+
+Final Answer: (C) Mya finished last",(C) Mya finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+19,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Mel, Ada, and Ana. Mel finished last. Ana finished second.
+Options:
+(A) Mel finished last
+(B) Ada finished last
+(C) Ana finished last",(A),"There are three golfers: Mel, Ada, and Ana.
+
+- Mel finished last.
+- Ana finished second.
+- Therefore, Ada must have finished first.
+
+The statement that matches the given information is **(A) Mel finished last**.
+
+Final Answer: (A) Mel finished last",(A) Mel finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+20,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: plums, apples, and loquats. The loquats are the cheapest. The plums are less expensive than the apples.
+Options:
+(A) The plums are the cheapest
+(B) The apples are the cheapest
+(C) The loquats are the cheapest",(C),"The loquats are explicitly stated to be the cheapest. The plums cost less than the apples, so the price order is:
+
+Loquats < Plums < Apples
+
+Final Answer: (C) The loquats are the cheapest",(C) The loquats are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+21,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a black book, an orange book, and a blue book. The blue book is to the right of the orange book. The orange book is to the right of the black book.
+Options:
+(A) The black book is the second from the left
+(B) The orange book is the second from the left
+(C) The blue book is the second from the left",(B),"The blue book is to the right of the orange book, and the orange book is to the right of the black book. Therefore, the order from left to right is:
+
+Black, Orange, Blue
+
+So, the orange book is second from the left.
+
+Final Answer: (B) The orange book is the second from the left",(B) The orange book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+22,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a convertible, a motorcyle, and a truck. The motorcyle is newer than the convertible. The convertible is newer than the truck.
+Options:
+(A) The convertible is the oldest
+(B) The motorcyle is the oldest
+(C) The truck is the oldest",(C),"The motorcycle is newer than the convertible, and the convertible is newer than the truck. Therefore, the order from oldest to newest is:
+
+Truck → Convertible → Motorcycle
+
+Final Answer: (C) The truck is the oldest",(C) The truck is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+23,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, peaches, and mangoes. The mangoes are less expensive than the peaches. The apples are less expensive than the mangoes.
+Options:
+(A) The apples are the cheapest
+(B) The peaches are the cheapest
+(C) The mangoes are the cheapest",(A),"The mangoes cost less than the peaches, and the apples cost less than the mangoes. Therefore:
+
+Apples < Mangoes < Peaches
+
+So, the apples are the cheapest.
+
+Final Answer: (A) The apples are the cheapest",(A) The apples are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+24,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eve, Joe, and Amy. Eve finished below Amy. Eve finished above Joe.
+Options:
+(A) Eve finished first
+(B) Joe finished first
+(C) Amy finished first",(C),"Eve finished below Amy, so Amy ranked higher than Eve. Eve finished above Joe, so Joe ranked below Eve. Therefore, the order was:
+
+1. Amy  
+2. Eve  
+3. Joe  
+
+Final Answer: (C) Amy finished first",(C) Amy finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+25,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eli, Mya, and Eve. Eve finished below Eli. Eve finished above Mya.
+Options:
+(A) Eli finished second
+(B) Mya finished second
+(C) Eve finished second",(C),"Eli finished above Eve, and Eve finished above Mya. Therefore, the order was:
+
+1. Eli  
+2. Eve  
+3. Mya  
+
+Final Answer: (C) Eve finished second",(C) Eve finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+26,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: peaches, pears, and mangoes. The mangoes are less expensive than the peaches. The mangoes are more expensive than the pears.
+Options:
+(A) The peaches are the most expensive
+(B) The pears are the most expensive
+(C) The mangoes are the most expensive",(A),"The mangoes are less expensive than the peaches, so peaches cost more than mangoes. The mangoes are more expensive than the pears, so pears cost less than mangoes. Therefore:
+
+Peaches > Mangoes > Pears
+
+The peaches are the most expensive.
+
+Final Answer: (A) The peaches are the most expensive",(A) The peaches are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+27,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a hatchback, a convertible, and a tractor. The convertible is older than the tractor. The hatchback is the second-newest.
+Options:
+(A) The hatchback is the oldest
+(B) The convertible is the oldest
+(C) The tractor is the oldest",(B),"The hatchback is the second-newest, so it is in the middle position by age. The convertible is older than the tractor, so the convertible must be the oldest and the tractor the newest.
+
+Final Answer: (B) The convertible is the oldest",(B) The convertible is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+28,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hummingbird, a blue jay, and a raven. The blue jay is to the right of the hummingbird. The raven is the second from the left.
+Options:
+(A) The hummingbird is the rightmost
+(B) The blue jay is the rightmost
+(C) The raven is the rightmost",(B),"There are three positions from left to right. The raven is second, so the hummingbird and blue jay must occupy the first and third positions. Since the blue jay is to the right of the hummingbird, the hummingbird is first and the blue jay is third.
+
+Final Answer: (B) The blue jay is the rightmost",(B) The blue jay is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+29,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a purple book, a red book, and a yellow book. The purple book is to the right of the yellow book. The yellow book is to the right of the red book.
+Options:
+(A) The purple book is the rightmost
+(B) The red book is the rightmost
+(C) The yellow book is the rightmost",(A),"The yellow book is to the right of the red book, and the purple book is to the right of the yellow book. Therefore, the order from left to right is:
+
+Red → Yellow → Purple
+
+So, the purple book is rightmost.
+
+Final Answer: (A) The purple book is the rightmost",(A) The purple book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+30,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: watermelons, apples, and mangoes. The apples are less expensive than the mangoes. The mangoes are less expensive than the watermelons.
+Options:
+(A) The watermelons are the second-most expensive
+(B) The apples are the second-most expensive
+(C) The mangoes are the second-most expensive",(C),"The apples are less expensive than the mangoes, and the mangoes are less expensive than the watermelons. Therefore, from least to most expensive:
+
+Apples → Mangoes → Watermelons
+
+So, the mangoes are the second-most expensive.
+
+Final Answer: (C) The mangoes are the second-most expensive",(C) The mangoes are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+31,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Amy, Dan, and Mel. Mel finished above Amy. Dan finished below Amy.
+Options:
+(A) Amy finished first
+(B) Dan finished first
+(C) Mel finished first",(C),"Mel finished above Amy, and Dan finished below Amy. Therefore, the order was:
+
+1. Mel  
+2. Amy  
+3. Dan  
+
+Final Answer: (C) Mel finished first",(C) Mel finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+32,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a motorcyle, a bus, and a tractor. The motorcyle is the oldest. The bus is newer than the tractor.
+Options:
+(A) The motorcyle is the second-newest
+(B) The bus is the second-newest
+(C) The tractor is the second-newest",(C),"The motorcycle is the oldest. Since the bus is newer than the tractor, the order from oldest to newest is:
+
+1. Motorcycle  
+2. Tractor  
+3. Bus  
+
+Therefore, the tractor is the second-newest.
+
+Final Answer: (C) The tractor is the second-newest",(C) The tractor is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+33,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a red book, a blue book, and an orange book. The red book is to the left of the orange book. The orange book is the second from the left.
+Options:
+(A) The red book is the second from the left
+(B) The blue book is the second from the left
+(C) The orange book is the second from the left",(C),"The orange book is second from the left. Since the red book is to the left of the orange book, the red book must be first, leaving the blue book third.
+
+Final Answer: (C) The orange book is the second from the left",(C) The orange book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+34,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a motorcyle, a minivan, and a tractor. The minivan is older than the tractor. The minivan is the second-newest.
+Options:
+(A) The motorcyle is the newest
+(B) The minivan is the newest
+(C) The tractor is the newest",(C),"The minivan is older than the tractor, so the minivan ranks ahead of the tractor in age. Since the minivan is second-newest, the only vehicle that can be newer than it is the motorcycle.
+
+Final Answer: (A) The motorcycle is the newest",(A) The motorcycle is the newest,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+35,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a bus, a sedan, and a truck. The truck is older than the bus. The bus is older than the sedan.
+Options:
+(A) The bus is the second-newest
+(B) The sedan is the second-newest
+(C) The truck is the second-newest",(A),"The truck is older than the bus, and the bus is older than the sedan. Therefore, from oldest to newest:
+
+1. Truck  
+2. Bus  
+3. Sedan  
+
+So, the bus is the second-newest.
+
+Final Answer: (A) The bus is the second-newest",(A) The bus is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+36,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: loquats, mangoes, and apples. The mangoes are more expensive than the apples. The loquats are more expensive than the mangoes.
+Options:
+(A) The loquats are the most expensive
+(B) The mangoes are the most expensive
+(C) The apples are the most expensive",(A),"The mangoes cost more than the apples, and the loquats cost more than the mangoes. Therefore, the order from most to least expensive is:
+
+Loquats > Mangoes > Apples
+
+Final Answer: (A) The loquats are the most expensive",(A) The loquats are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+37,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a blue jay, a quail, and a falcon. The falcon is to the right of the blue jay. The blue jay is to the right of the quail.
+Options:
+(A) The blue jay is the rightmost
+(B) The quail is the rightmost
+(C) The falcon is the rightmost",(C),"The order from left to right is:
+
+Quail → Blue jay → Falcon
+
+Since the falcon is to the right of the blue jay, and the blue jay is to the right of the quail, the falcon is rightmost.
+
+Final Answer: (C) The falcon is the rightmost",(C) The falcon is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+38,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hawk, a crow, and a raven. The raven is to the right of the hawk. The crow is the rightmost.
+Options:
+(A) The hawk is the second from the left
+(B) The crow is the second from the left
+(C) The raven is the second from the left",(C),"There are three positions from left to right. The crow is rightmost, so it is in position 3. The raven is to the right of the hawk, so the hawk must be before the raven. Therefore, the order is:
+
+**Hawk, Raven, Crow**
+
+The raven is second from the left.
+
+Final Answer: **(C) The raven is the second from the left**",(C) The raven is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+39,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a brown book, a yellow book, and an orange book. The yellow book is the leftmost. The orange book is to the right of the brown book.
+Options:
+(A) The brown book is the leftmost
+(B) The yellow book is the leftmost
+(C) The orange book is the leftmost",(B),"The yellow book is explicitly stated to be the leftmost. Since the orange book is to the right of the brown book, the order is:
+
+**Yellow → Brown → Orange**
+
+Therefore, the correct option is **(B)**.
+
+Final Answer: **(B) The yellow book is the leftmost**",(B) The yellow book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+40,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: loquats, mangoes, and apples. The mangoes are more expensive than the apples. The loquats are more expensive than the mangoes.
+Options:
+(A) The loquats are the second-most expensive
+(B) The mangoes are the second-most expensive
+(C) The apples are the second-most expensive",(B),"The loquats are more expensive than the mangoes, and the mangoes are more expensive than the apples. Thus, the order from most to least expensive is:
+
+1. Loquats  
+2. Mangoes  
+3. Apples  
+
+Final Answer: (B) The mangoes are the second-most expensive",(B) The mangoes are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+41,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: cantaloupes, oranges, and watermelons. The oranges are the most expensive. The cantaloupes are more expensive than the watermelons.
+Options:
+(A) The cantaloupes are the cheapest
+(B) The oranges are the cheapest
+(C) The watermelons are the cheapest",(C),"The oranges are the most expensive. Since the cantaloupes cost more than the watermelons, the order from most to least expensive is:
+
+Oranges > Cantaloupes > Watermelons
+
+Therefore, the watermelons are the cheapest.
+
+Final Answer: (C) The watermelons are the cheapest",(C) The watermelons are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+42,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, peaches, and loquats. The loquats are less expensive than the apples. The peaches are more expensive than the apples.
+Options:
+(A) The apples are the most expensive
+(B) The peaches are the most expensive
+(C) The loquats are the most expensive",(B),"The loquats cost less than the apples, and the peaches cost more than the apples. Therefore, the peaches are more expensive than both the apples and the loquats.
+
+Final Answer: (B) The peaches are the most expensive",(B) The peaches are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+43,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: an owl, a crow, and a cardinal. The crow is to the left of the owl. The owl is the second from the left.
+Options:
+(A) The owl is the second from the left
+(B) The crow is the second from the left
+(C) The cardinal is the second from the left",(A),"There are three positions from left to right. The owl is second, and the crow is to the left of the owl, so the crow must be first. The cardinal is therefore third.
+
+Final Answer: (A) The owl is the second from the left",(A) The owl is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+44,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: oranges, mangoes, and plums. The plums are less expensive than the mangoes. The oranges are less expensive than the plums.
+Options:
+(A) The oranges are the second-most expensive
+(B) The mangoes are the second-most expensive
+(C) The plums are the second-most expensive",(C),"The prices are ordered from least to most expensive as:
+
+Oranges < Plums < Mangoes
+
+Therefore, the plums are the second-most expensive.
+
+Final Answer: (C) The plums are the second-most expensive",(C) The plums are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+45,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a quail, an owl, and a hummingbird. The quail is to the left of the owl. The owl is to the left of the hummingbird.
+Options:
+(A) The quail is the second from the left
+(B) The owl is the second from the left
+(C) The hummingbird is the second from the left",(B),"The quail is to the left of the owl, and the owl is to the left of the hummingbird. Therefore, the order from left to right is:
+
+Quail, Owl, Hummingbird
+
+So, the owl is second from the left.
+
+Final Answer: (B) The owl is the second from the left",(B) The owl is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+46,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: oranges, watermelons, and pears. The oranges are the second-most expensive. The pears are more expensive than the watermelons.
+Options:
+(A) The oranges are the most expensive
+(B) The watermelons are the most expensive
+(C) The pears are the most expensive",(C),"There are three fruits ranked by price:
+
+- Oranges are second-most expensive.
+- Pears cost more than watermelons.
+
+Since oranges are already in second place, pears must be the most expensive, leaving watermelons as the least expensive.
+
+Final Answer: (C) The pears are the most expensive",(C) The pears are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+47,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Mel, and Ada. Ada finished above Ana. Mel finished below Ana.
+Options:
+(A) Ana finished first
+(B) Mel finished first
+(C) Ada finished first",(C),"Ada finished above Ana, and Mel finished below Ana. Therefore, the order is:
+
+1. Ada  
+2. Ana  
+3. Mel  
+
+Final Answer: (C) Ada finished first",(C) Ada finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+48,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a sedan, a tractor, and a bus. The sedan is older than the tractor. The bus is older than the sedan.
+Options:
+(A) The sedan is the second-newest
+(B) The tractor is the second-newest
+(C) The bus is the second-newest",(A),"The age order from oldest to newest is:
+
+1. Bus  
+2. Sedan  
+3. Tractor  
+
+Therefore, from newest to oldest, the sedan is second-newest.
+
+Final Answer: (A) The sedan is the second-newest",(A) The sedan is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+49,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a green book, a brown book, and an orange book. The brown book is to the left of the orange book. The green book is to the left of the brown book.
+Options:
+(A) The green book is the second from the left
+(B) The brown book is the second from the left
+(C) The orange book is the second from the left",(B),"The green book is to the left of the brown book, and the brown book is to the left of the orange book. Therefore, the order from left to right is:
+
+Green, Brown, Orange
+
+So, the brown book is second from the left.
+
+Final Answer: (B) The brown book is the second from the left",(B) The brown book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+50,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: an orange book, a blue book, and a yellow book. The orange book is to the left of the blue book. The yellow book is to the right of the blue book.
+Options:
+(A) The orange book is the leftmost
+(B) The blue book is the leftmost
+(C) The yellow book is the leftmost",(A),"The orange book is to the left of the blue book, and the yellow book is to the right of the blue book. Therefore, the order from left to right is:
+
+Orange → Blue → Yellow
+
+Final Answer: (A) The orange book is the leftmost",(A) The orange book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+51,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: oranges, mangoes, and plums. The plums are less expensive than the mangoes. The oranges are less expensive than the plums.
+Options:
+(A) The oranges are the cheapest
+(B) The mangoes are the cheapest
+(C) The plums are the cheapest",(A),"The plums cost less than the mangoes, and the oranges cost less than the plums. Therefore, the order from cheapest to most expensive is:
+
+Oranges < Plums < Mangoes
+
+Final Answer: (A) The oranges are the cheapest",(A) The oranges are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+52,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a gray book, a purple book, and a red book. The purple book is to the left of the red book. The gray book is to the left of the purple book.
+Options:
+(A) The gray book is the rightmost
+(B) The purple book is the rightmost
+(C) The red book is the rightmost",(C),"The gray book is to the left of the purple book, and the purple book is to the left of the red book. Therefore, the order is:
+
+Gray → Purple → Red
+
+So, the red book is rightmost.
+
+Final Answer: (C) The red book is the rightmost",(C) The red book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+53,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a motorcyle, a minivan, and a tractor. The minivan is older than the tractor. The minivan is the second-newest.
+Options:
+(A) The motorcyle is the oldest
+(B) The minivan is the oldest
+(C) The tractor is the oldest",(A),"The minivan is older than the tractor, so the tractor is older than the minivan. Since the minivan is second-newest, the only vehicle older than it must be the tractor.
+
+Therefore, the tractor is the oldest.
+
+Final Answer: (C) The tractor is the oldest",(C) The tractor is the oldest,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+54,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a blue jay, a cardinal, and a quail. The cardinal is to the right of the quail. The quail is to the right of the blue jay.
+Options:
+(A) The blue jay is the rightmost
+(B) The cardinal is the rightmost
+(C) The quail is the rightmost",(B),"The quail is to the right of the blue jay, and the cardinal is to the right of the quail. Therefore, the order from left to right is:
+
+Blue jay → Quail → Cardinal
+
+So, the cardinal is the rightmost.
+
+Final Answer: (B) The cardinal is the rightmost",(B) The cardinal is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+55,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Amy, Eli, and Eve. Eve finished above Amy. Eli finished below Amy.
+Options:
+(A) Amy finished second
+(B) Eli finished second
+(C) Eve finished second",(A),"Eve finished above Amy, while Eli finished below Amy. Therefore, the order from highest to lowest was:
+
+1. Eve  
+2. Amy  
+3. Eli  
+
+Final Answer: (A) Amy finished second",(A) Amy finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+56,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Joe, Dan, and Eve. Eve finished above Dan. Dan finished above Joe.
+Options:
+(A) Joe finished first
+(B) Dan finished first
+(C) Eve finished first",(C),"Eve finished above Dan, and Dan finished above Joe. Therefore, the finishing order was:
+
+1. Eve  
+2. Dan  
+3. Joe  
+
+Final Answer: (C) Eve finished first",(C) Eve finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+57,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a blue jay, a quail, and a falcon. The falcon is to the right of the blue jay. The blue jay is to the right of the quail.
+Options:
+(A) The blue jay is the leftmost
+(B) The quail is the leftmost
+(C) The falcon is the leftmost",(B),"The falcon is to the right of the blue jay, and the blue jay is to the right of the quail. Therefore, the order from left to right is:
+
+**Quail → Blue jay → Falcon**
+
+Final Answer: **(B) The quail is the leftmost**",(B) The quail is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+58,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: watermelons, apples, and mangoes. The apples are less expensive than the mangoes. The mangoes are less expensive than the watermelons.
+Options:
+(A) The watermelons are the cheapest
+(B) The apples are the cheapest
+(C) The mangoes are the cheapest",(B),"The prices follow this order:
+
+- Apples are less expensive than mangoes.
+- Mangoes are less expensive than watermelons.
+
+So, from cheapest to most expensive: **apples → mangoes → watermelons**.
+
+Final Answer: **(B) The apples are the cheapest**",(B) The apples are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+59,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a motorcyle, a bus, and a tractor. The motorcyle is the oldest. The bus is newer than the tractor.
+Options:
+(A) The motorcyle is the newest
+(B) The bus is the newest
+(C) The tractor is the newest",(B),"The motorcycle is the oldest. Since the bus is newer than the tractor, the order from oldest to newest is:
+
+1. Motorcycle  
+2. Tractor  
+3. Bus  
+
+Therefore, the bus is the newest.
+
+Final Answer: (B) The bus is the newest",(B) The bus is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+60,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a motorcyle, a minivan, and a tractor. The minivan is older than the tractor. The minivan is the second-newest.
+Options:
+(A) The motorcyle is the second-newest
+(B) The minivan is the second-newest
+(C) The tractor is the second-newest",(B),"The minivan is explicitly stated to be the second-newest vehicle. Therefore, the correct option is **(B)**.
+
+Final Answer: (B) The minivan is the second-newest",(B) The minivan is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+61,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: plums, apples, and loquats. The loquats are the cheapest. The plums are less expensive than the apples.
+Options:
+(A) The plums are the most expensive
+(B) The apples are the most expensive
+(C) The loquats are the most expensive",(B),"The loquats are the cheapest, and the plums cost less than the apples. Therefore, the price order is:
+
+Loquats < Plums < Apples
+
+So, the apples are the most expensive.
+
+Final Answer: (B) The apples are the most expensive",(B) The apples are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+62,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a gray book, an orange book, and a brown book. The orange book is the leftmost. The gray book is to the right of the brown book.
+Options:
+(A) The gray book is the second from the left
+(B) The orange book is the second from the left
+(C) The brown book is the second from the left",(C),"The orange book is leftmost, so it is in position 1. Since the gray book is to the right of the brown book, the brown book must be in position 2 and the gray book in position 3.
+
+Final Answer: (C) The brown book is the second from the left",(C) The brown book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+63,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: pears, plums, and kiwis. The pears are less expensive than the plums. The kiwis are less expensive than the pears.
+Options:
+(A) The pears are the second-most expensive
+(B) The plums are the second-most expensive
+(C) The kiwis are the second-most expensive",(A),"The kiwis are less expensive than the pears, and the pears are less expensive than the plums. Therefore, from least to most expensive:
+
+1. Kiwis  
+2. Pears  
+3. Plums  
+
+So, the pears are the second-most expensive.
+
+Final Answer: (A) The pears are the second-most expensive",(A) The pears are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+64,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a convertible, a tractor, and a hatchback. The hatchback is older than the convertible. The tractor is the newest.
+Options:
+(A) The convertible is the newest
+(B) The tractor is the newest
+(C) The hatchback is the newest",(B),"The hatchback is older than the convertible, and the tractor is explicitly stated to be the newest. Therefore, the correct option is:
+
+**Final Answer: (B) The tractor is the newest**",(B) The tractor is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+65,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a tractor, a convertible, and a minivan. The tractor is the second-newest. The minivan is newer than the convertible.
+Options:
+(A) The tractor is the second-newest
+(B) The convertible is the second-newest
+(C) The minivan is the second-newest",(A),"The tractor is explicitly stated to be the second-newest. Since the minivan is newer than the convertible, the full order from newest to oldest is:
+
+1. Minivan  
+2. Tractor  
+3. Convertible  
+
+Final Answer: (A) The tractor is the second-newest",(A) The tractor is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+66,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a tractor, a station wagon, and a limousine. The tractor is newer than the limousine. The station wagon is the newest.
+Options:
+(A) The tractor is the oldest
+(B) The station wagon is the oldest
+(C) The limousine is the oldest",(C),"The station wagon is the newest, and the tractor is newer than the limousine. Therefore, the order from oldest to newest is:
+
+1. Limousine  
+2. Tractor  
+3. Station wagon  
+
+Final Answer: (C) The limousine is the oldest",(C) The limousine is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+67,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eli, Mya, and Eve. Eve finished below Eli. Eve finished above Mya.
+Options:
+(A) Eli finished first
+(B) Mya finished first
+(C) Eve finished first",(A),"Eve finished below Eli, so Eli ranked higher than Eve. Eve finished above Mya, so the order was:
+
+1. Eli  
+2. Eve  
+3. Mya  
+
+Final Answer: (A) Eli finished first",(A) Eli finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+68,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a cardinal, a hawk, and a hummingbird. The hummingbird is to the right of the hawk. The cardinal is to the left of the hawk.
+Options:
+(A) The cardinal is the rightmost
+(B) The hawk is the rightmost
+(C) The hummingbird is the rightmost",(C),"The cardinal is to the left of the hawk, and the hummingbird is to the right of the hawk. Therefore, the order from left to right is:
+
+Cardinal → Hawk → Hummingbird
+
+Final Answer: (C) The hummingbird is the rightmost",(C) The hummingbird is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+69,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a sedan, a tractor, and a bus. The sedan is older than the tractor. The bus is older than the sedan.
+Options:
+(A) The sedan is the newest
+(B) The tractor is the newest
+(C) The bus is the newest",(B),"The bus is older than the sedan, and the sedan is older than the tractor. Therefore, the tractor is the newest vehicle.
+
+Final Answer: (B) The tractor is the newest",(B) The tractor is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+70,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a blue book, an orange book, and a green book. The green book is the leftmost. The orange book is to the left of the blue book.
+Options:
+(A) The blue book is the leftmost
+(B) The orange book is the leftmost
+(C) The green book is the leftmost",(C),"The green book is explicitly stated to be the leftmost. Since the orange book is to the left of the blue book, the order is:
+
+Green → Orange → Blue
+
+Final Answer: (C) The green book is the leftmost",(C) The green book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+71,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Joe, Eve, and Amy. Amy finished above Eve. Joe finished first.
+Options:
+(A) Joe finished last
+(B) Eve finished last
+(C) Amy finished last",(B),"Joe finished first. Since Amy finished above Eve, Amy must be second and Eve third.
+
+Final Answer: (B) Eve finished last",(B) Eve finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+72,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: kiwis, loquats, and cantaloupes. The kiwis are less expensive than the loquats. The cantaloupes are less expensive than the kiwis.
+Options:
+(A) The kiwis are the most expensive
+(B) The loquats are the most expensive
+(C) The cantaloupes are the most expensive",(B),"The kiwis cost less than the loquats, so loquats are more expensive than kiwis. The cantaloupes cost less than the kiwis, making them the least expensive. Therefore, the loquats are the most expensive.
+
+Final Answer: (B) The loquats are the most expensive",(B) The loquats are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+73,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: kiwis, loquats, and cantaloupes. The kiwis are less expensive than the loquats. The cantaloupes are less expensive than the kiwis.
+Options:
+(A) The kiwis are the second-most expensive
+(B) The loquats are the second-most expensive
+(C) The cantaloupes are the second-most expensive",(A),"The prices are ordered from least to most expensive as:
+
+Cantaloupes < Kiwis < Loquats
+
+Therefore, the kiwis are the second-most expensive.
+
+Final Answer: (A) The kiwis are the second-most expensive",(A) The kiwis are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+74,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a station wagon, a minivan, and a truck. The minivan is newer than the truck. The station wagon is newer than the minivan.
+Options:
+(A) The station wagon is the oldest
+(B) The minivan is the oldest
+(C) The truck is the oldest",(C),"The minivan is newer than the truck, and the station wagon is newer than the minivan. Thus, from newest to oldest: station wagon, minivan, truck. Therefore, the truck is the oldest.
+
+Final Answer: (C) The truck is the oldest",(C) The truck is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+75,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a white book, a black book, and a purple book. The black book is to the left of the purple book. The purple book is to the left of the white book.
+Options:
+(A) The white book is the leftmost
+(B) The black book is the leftmost
+(C) The purple book is the leftmost",(B),"The black book is to the left of the purple book, and the purple book is to the left of the white book. Therefore, the order from left to right is:
+
+**Black → Purple → White**
+
+So, the black book is the leftmost.
+
+Final Answer: **(B) The black book is the leftmost**",(B) The black book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+76,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eli, Mya, and Eve. Eve finished below Eli. Eve finished above Mya.
+Options:
+(A) Eli finished last
+(B) Mya finished last
+(C) Eve finished last",(B),"Eve finished below Eli, so Eli placed ahead of Eve. Eve finished above Mya, so Mya placed behind Eve. Therefore, the order from first to last was Eli, Eve, Mya.
+
+Final Answer: (B) Mya finished last",(B) Mya finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+77,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a quail, an owl, and a hummingbird. The quail is to the left of the owl. The owl is to the left of the hummingbird.
+Options:
+(A) The quail is the leftmost
+(B) The owl is the leftmost
+(C) The hummingbird is the leftmost",(A),"The quail is to the left of the owl, and the owl is to the left of the hummingbird. Therefore, the order from left to right is:
+
+Quail → Owl → Hummingbird
+
+Final Answer: (A) The quail is the leftmost",(A) The quail is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+78,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, pears, and plums. The pears are less expensive than the plums. The pears are more expensive than the apples.
+Options:
+(A) The apples are the cheapest
+(B) The pears are the cheapest
+(C) The plums are the cheapest",(A),"The pears cost less than the plums, and more than the apples. Therefore, the order from cheapest to most expensive is:
+
+**Apples < Pears < Plums**
+
+Final Answer: (A) The apples are the cheapest",(A) The apples are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+79,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ada, Mel, and Mya. Mya finished below Ada. Mel finished above Ada.
+Options:
+(A) Ada finished first
+(B) Mel finished first
+(C) Mya finished first",(B),"Mel finished above Ada, and Ada finished above Mya. Therefore, the order was:
+
+1. Mel  
+2. Ada  
+3. Mya  
+
+Final Answer: (B) Mel finished first",(B) Mel finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+80,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: cantaloupes, watermelons, and mangoes. The mangoes are the cheapest. The cantaloupes are the second-most expensive.
+Options:
+(A) The cantaloupes are the cheapest
+(B) The watermelons are the cheapest
+(C) The mangoes are the cheapest",(C),"The mangoes are explicitly stated to be the cheapest. Since the cantaloupes are second-most expensive, the watermelons must be the most expensive.
+
+Final Answer: (C) The mangoes are the cheapest",(C) The mangoes are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+81,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Amy, Ana, and Joe. Amy finished below Ana. Ana finished below Joe.
+Options:
+(A) Amy finished second
+(B) Ana finished second
+(C) Joe finished second",(B),"“Below” means finishing in a lower position. Since Amy finished below Ana, and Ana finished below Joe, the order from highest to lowest is:
+
+1. Joe  
+2. Ana  
+3. Amy  
+
+Therefore, Ana finished second.
+
+Final Answer: (B) Ana finished second",(B) Ana finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+82,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ada, Mel, and Mya. Mya finished below Ada. Mel finished above Ada.
+Options:
+(A) Ada finished second
+(B) Mel finished second
+(C) Mya finished second",(A),"Mel finished above Ada, and Mya finished below Ada. Therefore, the order was:
+
+1. Mel  
+2. Ada  
+3. Mya  
+
+Final Answer: (A) Ada finished second",(A) Ada finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+83,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a convertible, a motorcyle, and a truck. The motorcyle is newer than the convertible. The convertible is newer than the truck.
+Options:
+(A) The convertible is the newest
+(B) The motorcyle is the newest
+(C) The truck is the newest",(B),"The motorcycle is newer than the convertible, and the convertible is newer than the truck. Therefore, the order from newest to oldest is:
+
+1. Motorcycle  
+2. Convertible  
+3. Truck  
+
+Final Answer: (B) The motorcycle is the newest",(B) The motorcycle is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+84,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Dan, and Mel. Dan finished second. Mel finished first.
+Options:
+(A) Ana finished second
+(B) Dan finished second
+(C) Mel finished second",(B),"Mel finished first and Dan finished second, so Ana must have finished third. Therefore, the true statement is:
+
+**(B) Dan finished second**
+
+Final Answer: **(B) Dan finished second**",(B) Dan finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+85,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a convertible, a limousine, and a bus. The limousine is older than the bus. The bus is older than the convertible.
+Options:
+(A) The convertible is the newest
+(B) The limousine is the newest
+(C) The bus is the newest",(A),"The limousine is older than the bus, and the bus is older than the convertible. Therefore, the convertible is the newest vehicle.
+
+Final Answer: (A) The convertible is the newest",(A) The convertible is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+86,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a green book, a red book, and a blue book. The red book is the rightmost. The blue book is to the right of the green book.
+Options:
+(A) The green book is the second from the left
+(B) The red book is the second from the left
+(C) The blue book is the second from the left",(C),"There are three positions from left to right. The red book is rightmost, so it is in position 3. Since the blue book is to the right of the green book, the green must be in position 1 and the blue in position 2.
+
+Final Answer: (C) The blue book is the second from the left",(C) The blue book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+87,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: peaches, pears, and mangoes. The mangoes are less expensive than the pears. The peaches are the cheapest.
+Options:
+(A) The peaches are the most expensive
+(B) The pears are the most expensive
+(C) The mangoes are the most expensive",(B),"The peaches are the cheapest, and the mangoes cost less than the pears. Therefore, the price order from least to most expensive is:
+
+Peaches < Mangoes < Pears
+
+So, the pears are the most expensive.
+
+Final Answer: (B) The pears are the most expensive",(B) The pears are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+88,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: loquats, watermelons, and cantaloupes. The watermelons are the second-most expensive. The loquats are more expensive than the cantaloupes.
+Options:
+(A) The loquats are the cheapest
+(B) The watermelons are the cheapest
+(C) The cantaloupes are the cheapest",(C),"The watermelons are the second-most expensive, so they are in the middle. Since the loquats are more expensive than the cantaloupes, the loquats must be the most expensive and the cantaloupes the least expensive.
+
+Final Answer: (C) The cantaloupes are the cheapest",(C) The cantaloupes are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+89,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a robin, an owl, and a hawk. The robin is to the right of the hawk. The owl is the leftmost.
+Options:
+(A) The robin is the leftmost
+(B) The owl is the leftmost
+(C) The hawk is the leftmost",(B),"The owl is explicitly stated to be the leftmost bird. Since the robin is to the right of the hawk, the order is owl, hawk, robin.
+
+Final Answer: (B) The owl is the leftmost",(B) The owl is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+90,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eli, Mya, and Eve. Eli finished last. Mya finished second.
+Options:
+(A) Eli finished first
+(B) Mya finished first
+(C) Eve finished first",(C),"There are three finishing positions: first, second, and last. Eli finished last, and Mya finished second. Therefore, Eve must have finished first.
+
+Final Answer: (C) Eve finished first",(C) Eve finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+91,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: oranges, mangoes, and plums. The plums are less expensive than the mangoes. The oranges are less expensive than the plums.
+Options:
+(A) The oranges are the most expensive
+(B) The mangoes are the most expensive
+(C) The plums are the most expensive",(B),"The prices follow this order:
+
+- Oranges are less expensive than plums.
+- Plums are less expensive than mangoes.
+
+So, from least to most expensive: **oranges < plums < mangoes**. Therefore, the mangoes are the most expensive.
+
+Final Answer: **(B) The mangoes are the most expensive**",(B) The mangoes are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+92,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a sedan, a tractor, and a bus. The sedan is older than the tractor. The bus is older than the sedan.
+Options:
+(A) The sedan is the oldest
+(B) The tractor is the oldest
+(C) The bus is the oldest",(C),"The sedan is older than the tractor, and the bus is older than the sedan. Therefore, the order from oldest to youngest is:
+
+1. Bus  
+2. Sedan  
+3. Tractor  
+
+Final Answer: (C) The bus is the oldest",(C) The bus is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+93,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hummingbird, a blue jay, and a raven. The blue jay is to the right of the hummingbird. The raven is the second from the left.
+Options:
+(A) The hummingbird is the second from the left
+(B) The blue jay is the second from the left
+(C) The raven is the second from the left",(C),"There are three positions: left, middle, and right. The statement explicitly says that the raven is second from the left, meaning it is in the middle position.
+
+Therefore, the correct option is:
+
+**Final Answer: (C) The raven is the second from the left**",(C) The raven is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+94,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: an orange book, a white book, and a purple book. The orange book is to the left of the white book. The purple book is the rightmost.
+Options:
+(A) The orange book is the leftmost
+(B) The white book is the leftmost
+(C) The purple book is the leftmost",(A),"The purple book is rightmost, and the orange book is to the left of the white book. Therefore, the order from left to right is:
+
+Orange, White, Purple
+
+So, the orange book is leftmost.
+
+Final Answer: (A) The orange book is the leftmost",(A) The orange book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+95,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Amy, Eli, and Eve. Eve finished above Amy. Eli finished below Amy.
+Options:
+(A) Amy finished first
+(B) Eli finished first
+(C) Eve finished first",(C),"Eve finished above Amy, and Eli finished below Amy. Therefore, the order was:
+
+1. Eve  
+2. Amy  
+3. Eli  
+
+Final Answer: (C) Eve finished first",(C) Eve finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+96,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hawk, a cardinal, and a falcon. The hawk is to the left of the cardinal. The hawk is the second from the left.
+Options:
+(A) The hawk is the second from the left
+(B) The cardinal is the second from the left
+(C) The falcon is the second from the left",(A),"There are three positions from left to right. Since the hawk is second from the left, one bird must be to its left. The cardinal is to the right of the hawk, so the falcon must be on the left.
+
+Thus, the hawk is indeed second from the left.
+
+Final Answer: (A) The hawk is the second from the left",(A) The hawk is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+97,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: cantaloupes, oranges, and watermelons. The oranges are the most expensive. The cantaloupes are more expensive than the watermelons.
+Options:
+(A) The cantaloupes are the second-most expensive
+(B) The oranges are the second-most expensive
+(C) The watermelons are the second-most expensive",(A),"The oranges are the most expensive, so they are first. Since the cantaloupes cost more than the watermelons, the cantaloupes come next, followed by the watermelons.
+
+Final Answer: (A) The cantaloupes are the second-most expensive",(A) The cantaloupes are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+98,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a robin, a blue jay, and a crow. The robin is to the right of the crow. The robin is to the left of the blue jay.
+Options:
+(A) The robin is the second from the left
+(B) The blue jay is the second from the left
+(C) The crow is the second from the left",(A),"The robin is to the right of the crow and to the left of the blue jay, so the order from left to right is:
+
+**Crow → Robin → Blue jay**
+
+Therefore, the robin is second from the left.
+
+Final Answer: **(A) The robin is the second from the left**",(A) The robin is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+99,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Mel, and Ada. Ada finished above Ana. Mel finished below Ana.
+Options:
+(A) Ana finished last
+(B) Mel finished last
+(C) Ada finished last",(B),"Ada finished above Ana, and Mel finished below Ana. Therefore, the order from highest to lowest is:
+
+1. Ada  
+2. Ana  
+3. Mel  
+
+Final Answer: (B) Mel finished last",(B) Mel finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+100,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hummingbird, an owl, and a falcon. The falcon is to the right of the owl. The hummingbird is to the left of the owl.
+Options:
+(A) The hummingbird is the leftmost
+(B) The owl is the leftmost
+(C) The falcon is the leftmost",(A),"The hummingbird is to the left of the owl, and the falcon is to the right of the owl. Therefore, the order from left to right is:
+
+Hummingbird → Owl → Falcon
+
+Final Answer: (A) The hummingbird is the leftmost",(A) The hummingbird is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+101,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a sedan, a minivan, and a motorcyle. The motorcyle is the second-newest. The minivan is newer than the motorcyle.
+Options:
+(A) The sedan is the oldest
+(B) The minivan is the oldest
+(C) The motorcyle is the oldest",(A),"The motorcycle is the second-newest vehicle, so exactly one vehicle is newer than it. Since the minivan is newer than the motorcycle, the minivan must be the newest. Therefore, the sedan is the oldest.
+
+Final Answer: (A) The sedan is the oldest",(A) The sedan is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+102,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a convertible, a limousine, and a bus. The limousine is older than the bus. The bus is older than the convertible.
+Options:
+(A) The convertible is the oldest
+(B) The limousine is the oldest
+(C) The bus is the oldest",(B),"The limousine is older than the bus, and the bus is older than the convertible. Therefore, the limousine is the oldest vehicle.
+
+Final Answer: (B) The limousine is the oldest",(B) The limousine is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+103,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a truck, a minivan, and a tractor. The truck is newer than the minivan. The minivan is newer than the tractor.
+Options:
+(A) The truck is the newest
+(B) The minivan is the newest
+(C) The tractor is the newest",(A),"The truck is newer than the minivan, and the minivan is newer than the tractor. Therefore, the truck is newer than both and is the newest vehicle.
+
+Final Answer: (A) The truck is the newest",(A) The truck is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+104,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: an owl, a crow, and a cardinal. The owl is to the right of the cardinal. The cardinal is to the right of the crow.
+Options:
+(A) The owl is the rightmost
+(B) The crow is the rightmost
+(C) The cardinal is the rightmost",(A),"The cardinal is to the right of the crow, and the owl is to the right of the cardinal. Therefore, the order from left to right is:
+
+Crow → Cardinal → Owl
+
+So, the owl is the rightmost.
+
+Final Answer: (A) The owl is the rightmost",(A) The owl is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+105,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eve, Joe, and Amy. Eve finished below Amy. Eve finished above Joe.
+Options:
+(A) Eve finished last
+(B) Joe finished last
+(C) Amy finished last",(B),"Eve finished below Amy, so Amy ranked higher than Eve. Eve finished above Joe, so Joe ranked lower than Eve. Therefore, the order from highest to lowest is:
+
+Amy, Eve, Joe.
+
+Final Answer: (B) Joe finished last",(B) Joe finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+106,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a red book, a blue book, and an orange book. The red book is to the left of the orange book. The orange book is the second from the left.
+Options:
+(A) The red book is the leftmost
+(B) The blue book is the leftmost
+(C) The orange book is the leftmost",(A),"The orange book is second from the left. Since the red book is to the left of the orange book, the red book must be first, with the blue book third.
+
+Final Answer: (A) The red book is the leftmost",(A) The red book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+107,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a purple book, a black book, and a blue book. The purple book is to the right of the blue book. The black book is the second from the left.
+Options:
+(A) The purple book is the leftmost
+(B) The black book is the leftmost
+(C) The blue book is the leftmost",(C),"The black book is second from the left. Therefore, the purple and blue books must occupy the leftmost and rightmost positions. Since the purple book is to the right of the blue book, the blue book must be leftmost and the purple book rightmost.
+
+Final Answer: (C) The blue book is the leftmost",(C) The blue book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+108,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a raven, a quail, and a crow. The quail is the leftmost. The raven is the rightmost.
+Options:
+(A) The raven is the second from the left
+(B) The quail is the second from the left
+(C) The crow is the second from the left",(C),"There are three positions from left to right. The quail is leftmost, and the raven is rightmost, so the crow must occupy the middle position, or second from the left.
+
+Final Answer: (C) The crow is the second from the left",(C) The crow is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+109,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a robin, a raven, and a quail. The quail is to the left of the robin. The robin is the second from the left.
+Options:
+(A) The robin is the leftmost
+(B) The raven is the leftmost
+(C) The quail is the leftmost",(C),"The robin is second from the left. Since the quail is to the left of the robin, the quail must be in the leftmost position. The raven is therefore on the right.
+
+Final Answer: (C) The quail is the leftmost",(C) The quail is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+110,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hummingbird, a blue jay, and a raven. The blue jay is to the right of the hummingbird. The raven is the second from the left.
+Options:
+(A) The hummingbird is the leftmost
+(B) The blue jay is the leftmost
+(C) The raven is the leftmost",(A),"There are three positions from left to right. The raven is second, so the hummingbird and blue jay occupy the first and third positions. Since the blue jay is to the right of the hummingbird, the hummingbird must be first and the blue jay third.
+
+Final Answer: (A) The hummingbird is the leftmost",(A) The hummingbird is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+111,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Amy, Dan, and Mel. Mel finished above Amy. Dan finished below Amy.
+Options:
+(A) Amy finished second
+(B) Dan finished second
+(C) Mel finished second",(A),"The finishing order must be:
+
+1. Mel, since Mel finished above Amy  
+2. Amy, since Dan finished below Amy  
+3. Dan  
+
+Therefore, **Amy finished second**.
+
+Final Answer: (A) Amy finished second",(A) Amy finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+112,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a station wagon, a minivan, and a truck. The minivan is newer than the truck. The station wagon is newer than the minivan.
+Options:
+(A) The station wagon is the second-newest
+(B) The minivan is the second-newest
+(C) The truck is the second-newest",(B),"The station wagon is newer than the minivan, and the minivan is newer than the truck. Therefore, from newest to oldest:
+
+1. Station wagon  
+2. Minivan  
+3. Truck  
+
+Final Answer: (B) The minivan is the second-newest",(B) The minivan is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+113,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a motorcyle, a bus, and a tractor. The motorcyle is the oldest. The bus is newer than the tractor.
+Options:
+(A) The motorcyle is the oldest
+(B) The bus is the oldest
+(C) The tractor is the oldest",(A),"The motorcycle is explicitly stated to be the oldest. Therefore, the correct option is:
+
+**Final Answer: (A) The motorcycle is the oldest**",(A) The motorcycle is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+114,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Joe, Dan, and Eve. Eve finished above Dan. Dan finished above Joe.
+Options:
+(A) Joe finished second
+(B) Dan finished second
+(C) Eve finished second",(B),"Eve finished above Dan, and Dan finished above Joe, so the order is:
+
+1. Eve  
+2. Dan  
+3. Joe  
+
+Therefore, **Dan finished second**.
+
+Final Answer: (B) Dan finished second",(B) Dan finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+115,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, pears, and loquats. The pears are more expensive than the loquats. The pears are less expensive than the apples.
+Options:
+(A) The apples are the second-most expensive
+(B) The pears are the second-most expensive
+(C) The loquats are the second-most expensive",(B),"The pears cost more than the loquats, but less than the apples. Therefore, the order from most to least expensive is:
+
+1. Apples  
+2. Pears  
+3. Loquats  
+
+Final Answer: (B) The pears are the second-most expensive",(B) The pears are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+116,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a hatchback, a convertible, and a tractor. The convertible is older than the tractor. The hatchback is the second-newest.
+Options:
+(A) The hatchback is the newest
+(B) The convertible is the newest
+(C) The tractor is the newest",(C),"The hatchback is the second-newest, so exactly one vehicle is newer than it. Since the convertible is older than the tractor, the tractor must be newer than the convertible. Therefore, the tractor is the newest vehicle.
+
+Final Answer: (C) The tractor is the newest",(C) The tractor is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+117,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a blue jay, a falcon, and a hummingbird. The blue jay is to the right of the falcon. The hummingbird is to the left of the falcon.
+Options:
+(A) The blue jay is the rightmost
+(B) The falcon is the rightmost
+(C) The hummingbird is the rightmost",(A),"The hummingbird is to the left of the falcon, and the blue jay is to the right of the falcon. Therefore, the order from left to right is:
+
+Hummingbird → Falcon → Blue jay
+
+So, the blue jay is rightmost.
+
+Final Answer: (A) The blue jay is the rightmost",(A) The blue jay is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+118,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a minivan, a bus, and a sedan. The minivan is newer than the sedan. The minivan is older than the bus.
+Options:
+(A) The minivan is the newest
+(B) The bus is the newest
+(C) The sedan is the newest",(B),"The minivan is newer than the sedan, and the bus is newer than the minivan. Therefore, the order from newest to oldest is:
+
+**Bus → Minivan → Sedan**
+
+Final Answer: **(B) The bus is the newest**",(B) The bus is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+119,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: cantaloupes, apples, and loquats. The loquats are more expensive than the apples. The cantaloupes are less expensive than the apples.
+Options:
+(A) The cantaloupes are the cheapest
+(B) The apples are the cheapest
+(C) The loquats are the cheapest",(A),"The loquats cost more than the apples, so loquats are not the cheapest. The cantaloupes cost less than the apples, making them cheaper than both apples and loquats.
+
+Final Answer: (A) The cantaloupes are the cheapest",(A) The cantaloupes are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+120,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eve, Rob, and Mel. Rob finished below Mel. Mel finished below Eve.
+Options:
+(A) Eve finished last
+(B) Rob finished last
+(C) Mel finished last",(B),"Rob finished below Mel, and Mel finished below Eve. Therefore, the order from first to last was:
+
+1. Eve  
+2. Mel  
+3. Rob  
+
+So, **Rob finished last**.
+
+Final Answer: (B) Rob finished last",(B) Rob finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+121,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a white book, a black book, and a purple book. The black book is to the left of the purple book. The purple book is to the left of the white book.
+Options:
+(A) The white book is the second from the left
+(B) The black book is the second from the left
+(C) The purple book is the second from the left",(C),"The black book is to the left of the purple book, and the purple book is to the left of the white book. Therefore, the order from left to right is:
+
+Black, Purple, White
+
+Thus, the purple book is second from the left.
+
+Final Answer: (C) The purple book is the second from the left",(C) The purple book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+122,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eve, Rob, and Mel. Rob finished below Mel. Mel finished below Eve.
+Options:
+(A) Eve finished second
+(B) Rob finished second
+(C) Mel finished second",(C),"Rob finished below Mel, and Mel finished below Eve, so the order from highest to lowest is:
+
+1. Eve  
+2. Mel  
+3. Rob  
+
+Therefore, Mel finished second.
+
+Final Answer: (C) Mel finished second",(C) Mel finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+123,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: an owl, a crow, and a cardinal. The crow is to the left of the owl. The owl is the second from the left.
+Options:
+(A) The owl is the leftmost
+(B) The crow is the leftmost
+(C) The cardinal is the leftmost",(B),"The owl is second from the left. Since the crow is to the left of the owl, the crow must be in the leftmost position. The cardinal is therefore third.
+
+Final Answer: (B) The crow is the leftmost",(B) The crow is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+124,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, pears, and loquats. The pears are more expensive than the loquats. The pears are less expensive than the apples.
+Options:
+(A) The apples are the cheapest
+(B) The pears are the cheapest
+(C) The loquats are the cheapest",(C),"The pears cost more than the loquats, so the loquats are cheaper than the pears. The pears cost less than the apples, so the apples are the most expensive. Therefore, the loquats are the cheapest.
+
+Final Answer: (C) The loquats are the cheapest",(C) The loquats are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+125,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a green book, a red book, and a blue book. The red book is the rightmost. The blue book is to the right of the green book.
+Options:
+(A) The green book is the leftmost
+(B) The red book is the leftmost
+(C) The blue book is the leftmost",(A),"The red book is rightmost. Since the blue book is to the right of the green book, the order from left to right is:
+
+Green → Blue → Red
+
+Therefore, the green book is leftmost.
+
+Final Answer: (A) The green book is the leftmost",(A) The green book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+126,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: an orange book, a blue book, and a yellow book. The orange book is to the left of the blue book. The yellow book is to the right of the blue book.
+Options:
+(A) The orange book is the second from the left
+(B) The blue book is the second from the left
+(C) The yellow book is the second from the left",(B),"The orange book is to the left of the blue book, and the yellow book is to the right of the blue book. Therefore, the order is:
+
+Orange — Blue — Yellow
+
+So, the blue book is second from the left.
+
+Final Answer: (B) The blue book is the second from the left",(B) The blue book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+127,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a robin, a raven, and a quail. The quail is to the left of the robin. The robin is the second from the left.
+Options:
+(A) The robin is the second from the left
+(B) The raven is the second from the left
+(C) The quail is the second from the left",(A),"There are three positions from left to right. Since the robin is second from the left, it occupies position 2. The quail is to the left of the robin, so it must be in position 1, leaving the raven in position 3.
+
+Therefore, the correct option is **(A)**.
+
+Final Answer: (A) The robin is the second from the left",(A) The robin is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+128,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a crow, a falcon, and a raven. The crow is to the left of the raven. The falcon is to the right of the raven.
+Options:
+(A) The crow is the leftmost
+(B) The falcon is the leftmost
+(C) The raven is the leftmost",(A),"The crow is to the left of the raven, and the falcon is to the right of the raven. Therefore, the order from left to right is:
+
+**Crow → Raven → Falcon**
+
+So, the crow is the leftmost.
+
+Final Answer: **(A) The crow is the leftmost**",(A) The crow is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+129,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eli, Mya, and Eve. Eli finished last. Mya finished second.
+Options:
+(A) Eli finished second
+(B) Mya finished second
+(C) Eve finished second",(B),"There are three golfers, and each finishes in a different position.
+
+- Eli finished last, so Eli was third.
+- Mya finished second.
+- Therefore, Eve finished first.
+
+The statement that matches the information is **(B) Mya finished second**.
+
+Final Answer: (B) Mya finished second",(B) Mya finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+130,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a convertible, a motorcyle, and a truck. The motorcyle is newer than the convertible. The convertible is newer than the truck.
+Options:
+(A) The convertible is the second-newest
+(B) The motorcyle is the second-newest
+(C) The truck is the second-newest",(A),"The motorcycle is newer than the convertible, and the convertible is newer than the truck. Therefore, from newest to oldest:
+
+1. Motorcycle  
+2. Convertible  
+3. Truck  
+
+Final Answer: (A) The convertible is the second-newest",(A) The convertible is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+131,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a purple book, a red book, and a yellow book. The purple book is to the right of the yellow book. The yellow book is to the right of the red book.
+Options:
+(A) The purple book is the second from the left
+(B) The red book is the second from the left
+(C) The yellow book is the second from the left",(C),"The yellow book is to the right of the red book, and the purple book is to the right of the yellow book. Therefore, the order from left to right is:
+
+Red, Yellow, Purple
+
+So, the yellow book is second from the left.
+
+Final Answer: (C) The yellow book is the second from the left",(C) The yellow book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+132,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: peaches, mangoes, and apples. The peaches are more expensive than the apples. The mangoes are the cheapest.
+Options:
+(A) The peaches are the cheapest
+(B) The mangoes are the cheapest
+(C) The apples are the cheapest",(B),"The peaches cost more than the apples, so peaches are not the cheapest. The statement directly says that the mangoes are the cheapest.
+
+Final Answer: (B) The mangoes are the cheapest",(B) The mangoes are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+133,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a blue jay, a falcon, and a raven. The falcon is to the left of the blue jay. The falcon is to the right of the raven.
+Options:
+(A) The blue jay is the second from the left
+(B) The falcon is the second from the left
+(C) The raven is the second from the left",(B),"The falcon is to the left of the blue jay and to the right of the raven, so the order from left to right is:
+
+Raven → Falcon → Blue jay
+
+Therefore, the falcon is second from the left.
+
+Final Answer: (B) The falcon is the second from the left",(B) The falcon is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+134,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: loquats, mangoes, and apples. The mangoes are more expensive than the apples. The loquats are more expensive than the mangoes.
+Options:
+(A) The loquats are the cheapest
+(B) The mangoes are the cheapest
+(C) The apples are the cheapest",(C),"The loquats are more expensive than the mangoes, and the mangoes are more expensive than the apples. Therefore, the apples are the cheapest.
+
+Final Answer: (C) The apples are the cheapest",(C) The apples are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+135,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, peaches, and mangoes. The mangoes are less expensive than the peaches. The apples are less expensive than the mangoes.
+Options:
+(A) The apples are the most expensive
+(B) The peaches are the most expensive
+(C) The mangoes are the most expensive",(B),"The prices follow this order:
+
+Apples < Mangoes < Peaches
+
+Therefore, the peaches are the most expensive.
+
+Final Answer: (B) The peaches are the most expensive",(B) The peaches are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+136,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: plums, apples, and loquats. The loquats are the cheapest. The plums are less expensive than the apples.
+Options:
+(A) The plums are the second-most expensive
+(B) The apples are the second-most expensive
+(C) The loquats are the second-most expensive",(A),"The loquats are the cheapest, so they are least expensive. Since the plums cost less than the apples, the order from least to most expensive is:
+
+Loquats → Plums → Apples
+
+Therefore, the plums are the second-most expensive.
+
+Final Answer: (A) The plums are the second-most expensive",(A) The plums are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+137,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hummingbird, a quail, and a crow. The crow is the second from the left. The hummingbird is to the left of the crow.
+Options:
+(A) The hummingbird is the rightmost
+(B) The quail is the rightmost
+(C) The crow is the rightmost",(B),"The crow is second from the left. Since the hummingbird is to the left of the crow, it must be first. Therefore, the quail is third, or rightmost.
+
+Final Answer: (B) The quail is the rightmost",(B) The quail is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+138,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Rob, and Joe. Joe finished above Ana. Rob finished above Joe.
+Options:
+(A) Ana finished last
+(B) Rob finished last
+(C) Joe finished last",(A),"Rob finished above Joe, and Joe finished above Ana. Therefore, the order from highest to lowest is:
+
+1. Rob  
+2. Joe  
+3. Ana  
+
+**Final Answer: (A) Ana finished last**",(A) Ana finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+139,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a brown book, a yellow book, and an orange book. The yellow book is the leftmost. The orange book is to the right of the brown book.
+Options:
+(A) The brown book is the rightmost
+(B) The yellow book is the rightmost
+(C) The orange book is the rightmost",(C),"The yellow book is leftmost, so it must be in position 1. The orange book is to the right of the brown book, so the brown book must be in position 2 and the orange book in position 3. Therefore, the brown book is not rightmost; the orange book is.
+
+Final Answer: (C) The orange book is the rightmost",(C) The orange book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+140,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: pears, plums, and kiwis. The pears are less expensive than the plums. The kiwis are less expensive than the pears.
+Options:
+(A) The pears are the most expensive
+(B) The plums are the most expensive
+(C) The kiwis are the most expensive",(B),"The kiwis are less expensive than the pears, and the pears are less expensive than the plums. Therefore:
+
+kiwis < pears < plums
+
+So, the plums are the most expensive.
+
+Final Answer: (B) The plums are the most expensive",(B) The plums are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+141,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: an owl, a crow, and a cardinal. The owl is to the right of the cardinal. The cardinal is to the right of the crow.
+Options:
+(A) The owl is the second from the left
+(B) The crow is the second from the left
+(C) The cardinal is the second from the left",(C),"The cardinal is to the right of the crow, and the owl is to the right of the cardinal. Therefore, from left to right, the order is:
+
+**Crow → Cardinal → Owl**
+
+So, the cardinal is second from the left.
+
+Final Answer: **(C) The cardinal is the second from the left**",(C) The cardinal is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+142,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a yellow book, a brown book, and a red book. The red book is to the left of the brown book. The yellow book is to the right of the brown book.
+Options:
+(A) The yellow book is the leftmost
+(B) The brown book is the leftmost
+(C) The red book is the leftmost",(C),"The red book is to the left of the brown book, and the yellow book is to the right of the brown book. Therefore, the order from left to right is:
+
+Red → Brown → Yellow
+
+Final Answer: (C) The red book is the leftmost",(C) The red book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+143,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Joe, Eve, and Amy. Amy finished above Eve. Joe finished first.
+Options:
+(A) Joe finished first
+(B) Eve finished first
+(C) Amy finished first",(A),"Joe finished first, as explicitly stated. Since Amy finished above Eve, the remaining order is Amy second and Eve third.
+
+Final Answer: (A) Joe finished first",(A) Joe finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+144,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a gray book, an orange book, and a brown book. The orange book is the leftmost. The gray book is to the right of the brown book.
+Options:
+(A) The gray book is the leftmost
+(B) The orange book is the leftmost
+(C) The brown book is the leftmost",(B),"The orange book is explicitly stated to be the leftmost. Since the gray book is to the right of the brown book, the order is:
+
+**Orange → Brown → Gray**
+
+Final Answer: **(B) The orange book is the leftmost**",(B) The orange book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+145,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Amy, Ada, and Joe. Joe finished below Ada. Amy finished above Ada.
+Options:
+(A) Amy finished last
+(B) Ada finished last
+(C) Joe finished last",(C),"Joe finished below Ada, and Amy finished above Ada. Therefore, the order from first to last is:
+
+1. Amy  
+2. Ada  
+3. Joe  
+
+Final Answer: (C) Joe finished last",(C) Joe finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+146,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: peaches, pears, and mangoes. The mangoes are less expensive than the peaches. The mangoes are more expensive than the pears.
+Options:
+(A) The peaches are the second-most expensive
+(B) The pears are the second-most expensive
+(C) The mangoes are the second-most expensive",(C),"The mangoes are more expensive than the pears but less expensive than the peaches:
+
+Peaches > Mangoes > Pears
+
+Therefore, the mangoes are the second-most expensive.
+
+Final Answer: (C) The mangoes are the second-most expensive",(C) The mangoes are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+147,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a black book, an orange book, and a blue book. The blue book is to the right of the orange book. The orange book is to the right of the black book.
+Options:
+(A) The black book is the leftmost
+(B) The orange book is the leftmost
+(C) The blue book is the leftmost",(A),"The blue book is to the right of the orange book, and the orange book is to the right of the black book. Therefore, the order from left to right is:
+
+**Black → Orange → Blue**
+
+So, the black book is the leftmost.
+
+Final Answer: **(A) The black book is the leftmost**",(A) The black book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+148,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a motorcyle, a limousine, and a convertible. The motorcyle is newer than the limousine. The convertible is newer than the motorcyle.
+Options:
+(A) The motorcyle is the second-newest
+(B) The limousine is the second-newest
+(C) The convertible is the second-newest",(A),"The convertible is newer than the motorcycle, and the motorcycle is newer than the limousine. Therefore, from newest to oldest:
+
+1. Convertible  
+2. Motorcycle  
+3. Limousine  
+
+Final Answer: (A) The motorcycle is the second-newest",(A) The motorcycle is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+149,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Rob, and Joe. Joe finished above Ana. Rob finished above Joe.
+Options:
+(A) Ana finished first
+(B) Rob finished first
+(C) Joe finished first",(B),"Rob finished above Joe, and Joe finished above Ana. Therefore, the order is:
+
+1. Rob  
+2. Joe  
+3. Ana  
+
+Final Answer: (B) Rob finished first",(B) Rob finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+150,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: kiwis, oranges, and watermelons. The oranges are more expensive than the kiwis. The oranges are less expensive than the watermelons.
+Options:
+(A) The kiwis are the second-most expensive
+(B) The oranges are the second-most expensive
+(C) The watermelons are the second-most expensive",(B),"The prices from least to most expensive are:
+
+1. Kiwis  
+2. Oranges  
+3. Watermelons  
+
+Therefore, the oranges are the second-most expensive.
+
+Final Answer: (B) The oranges are the second-most expensive",(B) The oranges are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+151,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: an owl, a crow, and a cardinal. The owl is to the right of the cardinal. The cardinal is to the right of the crow.
+Options:
+(A) The owl is the leftmost
+(B) The crow is the leftmost
+(C) The cardinal is the leftmost",(B),"The owl is to the right of the cardinal, and the cardinal is to the right of the crow. Therefore, the order from left to right is:
+
+**crow, cardinal, owl**
+
+So, the crow is the leftmost.
+
+Final Answer: **(B) The crow is the leftmost**",(B) The crow is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+152,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a convertible, a tractor, and a hatchback. The hatchback is older than the convertible. The tractor is the newest.
+Options:
+(A) The convertible is the oldest
+(B) The tractor is the oldest
+(C) The hatchback is the oldest",(C),"The hatchback is older than the convertible, and the tractor is the newest. Therefore, the order from oldest to newest is:
+
+Hatchback → Convertible → Tractor
+
+Final Answer: (C) The hatchback is the oldest",(C) The hatchback is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+153,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a robin, a blue jay, and a crow. The robin is to the right of the crow. The robin is to the left of the blue jay.
+Options:
+(A) The robin is the leftmost
+(B) The blue jay is the leftmost
+(C) The crow is the leftmost",(C),"The robin is to the right of the crow, so the crow is left of the robin. The robin is to the left of the blue jay. Therefore, the order from left to right is:
+
+**crow, robin, blue jay**
+
+Final Answer: **(C) The crow is the leftmost**",(C) The crow is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+154,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a limousine, a truck, and a minivan. The minivan is older than the truck. The limousine is the second-newest.
+Options:
+(A) The limousine is the newest
+(B) The truck is the newest
+(C) The minivan is the newest",(B),"The limousine is the second-newest, so only the minivan and truck can be the newest or oldest. Since the minivan is older than the truck, the minivan must be the oldest and the truck the newest.
+
+Final Answer: (B) The truck is the newest",(B) The truck is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+155,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a hatchback, a limousine, and a station wagon. The station wagon is older than the hatchback. The hatchback is the second-newest.
+Options:
+(A) The hatchback is the second-newest
+(B) The limousine is the second-newest
+(C) The station wagon is the second-newest",(A),"The hatchback is explicitly stated to be the second-newest. Since the station wagon is older than the hatchback, the limousine must be the newest.
+
+Thus the order from newest to oldest is: limousine, hatchback, station wagon.
+
+Final Answer: (A) The hatchback is the second-newest",(A) The hatchback is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+156,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a yellow book, a brown book, and a red book. The red book is to the left of the brown book. The yellow book is to the right of the brown book.
+Options:
+(A) The yellow book is the rightmost
+(B) The brown book is the rightmost
+(C) The red book is the rightmost",(A),"The red book is to the left of the brown book, and the yellow book is to the right of the brown book. Therefore, the order from left to right is:
+
+Red → Brown → Yellow
+
+So, the yellow book is rightmost.
+
+Final Answer: (A) The yellow book is the rightmost",(A) The yellow book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+157,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a black book, an orange book, and a blue book. The blue book is to the right of the orange book. The orange book is to the right of the black book.
+Options:
+(A) The black book is the rightmost
+(B) The orange book is the rightmost
+(C) The blue book is the rightmost",(C),"The orange book is to the right of the black book, and the blue book is to the right of the orange book. Therefore, the order from left to right is:
+
+**Black → Orange → Blue**
+
+So, the blue book is rightmost.
+
+Final Answer: **(C) The blue book is the rightmost**",(C) The blue book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+158,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eve, Amy, and Rob. Amy finished above Rob. Eve finished above Amy.
+Options:
+(A) Eve finished first
+(B) Amy finished first
+(C) Rob finished first",(A),"Eve finished above Amy, and Amy finished above Rob. Therefore, the order was Eve, Amy, then Rob, making Eve the first-place finisher.
+
+Final Answer: (A) Eve finished first",(A) Eve finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+159,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a cardinal, a hawk, and a hummingbird. The hummingbird is to the right of the hawk. The cardinal is to the left of the hawk.
+Options:
+(A) The cardinal is the second from the left
+(B) The hawk is the second from the left
+(C) The hummingbird is the second from the left",(B),"The cardinal is to the left of the hawk, and the hummingbird is to the right of the hawk. Therefore, the order from left to right is:
+
+Cardinal → Hawk → Hummingbird
+
+So, the hawk is second from the left.
+
+Final Answer: (B) The hawk is the second from the left",(B) The hawk is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+160,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: oranges, watermelons, and pears. The oranges are the second-most expensive. The pears are more expensive than the watermelons.
+Options:
+(A) The oranges are the second-most expensive
+(B) The watermelons are the second-most expensive
+(C) The pears are the second-most expensive",(A),"There are three fruits: oranges, watermelons, and pears.
+
+- Oranges are stated to be the second-most expensive.
+- Pears cost more than watermelons, so pears are above watermelons in price.
+- Therefore, the order from most to least expensive is: pears, oranges, watermelons.
+
+Final Answer: (A) The oranges are the second-most expensive",(A) The oranges are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+161,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: kiwis, oranges, and watermelons. The oranges are more expensive than the kiwis. The oranges are less expensive than the watermelons.
+Options:
+(A) The kiwis are the most expensive
+(B) The oranges are the most expensive
+(C) The watermelons are the most expensive",(C),"The oranges cost more than the kiwis, and the watermelons cost more than the oranges. Therefore, the price order from most to least expensive is:
+
+Watermelons > Oranges > Kiwis
+
+Final Answer: (C) The watermelons are the most expensive",(C) The watermelons are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+162,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Amy, and Eli. Eli finished second. Eli finished below Amy.
+Options:
+(A) Ana finished second
+(B) Amy finished second
+(C) Eli finished second",(C),"Eli finished second, so option (C) directly matches the given information. Since Eli finished below Amy, Amy must have finished first, leaving Ana third.
+
+Final Answer: (C) Eli finished second",(C) Eli finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+163,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, pears, and plums. The pears are less expensive than the plums. The pears are more expensive than the apples.
+Options:
+(A) The apples are the second-most expensive
+(B) The pears are the second-most expensive
+(C) The plums are the second-most expensive",(B),"The pears are more expensive than the apples but less expensive than the plums, so the order from most to least expensive is:
+
+1. Plums  
+2. Pears  
+3. Apples  
+
+Final Answer: (B) The pears are the second-most expensive",(B) The pears are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+164,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hummingbird, an owl, and a falcon. The falcon is to the right of the owl. The hummingbird is to the left of the owl.
+Options:
+(A) The hummingbird is the rightmost
+(B) The owl is the rightmost
+(C) The falcon is the rightmost",(C),"The hummingbird is to the left of the owl, and the falcon is to the right of the owl. Therefore, the order from left to right is:
+
+Hummingbird → Owl → Falcon
+
+So, the falcon is the rightmost.
+
+Final Answer: (C) The falcon is the rightmost",(C) The falcon is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+165,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a sedan, a convertible, and a truck. The truck is the newest. The sedan is older than the convertible.
+Options:
+(A) The sedan is the oldest
+(B) The convertible is the oldest
+(C) The truck is the oldest",(A),"The truck is the newest, so it cannot be the oldest. The sedan is older than the convertible, making the sedan the oldest of the three.
+
+Final Answer: (A) The sedan is the oldest",(A) The sedan is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+166,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Amy, Ana, and Joe. Amy finished below Ana. Ana finished below Joe.
+Options:
+(A) Amy finished last
+(B) Ana finished last
+(C) Joe finished last",(A),"Amy finished below Ana, and Ana finished below Joe. Therefore, the order from highest to lowest is:
+
+Joe → Ana → Amy
+
+So Amy finished last.
+
+Final Answer: (A) Amy finished last",(A) Amy finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+167,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a crow, a falcon, and a hummingbird. The crow is to the left of the falcon. The hummingbird is to the left of the crow.
+Options:
+(A) The crow is the leftmost
+(B) The falcon is the leftmost
+(C) The hummingbird is the leftmost",(C),"The hummingbird is to the left of the crow, and the crow is to the left of the falcon. Therefore, the order from left to right is:
+
+Hummingbird → Crow → Falcon
+
+Final Answer: (C) The hummingbird is the leftmost",(C) The hummingbird is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+168,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: pears, plums, and kiwis. The pears are less expensive than the plums. The kiwis are less expensive than the pears.
+Options:
+(A) The pears are the cheapest
+(B) The plums are the cheapest
+(C) The kiwis are the cheapest",(C),"The prices follow this order from least to most expensive:
+
+**Kiwis < Pears < Plums**
+
+Therefore, the kiwis are the cheapest.
+
+Final Answer: **(C) The kiwis are the cheapest**",(C) The kiwis are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+169,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Mel, and Ada. Ada finished above Ana. Mel finished below Ana.
+Options:
+(A) Ana finished second
+(B) Mel finished second
+(C) Ada finished second",(A),"The order from highest to lowest is:
+
+1. Ada  
+2. Ana  
+3. Mel  
+
+Therefore, Ana finished second.
+
+Final Answer: (A) Ana finished second",(A) Ana finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+170,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a yellow book, a green book, and a red book. The red book is to the left of the green book. The yellow book is to the left of the red book.
+Options:
+(A) The yellow book is the leftmost
+(B) The green book is the leftmost
+(C) The red book is the leftmost",(A),"The red book is to the left of the green book, and the yellow book is to the left of the red book. Therefore, the order from left to right is:
+
+Yellow → Red → Green
+
+So, the yellow book is the leftmost.
+
+Final Answer: (A) The yellow book is the leftmost",(A) The yellow book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+171,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a yellow book, a brown book, and a red book. The red book is to the left of the brown book. The yellow book is to the right of the brown book.
+Options:
+(A) The yellow book is the second from the left
+(B) The brown book is the second from the left
+(C) The red book is the second from the left",(B),"The red book is to the left of the brown book, and the yellow book is to the right of the brown book. Therefore, the order from left to right is:
+
+Red, Brown, Yellow
+
+So the brown book is second from the left.
+
+Final Answer: (B) The brown book is the second from the left",(B) The brown book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+172,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: loquats, watermelons, and cantaloupes. The watermelons are the second-most expensive. The loquats are more expensive than the cantaloupes.
+Options:
+(A) The loquats are the second-most expensive
+(B) The watermelons are the second-most expensive
+(C) The cantaloupes are the second-most expensive",(B),"There are three fruits ranked by price. The watermelons are explicitly stated to be the second-most expensive. The loquats cost more than the cantaloupes, so the full order is:
+
+1. Loquats  
+2. Watermelons  
+3. Cantaloupes  
+
+Final Answer: (B) The watermelons are the second-most expensive",(B) The watermelons are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+173,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a purple book, a black book, and a blue book. The purple book is to the right of the blue book. The black book is the second from the left.
+Options:
+(A) The purple book is the rightmost
+(B) The black book is the rightmost
+(C) The blue book is the rightmost",(A),"There are three positions from left to right. The black book is second, so it occupies the middle position. The purple book must be to the right of the blue book, so the blue book is first and the purple book is third.
+
+Final Answer: (A) The purple book is the rightmost",(A) The purple book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+174,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Amy, Ada, and Joe. Joe finished below Ada. Amy finished above Ada.
+Options:
+(A) Amy finished first
+(B) Ada finished first
+(C) Joe finished first",(A),"Joe finished below Ada, and Amy finished above Ada. Therefore, the order from first to third is:
+
+1. Amy  
+2. Ada  
+3. Joe  
+
+Final Answer: (A) Amy finished first",(A) Amy finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+175,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Joe, Eve, and Amy. Amy finished above Eve. Joe finished first.
+Options:
+(A) Joe finished second
+(B) Eve finished second
+(C) Amy finished second",(C),"Joe finished first, so Amy and Eve must occupy second and third places. Since Amy finished above Eve, Amy must be second and Eve third.
+
+Final Answer: (C) Amy finished second",(C) Amy finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+176,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a station wagon, a truck, and a motorcyle. The truck is newer than the station wagon. The motorcyle is the oldest.
+Options:
+(A) The station wagon is the second-newest
+(B) The truck is the second-newest
+(C) The motorcyle is the second-newest",(A),"The motorcycle is the oldest. Since the truck is newer than the station wagon, the order from oldest to newest is:
+
+1. Motorcycle  
+2. Station wagon  
+3. Truck  
+
+Therefore, the station wagon is the second-newest.
+
+Final Answer: (A) The station wagon is the second-newest",(A) The station wagon is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+177,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a convertible, a limousine, and a bus. The limousine is older than the bus. The bus is older than the convertible.
+Options:
+(A) The convertible is the second-newest
+(B) The limousine is the second-newest
+(C) The bus is the second-newest",(C),"The limousine is older than the bus, and the bus is older than the convertible. Therefore, from newest to oldest, the order is:
+
+1. Convertible  
+2. Bus  
+3. Limousine  
+
+Final Answer: (C) The bus is the second-newest",(C) The bus is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+178,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hawk, a cardinal, and a falcon. The hawk is to the left of the cardinal. The hawk is the second from the left.
+Options:
+(A) The hawk is the rightmost
+(B) The cardinal is the rightmost
+(C) The falcon is the rightmost",(B),"There are three positions: left, middle, and right. Since the hawk is second from the left, it is in the middle. The cardinal is to the right of the hawk, so it must be rightmost.
+
+Final Answer: (B) The cardinal is the rightmost",(B) The cardinal is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+179,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a limousine, a truck, and a minivan. The minivan is older than the truck. The limousine is the second-newest.
+Options:
+(A) The limousine is the second-newest
+(B) The truck is the second-newest
+(C) The minivan is the second-newest",(A),"The limousine is explicitly stated to be the second-newest vehicle. Since the minivan is older than the truck, the full order from oldest to newest is:
+
+1. Minivan  
+2. Limousine  
+3. Truck  
+
+Final Answer: (A) The limousine is the second-newest",(A) The limousine is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+180,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a bus, a sedan, and a truck. The truck is older than the bus. The bus is older than the sedan.
+Options:
+(A) The bus is the oldest
+(B) The sedan is the oldest
+(C) The truck is the oldest",(C),"The truck is older than the bus, and the bus is older than the sedan. Therefore, the order from oldest to youngest is:
+
+1. Truck  
+2. Bus  
+3. Sedan  
+
+Final Answer: (C) The truck is the oldest",(C) The truck is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+181,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a crow, a falcon, and a hummingbird. The crow is to the left of the falcon. The hummingbird is to the left of the crow.
+Options:
+(A) The crow is the second from the left
+(B) The falcon is the second from the left
+(C) The hummingbird is the second from the left",(A),"The hummingbird is to the left of the crow, and the crow is to the left of the falcon. Therefore, the order from left to right is:
+
+1. Hummingbird  
+2. Crow  
+3. Falcon  
+
+Final Answer: (A) The crow is the second from the left",(A) The crow is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+182,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Dan, and Mel. Dan finished second. Mel finished first.
+Options:
+(A) Ana finished last
+(B) Dan finished last
+(C) Mel finished last",(A),"There are three finishing positions: first, second, and last. Mel finished first, and Dan finished second, so Ana must have finished last.
+
+Final Answer: (A) Ana finished last",(A) Ana finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+183,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a station wagon, a truck, and a motorcyle. The truck is newer than the station wagon. The motorcyle is the oldest.
+Options:
+(A) The station wagon is the oldest
+(B) The truck is the oldest
+(C) The motorcyle is the oldest",(C),"The motorcycle is explicitly stated to be the oldest. Since the truck is newer than the station wagon, the order from oldest to newest is:
+
+1. Motorcycle  
+2. Station wagon  
+3. Truck  
+
+Final Answer: (C) The motorcycle is the oldest",(C) The motorcycle is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+184,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Dan, Mel, and Amy. Dan finished above Amy. Amy finished above Mel.
+Options:
+(A) Dan finished last
+(B) Mel finished last
+(C) Amy finished last",(B),"Dan finished above Amy, and Amy finished above Mel. Therefore, the order from highest to lowest is:
+
+1. Dan  
+2. Amy  
+3. Mel  
+
+So, Mel finished last.
+
+Final Answer: (B) Mel finished last",(B) Mel finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+185,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eve, Amy, and Rob. Amy finished above Rob. Eve finished above Amy.
+Options:
+(A) Eve finished last
+(B) Amy finished last
+(C) Rob finished last",(C),"Eve finished above Amy, and Amy finished above Rob. Therefore, the order from first to last is Eve, Amy, Rob. Rob finished last.
+
+Final Answer: (C) Rob finished last",(C) Rob finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+186,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: cantaloupes, apples, and loquats. The loquats are more expensive than the apples. The cantaloupes are less expensive than the apples.
+Options:
+(A) The cantaloupes are the second-most expensive
+(B) The apples are the second-most expensive
+(C) The loquats are the second-most expensive",(B),"The loquats are more expensive than the apples, and the cantaloupes are less expensive than the apples. Therefore, the order from most to least expensive is:
+
+1. Loquats  
+2. Apples  
+3. Cantaloupes  
+
+Final Answer: (B) The apples are the second-most expensive",(B) The apples are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+187,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a red book, a blue book, and an orange book. The red book is to the left of the orange book. The orange book is the second from the left.
+Options:
+(A) The red book is the rightmost
+(B) The blue book is the rightmost
+(C) The orange book is the rightmost",(B),"The orange book is second from the left. Since the red book is to the left of the orange book, the red book must be first. Therefore, the blue book is third, or rightmost.
+
+Final Answer: (B) The blue book is the rightmost",(B) The blue book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+188,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a robin, an owl, and a hawk. The robin is to the right of the hawk. The owl is the leftmost.
+Options:
+(A) The robin is the second from the left
+(B) The owl is the second from the left
+(C) The hawk is the second from the left",(C),"The owl is leftmost, so it is in position 1. Since the robin is to the right of the hawk, the remaining order must be:
+
+1. Owl  
+2. Hawk  
+3. Robin  
+
+Final Answer: (C) The hawk is the second from the left",(C) The hawk is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+189,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a blue book, an orange book, and a red book. The blue book is the rightmost. The orange book is the leftmost.
+Options:
+(A) The blue book is the leftmost
+(B) The orange book is the leftmost
+(C) The red book is the leftmost",(B),"The blue book is rightmost, and the orange book is leftmost. Therefore, the red book must be in the middle.
+
+Final Answer: (B) The orange book is the leftmost",(B) The orange book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+190,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a falcon, an owl, and a raven. The raven is to the left of the owl. The falcon is the leftmost.
+Options:
+(A) The falcon is the leftmost
+(B) The owl is the leftmost
+(C) The raven is the leftmost",(A),"The falcon is stated to be the leftmost bird. Since the raven is to the left of the owl, the full order is:
+
+**Falcon → Raven → Owl**
+
+Therefore, the correct choice is **(A) The falcon is the leftmost**.
+
+Final Answer: (A) The falcon is the leftmost",(A) The falcon is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+191,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Rob, Mel, and Joe. Joe finished below Mel. Rob finished below Joe.
+Options:
+(A) Rob finished last
+(B) Mel finished last
+(C) Joe finished last",(A),"Joe finished below Mel, and Rob finished below Joe. Therefore, the order from highest to lowest was:
+
+1. Mel  
+2. Joe  
+3. Rob  
+
+Final Answer: (A) Rob finished last",(A) Rob finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+192,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: watermelons, apples, and mangoes. The apples are less expensive than the mangoes. The mangoes are less expensive than the watermelons.
+Options:
+(A) The watermelons are the most expensive
+(B) The apples are the most expensive
+(C) The mangoes are the most expensive",(A),"The apples cost less than the mangoes, and the mangoes cost less than the watermelons. Therefore, the order from least to most expensive is:
+
+Apples < Mangoes < Watermelons
+
+So, the watermelons are the most expensive.
+
+Final Answer: (A) The watermelons are the most expensive",(A) The watermelons are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+193,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Amy, Ada, and Joe. Joe finished below Ada. Amy finished above Ada.
+Options:
+(A) Amy finished second
+(B) Ada finished second
+(C) Joe finished second",(B),"Amy finished above Ada, and Joe finished below Ada. Therefore, the order is:
+
+1. Amy  
+2. Ada  
+3. Joe  
+
+So, **Ada finished second**.
+
+Final Answer: (B) Ada finished second",(B) Ada finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+194,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Amy, and Eli. Eli finished second. Eli finished below Amy.
+Options:
+(A) Ana finished last
+(B) Amy finished last
+(C) Eli finished last",(A),"Eli finished second, and Eli finished below Amy, so Amy must have finished first. The remaining golfer, Ana, finished last.
+
+Final Answer: (A) Ana finished last",(A) Ana finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+195,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a sedan, a convertible, and a truck. The truck is the newest. The sedan is older than the convertible.
+Options:
+(A) The sedan is the second-newest
+(B) The convertible is the second-newest
+(C) The truck is the second-newest",(B),"The truck is the newest. Since the sedan is older than the convertible, the order from oldest to newest is:
+
+1. Sedan  
+2. Convertible  
+3. Truck  
+
+Therefore, the convertible is the second-newest.
+
+Final Answer: (B) The convertible is the second-newest",(B) The convertible is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+196,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a limousine, a truck, and a minivan. The minivan is older than the truck. The limousine is the second-newest.
+Options:
+(A) The limousine is the oldest
+(B) The truck is the oldest
+(C) The minivan is the oldest",(C),"The limousine is the second-newest, so it is in the middle by age. The minivan is older than the truck, so with the limousine in the middle, the minivan must be the oldest and the truck the newest.
+
+Final Answer: (C) The minivan is the oldest",(C) The minivan is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+197,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: cantaloupes, watermelons, and mangoes. The mangoes are the cheapest. The cantaloupes are the second-most expensive.
+Options:
+(A) The cantaloupes are the most expensive
+(B) The watermelons are the most expensive
+(C) The mangoes are the most expensive",(B),"Mangoes are the cheapest, so they are third in price. Cantaloupes are the second-most expensive, so they are in the middle. Therefore, watermelons must be the most expensive.
+
+Final Answer: (B) The watermelons are the most expensive",(B) The watermelons are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+198,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eve, Joe, and Amy. Eve finished below Amy. Eve finished above Joe.
+Options:
+(A) Eve finished second
+(B) Joe finished second
+(C) Amy finished second",(A),"The order from highest to lowest is:
+
+1. Amy  
+2. Eve  
+3. Joe  
+
+Eve finished below Amy but above Joe, so Eve finished second.
+
+Final Answer: (A) Eve finished second",(A) Eve finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+199,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a green book, a brown book, and an orange book. The brown book is to the left of the orange book. The green book is to the left of the brown book.
+Options:
+(A) The green book is the leftmost
+(B) The brown book is the leftmost
+(C) The orange book is the leftmost",(A),"The brown book is to the left of the orange book, and the green book is to the left of the brown book. Therefore, the order from left to right is:
+
+Green → Brown → Orange
+
+So, the green book is the leftmost.
+
+Final Answer: (A) The green book is the leftmost",(A) The green book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+200,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: peaches, pears, and mangoes. The mangoes are less expensive than the pears. The peaches are the cheapest.
+Options:
+(A) The peaches are the second-most expensive
+(B) The pears are the second-most expensive
+(C) The mangoes are the second-most expensive",(C),"The peaches are the cheapest, so they are least expensive. The mangoes cost less than the pears, placing the pears above the mangoes in price. Therefore, the order from most to least expensive is:
+
+1. Pears  
+2. Mangoes  
+3. Peaches  
+
+Final Answer: (C) The mangoes are the second-most expensive",(C) The mangoes are the second-most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+201,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, peaches, and loquats. The loquats are less expensive than the apples. The peaches are more expensive than the apples.
+Options:
+(A) The apples are the cheapest
+(B) The peaches are the cheapest
+(C) The loquats are the cheapest",(C),"The loquats cost less than the apples, and the peaches cost more than the apples. Therefore, the order from cheapest to most expensive is:
+
+Loquats < Apples < Peaches
+
+Final Answer: (C) The loquats are the cheapest",(C) The loquats are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+202,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a blue jay, a falcon, and a hummingbird. The blue jay is to the right of the falcon. The hummingbird is to the left of the falcon.
+Options:
+(A) The blue jay is the leftmost
+(B) The falcon is the leftmost
+(C) The hummingbird is the leftmost",(C),"The hummingbird is to the left of the falcon, and the blue jay is to the right of the falcon. Thus the order from left to right is:
+
+Hummingbird → Falcon → Blue jay
+
+Final Answer: (C) The hummingbird is the leftmost",(C) The hummingbird is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+203,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a crow, a falcon, and a raven. The crow is to the left of the raven. The falcon is to the right of the raven.
+Options:
+(A) The crow is the rightmost
+(B) The falcon is the rightmost
+(C) The raven is the rightmost",(B),"The crow is to the left of the raven, and the falcon is to the right of the raven. Therefore, the order from left to right is:
+
+**Crow → Raven → Falcon**
+
+So, the falcon is rightmost.
+
+Final Answer: **(B) The falcon is the rightmost**",(B) The falcon is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+204,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: an orange book, a blue book, and a yellow book. The orange book is to the left of the blue book. The yellow book is to the right of the blue book.
+Options:
+(A) The orange book is the rightmost
+(B) The blue book is the rightmost
+(C) The yellow book is the rightmost",(C),"The orange book is to the left of the blue book, and the yellow book is to the right of the blue book. Therefore, the order from left to right is:
+
+Orange → Blue → Yellow
+
+So, the yellow book is rightmost.
+
+Final Answer: (C) The yellow book is the rightmost",(C) The yellow book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+205,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: peaches, pears, and mangoes. The mangoes are less expensive than the peaches. The mangoes are more expensive than the pears.
+Options:
+(A) The peaches are the cheapest
+(B) The pears are the cheapest
+(C) The mangoes are the cheapest",(B),"The mangoes cost less than the peaches, so:
+
+- Peaches > Mangoes
+
+The mangoes cost more than the pears, so:
+
+- Mangoes > Pears
+
+Therefore, the order from cheapest to most expensive is:
+
+**Pears < Mangoes < Peaches**
+
+Final Answer: **(B) The pears are the cheapest**",(B) The pears are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+206,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a white book, a green book, and an orange book. The green book is to the right of the white book. The orange book is the rightmost.
+Options:
+(A) The white book is the rightmost
+(B) The green book is the rightmost
+(C) The orange book is the rightmost",(C),"The green book is to the right of the white book, and the orange book is stated to be the rightmost. Therefore, the order from left to right is white, green, orange.
+
+Final Answer: (C) The orange book is the rightmost",(C) The orange book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+207,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a sedan, a convertible, and a truck. The truck is the newest. The sedan is older than the convertible.
+Options:
+(A) The sedan is the newest
+(B) The convertible is the newest
+(C) The truck is the newest",(C),"The truck is explicitly stated to be the newest vehicle. The sedan is older than the convertible, but both are older than the truck.
+
+Final Answer: (C) The truck is the newest",(C) The truck is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+208,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a truck, a minivan, and a tractor. The truck is newer than the minivan. The minivan is newer than the tractor.
+Options:
+(A) The truck is the second-newest
+(B) The minivan is the second-newest
+(C) The tractor is the second-newest",(B),"The truck is newer than the minivan, and the minivan is newer than the tractor. Thus, from newest to oldest:
+
+1. Truck  
+2. Minivan  
+3. Tractor  
+
+Final Answer: (B) The minivan is the second-newest",(B) The minivan is the second-newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+209,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a blue jay, a falcon, and a raven. The falcon is to the left of the blue jay. The falcon is to the right of the raven.
+Options:
+(A) The blue jay is the rightmost
+(B) The falcon is the rightmost
+(C) The raven is the rightmost",(A),"The falcon is to the left of the blue jay, and the raven is to the left of the falcon. Therefore, the order from left to right is:
+
+Raven → Falcon → Blue jay
+
+So, the blue jay is rightmost.
+
+Final Answer: (A) The blue jay is the rightmost",(A) The blue jay is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+210,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Rob, and Joe. Joe finished above Ana. Rob finished second.
+Options:
+(A) Ana finished second
+(B) Rob finished second
+(C) Joe finished second",(B),"There are three finishing positions: 1st, 2nd, and 3rd. Rob finished second. Since Joe finished above Ana, Joe must be 1st and Ana 3rd.
+
+Therefore, the correct option is **(B) Rob finished second**.
+
+Final Answer: **(B) Rob finished second**",(B) Rob finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+211,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a green book, a brown book, and an orange book. The brown book is to the left of the orange book. The green book is to the left of the brown book.
+Options:
+(A) The green book is the rightmost
+(B) The brown book is the rightmost
+(C) The orange book is the rightmost",(C),"The green book is to the left of the brown book, and the brown book is to the left of the orange book. Therefore, the order from left to right is:
+
+Green → Brown → Orange
+
+So, the orange book is rightmost.
+
+Final Answer: (C) The orange book is the rightmost",(C) The orange book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+212,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: kiwis, loquats, and cantaloupes. The kiwis are less expensive than the loquats. The cantaloupes are less expensive than the kiwis.
+Options:
+(A) The kiwis are the cheapest
+(B) The loquats are the cheapest
+(C) The cantaloupes are the cheapest",(C),"The kiwis are less expensive than the loquats, so:
+
+Kiwis < Loquats
+
+The cantaloupes are less expensive than the kiwis, so:
+
+Cantaloupes < Kiwis
+
+Therefore, the order from cheapest to most expensive is:
+
+Cantaloupes < Kiwis < Loquats
+
+Final Answer: (C) The cantaloupes are the cheapest",(C) The cantaloupes are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+213,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: oranges, watermelons, and pears. The oranges are the second-most expensive. The pears are more expensive than the watermelons.
+Options:
+(A) The oranges are the cheapest
+(B) The watermelons are the cheapest
+(C) The pears are the cheapest",(B),"There are three price levels: highest, middle, and lowest.
+
+- Oranges are second-most expensive, so they are in the middle.
+- Pears are more expensive than watermelons.
+- Therefore, pears must be the most expensive and watermelons the cheapest.
+
+Final Answer: (B) The watermelons are the cheapest",(B) The watermelons are the cheapest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+214,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Rob, Mel, and Joe. Joe finished below Mel. Rob finished below Joe.
+Options:
+(A) Rob finished second
+(B) Mel finished second
+(C) Joe finished second",(C),"Joe finished below Mel, and Rob finished below Joe. Therefore, the order from highest to lowest was:
+
+1. Mel  
+2. Joe  
+3. Rob  
+
+Final Answer: (C) Joe finished second",(C) Joe finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+215,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a raven, a quail, and a crow. The quail is the leftmost. The raven is the rightmost.
+Options:
+(A) The raven is the leftmost
+(B) The quail is the leftmost
+(C) The crow is the leftmost",(B),"The paragraph states that the quail is the leftmost bird and the raven is the rightmost. Therefore, the crow must be in the middle.
+
+Final Answer: (B) The quail is the leftmost",(B) The quail is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+216,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: cantaloupes, oranges, and watermelons. The oranges are the most expensive. The cantaloupes are more expensive than the watermelons.
+Options:
+(A) The cantaloupes are the most expensive
+(B) The oranges are the most expensive
+(C) The watermelons are the most expensive",(B),"The oranges are stated to be the most expensive. Since the cantaloupes cost more than the watermelons, the price order is:
+
+Oranges > Cantaloupes > Watermelons
+
+Final Answer: (B) The oranges are the most expensive",(B) The oranges are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+217,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a falcon, an owl, and a raven. The raven is to the left of the owl. The falcon is the leftmost.
+Options:
+(A) The falcon is the second from the left
+(B) The owl is the second from the left
+(C) The raven is the second from the left",(C),"The falcon is the leftmost, so it is first. Since the raven is to the left of the owl, the remaining order must be raven, then owl.
+
+Thus, the raven is second from the left.
+
+Final Answer: (C) The raven is the second from the left",(C) The raven is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+218,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a tractor, a station wagon, and a limousine. The tractor is newer than the limousine. The station wagon is the newest.
+Options:
+(A) The tractor is the newest
+(B) The station wagon is the newest
+(C) The limousine is the newest",(B),"The tractor is newer than the limousine, and the station wagon is stated to be the newest of all three vehicles. Therefore, the correct option is:
+
+**Final Answer: (B) The station wagon is the newest**",(B) The station wagon is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+219,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a robin, a raven, and a quail. The quail is to the left of the robin. The robin is the second from the left.
+Options:
+(A) The robin is the rightmost
+(B) The raven is the rightmost
+(C) The quail is the rightmost",(B),"The robin is second from the left. Since the quail is to the left of the robin, the quail must be first. Therefore, the raven is third, or rightmost.
+
+Final Answer: (B) The raven is the rightmost",(B) The raven is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+220,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a station wagon, a truck, and a motorcyle. The truck is newer than the station wagon. The motorcyle is the oldest.
+Options:
+(A) The station wagon is the newest
+(B) The truck is the newest
+(C) The motorcyle is the newest",(B),"The motorcycle is the oldest. Since the truck is newer than the station wagon, the order from oldest to newest is:
+
+1. Motorcycle  
+2. Station wagon  
+3. Truck  
+
+Therefore, the truck is the newest.
+
+Final Answer: (B) The truck is the newest",(B) The truck is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+221,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Dan, Mel, and Amy. Dan finished above Amy. Amy finished above Mel.
+Options:
+(A) Dan finished second
+(B) Mel finished second
+(C) Amy finished second",(C),"Dan finished above Amy, and Amy finished above Mel, so the order was:
+
+1. Dan  
+2. Amy  
+3. Mel  
+
+Therefore, **Amy finished second**.
+
+Final Answer: (C) Amy finished second",(C) Amy finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+222,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a blue book, an orange book, and a green book. The green book is the leftmost. The orange book is to the left of the blue book.
+Options:
+(A) The blue book is the second from the left
+(B) The orange book is the second from the left
+(C) The green book is the second from the left",(B),"The green book is leftmost, so it is in position 1. Since the orange book is to the left of the blue book, the remaining order must be:
+
+1. Green  
+2. Orange  
+3. Blue  
+
+Final Answer: (B) The orange book is the second from the left",(B) The orange book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+223,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a motorcyle, a limousine, and a convertible. The motorcyle is newer than the limousine. The convertible is newer than the motorcyle.
+Options:
+(A) The motorcyle is the newest
+(B) The limousine is the newest
+(C) The convertible is the newest",(C),"The motorcycle is newer than the limousine, and the convertible is newer than the motorcycle. Therefore, the order from newest to oldest is:
+
+1. Convertible  
+2. Motorcycle  
+3. Limousine  
+
+Final Answer: (C) The convertible is the newest",(C) The convertible is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+224,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Joe, Dan, and Eve. Eve finished above Dan. Dan finished above Joe.
+Options:
+(A) Joe finished last
+(B) Dan finished last
+(C) Eve finished last",(A),"Eve finished above Dan, and Dan finished above Joe, so the order from highest to lowest is:
+
+1. Eve  
+2. Dan  
+3. Joe  
+
+Therefore, Joe finished last.
+
+Final Answer: (A) Joe finished last",(A) Joe finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+225,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: an orange book, a yellow book, and a blue book. The blue book is to the right of the yellow book. The orange book is the second from the left.
+Options:
+(A) The orange book is the leftmost
+(B) The yellow book is the leftmost
+(C) The blue book is the leftmost",(B),"There are three positions from left to right. Since the orange book is second, the yellow and blue books must occupy the first and third positions. Because the blue book is to the right of the yellow book, the yellow book must be first and the blue book third.
+
+Final Answer: (B) The yellow book is the leftmost",(B) The yellow book is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+226,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Amy, and Eli. Eli finished second. Eli finished below Amy.
+Options:
+(A) Ana finished first
+(B) Amy finished first
+(C) Eli finished first",(B),"Eli finished second, and he finished below Amy, so Amy must have finished first. Ana then finished third.
+
+Final Answer: (B) Amy finished first",(B) Amy finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+227,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: apples, pears, and plums. The pears are less expensive than the plums. The pears are more expensive than the apples.
+Options:
+(A) The apples are the most expensive
+(B) The pears are the most expensive
+(C) The plums are the most expensive",(C),"The pears cost less than the plums, so the plums are more expensive than the pears. The pears cost more than the apples, giving the order:
+
+Apples < Pears < Plums
+
+Therefore, the plums are the most expensive.
+
+Final Answer: (C) The plums are the most expensive",(C) The plums are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+228,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Eli, Mya, and Eve. Eli finished last. Mya finished second.
+Options:
+(A) Eli finished last
+(B) Mya finished last
+(C) Eve finished last",(A),"There are three golfers: Eli, Mya, and Eve. Since Eli finished last and Mya finished second, Eve must have finished first.
+
+Therefore, the true statement is:
+
+**Final Answer: (A) Eli finished last**",(A) Eli finished last,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+229,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a robin, an owl, and a hawk. The robin is to the right of the hawk. The owl is the leftmost.
+Options:
+(A) The robin is the rightmost
+(B) The owl is the rightmost
+(C) The hawk is the rightmost",(A),"The owl is leftmost. Since the robin is to the right of the hawk, the remaining order must be:
+
+**Owl – Hawk – Robin**
+
+Therefore, the robin is rightmost.
+
+Final Answer: (A) The robin is the rightmost",(A) The robin is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+230,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Mel, Ada, and Ana. Mel finished last. Ana finished second.
+Options:
+(A) Mel finished first
+(B) Ada finished first
+(C) Ana finished first",(B),"There are three golfers: Mel, Ada, and Ana.
+
+- Mel finished last, so Mel was third.
+- Ana finished second.
+- Therefore, Ada must have finished first.
+
+Final Answer: (B) Ada finished first",(B) Ada finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+231,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: an orange book, a white book, and a purple book. The orange book is to the left of the white book. The purple book is the rightmost.
+Options:
+(A) The orange book is the rightmost
+(B) The white book is the rightmost
+(C) The purple book is the rightmost",(C),"The orange book is to the left of the white book, and the purple book is explicitly stated to be the rightmost. Therefore, the order is orange, white, purple.
+
+Final Answer: (C) The purple book is the rightmost",(C) The purple book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+232,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hawk, a cardinal, and a falcon. The hawk is to the left of the cardinal. The hawk is the second from the left.
+Options:
+(A) The hawk is the leftmost
+(B) The cardinal is the leftmost
+(C) The falcon is the leftmost",(C),"There are three positions from left to right. Since the hawk is second from the left, one bird must be to its left. The hawk is also to the left of the cardinal, so the cardinal must be to the hawk’s right. Therefore, the falcon is leftmost.
+
+Final Answer: (C) The falcon is the leftmost",(C) The falcon is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+233,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hummingbird, a quail, and a crow. The crow is the second from the left. The hummingbird is to the left of the crow.
+Options:
+(A) The hummingbird is the second from the left
+(B) The quail is the second from the left
+(C) The crow is the second from the left",(C),"There are three positions from left to right. The crow is explicitly second, and the hummingbird is to its left, so the hummingbird is first and the quail is third.
+
+Therefore, the correct option is **(C) The crow is the second from the left**.
+
+Final Answer: (C) The crow is the second from the left",(C) The crow is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+234,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a yellow book, a green book, and a red book. The red book is to the left of the green book. The yellow book is to the left of the red book.
+Options:
+(A) The yellow book is the rightmost
+(B) The green book is the rightmost
+(C) The red book is the rightmost",(B),"The yellow book is to the left of the red book, and the red book is to the left of the green book. Therefore, the order from left to right is:
+
+Yellow → Red → Green
+
+So, the green book is rightmost.
+
+Final Answer: (B) The green book is the rightmost",(B) The green book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+235,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hummingbird, a quail, and a crow. The crow is the second from the left. The hummingbird is to the left of the crow.
+Options:
+(A) The hummingbird is the leftmost
+(B) The quail is the leftmost
+(C) The crow is the leftmost",(A),"The crow is second from the left. Since the hummingbird is to the left of the crow, it must be first (leftmost). The quail is therefore third.
+
+Final Answer: (A) The hummingbird is the leftmost",(A) The hummingbird is the leftmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+236,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a sedan, a minivan, and a motorcyle. The motorcyle is the second-newest. The minivan is newer than the motorcyle.
+Options:
+(A) The sedan is the newest
+(B) The minivan is the newest
+(C) The motorcyle is the newest",(B),"The motorcycle is the second-newest vehicle. Since the minivan is newer than the motorcycle, it must be the newest vehicle. Therefore, the correct choice is:
+
+**Final Answer: (B) The minivan is the newest**",(B) The minivan is the newest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+237,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Rob, Mel, and Joe. Joe finished below Mel. Rob finished below Joe.
+Options:
+(A) Rob finished first
+(B) Mel finished first
+(C) Joe finished first",(B),"Joe finished below Mel, and Rob finished below Joe. Therefore, the order from first to third was:
+
+1. Mel  
+2. Joe  
+3. Rob  
+
+Final Answer: (B) Mel finished first",(B) Mel finished first,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+238,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hawk, a crow, and a raven. The raven is to the right of the hawk. The crow is the rightmost.
+Options:
+(A) The hawk is the rightmost
+(B) The crow is the rightmost
+(C) The raven is the rightmost",(B),"The raven is to the right of the hawk, and the crow is specified as the rightmost bird. Therefore, the order from left to right is hawk, raven, crow.
+
+Final Answer: (B) The crow is the rightmost",(B) The crow is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+239,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells three fruits: peaches, mangoes, and apples. The peaches are more expensive than the apples. The mangoes are the cheapest.
+Options:
+(A) The peaches are the most expensive
+(B) The mangoes are the most expensive
+(C) The apples are the most expensive",(A),"The mangoes are the cheapest, so they cost less than both peaches and apples. The peaches cost more than the apples. Therefore, the order from most to least expensive is:
+
+Peaches > Apples > Mangoes
+
+Final Answer: (A) The peaches are the most expensive",(A) The peaches are the most expensive,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+240,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: a hummingbird, an owl, and a falcon. The falcon is to the right of the owl. The hummingbird is to the left of the owl.
+Options:
+(A) The hummingbird is the second from the left
+(B) The owl is the second from the left
+(C) The falcon is the second from the left",(B),"The hummingbird is to the left of the owl, and the falcon is to the right of the owl. Therefore, the order from left to right is:
+
+Hummingbird, Owl, Falcon
+
+So, the owl is second from the left.
+
+Final Answer: (B) The owl is the second from the left",(B) The owl is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+241,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a gray book, a purple book, and a red book. The purple book is to the left of the red book. The gray book is to the left of the purple book.
+Options:
+(A) The gray book is the second from the left
+(B) The purple book is the second from the left
+(C) The red book is the second from the left",(B),"The gray book is to the left of the purple book, and the purple book is to the left of the red book. Therefore, the order from left to right is:
+
+Gray, Purple, Red
+
+So, the purple book is second from the left.
+
+Final Answer: (B) The purple book is the second from the left",(B) The purple book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+242,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a minivan, a bus, and a sedan. The minivan is newer than the sedan. The minivan is older than the bus.
+Options:
+(A) The minivan is the oldest
+(B) The bus is the oldest
+(C) The sedan is the oldest",(C),"“Newer than the sedan” means the minivan is younger than the sedan, so the sedan is older than the minivan. The minivan is older than the bus. Therefore, the order from oldest to newest is:
+
+Sedan → Minivan → Bus
+
+Final Answer: (C) The sedan is the oldest",(C) The sedan is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+243,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a red book, a gray book, and a white book. The white book is to the left of the gray book. The red book is the second from the left.
+Options:
+(A) The red book is the rightmost
+(B) The gray book is the rightmost
+(C) The white book is the rightmost",(B),"There are three positions from left to right. The red book is second, so the white and gray books must occupy the first and third positions. Since the white book is to the left of the gray book, the white book is first and the gray book is third.
+
+Final Answer: (B) The gray book is the rightmost",(B) The gray book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+244,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a tractor, a convertible, and a minivan. The tractor is the second-newest. The minivan is newer than the convertible.
+Options:
+(A) The tractor is the oldest
+(B) The convertible is the oldest
+(C) The minivan is the oldest",(B),"Order from oldest to newest:
+
+1. Convertible  
+2. Tractor  
+3. Minivan  
+
+Since the tractor is second-newest and the minivan is newer than the convertible, the convertible must be the oldest.
+
+Final Answer: (B) The convertible is the oldest",(B) The convertible is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+245,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: an orange book, a yellow book, and a blue book. The blue book is to the right of the yellow book. The orange book is the second from the left.
+Options:
+(A) The orange book is the rightmost
+(B) The yellow book is the rightmost
+(C) The blue book is the rightmost",(C),"The orange book is second from the left. Therefore, the yellow and blue books must occupy the first and third positions. Since the blue book is to the right of the yellow book, the yellow book is first and the blue book is rightmost.
+
+Final Answer: (C) The blue book is the rightmost",(C) The blue book is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+246,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are three birds: an owl, a crow, and a cardinal. The crow is to the left of the owl. The owl is the second from the left.
+Options:
+(A) The owl is the rightmost
+(B) The crow is the rightmost
+(C) The cardinal is the rightmost",(C),"The owl is second from the left. Since the crow is to the left of the owl, the crow must be first. Therefore, the cardinal is third, or rightmost.
+
+Final Answer: (C) The cardinal is the rightmost",(C) The cardinal is the rightmost,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+247,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are three vehicles: a truck, a minivan, and a tractor. The truck is newer than the minivan. The minivan is newer than the tractor.
+Options:
+(A) The truck is the oldest
+(B) The minivan is the oldest
+(C) The tractor is the oldest",(C),"The truck is newer than the minivan, and the minivan is newer than the tractor. Therefore, the tractor is the oldest vehicle.
+
+Final Answer: (C) The tractor is the oldest",(C) The tractor is the oldest,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+248,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are three books: a red book, a gray book, and a white book. The white book is to the left of the gray book. The red book is the second from the left.
+Options:
+(A) The red book is the second from the left
+(B) The gray book is the second from the left
+(C) The white book is the second from the left",(A),"There are three positions from left to right. The red book is explicitly second. Since the white book must be to the left of the gray book, the only possible order is:
+
+**White, Red, Gray**
+
+Therefore, the red book is second from the left.
+
+Final Answer: **(A) The red book is the second from the left**",(A) The red book is the second from the left,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+249,"The following paragraphs each describe a set of three objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were three golfers: Ana, Rob, and Joe. Joe finished above Ana. Rob finished above Joe.
+Options:
+(A) Ana finished second
+(B) Rob finished second
+(C) Joe finished second",(C),"Rob finished above Joe, and Joe finished above Ana. Therefore, the order was:
+
+1. Rob  
+2. Joe  
+3. Ana  
+
+Final Answer: (C) Joe finished second",(C) Joe finished second,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42

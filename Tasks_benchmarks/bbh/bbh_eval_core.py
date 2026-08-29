@@ -118,6 +118,14 @@ def has_marker(model_output):
     )
 
 
+CLOSED_SET = {"yes", "no", "true", "false", "valid", "invalid"}
+
+
+def _unwrap(text):
+    """Strip LaTeX inline-math delimiters. Same category as quotes, backticks and `**`."""
+    return re.sub(r"\\[\(\)\[\]]", "", text).strip().strip("$").strip()
+
+
 def score_response(model_response, gold_answer, question=""):
     """The one scorer. Generous about how an answer is written, strict about what it says.
 
@@ -164,6 +172,41 @@ def score_response(model_response, gold_answer, question=""):
     ):
         return 1
 
+    # ---- v3 branches: the concise answer is there, with something wrapped around it ----
+    #
+    # These fire ONLY when the model actually emitted the `Final Answer:` marker. Without that,
+    # `final_answer` is a scrape of the whole response, and "it contains the gold letter
+    # somewhere" is not an answer — a Llama row whose reasoning happened to mention `(D)` once
+    # would otherwise have been credited for an answer it never gave.
+    if not has_marker(model_response):
+        return 0
+
+    bare = _unwrap(final_answer)
+
+    # 7. LaTeX inline math is packaging, like quotes and bold: `\(-50\)` for gold `-50`
+    if bare.lower() == gold_answer.lower().strip():
+        return 1
+
+    # 8. a number with its unit noun attached: `8 musical instruments` for gold `8`
+    if re.match(r"^-?\d+$", gold_answer.strip()):
+        head = bare.split()
+        if head and head[0].rstrip(".,").lstrip("(") == gold_answer.strip():
+            return 1
+
+    # 9. a closed-set answer restated: `No, Ka does not tell the truth.` for gold `No`
+    if gold_answer.strip().lower() in CLOSED_SET:
+        first = re.split(r"[\s,.;:]+", final_answer.strip(), 1)[0].strip(" .,:;!\"'`*")
+        if first.lower() == gold_answer.strip().lower():
+            return 1
+
+    # 10. the option letter given at the END rather than the start: `11/10/2019 (B)` for `(B)`.
+    #     Length-capped and requiring exactly ONE distinct letter, so a response that weighs
+    #     several options cannot be read as having chosen one.
+    if re.match(r"^\([A-Z]\)$", gold_answer.strip()) and len(final_answer) < 100:
+        letters = re.findall(r"\(([A-Z])\)", final_answer)
+        if len(set(letters)) == 1 and f"({letters[0]})" == gold_answer.strip():
+            return 1
+
     return 0
 
 
@@ -171,9 +214,9 @@ def score_response(model_response, gold_answer, question=""):
 
 
 # Bumped whenever score_response changes behaviour, and written onto every result file. v2
-# added markdown-emphasis stripping (2026-08-29). A number tagged v1 cannot be compared with one
-# tagged v2 without rescoring.
-SCORER_VERSION = "lenient_v2"
+# added markdown-emphasis stripping; v3 added the four packaging branches below (both
+# 2026-08-29). A number tagged v1 cannot be compared with one tagged v3 without rescoring.
+SCORER_VERSION = "lenient_v3"
 
 FIELDS = ["idx", "question", "gold_answer", "model_response", "final_answer", "has_marker",
           "score", "config"]
