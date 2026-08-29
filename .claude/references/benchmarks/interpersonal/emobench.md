@@ -82,7 +82,7 @@ Two things this changes for a runner:
 
 - **`EMO_SCRIPT.md` is not about EmoBench.** Despite living in this folder, it is a repo-wide script
   analysis — its first sections cover BBH and DocVQA. It also points at `../CLAUDE.md`, a path that
-  does not exist. Read it for the client/retry comparison table, not as EmoBench documentation.
+  does not exist. Read it for the client/retry comparison table, not as EmoBench documentation — and **not for its BBH section, which was marked superseded on 2026-08-29** when every filename in it stopped existing. bbh's live record is `../tasks/bbh-parameters.md`.
 - **The model name is passed on the command line, not read from the script name.** `run_emobench.sh`
   in `EMO_Gemma/` carries `--model google/gemma-4-31B-it`; changing the folder does not change the
   model, and a copied folder that keeps the old `--model` silently evaluates the wrong one.
