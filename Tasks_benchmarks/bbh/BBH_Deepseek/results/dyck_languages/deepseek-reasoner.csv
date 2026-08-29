@@ -100,7 +100,7 @@ Final Answer: [ ] { ( ( < { ( ( ( { < > ( ) } ) ) [ { } ] { { ( ) } } ) } < > > 
 
 Thus, the rest of the sequence to add is "" ) } >"" to properly close all brackets. When combined with the input, the full sequence is ""< { < > } { ( ) } >"", which passes a stack-based validation for proper bracket matching.
 
-Final Answer: "")}>""",)}>,True,0,
+Final Answer: "")}>""",)}>,True,1,
 16,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < < { } >",> ] ],"The input sequence is ""[ [ < < { } >"". To close all parentheses properly, we need to consider the order of opening brackets. The stack after processing the input is ""[ [ <"", meaning we have two open square brackets and one open angle bracket to close. The correct closing order is to first close the angle bracket with "">"", then close the two square brackets with ""]"" and ""]"". Thus, the rest of the sequence to add is ""> ] ]"".
 
 Final Answer: > ] ]",> ] ],True,1,
@@ -608,7 +608,7 @@ At the end of the input, the stack has two '<' symbols, indicating two unclosed 
 
 The completed sequence is: < < [ ] > ( < > ) < > >
 
-Final Answer: >>",>>,True,0,
+Final Answer: >>",>>,True,1,
 78,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { [ { [ { ( ( ) ) } ] } ( < < ( < > ) > { } [ [ [ ( < { } > ) ] ] ] { } > ) ( { } ) { } ] }",} ] >,"The input sequence has multiple opening symbols that are not properly closed. After parsing the sequence step by step, the stack ends with `< [ {`, meaning we need to close the curly brace, square bracket, and angle bracket in that order. Thus, the missing closing symbols are `} ] >`. Appending these to the input completes the sequence with all parentheses, brackets, and braces properly closed.
 
 Final Answer: < [ { { [ { [ { ( ( ) ) } ] } ( < < ( < > ) > { } [ [ [ ( < { } > ) ] ] ] { } > ) ( { } ) { } ] } } ] >",< [ { { [ { [ { ( ( ) ) } ] } ( < < ( < > ) > { } [ [ [ ( < { } > ) ] ] ] { } > ) ( { } ) { } ] } } ] >,True,1,
@@ -845,7 +845,7 @@ Thus, the completed sequence is ""{ < ( [ ] ) > }"".
 Final Answer: {<([])>}",{<([])>},True,0,
 108,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( )",> } >,"The input sequence is ""< { < ( )"", which has open angle brackets and a curly brace that need to be closed. The parentheses ""( )"" are already closed. The open brackets are: the first angle bracket ""<"", the curly brace ""{"", and the second angle bracket ""<"". To close them properly, they must be closed in reverse order: first close the second angle bracket with "">"", then the curly brace with ""}"", and finally the first angle bracket with "">"". Thus, the completion is "">}>"", resulting in the full sequence ""< { < ( ) > } >"" or without spaces: ""<{<()>}>"".
 
-Final Answer: >}>",>}>,True,0,
+Final Answer: >}>",>}>,True,1,
 109,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( ) ( < [ ] > ( ) < [ [ { } { < > } < > ] ] > ) [ ] > [ ( < { [ ] } [ ] ( { [ < > ] < < > > ( ( < { } > ) ) } ) [ [ [ < < < ( ( ) ) > > > ] < < { [ ] } > > ( [ < > ] ) ] ] > ) ] < >",),"The sequence is analyzed using a stack to track opening symbols. The stack ends with an opening parenthesis '(' from the start of the sequence, indicating that a closing parenthesis is missing. Thus, the sequence is completed by adding a closing parenthesis ')' at the end.
 
 Final Answer: ( < ( ) ( < [ ] > ( ) < [ [ { } { < > } < > ] ] > ) [ ] > [ ( < { [ ] } [ ] ( { [ < > ] < < > > ( ( < { } > ) ) } ) [ [ [ < < < ( ( ) ) > > > ] < < { [ ] } > > ( [ < > ] ) ] ] > ) ] < > )",( < ( ) ( < [ ] > ( ) < [ [ { } { < > } < > ] ] > ) [ ] > [ ( < { [ ] } [ ] ( { [ < > ] < < > > ( ( < { } > ) ) } ) [ [ [ < < < ( ( ) ) > > > ] < < { [ ] } > > ( [ < > ] ) ] ] > ) ] < > ),True,1,
@@ -1011,7 +1011,7 @@ To complete the sequence, I need to ensure all parentheses, brackets, and braces
 
 After processing all symbols, the stack has two opening parentheses '(' that need to be closed. Therefore, I need to add two closing parentheses '))' to complete the sequence.
 
-Final Answer: ))",)),True,0,
+Final Answer: ))",)),True,1,
 131,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( ) > { < > } ( < > ) < ( ) > [ ] < < < < ( ( ) ) < ( ) > > > > > {",} },"The input sequence is: { < ( ) > { < > } ( < > ) < ( ) > [ ] < < < < ( ( ) ) < ( ) > > > > > {
 
 To complete the sequence, all opening symbols must have corresponding closing symbols. The sequence has two unclosed curly braces: one at the beginning and one at the end. After analyzing the sequence, all parentheses, angle brackets, and square brackets are properly closed. The last curly brace { must be closed first, followed by the first curly brace {. Therefore, two closing curly braces need to be added: } to close the last { and } to close the first {.
@@ -1259,7 +1259,7 @@ The completed sequence is: [ < [ ] { { } { < ( { } ) > } } > ] ( { } )
 Final Answer: [ < [ ] { { } { < ( { } ) > } } > ] ( { } )",[ < [ ] { { } { < ( { } ) > } } > ] ( { } ),True,1,
 160,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < > ( [ [ { ( ( [ ] < > ) ) } ] { [ [ ] { } { [ { < > } ] } ( { { { { } } } } ) ] } ] ) (",) > },"The input sequence has unbalanced parentheses, brackets, and angle brackets. After processing the sequence, the stack contains an open parenthesis '(', an open angle bracket '<', and an open curly brace '{'. To close them properly, we need to add the corresponding closing symbols in reverse order: first close the parenthesis with ')', then the angle bracket with '>', and finally the curly brace with '}'. Thus, the completion is "")>}"".
 
-Final Answer: )>}",)>},True,0,
+Final Answer: )>}",)>},True,1,
 161,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( (",) ) },"The input sequence is ""{ ( ("", which contains opening brackets that need to be closed properly. To balance the brackets, we need to close them in the reverse order of their opening. The order of opening is: curly brace '{', then parenthesis '(', then another parenthesis '('. Therefore, we first close the last opened parenthesis with ')', then the next parenthesis with ')', and finally the curly brace with '}'. This results in the completed sequence: ""{ ( ( ) ) }"".
 
 Final Answer: { ( ( ) ) }",{ ( ( ) ) },True,1,

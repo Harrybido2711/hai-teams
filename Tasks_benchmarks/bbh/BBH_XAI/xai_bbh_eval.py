@@ -47,6 +47,10 @@ if __name__ == "__main__":
     ap.add_argument("--sleep", type=float, default=0.0, help="seconds between calls")
     ap.add_argument("--limit", type=int, default=0,
                     help="only the first N items of each task — a smoke test, not a run")
+    ap.add_argument("--prompt", default="v1", choices=["v1", "v2"],
+                    help="prompt version. It is part of the run config and is written onto every "
+                         "row, so a resume across a change of it is refused rather than silently "
+                         "mixing two prompts in one result set")
     ap.add_argument("--workers", type=int, default=1,
                     help="concurrent request streams. 5 is this project's standing limit and a "
                          "measured fix, not a convention — see quest-cluster.md. Concurrency does "
@@ -61,5 +65,5 @@ if __name__ == "__main__":
 
     print("XAI: model=%s tasks=%d" % (MODEL, len(tasks)), flush=True)
     core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep,
-                   limit=args.limit, workers=args.workers, config=dict(CONFIG, model=MODEL))
+                   limit=args.limit, workers=args.workers, prompt_version=args.prompt, config=dict(CONFIG, model=MODEL))
     print("done ->", os.path.join(MODEL_DIR, "results"), flush=True)

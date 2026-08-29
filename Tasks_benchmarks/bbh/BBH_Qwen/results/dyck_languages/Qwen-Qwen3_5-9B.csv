@@ -397,7 +397,7 @@ Final Answer: [ < { [ ] } > ]",[ < { [ ] } > ],True,1,
     *   The next item on the stack is `<`, so we need another `>`.
     *   Therefore, the missing characters are `>>`.
 
-Final Answer: >>",>>,True,0,
+Final Answer: >>",>>,True,1,
 28,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ [ ] ] > ] ] { } { ( { ( ( ) ) ( ) { { [ [ ( { < { [ { [ ( < ( ( < < < [ ( ) ] [ ] > > > ) ) > < [ < { < ( ) > } > ] > ) ] } ] } > ( ( ) ) } ) [ ( ) ] ] ( < > ) ] } } } ) } [",],,,False,0,
 29,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { } ( ( ) )",},"To determine the correct completion, we need to track the open brackets using a stack-based approach:
 
@@ -608,7 +608,7 @@ Final Answer: ) >",) >,True,1,
 **Conclusion:**
 After processing the entire input string, the stack contains two open parentheses: `(` and `(`. To properly close the sequence, we must append two closing parentheses `)` in reverse order of the stack (which is simply `)` then `)`).
 
-Final Answer: ))",)),True,0,
+Final Answer: ))",)),True,1,
 40,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { } > { (",) } },"To determine the correct completion, we need to track the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the Input:** `{ < { } > { (`
@@ -914,7 +914,7 @@ After processing the entire input string, the stack contains two open brackets: 
 
 Therefore, the missing part of the sequence is `>)`.
 
-Final Answer: >)",>),True,0,
+Final Answer: >)",>),True,1,
 63,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < { } > < > > ( )",],"To determine the correct completion of the sequence, we need to track the opening and closing brackets using a stack-based approach. We process the input string from left to right, pushing opening brackets onto the stack and popping them when a matching closing bracket is encountered.
 
 1.  **`[`**: Open square bracket. Stack: `[`
@@ -981,7 +981,7 @@ Final Answer: [ < ( < < > [ ] ( ) > ) > ]",[ < ( < < > [ ] ( ) > ) > ],True,1,
 5.  **Construct Completion:**
     *   Append `]` then `}` to the end of the sequence.
 
-Final Answer: ]}",]},True,0,
+Final Answer: ]}",]},True,1,
 66,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < > < [ ] > [ < { } > ] [ ( { } ) ] [ ] [ ( ) ] ( ) < { { < { { { { { ( { } ) } ( { < > } ) } } } } > } }",> } ],,,False,0,
 67,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ( [ < [ ] > ] ) ] > ] ( { }",) ],"To determine the completion of the sequence, we need to track the open brackets using a stack-based approach. We process the input string from left to right, pushing open brackets onto the stack and popping them when a matching closing bracket is encountered.
 
@@ -1018,7 +1018,7 @@ To properly close the sequence, we must close the remaining open brackets in the
 
 Therefore, the missing characters are `)]`.
 
-Final Answer: )]",)],True,0,
+Final Answer: )]",)],True,1,
 68,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ ( )",] ),"To determine the correct completion of the sequence, we need to ensure that all opening brackets are matched with their corresponding closing brackets in the correct order (Last In, First Out).
 
 1.  **Analyze the Input:** The input string is `( [ ( )`.
@@ -1103,7 +1103,7 @@ Final Answer: }",},True,1,
 
 **Final Answer:** }}
 
-Final Answer: }}",}},True,0,
+Final Answer: }}",}},True,1,
 73,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ] > ( ( ( { { { { ( ( { { } } ) ) } ( { } ) } } { { { [ { ( ) } ( ) ( ( { [ < < > > ] < < > > } ) ) ] ( { } { } ) } } } } )",) ),,,False,0,
 74,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ < ( < [ ] > ) < > < { } > { < > { } { { < [ < < { } [ { } ] < > > > ] < > > } < [ [ ] ] > } } > ] [ ( ) ] > } [ { ( < ( ( ( [ { } ] ) ) ) > ) } ] [ < ( ) ( ( { ( ) [ { { ( { } ) } } ] } ) ) >",],,,False,0,
 75,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( ) > [ { [ { ( ) } ] } ] ] > [ { } ] ( < { < [ { } ] > } > ) ) ( ( < ( ) > [ ] [ < { ( ) } > ] [ { } ] [",] ) ),"To determine the correct completion of the sequence, we need to parse the input string and track the open brackets using a stack data structure. We process the string from left to right, pushing open brackets onto the stack and popping them when a matching closing bracket is found. At the end of the input, any remaining items on the stack represent the open brackets that need to be closed in reverse order (Last-In, First-Out).
@@ -1147,7 +1147,7 @@ Final Answer: }}",}},True,0,
 4.  **Conclusion:**
     *   The missing sequence is `]))`.
 
-Final Answer: ]))",])),True,0,
+Final Answer: ]))",])),True,1,
 76,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } < > { < { ( < > ) } >",} ),"To complete the sequence, we need to track the open brackets using a stack-based approach and ensure every opening bracket has a corresponding closing bracket in the correct order.
 
 1.  **Analyze the Input Sequence:**
@@ -1181,7 +1181,7 @@ Final Answer: ]))",])),True,0,
 4.  **Construct the Completion:**
     The missing characters are `}` followed by `)`.
 
-Final Answer: })",}),True,0,
+Final Answer: })",}),True,1,
 77,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ] > ( < > ) <",> >,"To determine the completion of the sequence, we need to ensure that all opening brackets are matched with their corresponding closing brackets in the correct order (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `< < [ ] > ( < > ) <`
@@ -1204,7 +1204,7 @@ Final Answer: })",}),True,0,
 4.  **Determine the completion:**
     *   The missing characters are `>` followed by `>`.
 
-Final Answer: >>",>>,True,0,
+Final Answer: >>",>>,True,1,
 78,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { [ { [ { ( ( ) ) } ] } ( < < ( < > ) > { } [ [ [ ( < { } > ) ] ] ] { } > ) ( { } ) { } ] }",} ] >,,,False,0,
 79,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ]",) ] >,,,False,0,
 80,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { { < > [ ( ) ] ( ( ) ) } } ] > ] { { { ( < > )",} } },"To determine the correct completion of the sequence, we need to analyze the structure of the brackets provided in the input. We will track the open brackets using a stack-based approach, ensuring that every opening bracket has a corresponding closing bracket in the correct order.
@@ -1317,7 +1317,7 @@ Final Answer: )",),True,1,
 4.  **Conclusion:**
     *   The missing characters to properly close the sequence are `}` followed by `>`.
 
-Final Answer: }>",}>,True,0,
+Final Answer: }>",}>,True,1,
 85,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( { < > } )",) >,,,False,0,
 86,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ) )",),"The input sequence is `( ( ( ) )`.
 
@@ -1387,7 +1387,7 @@ At the end of the input string, the stack contains two open curly braces: `['{',
 
 The missing sequence is `}}`.
 
-Final Answer: }}",}},True,0,
+Final Answer: }}",}},True,1,
 92,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ] > ] ] <",>,"To determine the correct completion of the sequence, we need to analyze the nesting of the brackets (square brackets `[]`, angle brackets `<>`) to ensure they are balanced.
 
 1.  **Analyze the Input Sequence:** `[ [ < [ ] > ] ] <`
@@ -1436,7 +1436,7 @@ To properly close the sequence, we need to add two closing Square Brackets (`]`)
 
 The missing part is `]]`.
 
-Final Answer: ]]",]],True,0,
+Final Answer: ]]",]],True,1,
 94,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } }",) ),,,False,0,
 95,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ < [ < [ ( [ { < ( < ( ( ) ) { } [ ] > ) > } ] ) { < > } ] [ < [ { ( < < { { [ < { [ [ < > [ ] ] ] } > ] { { } } } } > > ) } ] > { < > { } } ] > ( [ ] ) ] > ] ) ( )",) ),,,False,0,
 96,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { } >",>,"To determine the completion of the sequence, we analyze the nesting of the brackets using a stack-based approach:
@@ -1908,7 +1908,7 @@ Final Answer: > ]",> ],True,1,
 3.  **Remaining Open Delimiters:** The stack now contains `['{', '(']`. The top of the stack is `(`, which needs to be closed by `)`. The next item is `{`, which needs to be closed by `}`.
 4.  **Completion:** We need to append `)` to close the parenthesis, followed by `}` to close the curly brace.
 
-Final Answer: )}",)},True,0,
+Final Answer: )}",)},True,1,
 127,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { ( ( { } ) ( ) ) } { } < { } > < > > } { } ( { ( { { } } ) [ ( ) ] } ) ) [ ( [ ]",) ],,,False,0,
 128,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( )",>,"The input sequence is `< ( )`.
 1.  **Analyze the brackets:** The sequence contains an opening angle bracket `<` and a pair of parentheses `(` and `)`.
@@ -1945,7 +1945,7 @@ Final Answer: < ( ) >",< ( ) >,True,1,
     *   To close the next item in the stack (`(`), we need another `)`.
     *   Therefore, the sequence to append is `))`.
 
-Final Answer: ))",)),True,0,
+Final Answer: ))",)),True,1,
 131,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( ) > { < > } ( < > ) < ( ) > [ ] < < < < ( ( ) ) < ( ) > > > > > {",} },"To complete the sequence properly, we must ensure that all opening brackets are matched with their corresponding closing brackets in the correct order (Last-In, First-Out). We can determine the required completion by tracking the open brackets using a stack.
 
 **Reasoning:**
@@ -1974,7 +1974,7 @@ Final Answer: ))",)),True,0,
 
     Therefore, the sequence to append is `}}`.
 
-Final Answer: }}",}},True,0,
+Final Answer: }}",}},True,1,
 132,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < > ( [ ]",) >,"To complete the sequence, we need to ensure that all opening brackets are matched with their corresponding closing brackets in the correct order (Last-In, First-Out).
 
 1.  **Analyze the input:** `< < > ( [ ]`
@@ -2023,7 +2023,7 @@ To close the sequence properly, we must close the most recently opened bracket f
 
 Therefore, the missing characters to complete the sequence are `}>`.
 
-Final Answer: }>",}>,True,0,
+Final Answer: }>",}>,True,1,
 134,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] > [",] ],,,False,0,
 135,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < ( ( < { } { < < { { { } } } > < < < > [ ] > { } ( < { { ( [ ( ) ] ) } } > ) > > } > ) ) > } >",),,,False,0,
 136,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ { } ] )",) ),,,False,0,
@@ -2311,7 +2311,7 @@ Final Answer: >",>,True,1,
 
     Therefore, the sequence to complete the input is `>>`.
 
-Final Answer: >>",>>,True,0,
+Final Answer: >>",>>,True,1,
 156,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ [ { } ] ] }",),"To determine the correct completion of the sequence, we need to analyze the nesting of the brackets (parentheses `()`, curly braces `{}`, and square brackets `[]`) using a stack-based approach.
 
 1.  **Analyze the Input:** `( { [ [ { } ] ] }`
@@ -2632,7 +2632,7 @@ Final Answer: ]",],True,1,
 4.  **Construct Completion:**
     *   The required suffix is `})>`.
 
-Final Answer: })>",})>,True,0,
+Final Answer: })>",})>,True,1,
 177,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < >",) >,"To determine the correct completion of the sequence, we need to analyze the structure of the brackets and ensure they are balanced. The input sequence is `< ( < >`.
 
 1.  **Analyze the brackets:**
@@ -2861,7 +2861,7 @@ Final Answer: [ ( [] ) ]",[ ( [] ) ],True,0,
     *   Next `(` needs `)`.
     *   Therefore, the sequence needs to be completed with `))`.
 
-Final Answer: ))",)),True,0,
+Final Answer: ))",)),True,1,
 200,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( [ [ ] ] ) ( { [ { < { ( ) < [ [ < > { [ ( < ( < [ { < < ( [ ( ) ] [ ( < ( { [ ] } ) > ) ] [ < > ] ) > [ { ( < > ) } ] > } ] > ) > ) ] } ] ] > { } [ [ ] ] { } } > ( ( < > ) ) } ] }",),,,False,0,
 201,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { ( ( { } ) ) ( ( [ ] ) ) } )",),"To determine how to complete the sequence, we need to analyze the nesting of the brackets (parentheses `()`, square brackets `[]`, and curly braces `{}`). We can do this by tracking the open brackets using a stack.
 
@@ -3111,7 +3111,7 @@ To close the sequence properly, we must close the brackets in the reverse order 
 
 Therefore, the missing characters are `)` followed by `>`.
 
-Final Answer: )>",)>,True,0,
+Final Answer: )>",)>,True,1,
 214,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { { { < > } }",} ] },"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct order (Last-In, First-Out).
 
 1.  **Analyze the Input:** `{ [ { { { < > } }`
@@ -3202,7 +3202,7 @@ To close the sequence properly, we must close the top of the stack first:
 
 The missing sequence is `)>}`.
 
-Final Answer: )>}`",)>},True,0,
+Final Answer: )>}`",)>},True,1,
 216,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > { < [ ] >",} ],"To determine the correct completion of the sequence, we need to analyze the nesting of the brackets (parentheses, square brackets, curly braces, and angle brackets) and ensure they are closed in the correct order (Last-In, First-Out).
 
 **Reasoning:**
@@ -3225,7 +3225,7 @@ Final Answer: )>}`",)>},True,0,
 5.  **Construct the Completion:**
     *   The missing characters are `}` followed by `]`.
 
-Final Answer: }]",}],True,0,
+Final Answer: }]",}],True,1,
 217,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ <",> ] ],,,False,0,
 218,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { }",),"The input string is `( { }`.
 
@@ -3651,7 +3651,7 @@ After processing the entire input string, the stack contains two open angle brac
 
 Therefore, the missing characters are `>>`.
 
-Final Answer: >>",>>,True,0,
+Final Answer: >>",>>,True,1,
 241,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ { } ] ( ( )",),"To determine how to complete the sequence, we need to analyze the nesting of the brackets provided in the input: `[ ] [ { } ] ( ( )`.
 
 1.  **Analyze the first part:** `[ ]`
@@ -3737,7 +3737,7 @@ The stack currently contains `['(', '{']`. To properly close the sequence, we mu
 
 Therefore, the missing characters are `}` followed by `)`.
 
-Final Answer: })",}),True,0,
+Final Answer: })",}),True,1,
 244,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( <",> ) },,,False,0,
 245,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { { { < ( < ( [ < < > > ] < > ) > ) > } [ ] }",} ) },"To determine the correct completion of the sequence, we need to track the nesting of the delimiters (parentheses, brackets, braces, and angle brackets) using a stack-based approach. We process the input string from left to right, pushing opening delimiters onto the stack and popping them when a matching closing delimiter is encountered.
 
@@ -3783,7 +3783,7 @@ To properly close the sequence, we must pop the remaining items from the stack i
 
 The missing sequence is `})}`.
 
-Final Answer: })}",})},True,0,
+Final Answer: })}",})},True,1,
 246,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] )",} },"To determine the completion of the sequence, we need to analyze the nesting of the brackets. We can do this by tracking the open brackets using a stack. As we iterate through the string, we push opening brackets onto the stack and pop them when we encounter the corresponding closing bracket.
 
 Let's break down the input string:

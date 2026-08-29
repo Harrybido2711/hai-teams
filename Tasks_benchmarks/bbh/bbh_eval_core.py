@@ -73,6 +73,29 @@ PROMPT = """
     "Final Answer: <your concise answer here>"
     """
 
+# v2 — same instruction, plus an explicit statement of what "concise" means. Added 2026-08-29
+# because gpt-5.6-luna reads "concise answer" as a short SENTENCE: it answered `8 musical
+# instruments` for gold `8` and `Elanor does not tell the truth.` for gold `No`. The scorer's v3
+# branches recover the first form; the second cannot be credited without parsing negation, which
+# would make the matcher task-aware. Asking for the bare answer is the cleaner fix.
+#
+# **A prompt version is part of the run config** and goes on every row. Two prompts in one result
+# set is the thing CLAUDE.md says to archive rather than resume across, and until this existed the
+# resume guard could not see a prompt change at all.
+PROMPT_V2 = """
+    You are a helpful assistant.
+    Question: {question}
+
+    Please show your reasoning, then end your response with:
+    "Final Answer: <your concise answer here>"
+
+    The final answer must be the answer by itself — no restatement of the question, no units or
+    category words, no explanation. If the question lists options, give the option label exactly
+    as it is written there.
+    """
+
+PROMPTS = {"v1": PROMPT, "v2": PROMPT_V2}
+
 
 def model_slug(model_id):
     """`google/gemma-4-31B-it` -> `google-gemma-4-31B-it`; `kimi-k2.5` -> `kimi-k2_5`.
@@ -119,6 +142,16 @@ def has_marker(model_output):
 
 
 CLOSED_SET = {"yes", "no", "true", "false", "valid", "invalid"}
+# Yes and True are the same answer to a yes/no question. Not semantics — a fixed synonym table
+# over a closed set, which is why it is safe where negation parsing would not be.
+CLOSED_SYNONYMS = {"yes": {"true"}, "no": {"false"}, "true": {"yes"}, "false": {"no"},
+                   "valid": {"true", "yes"}, "invalid": {"false", "no"}}
+_BRACKET_CHARS = set("()[]{}<> \t")
+
+
+def _BRACKETS_ONLY(text):
+    t = str(text)
+    return t.strip() != "" and set(t) <= _BRACKET_CHARS
 
 
 def _unwrap(text):
@@ -199,6 +232,20 @@ def score_response(model_response, gold_answer, question=""):
         if first.lower() == gold_answer.strip().lower():
             return 1
 
+    # 12. a closed-set answer given as its synonym: `True` for gold `Yes`
+    g_low = gold_answer.strip().lower()
+    if g_low in CLOSED_SYNONYMS:
+        if final_answer.strip().strip(" .,:;!\"'`*").lower() in CLOSED_SYNONYMS[g_low]:
+            return 1
+
+    # 11. dyck_languages: the same brackets without the spaces. `})>` for gold `} ) >` is the
+    #     right answer typed without separators. Restricted to answers AND golds made only of
+    #     bracket characters and whitespace — with no alphanumerics on either side, collapsing
+    #     whitespace cannot merge two real words into one. Found by the user in a Flash-Lite row.
+    if _BRACKETS_ONLY(gold_answer) and _BRACKETS_ONLY(final_answer):
+        if re.sub(r"\s+", "", final_answer) == re.sub(r"\s+", "", gold_answer):
+            return 1
+
     # 10. the option letter given at the END rather than the start: `11/10/2019 (B)` for `(B)`.
     #     Length-capped and requiring exactly ONE distinct letter, so a response that weighs
     #     several options cannot be read as having chosen one.
@@ -214,9 +261,9 @@ def score_response(model_response, gold_answer, question=""):
 
 
 # Bumped whenever score_response changes behaviour, and written onto every result file. v2
-# added markdown-emphasis stripping; v3 added the four packaging branches below (both
-# 2026-08-29). A number tagged v1 cannot be compared with one tagged v3 without rescoring.
-SCORER_VERSION = "lenient_v3"
+# added markdown-emphasis stripping; v3 added the four packaging branches below; v4 added
+# whitespace-insensitive bracket matching; v5 added closed-set synonyms (all 2026-08-29). A number tagged v1 cannot be compared with one tagged v3 without rescoring.
+SCORER_VERSION = "lenient_v5"
 
 FIELDS = ["idx", "question", "gold_answer", "model_response", "final_answer", "has_marker",
           "score", "config"]
@@ -347,7 +394,8 @@ def load_checkpoint(out_path, config, verbose=True):
 
 
 def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=True, limit=0,
-              config=None, per_row_config=None, save_every=20, resume=True, workers=1):
+              config=None, per_row_config=None, save_every=20, resume=True, workers=1,
+              prompt_version="v1"):
     """Drive `call(prompt) -> str` over the requested tasks and write results per task.
 
     A failed call yields `""` for that ITEM and the task continues. The old runners let a `None`
@@ -355,6 +403,12 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
     without writing a file — one bad call cost a whole 250-item task.
     """
     tasks = tasks or TASKS
+    if prompt_version not in PROMPTS:
+        raise SystemExit(f"unknown prompt version {prompt_version!r}; known: {sorted(PROMPTS)}")
+    template = PROMPTS[prompt_version]
+    # the prompt is part of the config, so the resume guard refuses to mix two of them and every
+    # row says which one produced it
+    config = dict(config or {}, prompt=prompt_version)
     summaries = []
     for task in tasks:
         examples = load_task(task)
@@ -381,7 +435,7 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
         def one_item(i, ex):
             q, gold = ex["input"], ex["target"]
             try:
-                resp = call(PROMPT.format(question=q))
+                resp = call(template.format(question=q))
             except Exception as e:  # never let one item take the task down
                 if verbose:
                     print(f"[{task}#{i}] call failed: {e}", flush=True)
@@ -428,7 +482,7 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
                 continue
             q, gold = ex["input"], ex["target"]
             try:
-                resp = call(PROMPT.format(question=q))
+                resp = call(template.format(question=q))
             except Exception as e:  # never let one item take the task down
                 if verbose:
                     print(f"[{task}#{i}] call failed: {e}", flush=True)

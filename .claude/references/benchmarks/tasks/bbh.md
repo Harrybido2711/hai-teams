@@ -56,6 +56,14 @@ gpt-4o-mini 0.308 → 0.834, xai 0.509 → 0.940, llama 0.726 → 0.910. Gemma a
 Every `_overall.csv` carries a `scorer` column — `SCORER_VERSION`, today **`lenient_v2`** — and
 every row a `config` column (rule 8), so a number cannot be read without knowing what produced it.
 
+**v4 / v5, 2026-08-29:** whitespace-insensitive bracket matching (`})>` for `} ) >`, +190 rows over
+six models — Kimi's `dyck_languages` 0.572 → 0.944) and closed-set synonyms (`True` for `Yes`, +18).
+Both found by reading rows, not by reasoning about the matcher.
+
+**The prompt is now versioned and part of the config.** `--prompt v2` spells out what "concise"
+means. Measured on Luna's `web_of_lies`: 0.728 → 0.780 — **it helps but does not solve it**, because
+the model keeps restating (`Helene lies`). Prompting is a weaker lever than it looks here.
+
 **v3, 2026-08-29:** four branches for a concise answer with something wrapped around it — LaTeX
 math, a unit noun after a number, a restated Yes/No, an option letter at the end. **+766 rows, 0
 losses, across five models.** They fire only when the model emitted the marker, so a stray letter in

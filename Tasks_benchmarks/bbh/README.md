@@ -63,6 +63,17 @@ the marker is absent** — which then scores 0 on anything but a one-word answer
 detector, not a scoring bug; `has_marker` records it per row so "wrong" can be told from "never
 finished". Then six branches are tried in order, any hit scoring 1:
 
+**v4 and v5 add two more, both found by inspecting real rows.** **11.** the same brackets without
+the separators — `})>` for gold `} ) >`, restricted to answers *and* golds made only of bracket
+characters, so with no alphanumerics on either side collapsing whitespace cannot merge two real
+words (+190 rows over six models; Kimi's `dyck_languages` alone went 0.572 → 0.944). **12.** a
+closed-set synonym — `True` for gold `Yes`. That is a fixed table over a closed set, not semantics,
+which is why it is safe where negation parsing is not (+18 rows).
+
+**A prompt version is part of the run config.** `--prompt v2` states what "concise" means; the
+resume guard refuses to mix two prompt versions in one result set, and every row records which one
+produced it. Archive rather than resume across a change: `results_archive_promptv1_<ts>/`.
+
 **v3 adds four more, and they only fire when the model actually emitted the marker.** Without it
 `final_answer` is a scrape of the whole response, and "the gold letter appears somewhere in the
 reasoning" is not an answer — a Llama row whose reasoning mentioned `(D)` once would otherwise have
