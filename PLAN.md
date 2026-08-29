@@ -116,11 +116,14 @@ been scored on it yet. `MMLU`/`Qwen` is blank because `qwen_overall_results.csv`
 `MMLU`/`Gemma` covers 8 of 13 subjects because the other five were never written, and `DocVQA` has no
 XAI or Deepseek run at all.
 
-**`Big Bench Hard` mixes two scorers and the sheet says so.** XAI, Gemma and Qwen are scored by a
-lenient six-branch matcher, Gemini, OpenAI and Deepseek by case-folded string equality, so part of
-the gap in that row is formatting rather than ability
-([bbh README](Tasks_benchmarks/bbh/README.md)). Ranking that row without reading this is the mistake
-the `Provenance` sheet exists to stop.
+**`Big Bench Hard` is now scored uniformly, and its numbers were refreshed to match.** Every model
+on that sheet comes from `BBH_*/results/*_bbh_overall.csv` under the one shared lenient matcher
+(scorer tag `lenient_v2`), so the sheet is reproducible from a single source and the old
+strict-vs-lenient caveat is gone. The refresh moved one column a long way: `gemini-2.5-flash` fell
+from the 0.9122 the workbook used to carry to **0.3387**, because 3,002 of its 4,833 stored responses
+never emitted `Final Answer:` — a broken run no scorer can rescue, and the run behind the old number
+is not on disk. It is kept in `Results.xlsx` as a record; the model is superseded and will not be
+redone.
 
 ## Benchmark index
 
