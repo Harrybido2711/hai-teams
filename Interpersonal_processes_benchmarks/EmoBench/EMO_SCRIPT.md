@@ -5,6 +5,12 @@
 
 ## 1. BBH — Models and How They Are Called
 
+> **Superseded 2026-08-29 — every filename in this section is gone.** bbh was rebuilt onto
+> `BBH_<Slot>/<vendor>_bbh_eval.py` with one shared scorer, and two of the client details below
+> were read from a file no job ever submitted (gemma's timeout is `4800`; qwen's client sets
+> none). The live record is `.claude/references/benchmarks/tasks/bbh-parameters.md`. This
+> section is kept as what was true when it was written, not as guidance.
+
 All BBH eval scripts share the same structure: load an API key from `.env`, iterate over task splits, call the model with a `"Final Answer: <answer>"` prompt, and save per-split CSVs plus an overall results CSV.
 
 | File | Model | SDK / Client |
