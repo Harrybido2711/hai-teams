@@ -1,3 +1,8 @@
+<!-- size-budget: 7500 -->
+<!-- The card carries one job, not two: the scorer split and the workbook-provenance rule are
+     both answers to "can I trust this number", and splitting them apart is how a reader ends
+     up refreshing a column from a degraded _overall_results.csv. The six matcher branches and
+     the folder layout already live in Tasks_benchmarks/bbh/README.md. -->
 # BIG-Bench Hard — benchmark card
 
 <!-- size-budget: 6000 -->
@@ -49,9 +54,24 @@ matcher** (`xai`, `gemma`, `qwen`). *(This page said four and four until 2026-08
 the code it is five and three — by file 5 and 5, since gemma and qwen each have a `_finish` twin.)*
 
 The five strict-scored models are penalised for formatting rather than reasoning, and nothing in a
-result CSV records which scorer produced it. **What the six branches do, what the marker-missing
+result CSV records which scorer produced it. **Both workbooks now carry that split as a row on their
+`Provenance` sheet**, because the bbh sheet is the one place where six columns are not scored the
+same way. **What the six branches do, what the marker-missing
 fallback costs, and which of the 20 tasks each branch rescues: `Tasks_benchmarks/bbh/README.md`.
 Read it before comparing any two providers here.**
+
+**`<model>/<model>_overall_results.csv` is not where the workbook's bbh numbers come from** —
+established 2026-08-29 while rebuilding the workbooks. For five of the eight those files record a
+later, degraded re-run: `gemini` has `date_understanding` at 0.064 where the workbook has 0.936, and
+`xai` has `reasoning_about_colored_objects` at 0.12 where the workbook has 0.988. The shape gives the
+cause away — near-zero on every lettered-choice task, unharmed on the short free-form ones — which is
+the marker-missing fallback scoring whole responses after the model stopped emitting `Final Answer:`.
+Several are also short, for the narrowed-`splits` reason below. **Do not refresh a bbh column from one
+of these files without checking it against the per-task CSVs first.**
+
+`gemma` is the exception, and checking is what established it: 20 tasks, 4,833 rows, an empty
+`errlog`, and every per-task CSV mean equal to the overall CSV. That is why `Gemma` has a bbh column
+from 2026-08-29 and the other seven columns do not come from these files.
 
 Every generation parameter each runner sets, with `file:line`:
 [bbh-parameters.md](bbh-parameters.md) — also where the two-file caveat above is spelled out per model.

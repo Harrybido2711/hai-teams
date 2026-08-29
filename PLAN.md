@@ -61,9 +61,23 @@ So running a new model adds a column to `Results.xlsx` and **does not** earn one
 `Final_Result.xlsx` unless that model is one of the six. Numbers still land in `Results.xlsx` first;
 `Final_Result.xlsx` is the selection made from it, not a separate measurement.
 
-**As of 2026-08-29 the two files are byte-identical** (`md5 4dd3902b…`) — `Final_Result.xlsx` was
-copied from `Results.xlsx` and has not yet been trimmed to the six, so its `Emo` sheet still carries
-the two extra columns. It is a copy waiting to be narrowed, not yet the selection it describes.
+Both were rebuilt on 2026-08-29 from the result files on disk, and each carries a **`Provenance`
+sheet** naming the source file behind every column and the reason behind every blank. Read that sheet
+before trusting or extending a number; it is the part of the workbook that says where a cell came
+from. The extras `Results.xlsx` holds and `Final_Result.xlsx` does not: `Kimi` and `Llama` on
+`Big Bench Hard`, `Llama` on `MMLU`, and `Gemini-3.5-Flash-Lite (OpenRouter)` and
+`GPT-5.6-Luna (effort=medium)` on `Emo`.
+
+**A blank cell means no usable number, not a zero.** `Awareness` is blank throughout — no model has
+been scored on it yet. `MMLU`/`Qwen` is blank because `qwen_overall_results.csv` was written empty,
+`MMLU`/`Gemma` covers 8 of 13 subjects because the other five were never written, and `DocVQA` has no
+XAI or Deepseek run at all.
+
+**`Big Bench Hard` mixes two scorers and the sheet says so.** XAI, Gemma and Qwen are scored by a
+lenient six-branch matcher, Gemini, OpenAI and Deepseek by case-folded string equality, so part of
+the gap in that row is formatting rather than ability
+([bbh README](Tasks_benchmarks/bbh/README.md)). Ranking that row without reading this is the mistake
+the `Provenance` sheet exists to stop.
 
 ## Benchmark index
 
