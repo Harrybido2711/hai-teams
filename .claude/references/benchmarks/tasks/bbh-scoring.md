@@ -47,10 +47,16 @@ without rescoring.
 
 ## The line not crossed
 
-48 Luna rows answer `Elanor does not tell the truth.` for gold `No`. Crediting them needs negation
+36 Luna rows answer `Elanor does not tell the truth.` for gold `No`. Crediting them needs negation
 parsing specific to `web_of_lies`: measured at **+92 rows, 0 losses**, but it would make the matcher
 *task-aware* rather than packaging-tolerant, which is a different kind of thing from every branch
-above. **Not adopted — the user's call.**
+above.
+
+**Declined by the user, 2026-08-29 — this is settled, not pending.** Luna's `web_of_lies` stands at
+0.852 and that is the reported number. Do not reopen it by adding the rule later "to be
+consistent": the boundary is the point. Every adopted branch normalises *how an answer is written*;
+this one would interpret *what a sentence means*, and once the matcher does that for one task there
+is no principled place to stop.
 
 The prompt route was tried instead and came up short: `--prompt v2` states that the answer must
 stand alone, and moved Luna's `web_of_lies` only 0.728 → 0.780, because the model keeps restating.
