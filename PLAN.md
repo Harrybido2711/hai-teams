@@ -51,9 +51,10 @@ Stated by the user, 2026-08-29. Both workbooks carry the same five sheets — `B
 hold.
 
 - **`Results.xlsx` records every model that has appeared in an experiment**, including ones that
-  were tried and then dropped. Its `Emo` sheet is the visible case: eight columns, the six below
-  plus `Gemini-3.5-Flash-Lite (OR)` and `GPT-5.6-Luna (effort=medium)`. A leftover column is not a
-  retracted result, the same way a leftover CSV is not — see `.claude/references/benchmarks/tasks/bbh.md`.
+  were tried and then dropped, and the two that were *replaced*. Its `Emo` sheet is the visible
+  case: eight columns, the six slots plus `gemini-2.5-flash` and `gpt-4o-mini` in their own right. A
+  leftover column is not a retracted result, the same way a leftover CSV is not — see
+  `.claude/references/benchmarks/tasks/bbh.md`.
 - **`Final_Result.xlsx` records only the six selected models** — one per vendor slot, named below —
   and it is the workbook a reported number is taken from.
 
@@ -72,13 +73,24 @@ the warning under the table.
 | Gemma | `google/gemma-4-31B-it` | DeepInfra | `references/model-calls.md` |
 | Deepseek | `deepseek-reasoner` | DeepSeek | `references/model-calls.md` |
 
+**A column header is a slot, not a model, so every sheet carries a `Model / config` row under it.**
+That row is where a cell's identity actually lives, and it is the first thing to read — the two
+re-pointed slots hold a different model on `Emo` than they do on the other sheets.
+
 **`gemini-2.5-flash` and `gpt-4o-mini-2024-07-18` are superseded and are not among the six**, but
-they are still what the bbh, MMLU, DocVQA and NegotiationToM runners call, so most `Gemini` and
-`OpenAI` cells in both workbooks are still *their* numbers. Only the `Emo` sheet has been run on the
-current pair, and there it sits in `Results.xlsx` as an extra column rather than in the `Gemini` and
-`OpenAI` slots. Re-pointing those columns means re-running the other four benchmarks, not editing a
-header. `kimi-k2.5` and `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` were run on bbh only and
-were never among the six.
+they are still what the bbh, MMLU, DocVQA and NegotiationToM runners call. Those benchmarks were run
+before the re-point and the new pair has not been run on them, so their `Gemini` and `OpenAI` cells
+are still the old models' numbers and say so in row 2. **`Emo` is the one sheet that has been run on
+the current pair**, and there the two slots hold `gemini-3.5-flash-lite` and `gpt-5.6-luna`, with the
+superseded pair kept beside them in `Results.xlsx` as columns of their own. Closing the gap on the
+other three means re-running them, not editing a header.
+
+One caveat inside that: the `Emo` result for `gpt-5.6-luna` is the **default `medium`** arm.
+The settled effort is `low`, and `results_eLow` has EU (0.650) but no EA, so **no complete EmoBench
+score exists at the settled config** — one EA run at `effort=low` closes it.
+
+`kimi-k2.5` and `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` were run on bbh only (llama also
+on MMLU) and were never among the six.
 
 So running a new model adds a column to `Results.xlsx` and **does not** earn one in
 `Final_Result.xlsx` unless that model is one of the six. Numbers still land in `Results.xlsx` first;
@@ -88,8 +100,8 @@ Both were rebuilt on 2026-08-29 from the result files on disk, and each carries 
 sheet** naming the source file behind every column and the reason behind every blank. Read that sheet
 before trusting or extending a number; it is the part of the workbook that says where a cell came
 from. The extras `Results.xlsx` holds and `Final_Result.xlsx` does not: `Kimi` and `Llama` on
-`Big Bench Hard`, `Llama` on `MMLU`, and `Gemini-3.5-Flash-Lite (OpenRouter)` and
-`GPT-5.6-Luna (effort=medium)` on `Emo`.
+`Big Bench Hard`, `Llama` on `MMLU`, and the superseded `Gemini-2.5-Flash` and `GPT-4o-mini` on
+`Emo`.
 
 **A blank cell means no usable number, not a zero.** `Awareness` is blank throughout — no model has
 been scored on it yet. `MMLU`/`Qwen` is blank because `qwen_overall_results.csv` was written empty,

@@ -17,7 +17,7 @@
   {
     "check": "canary",
     "target": "14,138 @ .claude/references/benchmarks/README.md",
-    "why": "This is the worked illustration of why per-benchmark pages exist — 'a number carried from one page to another is the failure this split prevents; 14,138 is NegotiationToM's'. Removing the number removes the lesson."
+    "why": "This is the worked illustration of why per-benchmark pages exist \u2014 'a number carried from one page to another is the failure this split prevents; 14,138 is NegotiationToM's'. Removing the number removes the lesson."
   },
   {
     "check": "canary",
@@ -38,5 +38,20 @@
     "check": "canary",
     "target": "watcher checkpoint @ .claude/agents/executor.md",
     "why": "executor is the only agent that stages for git, and it cannot rely on receiving CLAUDE.md. The prohibition has to be in its own prompt to be binding."
+  },
+  {
+    "check": "models",
+    "target": "gpt-4o-mini-2024-07-18",
+    "why": "Retired. It held the OpenAI slot before gpt-5.6-luna and is named in PLAN.md only to say which model the older bbh/MMLU/DocVQA columns belong to. model-calls.md carries a recipe per model IN USE; adding one for a model no runner should be pointed at again would invite it back."
+  },
+  {
+    "check": "models",
+    "target": "kimi-k2.5",
+    "why": "Abandoned. Run on bbh only, one task completed, never among the six. Named in PLAN.md to explain an empty Results.xlsx column, not to enable a call."
+  },
+  {
+    "check": "models",
+    "target": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+    "why": "Abandoned. Run on bbh and MMLU, no usable numbers from either, never among the six. Same reason as kimi-k2.5."
   }
 ]
