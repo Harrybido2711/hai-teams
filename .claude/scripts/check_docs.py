@@ -311,6 +311,57 @@ def impact(term, docs):
     return 0
 
 
+def sections(path):
+    """Split a reference into (heading, body) at markdown headings.
+
+    Retrieval fails here not at finding the file but at the unit of reading: the answer is a
+    section and the unit is a whole file. Writing one runner touches six references totalling
+    ~44 KB, of which perhaps 15% is used. An agent that reads all six pays for the other 85% in
+    context; one that reads fewer misses something — which is how gpt-5.6-luna got adopted with
+    no invocation recipe.
+    """
+    text = open(path, encoding="utf-8", errors="replace").read()
+    out, head, buf = [], os.path.basename(path), []
+    for line in text.splitlines():
+        if line.startswith("## "):
+            if buf:
+                out.append((head, "\n".join(buf).strip()))
+            head, buf = line.lstrip("# ").strip(), []
+        else:
+            buf.append(line)
+    if buf:
+        out.append((head, "\n".join(buf).strip()))
+    return out
+
+
+def brief(terms, docs):
+    """Only the sections that mention every-or-any term, not the files that contain them.
+
+    `--impact` answers "which files must change" and is the work list before an edit. This answers
+    "what do I need to know to do this task" and is what an agent should run instead of opening six
+    references. Sections are printed whole, because a rule without its reason gets overridden by
+    the next person who does not know why it exists.
+    """
+    lowered = [t.lower() for t in terms]
+    print("Sections mentioning %s\n" % " or ".join(repr(t) for t in terms))
+    shown = chars = 0
+    for p in docs:
+        for head, body in sections(p):
+            blob = (head + "\n" + body).lower()
+            if not any(t in blob for t in lowered):
+                continue
+            shown += 1
+            chars += len(body)
+            print("━━ %s › %s" % (rel(p), head))
+            print(body if len(body) <= 1400 else body[:1400] + "\n   … section truncated")
+            print()
+    print("%d section(s), %d chars — against %d chars for the whole files."
+          % (shown, chars, sum(os.path.getsize(p) for p in docs
+                              if any(t in open(p, encoding="utf-8", errors="replace").read().lower()
+                                     for t in lowered))))
+    return 0
+
+
 def model_card(mid, docs):
     """Everything the references say about one model, in one place.
 
@@ -347,6 +398,8 @@ def main():
         return impact(sys.argv[2], docs)
     if len(sys.argv) > 2 and sys.argv[1] == "--model":
         return model_card(sys.argv[2], docs)
+    if len(sys.argv) > 2 and sys.argv[1] == "--brief":
+        return brief(sys.argv[2:], docs)
     report_touched = None
     if len(sys.argv) > 2 and sys.argv[1] == "--touched":
         report_touched = sys.argv[2:]

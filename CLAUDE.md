@@ -31,6 +31,13 @@ by subagents, which your context is not. **The loop is the same in every phase: 
 before acting, and write what the work taught back into it afterwards.** A lesson left in a
 transcript dies when the session ends.
 
+**Retrieve, don't read.** `check_docs.py --brief <term>…` returns the matching sections whole;
+`--model <id>` gathers one model across every file; `--impact <term>` is the work list before an
+edit. Writing one runner touches six references, ~44 KB, of which about 15% gets used — reading them
+all wastes context, and reading fewer is how a model was adopted with no invocation recipe. Open a
+whole file when you are *editing* it; retrieve when you are *using* it. Pass the command to a
+subagent rather than a list of filenames.
+
 **1 · Analyse a new benchmark's repo.** Establish paths, counts, scoring and traps from the code.
 Read the code before the paper; a value inferred from what a benchmark "probably" does is not a
 finding, and an unestablished field is written as unestablished.

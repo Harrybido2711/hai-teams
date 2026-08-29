@@ -18,6 +18,13 @@ The planner passes **what to accomplish** and **where**. The agent decides **how
 4. **The output shape** — the status token below, plus whatever fields the caller will branch on.
 5. **What to do when blocked.** The default is: stop and report with the concrete blocker. Guessing
    is never the fallback.
+6. **How to retrieve, not which files to read.** Say
+   `python3 .claude/scripts/check_docs.py --brief <model> <benchmark>` rather than naming five
+   references. Writing one runner touches six of them, ~44 KB, of which about 15% is used — an
+   agent told to read them all pays for the rest in context, and one told to read fewer misses
+   something. That is not hypothetical: `gpt-5.6-luna` was adopted with its limits recorded and its
+   invocation recipe forgotten, because the sixth file went unread. `--brief` returns the sections
+   whole, reasons included, so a rule does not arrive stripped of why it exists.
 
 ## Status tokens
 
