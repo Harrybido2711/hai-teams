@@ -5,15 +5,13 @@ be read against what the model can do at all. None uses an LLM judge.
 
 What this folder's benchmarks share, and how they differ from the process benchmarks:
 
-- **bbh now has EmoBench's shape; the other two do not.** **bbh was rebuilt on 2026-08-29** onto
-  `BBH_<Slot>/` folders — `<vendor>_bbh_eval.py`, `run_bbh.sh`, `log.txt`/`log.err`, and
-  `results/<task>/<model-slug>.{jsonl,csv}` + `_overall.csv` — with the task JSONs in `data/` and a
-  shared `bbh_eval_core.py` holding the scorer. This page previously said not to convert it, because
-  "the summary CSVs read the flat names"; that reason did not hold — nothing outside the folder ever
-  opened a bbh CSV by path. **mmlu is half-converted** (`gemma/ xai/ openai/ llama/` exist; the other
-  providers are still flat beside the data, and their runners have not been checked for the cwd bug
-  below) and **DocVQA has per-model folders** (`gemma_DocVQA/`, `qwen_DocVQA/`). Check the
-  benchmark's own page before assuming either shape.
+- **bbh and mmlu both have EmoBench's shape; DocVQA does not.** Both were rebuilt on 2026-08-29
+  onto `<BENCH>_<Slot>/` folders — a runner, a job script, `log.txt`/`log.err`, and
+  `results/<task-or-subject>/<model-slug>.{jsonl,csv}` + `_overall.csv` — with the data in `data/`
+  and a shared `*_eval_core.py` holding the scorer. This page previously said not to convert bbh,
+  because "the summary CSVs read the flat names"; that reason did not hold — nothing outside the
+  folder ever opened a bbh CSV by path. **DocVQA has per-model folders of its own shape**
+  (`gemma_DocVQA/`, `qwen_DocVQA/`) and no shared core. Check the benchmark's own page first.
 - **One scorer per benchmark, imported from its core** (`CLAUDE.md`). bbh is where this was broken
   and is now the worked example: five of its eight runners scored strictly, and rescoring the same
   stored responses moved three models by 0.19–0.64. **mmlu now has one too** (`mmlu_eval_core.py`, 2026-08-29) — it had the identical split,
@@ -21,8 +19,9 @@ What this folder's benchmarks share, and how they differ from the process benchm
   still has none; check before comparing its models.
 - **A runner that moves into a subfolder must stop resolving paths against the cwd**, or it finds no
   data and writes an empty result while the job still exits `COMPLETED 0:0`. `bbh/kimi/kimi_outlog`
-  is that failure, recorded: 20 splits, every one `No such file or directory`. bbh's runners now
-  anchor on `__file__`; mmlu's subfolder runners have not been checked.
+  is that failure, recorded: 20 splits, every one `No such file or directory`. **bbh's and mmlu's
+  cores both anchor on `__file__`**, so their reads and writes do not depend on the submit
+  directory. DocVQA's runners have not been checked.
 - **One JSON per task or subject**, so the task list is `ls *.json`, not a constant in the code.
 - **Provider coverage is uneven and is a scope decision, not an oversight** — see `PLAN.md`.
 
