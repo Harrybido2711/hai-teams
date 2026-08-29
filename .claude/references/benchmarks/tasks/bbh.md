@@ -47,47 +47,13 @@ the benchmark's own committed notes, and the place to read before touching it.
 
 ## Scoring — one matcher, imported, for every model
 
-`bbh_eval_core.py::score_response` is the only scorer here and every runner imports it. **This is
-the benchmark where the project's one-scorer rule came from** (`CLAUDE.md`; `script-skeleton.md`
-rule 7): until 2026-08-29 five runners compared with `==` and three used the lenient matcher, and
-rescoring the identical stored responses moved deepseek 0.448 → 0.961, kimi 0.243 → 0.884,
-gpt-4o-mini 0.308 → 0.834, xai 0.509 → 0.940, llama 0.726 → 0.910. Gemma and Qwen did not move.
+`bbh_eval_core.py::score_response`, imported by every runner so no model can be judged more or less
+generously than another. It is at **`lenient_v5`**, and each version came from a correct answer
+being scored 0 for how it was written. **Full history, what each branch does, and the one line
+deliberately not crossed: [bbh-scoring.md](bbh-scoring.md).**
 
-Every `_overall.csv` carries a `scorer` column — `SCORER_VERSION`, today **`lenient_v2`** — and
-every row a `config` column (rule 8), so a number cannot be read without knowing what produced it.
-
-**v4 / v5, 2026-08-29:** whitespace-insensitive bracket matching (`})>` for `} ) >`, +190 rows over
-six models — Kimi's `dyck_languages` 0.572 → 0.944) and closed-set synonyms (`True` for `Yes`, +18).
-Both found by reading rows, not by reasoning about the matcher.
-
-**The prompt is now versioned and part of the config.** `--prompt v2` spells out what "concise"
-means. Measured on Luna's `web_of_lies`: 0.728 → 0.780 — **it helps but does not solve it**, because
-the model keeps restating (`Helene lies`). Prompting is a weaker lever than it looks here.
-
-**v3, 2026-08-29:** four branches for a concise answer with something wrapped around it — LaTeX
-math, a unit noun after a number, a restated Yes/No, an option letter at the end. **+766 rows, 0
-losses, across five models.** They fire only when the model emitted the marker, so a stray letter in
-un-marked reasoning is never read as a choice. It found a real failure: Luna scored **0.000 on two
-whole tasks** — `object_counting` and `web_of_lies` — with `no_marker=0` and `empty=0`, because it
-answers `8 musical instruments` and `No, Ka does not tell the truth.`. **A task at exactly 0.000
-with nothing empty is a scorer bug, not a result.** Luna's macro went 0.8102 → 0.9213.
-
-Still unfixed and deliberately so: 48 Luna rows answer `Elanor does not tell the truth.` for gold
-`No`. Crediting those needs negation parsing specific to `web_of_lies` — measured at +92 rows and 0
-losses, but it would make the matcher task-aware rather than packaging-tolerant. Not adopted; the
-user's call.
-
-**v2, 2026-08-29:** the matcher also strips markdown emphasis. A Luna pilot answered
-`**bootlegging, indifferent, trainman**` to gold `bootlegging indifferent trainman` and scored 0.
-Across all 36,348 stored rows the fix gains 31 and loses 0. It moved two reported cells, both now
-updated in `Final_Result.xlsx`: XAI `dyck_languages` 0.752 → 0.756, Qwen `formal_fallacies`
-0.952 → 0.968.
-
-**The prompt had the same problem as the scorer.** Six of the eight old runners sent a four-space
-indented prompt; gemma and qwen sent the same text indented eight, through the `_finish` twins their
-jobs submitted. The core now sends the six-runner original byte-for-byte — including the
-indentation, which must not be tidied, or a new run differs from the rows on disk by the prompt as
-well as the model.
+The rule of thumb worth carrying out of it: **a task at exactly 0.000 with `no_marker=0` and
+`empty=0` is a scorer bug, not a result.**
 
 ## Its own traps
 
