@@ -1,10 +1,11 @@
 # BIG-Bench Hard — benchmark card
 
-<!-- size-budget: 6000 -->
+<!-- size-budget: 7000 -->
 <!-- One job, not two: the card for one benchmark. It runs long because bbh carries eight
      providers, a broken run that must not be read as a result, and the incident that produced the
      project's one-scorer rule. The split that would shrink it already happened into
-     bbh-parameters.md and the benchmark's own README. -->
+     bbh-parameters.md and the benchmark's own README. Raised again when the 20-task scope
+     became a recorded decision rather than a gap someone might try to close. -->
 
 General task ability. Exact match against a `"Final Answer: <answer>"` prompt contract. No LLM judge.
 
@@ -33,6 +34,12 @@ Slots **with a runner and no results**, added 2026-08-29:
 has been piloted and their output caps are chosen rather than measured** — `--limit 20` and check
 `no_marker` first. They are also the only two runners here that comply with the model-parameter
 rule; the other eight set no reasoning or output cap, deliberately, so their rows stay comparable.
+
+**20 tasks, 4,833 items, and that is the settled scope** — seven of upstream's 27 are not vendored
+here, and the user decided on 2026-08-29 to keep it that way: what was run before is what this
+benchmark reports on. Do not add them to "complete" it; that would leave old models at 20 tasks and
+new ones at 27. Verified 2026-08-29: every example carries a non-empty `input` and `target`, and all
+36,638 result rows cross-check against the data files with zero mismatches.
 
 Full tree, the six matcher branches and the task inventory: **`Tasks_benchmarks/bbh/README.md`** —
 the benchmark's own committed notes, and the place to read before touching it.
