@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ana, Eve, Ada, Dan, Rob, Amy, and Joe. Dan finished third. Ana finished above Ada. Amy finished last. Dan finished below Rob. Eve finished below Ada. Rob finished below Joe.
 Options:
 (A) Ana finished third
@@ -38,7 +38,7 @@ Options:
 5.  **Conclusion:**
     The question asks who finished third. Based on the deduction, Dan finished third. This matches Option (D).
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 1,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a bus, a motorcyle, a hatchback, a station wagon, a minivan, a truck, and a limousine. The station wagon is the fourth-newest. The motorcyle is newer than the truck. The station wagon is older than the hatchback. The minivan is newer than the hatchback. The bus is newer than the minivan. The truck is newer than the limousine.
 Options:
 (A) The bus is the third-oldest
@@ -94,7 +94,7 @@ Options:
 5.  **Match with options:**
     Option (B) states: ""The motorcyle is the third-oldest"".
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 2,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hummingbird, a cardinal, a blue jay, an owl, a raven, a quail, and a robin. The hummingbird is to the left of the quail. The robin is to the left of the cardinal. The blue jay is the leftmost. The cardinal is the fourth from the left. The raven is the third from the right. The owl is the third from the left.
 Options:
 (A) The hummingbird is the second from the right
@@ -132,7 +132,7 @@ Options:
     *   (F) The quail is the second from the right. (Position 7 is first from the right). False.
     *   (G) The robin is the second from the right. (Position 2). False.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 3,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a robin, an owl, a quail, a falcon, a hummingbird, a cardinal, and a crow. The hummingbird is to the left of the falcon. The crow is to the right of the cardinal. The cardinal is the second from the right. The quail is the third from the right. The falcon is to the left of the robin. The owl is the second from the left.
 Options:
 (A) The robin is the fourth from the left
@@ -187,7 +187,7 @@ Options:
 
 The correct statement is that the robin is the fourth from the left.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 4,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: kiwis, plums, mangoes, watermelons, pears, peaches, and oranges. The pears are the third-cheapest. The kiwis are the second-most expensive. The pears are more expensive than the plums. The oranges are less expensive than the kiwis. The mangoes are the third-most expensive. The peaches are the second-cheapest.
 Options:
 (A) The kiwis are the second-cheapest
@@ -225,7 +225,7 @@ Options:
 *   (F) The peaches are the second-cheapest: **True** (Matches our derived ranking and the explicit statement in the text).
 *   (G) The oranges are the second-cheapest: False (They are 4th).
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 5,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eli, Eve, Mel, Joe, Mya, Rob, and Ada. Ada finished above Mya. Eli finished below Joe. Eli finished above Eve. Ada finished second-to-last. Mel finished third. Rob finished fourth.
 Options:
 (A) Eli finished third-to-last
@@ -294,7 +294,7 @@ Options:
     *   Third-to-last is the **5th** position.
     *   Based on the final order, **Eve** finished 5th.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 6,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Amy, Eve, Ada, Rob, Dan, Mel, and Joe. Joe finished third. Dan finished last. Eve finished first. Mel finished below Rob. Ada finished above Joe. Rob finished third-to-last.
 Options:
 (A) Amy finished last
@@ -359,7 +359,7 @@ Options:
 
 The statement ""Dan finished last"" is explicitly given in the text and confirmed by the logical deduction.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 7,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: oranges, loquats, apples, kiwis, mangoes, plums, and peaches. The apples are the second-cheapest. The peaches are the cheapest. The plums are the fourth-most expensive. The loquats are the third-cheapest. The kiwis are more expensive than the mangoes. The oranges are less expensive than the mangoes.
 Options:
 (A) The oranges are the third-cheapest
@@ -409,7 +409,7 @@ Options:
 
 The only statement that is logically consistent with the derived order is Option (B).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 8,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a truck, a minivan, a tractor, a hatchback, a bus, and a convertible. The convertible is the second-oldest. The tractor is the fourth-newest. The minivan is older than the truck. The truck is older than the limousine. The hatchback is the third-oldest. The bus is newer than the limousine.
 Options:
 (A) The limousine is the oldest
@@ -455,7 +455,7 @@ Comparing this to the options:
 (F) The bus is the oldest (False, Rank 7)
 (G) The convertible is the oldest (False, Rank 2)
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 9,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a yellow book, a black book, a white book, a green book, an orange book, and a purple book. The purple book is the rightmost. The yellow book is the leftmost. The orange book is the second from the right. The brown book is to the left of the green book. The brown book is to the right of the black book. The white book is the fourth from the left.
 Options:
 (A) The brown book is the leftmost
@@ -510,7 +510,7 @@ Options:
     *   According to our arrangement (and the explicit text), the Yellow book is indeed at Position 1 (the leftmost).
     *   All other options claim a different book is the leftmost, which contradicts the arrangement.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 10,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: mangoes, watermelons, peaches, kiwis, oranges, cantaloupes, and plums. The watermelons are the cheapest. The peaches are more expensive than the mangoes. The cantaloupes are the second-most expensive. The oranges are more expensive than the cantaloupes. The peaches are less expensive than the plums. The kiwis are the third-cheapest.
 Options:
 (A) The mangoes are the third-most expensive
@@ -550,7 +550,7 @@ Options:
 
 Therefore, the plums are the third-most expensive.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 11,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a white book, a black book, a yellow book, an orange book, a blue book, and a green book. The yellow book is the rightmost. The blue book is to the left of the orange book. The green book is to the right of the white book. The blue book is to the right of the green book. The black book is the fourth from the left. The brown book is the third from the right.
 Options:
 (A) The brown book is the fourth from the left
@@ -611,7 +611,7 @@ Options:
 
 The only statement that matches the logical arrangement is Option (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 12,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Dan, Ana, Mel, Ada, Eve, and Amy. Eve finished above Amy. Dan finished second. Ada finished below Ana. Ana finished third-to-last. Mel finished last. Amy finished third.
 Options:
 (A) Joe finished last
@@ -657,7 +657,7 @@ Options:
 
 The statement ""Mel finished last"" is explicitly given in the text and confirmed by the logical deduction.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 13,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a raven, a hummingbird, a robin, a crow, a quail, a blue jay, and a cardinal. The hummingbird is to the left of the crow. The quail is to the right of the crow. The raven is to the left of the robin. The blue jay is the third from the right. The cardinal is the leftmost. The hummingbird is the fourth from the left.
 Options:
 (A) The raven is the third from the right
@@ -718,7 +718,7 @@ Options:
 
     This matches our derived arrangement.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 14,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a raven, a cardinal, a falcon, an owl, a blue jay, a quail, and a robin. The owl is the second from the right. The cardinal is the fourth from the left. The falcon is to the left of the blue jay. The quail is to the left of the falcon. The raven is the second from the left. The robin is to the left of the quail.
 Options:
 (A) The raven is the second from the left
@@ -766,7 +766,7 @@ Options:
     *   The bird in the second position from the left is the **Raven**.
     *   Option (A) states ""The raven is the second from the left"", which matches our finding and the explicit statement in the text.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 15,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a black book, a yellow book, a white book, a gray book, a purple book, an orange book, and a green book. The green book is to the left of the gray book. The gray book is the third from the right. The white book is the rightmost. The orange book is the second from the left. The black book is to the right of the yellow book. The black book is the third from the left.
 Options:
 (A) The black book is the second from the right
@@ -821,7 +821,7 @@ Checking the options:
 (F) The orange book is the second from the right (False, it is 6th from the right)
 (G) The green book is the second from the right (False, it is 4th from the right)
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 16,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: plums, kiwis, cantaloupes, pears, watermelons, apples, and loquats. The watermelons are more expensive than the cantaloupes. The apples are less expensive than the cantaloupes. The watermelons are the second-most expensive. The loquats are less expensive than the kiwis. The apples are more expensive than the loquats. The loquats are the third-cheapest. The plums are the cheapest.
 Options:
 (A) The plums are the most expensive
@@ -868,7 +868,7 @@ Options:
         7. Kiwis
     *   The most expensive fruit is at position 7, which is the Kiwis.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 17,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a green book, a brown book, a white book, a black book, an orange book, a purple book, and a yellow book. The purple book is to the left of the yellow book. The green book is to the left of the white book. The brown book is to the right of the yellow book. The white book is the fourth from the left. The green book is to the right of the orange book. The black book is the second from the left.
 Options:
 (A) The green book is the leftmost
@@ -914,7 +914,7 @@ Comparing this to the options:
 (F) The purple book is the leftmost (Incorrect, it is 5th)
 (G) The yellow book is the leftmost (Incorrect, it is 6th)
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 18,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a truck, a hatchback, a minivan, a bus, a tractor, a station wagon, and a convertible. The station wagon is the fourth-newest. The minivan is the third-newest. The tractor is the second-oldest. The convertible is older than the station wagon. The truck is newer than the bus. The hatchback is older than the convertible.
 Options:
 (A) The truck is the third-oldest
@@ -964,7 +964,7 @@ Options:
 **4. Determine the answer:**
 The question asks which vehicle is the third-oldest. Based on our arrangement, the vehicle at position 3 is the Convertible.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 19,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a black book, a yellow book, a white book, a gray book, a purple book, an orange book, and a green book. The green book is to the left of the gray book. The gray book is the third from the right. The white book is the rightmost. The orange book is the second from the left. The black book is to the right of the yellow book. The black book is the third from the left.
 Options:
 (A) The black book is the third from the left
@@ -1016,7 +1016,7 @@ Options:
 
 The only statement that matches the deduced arrangement is Option (A).
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 20,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a raven, a cardinal, a falcon, an owl, a blue jay, a quail, and a robin. The owl is the second from the right. The cardinal is the fourth from the left. The falcon is to the left of the blue jay. The quail is to the left of the falcon. The raven is the second from the left. The robin is to the left of the quail.
 Options:
 (A) The raven is the second from the right
@@ -1085,7 +1085,7 @@ The question asks which statement is true regarding the position of the birds. S
 
 Option (D) is consistent with the derived arrangement and the initial statement provided in the text.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 21,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a hummingbird, a quail, an owl, a crow, a robin, and a cardinal. The cardinal is the second from the right. The hawk is the rightmost. The owl is to the left of the hummingbird. The robin is to the left of the quail. The owl is to the right of the crow. The robin is the fourth from the left.
 Options:
 (A) The hawk is the third from the right
@@ -1144,7 +1144,7 @@ Options:
     (F) Robin is 3rd from right (False, it is 4th).
     (G) Cardinal is 3rd from right (False, it is 2nd).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 22,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: an owl, a crow, a falcon, a cardinal, a hummingbird, a quail, and a hawk. The falcon is to the left of the crow. The quail is to the right of the cardinal. The hummingbird is to the right of the quail. The falcon is the second from the right. The hummingbird is to the left of the hawk. The owl is the third from the left.
 Options:
 (A) The owl is the third from the left
@@ -1196,7 +1196,7 @@ Options:
 
 Only Option (A) is consistent with the deduced arrangement.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 23,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: watermelons, mangoes, kiwis, pears, cantaloupes, oranges, and peaches. The oranges are more expensive than the peaches. The cantaloupes are the fourth-most expensive. The pears are less expensive than the cantaloupes. The peaches are the second-most expensive. The mangoes are the cheapest. The kiwis are the third-cheapest.
 Options:
 (A) The watermelons are the fourth-most expensive
@@ -1251,7 +1251,7 @@ Options:
 
     This corresponds to Option (E).
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 24,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a cardinal, a blue jay, a robin, a falcon, a quail, a hummingbird, and a raven. The falcon is to the right of the quail. The robin is to the right of the hummingbird. The raven is to the left of the quail. The blue jay is the second from the left. The robin is the third from the left. The cardinal is the third from the right.
 Options:
 (A) The cardinal is the rightmost
@@ -1299,7 +1299,7 @@ Comparing this to the options:
 (F) The hummingbird is the rightmost (False, Position 1)
 (G) The raven is the rightmost (False, Position 4)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 25,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, an owl, a falcon, a hawk, a raven, a crow, and a hummingbird. The falcon is the second from the left. The crow is the rightmost. The hummingbird is to the right of the blue jay. The hawk is to the right of the hummingbird. The blue jay is to the right of the owl. The raven is to the left of the falcon.
 Options:
 (A) The blue jay is the fourth from the left
@@ -1352,7 +1352,7 @@ Options:
 
 Option (A) is the only statement that matches the derived arrangement.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 26,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a sedan, a minivan, a motorcyle, a limousine, a hatchback, a truck, and a tractor. The motorcyle is older than the tractor. The hatchback is older than the limousine. The hatchback is newer than the truck. The truck is newer than the tractor. The minivan is the second-newest. The sedan is the third-newest.
 Options:
 (A) The sedan is the third-oldest
@@ -1403,7 +1403,7 @@ Comparing this to the options:
 (F) The truck is the third-oldest (True)
 (G) The tractor is the third-oldest (False, it is 2nd)
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 27,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eve, Rob, Dan, Mel, Ana, Eli, and Ada. Ada finished above Rob. Eve finished below Rob. Mel finished above Eli. Ada finished below Dan. Ana finished third. Eli finished second.
 Options:
 (A) Eve finished fourth
@@ -1444,7 +1444,7 @@ Options:
 6.  **Conclusion:**
     *   The question asks who finished fourth. Based on the deduction, Dan finished fourth.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 28,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a convertible, a station wagon, a minivan, a bus, a tractor, and a truck. The minivan is the oldest. The truck is older than the station wagon. The truck is newer than the limousine. The bus is newer than the convertible. The bus is older than the tractor. The limousine is newer than the tractor.
 Options:
 (A) The limousine is the second-oldest
@@ -1491,7 +1491,7 @@ The order from oldest to newest is:
 
 The second-oldest vehicle is the Convertible.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 29,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a blue book, a yellow book, a brown book, a gray book, a green book, a purple book, and an orange book. The blue book is to the right of the brown book. The gray book is the rightmost. The purple book is to the left of the green book. The green book is to the left of the yellow book. The brown book is the second from the left. The purple book is to the right of the blue book.
 Options:
 (A) The blue book is the third from the right
@@ -1551,7 +1551,7 @@ Let's check the options:
 (F) Purple is 3rd from right (False, it is 4th from right)
 (G) Orange is 3rd from right (False, it is 7th from right)
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 30,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a station wagon, a limousine, a truck, a minivan, a motorcyle, a hatchback, and a bus. The motorcyle is older than the truck. The station wagon is older than the hatchback. The motorcyle is newer than the hatchback. The bus is the second-newest. The minivan is the oldest. The limousine is older than the station wagon.
 Options:
 (A) The station wagon is the newest
@@ -1605,7 +1605,7 @@ The newest vehicle is at Position 7. Based on our mapping, the **Truck** is at P
 (F) The hatchback is the newest (False, Position 4)
 (G) The bus is the newest (False, Position 6)
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 31,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Dan, Ada, Amy, Rob, Mya, and Mel. Ada finished below Amy. Joe finished below Dan. Dan finished below Ada. Mel finished third-to-last. Amy finished third. Rob finished below Mya.
 Options:
 (A) Joe finished third
@@ -1642,7 +1642,7 @@ Options:
 
 The statement ""Amy finished third"" is consistent with all other clues and is explicitly given.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 32,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eli, Ada, Amy, Ana, Eve, Mel, and Dan. Ada finished above Mel. Dan finished above Ada. Amy finished last. Ana finished third-to-last. Dan finished below Eli. Eve finished third.
 Options:
 (A) Eli finished last
@@ -1688,7 +1688,7 @@ Options:
 4.  **Conclusion:**
     The statement ""Amy finished last"" is explicitly given in the text, and our logical arrangement confirms she is in the 7th position. Therefore, Amy is the one who finished last.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 33,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ada, Ana, Rob, Amy, Dan, Joe, and Eli. Eli finished below Amy. Ada finished third. Amy finished below Rob. Dan finished last. Rob finished second. Ana finished fourth.
 Options:
 (A) Ada finished third
@@ -1719,7 +1719,7 @@ Options:
 
 4.  **Conclusion:** The statement ""Ada finished third"" is explicitly given and consistent with the rest of the logic. Therefore, Ada is the golfer who finished third.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 34,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: kiwis, plums, mangoes, watermelons, pears, peaches, and oranges. The pears are the third-cheapest. The kiwis are the second-most expensive. The pears are more expensive than the plums. The oranges are less expensive than the kiwis. The mangoes are the third-most expensive. The peaches are the second-cheapest.
 Options:
 (A) The kiwis are the fourth-most expensive
@@ -1768,7 +1768,7 @@ Options:
 *   (F) Peaches are 6th-most expensive, not 4th.
 *   (G) Oranges are at Rank 4. Rank 4 is the fourth position from the top (most expensive). Thus, they are the fourth-most expensive.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 35,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a red book, a purple book, a green book, a white book, an orange book, a blue book, and a gray book. The green book is to the left of the white book. The red book is to the left of the purple book. The red book is to the right of the orange book. The gray book is the second from the left. The purple book is to the left of the green book. The blue book is the fourth from the left.
 Options:
 (A) The red book is the third from the left
@@ -1824,7 +1824,7 @@ There are exactly 5 books in our chain (Orange, Red, Purple, Green, White) and e
 
 The correct statement is that the red book is the third from the left.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 36,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a raven, a cardinal, a falcon, an owl, a blue jay, a quail, and a robin. The owl is the second from the right. The cardinal is the fourth from the left. The falcon is to the left of the blue jay. The quail is to the left of the falcon. The raven is the second from the left. The robin is to the left of the quail.
 Options:
 (A) The raven is the third from the left
@@ -1890,7 +1890,7 @@ Since there are exactly four birds and four empty positions (1, 3, 5, 7), they m
 *   (F) The quail is the third from the left (**True**, it is at Position 3)
 *   (G) The robin is the third from the left (False, it is 1st)
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 37,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: loquats, cantaloupes, watermelons, apples, oranges, pears, and mangoes. The oranges are the second-cheapest. The apples are less expensive than the pears. The mangoes are more expensive than the cantaloupes. The mangoes are the third-cheapest. The watermelons are the second-most expensive. The loquats are the third-most expensive.
 Options:
 (A) The loquats are the second-most expensive
@@ -1943,7 +1943,7 @@ The question asks which statement is true based on the logic. We are looking for
 
 Option (C) is the only statement that aligns with the derived ranking.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 38,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a station wagon, a sedan, a bus, a motorcyle, a hatchback, a tractor, and a minivan. The sedan is the third-oldest. The tractor is newer than the motorcyle. The bus is older than the motorcyle. The bus is newer than the hatchback. The minivan is the newest. The station wagon is the oldest.
 Options:
 (A) The station wagon is the oldest
@@ -1965,7 +1965,7 @@ Options:
 
 Since the text directly identifies the station wagon as the oldest vehicle, Option (A) is the correct choice.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 39,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ana, Eli, Mya, Amy, Joe, Mel, and Ada. Ada finished above Mel. Ada finished third-to-last. Amy finished above Ana. Mya finished second-to-last. Joe finished above Amy. Eli finished below Ana.
 Options:
 (A) Ana finished third-to-last
@@ -2009,7 +2009,7 @@ Options:
     *   According to our order, **Ada** finished 5th.
     *   This matches Option (G).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 40,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: apples, plums, mangoes, watermelons, oranges, kiwis, and loquats. The watermelons are less expensive than the plums. The watermelons are more expensive than the oranges. The kiwis are less expensive than the oranges. The apples are more expensive than the loquats. The plums are less expensive than the mangoes. The mangoes are the third-most expensive.
 Options:
 (A) The apples are the third-most expensive
@@ -2062,7 +2062,7 @@ This tells us that Mangoes are more expensive than 4 specific fruits (Plums, Wat
 **6. Conclusion:**
 The fruit in the third position is the Mangoes. This is consistent with the explicit statement in the text and the logical deduction from the other constraints.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 41,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a white book, a gray book, a yellow book, a purple book, a red book, a black book, and a green book. The black book is the second from the right. The red book is to the left of the green book. The red book is the second from the left. The gray book is the third from the right. The yellow book is the third from the left. The white book is the fourth from the left.
 Options:
 (A) The white book is the leftmost
@@ -2103,7 +2103,7 @@ Comparing this to the options:
 (F) Black is 6th
 (G) Green is 7th
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 42,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: mangoes, kiwis, oranges, watermelons, apples, pears, and loquats. The loquats are less expensive than the oranges. The oranges are the third-most expensive. The apples are the cheapest. The kiwis are more expensive than the pears. The mangoes are more expensive than the watermelons. The loquats are more expensive than the kiwis.
 Options:
 (A) The mangoes are the cheapest
@@ -2145,7 +2145,7 @@ Options:
 5.  **Match with Options:**
     *   Option (E) states ""The apples are the cheapest,"" which matches our deduction and the explicit text.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 43,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, a falcon, a raven, a crow, a robin, an owl, and a hummingbird. The robin is to the left of the owl. The crow is the rightmost. The hummingbird is the fourth from the left. The owl is the third from the right. The blue jay is to the left of the robin. The raven is the second from the left.
 Options:
 (A) The blue jay is the rightmost
@@ -2188,7 +2188,7 @@ Options:
 
 The question asks to identify the correct statement among the options. Based on our arrangement (and the explicit statement in the text), the Crow is the rightmost bird. This corresponds to Option (D).
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 44,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a motorcyle, a sedan, a station wagon, a tractor, a minivan, a bus, and a truck. The motorcyle is older than the minivan. The minivan is older than the tractor. The bus is newer than the truck. The station wagon is the third-newest. The sedan is older than the truck. The tractor is older than the sedan.
 Options:
 (A) The motorcyle is the oldest
@@ -2246,7 +2246,7 @@ The vehicle in the 1st position is the oldest. Based on our arrangement, the **M
 
 Final Answer: (A)
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 45,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a yellow book, a brown book, a white book, an orange book, a black book, a blue book, and a purple book. The black book is the second from the left. The white book is to the right of the orange book. The black book is to the right of the brown book. The yellow book is the third from the right. The purple book is the third from the left. The orange book is the second from the right.
 Options:
 (A) The yellow book is the leftmost
@@ -2277,7 +2277,7 @@ Options:
 
 The question asks which book is the leftmost. Based on the arrangement, the Brown book is at Position 1.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 46,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Mel, Rob, Eli, Dan, Ana, Ada, and Mya. Ana finished last. Mya finished above Rob. Dan finished above Mya. Rob finished fourth. Eli finished second. Mel finished above Ada.
 Options:
 (A) Mel finished first
@@ -2329,7 +2329,7 @@ Options:
     *   (F) Ada finished first (False, Dan did)
     *   (G) Mya finished first (False, Dan did)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 47,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a green book, a black book, an orange book, a white book, a blue book, and a gray book. The brown book is the rightmost. The black book is to the right of the white book. The gray book is the third from the left. The orange book is to the right of the gray book. The orange book is to the left of the green book. The blue book is the third from the right.
 Options:
 (A) The brown book is the second from the right
@@ -2402,7 +2402,7 @@ Options:
     *   (F) Blue is 2nd from right (False, it is 3rd from right).
     *   (G) Gray is 2nd from right (False, it is 3rd from left).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 48,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Dan, Ana, Mel, Ada, Eve, and Amy. Eve finished above Amy. Dan finished second. Ada finished below Ana. Ana finished third-to-last. Mel finished last. Amy finished third.
 Options:
 (A) Joe finished first
@@ -2441,7 +2441,7 @@ Options:
 5.  **Conclusion:**
     The question asks who finished first. Based on the deduction, Eve finished first. This corresponds to option (F).
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 49,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: apples, plums, mangoes, watermelons, oranges, kiwis, and loquats. The watermelons are less expensive than the plums. The watermelons are more expensive than the oranges. The kiwis are less expensive than the oranges. The apples are more expensive than the loquats. The plums are less expensive than the mangoes. The mangoes are the third-most expensive.
 Options:
 (A) The apples are the cheapest
@@ -2489,7 +2489,7 @@ In a set of 7 fruits, the ""third-most expensive"" means there are exactly 2 fru
 **5. Conclusion:**
 The fruit with Rank 7 is the cheapest. Based on our ranking, the Kiwis are the cheapest.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 50,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: mangoes, cantaloupes, apples, plums, loquats, watermelons, and peaches. The plums are more expensive than the mangoes. The watermelons are more expensive than the loquats. The loquats are the second-cheapest. The plums are less expensive than the peaches. The mangoes are the fourth-most expensive. The peaches are less expensive than the cantaloupes.
 Options:
 (A) The mangoes are the third-cheapest
@@ -2544,7 +2544,7 @@ The question asks which fruit is the third-cheapest. Based on our ranking, the W
 
 This corresponds to Option (F).
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 51,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ana, Eve, Ada, Dan, Rob, Amy, and Joe. Dan finished third. Ana finished above Ada. Amy finished last. Dan finished below Rob. Eve finished below Ada. Rob finished below Joe.
 Options:
 (A) Ana finished fourth
@@ -2592,7 +2592,7 @@ Options:
 
 This corresponds to Option (A).
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 52,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ana, Eve, Ada, Dan, Rob, Amy, and Joe. Dan finished third. Ana finished above Ada. Amy finished last. Dan finished below Rob. Eve finished below Ada. Rob finished below Joe.
 Options:
 (A) Ana finished third-to-last
@@ -2658,7 +2658,7 @@ Comparing this to the options:
 
 Option (C) is correct.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 53,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a truck, a motorcyle, a sedan, a minivan, a station wagon, a hatchback, and a tractor. The hatchback is newer than the truck. The sedan is the third-newest. The station wagon is the newest. The motorcyle is older than the truck. The minivan is newer than the sedan. The tractor is the third-oldest.
 Options:
 (A) The truck is the second-newest
@@ -2726,7 +2726,7 @@ Current Order:
 *   (F) The hatchback is the second-newest (False, it is 4th).
 *   (G) The tractor is the second-newest (False, it is 5th).
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 54,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eli, Ada, Amy, Ana, Eve, Mel, and Dan. Ada finished above Mel. Dan finished above Ada. Amy finished last. Ana finished third-to-last. Dan finished below Eli. Eve finished third.
 Options:
 (A) Eli finished fourth
@@ -2770,7 +2770,7 @@ Options:
 7.  **Identify the fourth-place finisher:**
     *   Based on the order derived, **Ada** finished fourth.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 55,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a raven, a hummingbird, a robin, a crow, a quail, a blue jay, and a cardinal. The hummingbird is to the left of the crow. The quail is to the right of the crow. The raven is to the left of the robin. The blue jay is the third from the right. The cardinal is the leftmost. The hummingbird is the fourth from the left.
 Options:
 (A) The raven is the rightmost
@@ -2816,7 +2816,7 @@ Comparing this to the options:
 
 The correct option is (E).
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 56,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a truck, a convertible, a bus, a station wagon, a minivan, a sedan, and a motorcyle. The bus is newer than the sedan. The motorcyle is older than the truck. The station wagon is older than the motorcyle. The sedan is newer than the convertible. The station wagon is newer than the bus. The minivan is the fourth-newest.
 Options:
 (A) The truck is the second-newest
@@ -2876,7 +2876,7 @@ According to our list, the vehicle at Rank 2 is the **motorcyle**.
 **5. Match with Options:**
 Option (G) states: ""The motorcyle is the second-newest"".
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 57,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a cardinal, a crow, a hummingbird, a blue jay, an owl, a robin, and a quail. The cardinal is to the right of the crow. The quail is the third from the left. The owl is to the right of the robin. The hummingbird is to the right of the blue jay. The cardinal is the second from the left. The owl is the third from the right.
 Options:
 (A) The cardinal is the fourth from the left
@@ -2924,7 +2924,7 @@ Options:
     *   (F) The robin is the fourth from the left (True).
     *   (G) The quail is the fourth from the left (False, it is 3rd).
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 58,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: loquats, cantaloupes, watermelons, apples, oranges, pears, and mangoes. The oranges are the second-cheapest. The apples are less expensive than the pears. The mangoes are more expensive than the cantaloupes. The mangoes are the third-cheapest. The watermelons are the second-most expensive. The loquats are the third-most expensive.
 Options:
 (A) The loquats are the fourth-most expensive
@@ -2984,7 +2984,7 @@ Let's check the options:
 
 Final Answer: (D)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 59,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a red book, a white book, a purple book, a black book, a gray book, an orange book, and a blue book. The red book is to the right of the white book. The gray book is to the left of the orange book. The gray book is to the right of the blue book. The red book is the second from the right. The black book is the fourth from the left. The orange book is to the left of the white book.
 Options:
 (A) The red book is the fourth from the left
@@ -3047,7 +3047,7 @@ The only remaining book is the Purple book, which must go in the only remaining 
 
 Final Answer: (D)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 60,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eve, Rob, Dan, Mel, Ana, Eli, and Ada. Ada finished above Rob. Eve finished below Rob. Mel finished above Eli. Ada finished below Dan. Ana finished third. Eli finished second.
 Options:
 (A) Eve finished third-to-last
@@ -3099,7 +3099,7 @@ Comparing this to the options:
 (F) Eli finished third-to-last (Incorrect, Eli is 2nd)
 (G) Ada finished third-to-last (Correct, Ada is 5th)
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 61,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a red book, a purple book, a green book, a white book, an orange book, a blue book, and a gray book. The green book is to the left of the white book. The red book is to the left of the purple book. The red book is to the right of the orange book. The gray book is the second from the left. The purple book is to the left of the green book. The blue book is the fourth from the left.
 Options:
 (A) The red book is the fourth from the left
@@ -3156,7 +3156,7 @@ Options:
 
 The statement in option (F) is explicitly stated in the problem description and confirmed by our logical deduction.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 62,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a gray book, an orange book, a green book, a black book, a purple book, and a yellow book. The purple book is the leftmost. The brown book is to the right of the yellow book. The green book is to the left of the orange book. The orange book is to the left of the gray book. The black book is the third from the left. The green book is the third from the right.
 Options:
 (A) The brown book is the rightmost
@@ -3197,7 +3197,7 @@ The rightmost book (Position 7) is the **gray book**.
 
 This corresponds to Option (B).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 63,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a truck, a minivan, a tractor, a hatchback, a bus, and a convertible. The convertible is the second-oldest. The tractor is the fourth-newest. The minivan is older than the truck. The truck is older than the limousine. The hatchback is the third-oldest. The bus is newer than the limousine.
 Options:
 (A) The limousine is the second-oldest
@@ -3252,7 +3252,7 @@ We have four vehicles (Minivan, Truck, Limousine, Bus) and four available positi
 *   (F) The bus is the second-oldest: False (It is 7th).
 *   (G) The convertible is the second-oldest: **True** (It is explicitly stated in the text and confirmed by our arrangement).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 64,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Dan, Ada, Amy, Rob, Mya, and Mel. Ada finished below Amy. Joe finished below Dan. Dan finished below Ada. Mel finished third-to-last. Amy finished third. Rob finished below Mya.
 Options:
 (A) Joe finished last
@@ -3300,7 +3300,7 @@ Options:
 6.  **Conclusion:**
     *   The golfer in position 7 (last) is Joe.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 65,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: watermelons, oranges, mangoes, cantaloupes, kiwis, pears, and peaches. The pears are the second-cheapest. The peaches are more expensive than the cantaloupes. The peaches are less expensive than the mangoes. The cantaloupes are more expensive than the kiwis. The oranges are the fourth-most expensive. The watermelons are the second-most expensive.
 Options:
 (A) The watermelons are the third-most expensive
@@ -3350,7 +3350,7 @@ The question asks which fruit is the **third-most expensive**. Based on our rank
 
 This corresponds to Option (G).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 66,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eve, Rob, Dan, Mel, Ana, Eli, and Ada. Ada finished above Rob. Eve finished below Rob. Mel finished above Eli. Ada finished below Dan. Ana finished third. Eli finished second.
 Options:
 (A) Eve finished third
@@ -3404,7 +3404,7 @@ Options:
 
 The statement ""Ana finished third"" is explicitly given in the text and confirmed by the logical deduction.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 67,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Mya, Eli, Ana, Amy, Mel, Dan, and Joe. Amy finished below Joe. Dan finished above Mya. Eli finished third. Ana finished first. Amy finished second-to-last. Mya finished fourth.
 Options:
 (A) Mya finished first
@@ -3439,7 +3439,7 @@ Options:
 
 The question asks who finished first. According to the explicit statement and the logical deduction, Ana finished first.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 68,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: apples, pears, mangoes, oranges, watermelons, peaches, and cantaloupes. The pears are more expensive than the oranges. The oranges are more expensive than the cantaloupes. The peaches are less expensive than the cantaloupes. The apples are the third-cheapest. The watermelons are the second-most expensive. The mangoes are the fourth-most expensive.
 Options:
 (A) The apples are the cheapest
@@ -3487,7 +3487,7 @@ This arrangement satisfies all conditions given in the text. The fruit with Rank
 **Conclusion:**
 The peaches are the cheapest.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 69,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a gray book, an orange book, a green book, a black book, a purple book, and a yellow book. The purple book is the leftmost. The brown book is to the right of the yellow book. The green book is to the left of the orange book. The orange book is to the left of the gray book. The black book is the third from the left. The green book is the third from the right.
 Options:
 (A) The brown book is the second from the left
@@ -3530,7 +3530,7 @@ Options:
     *   (F) Purple is 2nd? No (1st).
     *   (G) Yellow is 2nd? **Yes**.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 70,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, an owl, a hawk, a falcon, a hummingbird, a robin, and a quail. The hummingbird is to the left of the falcon. The owl is the second from the left. The robin is to the left of the hummingbird. The quail is to the right of the falcon. The robin is to the right of the owl. The blue jay is the third from the right.
 Options:
 (A) The blue jay is the second from the left
@@ -3601,7 +3601,7 @@ The available positions are 1, 3, 4, 6, 7 (since 2 is Owl and 5 is Blue Jay).
 
 Final Answer: (B)
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 71,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: an orange book, a red book, a brown book, a blue book, a black book, a gray book, and a white book. The white book is the leftmost. The red book is to the right of the blue book. The orange book is the second from the right. The gray book is the fourth from the left. The black book is the rightmost. The gray book is to the right of the red book.
 Options:
 (A) The orange book is the third from the right
@@ -3661,7 +3661,7 @@ Options:
     (F) Gray is 3rd from right (False, it is 4th)
     (G) White is 3rd from right (False, it is 7th)
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 72,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a minivan, a bus, a station wagon, a tractor, a truck, and a hatchback. The truck is the oldest. The tractor is older than the minivan. The minivan is the third-newest. The limousine is the fourth-newest. The station wagon is newer than the hatchback. The bus is the second-oldest.
 Options:
 (A) The limousine is the oldest
@@ -3699,7 +3699,7 @@ Options:
 3.  **Conclusion:**
     The text explicitly identifies the truck as the oldest vehicle. This matches Option (F).
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 73,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: watermelons, oranges, mangoes, cantaloupes, kiwis, pears, and peaches. The pears are the second-cheapest. The peaches are more expensive than the cantaloupes. The peaches are less expensive than the mangoes. The cantaloupes are more expensive than the kiwis. The oranges are the fourth-most expensive. The watermelons are the second-most expensive.
 Options:
 (A) The watermelons are the cheapest
@@ -3737,7 +3737,7 @@ We have 7 total ranks (1 to 7).
 **4. Conclusion:**
 The fruit with Rank 1 is the cheapest. Based on our deduction, the Kiwis are Rank 1.
 
-Final Answer: (E) The kiwis are the cheapest",(E) The kiwis are the cheapest,True,1
+Final Answer: (E) The kiwis are the cheapest",(E) The kiwis are the cheapest,True,1,
 74,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a bus, a motorcyle, a hatchback, a station wagon, a minivan, a truck, and a limousine. The station wagon is the fourth-newest. The motorcyle is newer than the truck. The station wagon is older than the hatchback. The minivan is newer than the hatchback. The bus is newer than the minivan. The truck is newer than the limousine.
 Options:
 (A) The bus is the newest
@@ -3791,7 +3791,7 @@ Options:
 
     The vehicle at Rank 7 is the Bus. Therefore, the Bus is the newest.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 75,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a crow, an owl, a raven, a falcon, a quail, and a hummingbird. The hummingbird is the second from the left. The raven is the fourth from the left. The raven is to the right of the hawk. The owl is to the right of the crow. The falcon is the rightmost. The hawk is to the right of the hummingbird. The quail is the second from the right.
 Options:
 (A) The hawk is the third from the right
@@ -3843,7 +3843,7 @@ Comparing this to the options:
 (F) Quail is 2nd from right.
 (G) Hummingbird is 6th from right.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 76,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a gray book, an orange book, a green book, a black book, a purple book, and a yellow book. The purple book is the leftmost. The brown book is to the right of the yellow book. The green book is to the left of the orange book. The orange book is to the left of the gray book. The black book is the third from the left. The green book is the third from the right.
 Options:
 (A) The brown book is the fourth from the left
@@ -3887,7 +3887,7 @@ Options:
     *   (F) The purple book is the fourth from the left. (False, Purple is at 1).
     *   (G) The yellow book is the fourth from the left. (False, Yellow is at 2).
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 77,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a yellow book, a black book, a white book, a green book, an orange book, and a purple book. The purple book is the rightmost. The yellow book is the leftmost. The orange book is the second from the right. The brown book is to the left of the green book. The brown book is to the right of the black book. The white book is the fourth from the left.
 Options:
 (A) The brown book is the rightmost
@@ -3943,7 +3943,7 @@ Options:
 
 This matches our derived arrangement and the explicit statement in the text.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 78,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, an owl, a hawk, a falcon, a hummingbird, a robin, and a quail. The hummingbird is to the left of the falcon. The owl is the second from the left. The robin is to the left of the hummingbird. The quail is to the right of the falcon. The robin is to the right of the owl. The blue jay is the third from the right.
 Options:
 (A) The blue jay is the third from the right
@@ -3994,7 +3994,7 @@ The question asks to identify the correct statement among the options. The optio
 *   The bird at Position 5 is the **Blue Jay**.
 *   Option (A) states: ""The blue jay is the third from the right"". This matches our deduction and the explicit constraint given in the text.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 79,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a black book, an orange book, a yellow book, a white book, a blue book, a red book, and a green book. The red book is to the right of the yellow book. The white book is the second from the right. The red book is to the left of the green book. The blue book is to the right of the black book. The black book is the third from the right. The orange book is the leftmost.
 Options:
 (A) The black book is the leftmost
@@ -4030,7 +4030,7 @@ Options:
 4.  **Evaluate Options:**
     The question asks to identify the correct statement among the options. The text explicitly states ""The orange book is the leftmost,"" and our logical arrangement confirms that the Orange book is indeed at Position 1 (the leftmost). This matches Option (B).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 80,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Dan, Eve, Mya, Amy, Rob, Ada, and Joe. Amy finished third. Joe finished last. Mya finished above Dan. Eve finished fourth. Amy finished above Rob. Ada finished third-to-last.
 Options:
 (A) Dan finished second
@@ -4068,7 +4068,7 @@ Options:
 
 Based on this order, Dan finished second.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 81,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a purple book, a green book, a white book, a gray book, a red book, a black book, and a brown book. The gray book is to the left of the purple book. The white book is to the right of the brown book. The black book is the third from the right. The purple book is to the left of the white book. The white book is the second from the right. The gray book is the third from the left. The brown book is to the right of the green book.
 Options:
 (A) The purple book is the third from the left
@@ -4156,7 +4156,7 @@ Options:
 
 Option (D) matches our derived arrangement.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 82,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: apples, plums, mangoes, watermelons, oranges, kiwis, and loquats. The watermelons are less expensive than the plums. The watermelons are more expensive than the oranges. The kiwis are less expensive than the oranges. The apples are more expensive than the loquats. The plums are less expensive than the mangoes. The mangoes are the third-most expensive.
 Options:
 (A) The apples are the second-cheapest
@@ -4213,7 +4213,7 @@ Therefore:
 **5. Identify the Second-Cheapest:**
 Based on the ranking above, the second-cheapest fruit is the Oranges.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 83,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a sedan, a truck, a bus, a station wagon, a tractor, a convertible, and a limousine. The truck is the oldest. The tractor is the newest. The sedan is older than the station wagon. The station wagon is the third-newest. The bus is older than the convertible. The sedan is newer than the convertible.
 Options:
 (A) The sedan is the fourth-newest
@@ -4284,7 +4284,7 @@ Based on our deduction, the vehicle at Position 4 is the **Sedan**.
 
 This corresponds to Option (A).
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 84,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Mel, Rob, Eli, Dan, Ana, Ada, and Mya. Ana finished last. Mya finished above Rob. Dan finished above Mya. Rob finished fourth. Eli finished second. Mel finished above Ada.
 Options:
 (A) Mel finished fourth
@@ -4331,7 +4331,7 @@ Options:
     *   (F) Ada finished fourth (Incorrect, Ada is 6th)
     *   (G) Mya finished fourth (Incorrect, Mya is 3rd)
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 85,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: loquats, watermelons, oranges, kiwis, apples, plums, and peaches. The plums are the cheapest. The watermelons are the third-most expensive. The apples are more expensive than the oranges. The kiwis are the most expensive. The apples are less expensive than the peaches. The loquats are the third-cheapest.
 Options:
 (A) The loquats are the second-most expensive
@@ -4378,7 +4378,7 @@ Comparing this to the options:
 (F) The plums are the second-most expensive (False, Rank 7)
 (G) The peaches are the second-most expensive (True, Rank 2)
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 86,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a bus, a motorcyle, a hatchback, a station wagon, a minivan, a truck, and a limousine. The station wagon is the fourth-newest. The motorcyle is newer than the truck. The station wagon is older than the hatchback. The minivan is newer than the hatchback. The bus is newer than the minivan. The truck is newer than the limousine.
 Options:
 (A) The bus is the fourth-newest
@@ -4410,7 +4410,7 @@ Options:
 
 Final Answer: (D)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 87,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a station wagon, a limousine, a truck, a minivan, a motorcyle, a hatchback, and a bus. The motorcyle is older than the truck. The station wagon is older than the hatchback. The motorcyle is newer than the hatchback. The bus is the second-newest. The minivan is the oldest. The limousine is older than the station wagon.
 Options:
 (A) The station wagon is the oldest
@@ -4440,7 +4440,7 @@ Options:
 
 Therefore, the statement that the minivan is the oldest is the correct conclusion.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 88,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: an orange book, a red book, a green book, a white book, a purple book, a brown book, and a yellow book. The green book is to the left of the purple book. The white book is to the right of the orange book. The green book is to the right of the brown book. The yellow book is to the right of the white book. The red book is to the right of the yellow book. The brown book is to the right of the red book.
 Options:
 (A) The orange book is the rightmost
@@ -4490,7 +4490,7 @@ Comparing this to the options:
 
 The correct option is (E).
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 89,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a minivan, a bus, a station wagon, a tractor, a truck, and a hatchback. The truck is the oldest. The tractor is older than the minivan. The minivan is the third-newest. The limousine is the fourth-newest. The station wagon is newer than the hatchback. The bus is the second-oldest.
 Options:
 (A) The limousine is the newest
@@ -4539,7 +4539,7 @@ The complete order from oldest to newest is:
 
 The vehicle at position 7 is the newest. Therefore, the Station Wagon is the newest.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 90,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Eli, Ada, Mel, Eve, Rob, and Ana. Joe finished first. Mel finished second-to-last. Rob finished above Eve. Mel finished above Eli. Rob finished below Ada. Eve finished fourth.
 Options:
 (A) Joe finished third
@@ -4579,7 +4579,7 @@ Options:
 
 The question asks who finished third. Based on the deduction, Rob finished third.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 91,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a cardinal, a blue jay, a robin, a falcon, a quail, a hummingbird, and a raven. The falcon is to the right of the quail. The robin is to the right of the hummingbird. The raven is to the left of the quail. The blue jay is the second from the left. The robin is the third from the left. The cardinal is the third from the right.
 Options:
 (A) The cardinal is the leftmost
@@ -4625,7 +4625,7 @@ Options:
 4.  **Conclusion:**
     The question asks which bird is the leftmost (Position 1). Based on the deduction, the Hummingbird is at Position 1.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 92,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a white book, a black book, a yellow book, an orange book, a blue book, and a green book. The yellow book is the rightmost. The blue book is to the left of the orange book. The green book is to the right of the white book. The blue book is to the right of the green book. The black book is the fourth from the left. The brown book is the third from the right.
 Options:
 (A) The brown book is the rightmost
@@ -4658,7 +4658,7 @@ Options:
 
 Since the text explicitly states that the yellow book is the rightmost, Option (D) is the correct choice.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 93,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a green book, a brown book, a white book, a black book, an orange book, a purple book, and a yellow book. The purple book is to the left of the yellow book. The green book is to the left of the white book. The brown book is to the right of the yellow book. The white book is the fourth from the left. The green book is to the right of the orange book. The black book is the second from the left.
 Options:
 (A) The green book is the second from the right
@@ -4712,7 +4712,7 @@ Options:
 
     Option (G) is the correct statement.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 94,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ada, Amy, Eli, Rob, Joe, Eve, and Ana. Rob finished second. Rob finished above Eve. Joe finished above Ada. Joe finished below Eve. Ada finished above Ana. Eli finished third-to-last.
 Options:
 (A) Ada finished second
@@ -4761,7 +4761,7 @@ Based on the explicit statement in the text and the logical consistency of the f
 
 Final Answer: (D)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 95,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: apples, plums, mangoes, watermelons, oranges, kiwis, and loquats. The watermelons are less expensive than the plums. The watermelons are more expensive than the oranges. The kiwis are less expensive than the oranges. The apples are more expensive than the loquats. The plums are less expensive than the mangoes. The mangoes are the third-most expensive.
 Options:
 (A) The apples are the most expensive
@@ -4811,7 +4811,7 @@ Therefore, the order of the top three fruits must be:
 **5. Conclusion:**
 Based on this arrangement, the Apples are the most expensive fruit.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 96,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: plums, kiwis, cantaloupes, pears, watermelons, apples, and loquats. The watermelons are more expensive than the cantaloupes. The apples are less expensive than the cantaloupes. The watermelons are the second-most expensive. The loquats are less expensive than the kiwis. The apples are more expensive than the loquats. The loquats are the third-cheapest. The plums are the cheapest.
 Options:
 (A) The plums are the third-cheapest
@@ -4864,7 +4864,7 @@ The question asks to identify the correct statement among the options. The deriv
 
 Option (G) states: ""The loquats are the third-cheapest"".
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 97,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ana, Eve, Ada, Dan, Rob, Amy, and Joe. Dan finished third. Ana finished above Ada. Amy finished last. Dan finished below Rob. Eve finished below Ada. Rob finished below Joe.
 Options:
 (A) Ana finished second
@@ -4905,7 +4905,7 @@ Options:
 5.  **Conclusion:**
     The question asks who finished second. Based on the deduction, Rob finished second.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 98,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ana, Eve, Ada, Dan, Rob, Amy, and Joe. Dan finished third. Ana finished above Ada. Amy finished last. Dan finished below Rob. Eve finished below Ada. Rob finished below Joe.
 Options:
 (A) Ana finished last
@@ -4944,7 +4944,7 @@ Comparing this to the options:
 
 Option (F) matches the fact derived from the text.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 99,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a motorcyle, a sedan, a station wagon, a tractor, a minivan, a bus, and a truck. The motorcyle is older than the minivan. The minivan is older than the tractor. The bus is newer than the truck. The station wagon is the third-newest. The sedan is older than the truck. The tractor is older than the sedan.
 Options:
 (A) The motorcyle is the third-oldest
@@ -5002,7 +5002,7 @@ Based on our mapping, the vehicle at Rank 3 is the **Tractor**.
 (F) The bus is the third-oldest (Incorrect, Rank 7)
 (G) The truck is the third-oldest (Incorrect, Rank 6)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 100,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a sedan, a tractor, a motorcyle, a minivan, a hatchback, and a truck. The minivan is newer than the limousine. The tractor is the second-newest. The truck is older than the sedan. The minivan is older than the truck. The hatchback is newer than the tractor. The motorcyle is the fourth-newest.
 Options:
 (A) The limousine is the oldest
@@ -5038,7 +5038,7 @@ Options:
 4.  **Conclusion:**
     *   The Limousine is assigned Rank 7, which corresponds to the oldest vehicle.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 101,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a yellow book, a black book, a white book, a green book, an orange book, and a purple book. The purple book is the rightmost. The yellow book is the leftmost. The orange book is the second from the right. The brown book is to the left of the green book. The brown book is to the right of the black book. The white book is the fourth from the left.
 Options:
 (A) The brown book is the second from the left
@@ -5083,7 +5083,7 @@ Options:
     *   (F) Orange is 2nd from left? No, it is 6th.
     *   (G) Purple is 2nd from left? No, it is 7th.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 102,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a purple book, a brown book, a red book, a blue book, a gray book, a black book, and a green book. The brown book is to the left of the green book. The gray book is the second from the left. The black book is to the left of the gray book. The blue book is to the left of the red book. The blue book is the second from the right. The green book is to the left of the purple book.
 Options:
 (A) The purple book is the second from the left
@@ -5134,7 +5134,7 @@ Options:
 
 The only statement that matches our derived arrangement is Option (E).
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 103,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: an orange book, a green book, a red book, a gray book, a purple book, a blue book, and a brown book. The purple book is the fourth from the left. The brown book is the third from the left. The green book is to the left of the blue book. The red book is the leftmost. The gray book is the third from the right. The orange book is the rightmost.
 Options:
 (A) The orange book is the second from the left
@@ -5172,7 +5172,7 @@ Now we evaluate the options:
 (F) The blue book is the second from the left (False, it is 6th).
 (G) The brown book is the second from the left (False, it is 3rd).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 104,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a cardinal, a blue jay, a robin, a falcon, a quail, a hummingbird, and a raven. The falcon is to the right of the quail. The robin is to the right of the hummingbird. The raven is to the left of the quail. The blue jay is the second from the left. The robin is the third from the left. The cardinal is the third from the right.
 Options:
 (A) The cardinal is the third from the left
@@ -5230,7 +5230,7 @@ Options:
 
 The only statement that matches the derived arrangement is Option (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 105,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a purple book, a brown book, a red book, a blue book, a gray book, a black book, and a green book. The brown book is to the left of the green book. The gray book is the second from the left. The black book is to the left of the gray book. The blue book is to the left of the red book. The blue book is the second from the right. The green book is to the left of the purple book.
 Options:
 (A) The purple book is the second from the right
@@ -5281,7 +5281,7 @@ Options:
 
 The only statement that matches the derived arrangement is Option (D).
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 106,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a blue book, a yellow book, a brown book, a gray book, a green book, a purple book, and an orange book. The blue book is to the right of the brown book. The gray book is the rightmost. The purple book is to the left of the green book. The green book is to the left of the yellow book. The brown book is the second from the left. The purple book is to the right of the blue book.
 Options:
 (A) The blue book is the second from the right
@@ -5338,7 +5338,7 @@ Options:
     *   (F) Purple is at 4.
     *   (G) Orange is at 1.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 107,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a cardinal, a blue jay, a robin, a crow, a falcon, a hawk, and a raven. The hawk is the second from the right. The raven is the fourth from the left. The robin is the second from the left. The cardinal is to the left of the raven. The falcon is to the left of the robin. The crow is to the right of the blue jay.
 Options:
 (A) The cardinal is the second from the left
@@ -5389,7 +5389,7 @@ Options:
 
 The only statement that matches the derived arrangement is Option (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 108,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Eli, Ada, Mel, Eve, Rob, and Ana. Joe finished first. Mel finished second-to-last. Rob finished above Eve. Mel finished above Eli. Rob finished below Ada. Eve finished fourth.
 Options:
 (A) Joe finished second
@@ -5458,7 +5458,7 @@ Options:
 
 This corresponds to Option (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 109,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a sedan, a minivan, a motorcyle, a limousine, a hatchback, a truck, and a tractor. The motorcyle is older than the tractor. The hatchback is older than the limousine. The hatchback is newer than the truck. The truck is newer than the tractor. The minivan is the second-newest. The sedan is the third-newest.
 Options:
 (A) The sedan is the third-newest
@@ -5511,7 +5511,7 @@ The question asks to identify the correct statement among the options.
 
 Therefore, Option (A) is the correct answer.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 110,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: an owl, a crow, a falcon, a cardinal, a hummingbird, a quail, and a hawk. The falcon is to the left of the crow. The quail is to the right of the cardinal. The hummingbird is to the right of the quail. The falcon is the second from the right. The hummingbird is to the left of the hawk. The owl is the third from the left.
 Options:
 (A) The owl is the fourth from the left
@@ -5562,7 +5562,7 @@ Options:
     *   (F) Quail is 4th? No, it is 2nd.
     *   (G) Hawk is 4th? No, it is 5th.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 111,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a cardinal, a blue jay, a robin, a crow, a falcon, a hawk, and a raven. The hawk is the second from the right. The raven is the fourth from the left. The robin is the second from the left. The cardinal is to the left of the raven. The falcon is to the left of the robin. The crow is to the right of the blue jay.
 Options:
 (A) The cardinal is the third from the right
@@ -5615,7 +5615,7 @@ Comparing this to the options:
 (F) The hawk is the third from the right (False, it is 2nd)
 (G) The raven is the third from the right (False, it is 4th)
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 112,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Eve, Mel, Amy, Mya, Dan, and Rob. Amy finished above Dan. Rob finished third. Mel finished below Rob. Dan finished second-to-last. Eve finished above Amy. Mel finished above Dan. Joe finished fourth.
 Options:
 (A) Joe finished second-to-last
@@ -5672,7 +5672,7 @@ The question asks who finished second-to-last (Position 6).
 
 Note: The text explicitly states ""Dan finished second-to-last,"" which directly confirms option (F), and our logical deduction confirms this is consistent with all other clues.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 113,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a hummingbird, a quail, an owl, a crow, a robin, and a cardinal. The cardinal is the second from the right. The hawk is the rightmost. The owl is to the left of the hummingbird. The robin is to the left of the quail. The owl is to the right of the crow. The robin is the fourth from the left.
 Options:
 (A) The hawk is the third from the left
@@ -5726,7 +5726,7 @@ Options:
 (F) The robin is the third from the left (False, it is 4th).
 (G) The cardinal is the third from the left (False, it is 6th).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 114,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a yellow book, a red book, a gray book, a blue book, a white book, an orange book, and a purple book. The red book is the third from the right. The white book is to the right of the orange book. The purple book is the third from the left. The yellow book is to the right of the purple book. The blue book is to the right of the red book. The blue book is to the left of the gray book.
 Options:
 (A) The yellow book is the third from the left
@@ -5778,7 +5778,7 @@ Options:
 *   (F) The orange book is the third from the left: False (It is 1st).
 *   (G) The purple book is the third from the left: **True** (It is at Position 3).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 115,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a white book, a gray book, a yellow book, a purple book, a red book, a black book, and a green book. The black book is the second from the right. The red book is to the left of the green book. The red book is the second from the left. The gray book is the third from the right. The yellow book is the third from the left. The white book is the fourth from the left.
 Options:
 (A) The white book is the second from the left
@@ -5832,7 +5832,7 @@ Options:
 
 The statement in Option (E) is explicitly confirmed by the arrangement derived from the clues.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 116,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a sedan, a tractor, a motorcyle, a minivan, a hatchback, and a truck. The minivan is newer than the limousine. The tractor is the second-newest. The truck is older than the sedan. The minivan is older than the truck. The hatchback is newer than the tractor. The motorcyle is the fourth-newest.
 Options:
 (A) The limousine is the fourth-newest
@@ -5889,7 +5889,7 @@ The text explicitly states ""The motorcyle is the fourth-newest,"" and our logic
 
 Final Answer: Option (D)
 
-Final Answer: (D)",Option (D),True,0
+Final Answer: (D)",Option (D),True,0,
 117,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: watermelons, oranges, mangoes, cantaloupes, kiwis, pears, and peaches. The pears are the second-cheapest. The peaches are more expensive than the cantaloupes. The peaches are less expensive than the mangoes. The cantaloupes are more expensive than the kiwis. The oranges are the fourth-most expensive. The watermelons are the second-most expensive.
 Options:
 (A) The watermelons are the third-cheapest
@@ -5934,7 +5934,7 @@ Options:
 
     The third-cheapest fruit is the Cantaloupes.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 118,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a cardinal, a blue jay, a robin, a crow, a falcon, a hawk, and a raven. The hawk is the second from the right. The raven is the fourth from the left. The robin is the second from the left. The cardinal is to the left of the raven. The falcon is to the left of the robin. The crow is to the right of the blue jay.
 Options:
 (A) The cardinal is the fourth from the left
@@ -5973,7 +5973,7 @@ Options:
     *   (F) The hawk is the fourth from the left (False, it is sixth).
     *   (G) The raven is the fourth from the left (True, this matches our derived arrangement and the explicit statement in the text).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 119,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a convertible, a limousine, a hatchback, a bus, a station wagon, a tractor, and a minivan. The station wagon is the fourth-newest. The hatchback is older than the bus. The hatchback is the second-newest. The minivan is newer than the limousine. The convertible is older than the limousine. The tractor is the second-oldest.
 Options:
 (A) The convertible is the fourth-newest
@@ -6030,7 +6030,7 @@ Options:
 
 Option (E) matches our deduction and the text provided.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 120,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a robin, a hummingbird, a raven, a blue jay, a crow, a cardinal, and a quail. The hummingbird is to the left of the crow. The cardinal is to the right of the quail. The blue jay is the fourth from the left. The robin is the second from the left. The quail is to the right of the crow. The raven is to the left of the robin.
 Options:
 (A) The robin is the fourth from the left
@@ -6084,7 +6084,7 @@ Options:
 
 The statement ""The blue jay is the fourth from the left"" is explicitly given in the text and confirmed by the logical arrangement.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 121,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Dan, Ada, Amy, Rob, Mya, and Mel. Ada finished below Amy. Joe finished below Dan. Dan finished below Ada. Mel finished third-to-last. Amy finished third. Rob finished below Mya.
 Options:
 (A) Joe finished third-to-last
@@ -6133,7 +6133,7 @@ Options:
 
 Final Answer: (G)
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 122,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: kiwis, plums, mangoes, watermelons, pears, peaches, and oranges. The pears are the third-cheapest. The kiwis are the second-most expensive. The pears are more expensive than the plums. The oranges are less expensive than the kiwis. The mangoes are the third-most expensive. The peaches are the second-cheapest.
 Options:
 (A) The kiwis are the third-most expensive
@@ -6196,7 +6196,7 @@ The question asks to identify the correct statement among the options.
 
 Option (C) is explicitly stated in the text and confirmed by the logical deduction of the full ranking.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 123,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eli, Ada, Amy, Ana, Eve, Mel, and Dan. Ada finished above Mel. Dan finished above Ada. Amy finished last. Ana finished third-to-last. Dan finished below Eli. Eve finished third.
 Options:
 (A) Eli finished third-to-last
@@ -6234,7 +6234,7 @@ Options:
     *   Our derived order confirms Ana is in position 5 (third-to-last).
     *   Comparing this to the options, Option (D) states ""Ana finished third-to-last"".
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 124,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Eli, Ada, Mel, Eve, Rob, and Ana. Joe finished first. Mel finished second-to-last. Rob finished above Eve. Mel finished above Eli. Rob finished below Ada. Eve finished fourth.
 Options:
 (A) Joe finished first
@@ -6274,7 +6274,7 @@ Options:
 5.  **Conclusion:**
     The question asks to identify the correct statement from the options regarding who finished first. The text explicitly states ""Joe finished first,"" and our logical deduction confirms that Joe holds the 1st position. This matches Option (A).
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 125,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, an owl, a hawk, a falcon, a hummingbird, a robin, and a quail. The hummingbird is to the left of the falcon. The owl is the second from the left. The robin is to the left of the hummingbird. The quail is to the right of the falcon. The robin is to the right of the owl. The blue jay is the third from the right.
 Options:
 (A) The blue jay is the rightmost
@@ -6327,7 +6327,7 @@ Options:
 6.  **Conclusion:**
     The bird at the rightmost position (Position 7) is the Quail.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 126,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eve, Rob, Dan, Mel, Ana, Eli, and Ada. Ada finished above Rob. Eve finished below Rob. Mel finished above Eli. Ada finished below Dan. Ana finished third. Eli finished second.
 Options:
 (A) Eve finished first
@@ -6362,7 +6362,7 @@ Options:
 4.  **Conclusion:**
     *   The golfer who finished first is Mel.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 127,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a yellow book, a red book, a gray book, a blue book, a white book, an orange book, and a purple book. The red book is the third from the right. The white book is to the right of the orange book. The purple book is the third from the left. The yellow book is to the right of the purple book. The blue book is to the right of the red book. The blue book is to the left of the gray book.
 Options:
 (A) The yellow book is the leftmost
@@ -6410,7 +6410,7 @@ Options:
 
 The leftmost book (Position 1) is the Orange book.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 128,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a station wagon, a sedan, a bus, a motorcyle, a hatchback, a tractor, and a minivan. The sedan is the third-oldest. The tractor is newer than the motorcyle. The bus is older than the motorcyle. The bus is newer than the hatchback. The minivan is the newest. The station wagon is the oldest.
 Options:
 (A) The station wagon is the third-oldest
@@ -6432,7 +6432,7 @@ Options:
 3.  **Consistency Check:** We have positions 1 (Station Wagon), 3 (Sedan), and 7 (Minivan) fixed. The chain of four vehicles (Hatchback, Bus, Motorcycle, Tractor) can fit into the remaining positions (2, 4, 5, 6) without contradiction (e.g., Hatchback=2, Bus=4, Motorcycle=5, Tractor=6).
 4.  **Conclusion:** Since the text explicitly identifies the sedan as the third-oldest vehicle, and this is consistent with the other logical constraints, Option (B) is the correct statement.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 129,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: kiwis, cantaloupes, oranges, loquats, pears, watermelons, and peaches. The loquats are less expensive than the peaches. The pears are the third-cheapest. The oranges are less expensive than the cantaloupes. The loquats are more expensive than the watermelons. The peaches are less expensive than the oranges. The kiwis are the second-most expensive.
 Options:
 (A) The kiwis are the second-most expensive
@@ -6496,7 +6496,7 @@ The question asks to identify the statement that is true based on the arrangemen
 
 This matches the explicit statement in the text (""The kiwis are the second-most expensive"") and corresponds to Option (A).
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 130,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eve, Mya, Rob, Ana, Ada, Mel, and Joe. Eve finished third. Mya finished above Joe. Mel finished above Ada. Mya finished above Rob. Mel finished below Joe. Mya finished second. Ada finished second-to-last.
 Options:
 (A) Eve finished last
@@ -6562,7 +6562,7 @@ Options:
 
 The golfer who finished last (7th) is Rob.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 131,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ada, Amy, Eli, Rob, Joe, Eve, and Ana. Rob finished second. Rob finished above Eve. Joe finished above Ada. Joe finished below Eve. Ada finished above Ana. Eli finished third-to-last.
 Options:
 (A) Ada finished last
@@ -6622,7 +6622,7 @@ Options:
 
     The golfer in the last position (7th) is Ana.
 
-Final Answer: (G) Ana finished last",(G) Ana finished last,True,1
+Final Answer: (G) Ana finished last",(G) Ana finished last,True,1,
 132,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a falcon, a crow, a hawk, a hummingbird, a blue jay, a robin, and a raven. The blue jay is to the right of the robin. The hawk is to the left of the hummingbird. The robin is the second from the right. The falcon is the third from the left. The crow is to the right of the hummingbird. The raven is the second from the left.
 Options:
 (A) The falcon is the third from the left
@@ -6668,7 +6668,7 @@ Options:
 
 The statement in Option (A) is explicitly stated in the text and confirmed by the logical deduction of the full arrangement.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 133,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hummingbird, a cardinal, a blue jay, an owl, a raven, a quail, and a robin. The hummingbird is to the left of the quail. The robin is to the left of the cardinal. The blue jay is the leftmost. The cardinal is the fourth from the left. The raven is the third from the right. The owl is the third from the left.
 Options:
 (A) The hummingbird is the fourth from the left
@@ -6728,7 +6728,7 @@ Options:
 
 The only true statement among the options is (B).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 134,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Dan, Ana, Mel, Ada, Eve, and Amy. Eve finished above Amy. Dan finished second. Ada finished below Ana. Ana finished third-to-last. Mel finished last. Amy finished third.
 Options:
 (A) Joe finished third
@@ -6786,7 +6786,7 @@ Options:
 
 This matches the explicit statement in the text as well as our logical deduction.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 135,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: loquats, watermelons, oranges, kiwis, apples, plums, and peaches. The plums are the cheapest. The watermelons are the third-most expensive. The apples are more expensive than the oranges. The kiwis are the most expensive. The apples are less expensive than the peaches. The loquats are the third-cheapest.
 Options:
 (A) The loquats are the most expensive
@@ -6842,7 +6842,7 @@ Options:
     *   (F) Plums are most expensive: False (Plums are cheapest).
     *   (G) Peaches are most expensive: False (Kiwis are).
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 136,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ada, Amy, Eli, Rob, Joe, Eve, and Ana. Rob finished second. Rob finished above Eve. Joe finished above Ada. Joe finished below Eve. Ada finished above Ana. Eli finished third-to-last.
 Options:
 (A) Ada finished first
@@ -6886,7 +6886,7 @@ Options:
 6.  **Match with Options:**
     *   Option (B) states ""Amy finished first"".
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 137,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a yellow book, a brown book, a white book, an orange book, a black book, a blue book, and a purple book. The black book is the second from the left. The white book is to the right of the orange book. The black book is to the right of the brown book. The yellow book is the third from the right. The purple book is the third from the left. The orange book is the second from the right.
 Options:
 (A) The yellow book is the second from the left
@@ -6937,7 +6937,7 @@ Now, let's evaluate the options:
 
 Option (E) matches the derived arrangement and is explicitly stated in the problem description.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 138,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, an owl, a falcon, a hawk, a raven, a crow, and a hummingbird. The falcon is the second from the left. The crow is the rightmost. The hummingbird is to the right of the blue jay. The hawk is to the right of the hummingbird. The blue jay is to the right of the owl. The raven is to the left of the falcon.
 Options:
 (A) The blue jay is the third from the right
@@ -6986,7 +6986,7 @@ Options:
 5.  **Match with Options:**
     *   Option (G) states: ""The hummingbird is the third from the right"". This matches our deduction.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 139,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ana, Rob, Eve, Mel, Mya, Joe, and Eli. Joe finished second-to-last. Eli finished first. Mya finished below Joe. Mel finished second. Rob finished third-to-last. Ana finished third.
 Options:
 (A) Ana finished last
@@ -7012,7 +7012,7 @@ Options:
 5.  **Match with the options:**
     *   Option (E) states ""Mya finished last"".
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 140,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a hummingbird, a falcon, a cardinal, an owl, a robin, and a blue jay. The hummingbird is to the left of the owl. The robin is the rightmost. The blue jay is to the left of the hawk. The blue jay is the third from the left. The falcon is the fourth from the left. The cardinal is the second from the right.
 Options:
 (A) The hawk is the second from the left
@@ -7078,7 +7078,7 @@ Options:
     *   (F) The robin is the second from the left (False, it is 7th).
     *   (G) The blue jay is the second from the left (False, it is 3rd).
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 141,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a yellow book, a red book, a gray book, a blue book, a white book, an orange book, and a purple book. The red book is the third from the right. The white book is to the right of the orange book. The purple book is the third from the left. The yellow book is to the right of the purple book. The blue book is to the right of the red book. The blue book is to the left of the gray book.
 Options:
 (A) The yellow book is the rightmost
@@ -7123,7 +7123,7 @@ Options:
 
 The rightmost book (Position 7) is the Gray book.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 142,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a falcon, a crow, a hawk, a hummingbird, a blue jay, a robin, and a raven. The blue jay is to the right of the robin. The hawk is to the left of the hummingbird. The robin is the second from the right. The falcon is the third from the left. The crow is to the right of the hummingbird. The raven is the second from the left.
 Options:
 (A) The falcon is the fourth from the left
@@ -7180,7 +7180,7 @@ Options:
     *   (F) The robin is the fourth from the left (False, it is sixth).
     *   (G) The raven is the fourth from the left (False, it is second).
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 143,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, an owl, a falcon, a hawk, a raven, a crow, and a hummingbird. The falcon is the second from the left. The crow is the rightmost. The hummingbird is to the right of the blue jay. The hawk is to the right of the hummingbird. The blue jay is to the right of the owl. The raven is to the left of the falcon.
 Options:
 (A) The blue jay is the third from the left
@@ -7232,7 +7232,7 @@ Options:
     *   (F) The crow is the third from the left (False, it is 7th).
     *   (G) The hummingbird is the third from the left (False, it is 5th).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 144,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eli, Eve, Mel, Joe, Mya, Rob, and Ada. Ada finished above Mya. Eli finished below Joe. Eli finished above Eve. Ada finished second-to-last. Mel finished third. Rob finished fourth.
 Options:
 (A) Eli finished last
@@ -7265,7 +7265,7 @@ Options:
 
 This corresponds to Option (E).
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 145,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: plums, kiwis, pears, mangoes, apples, oranges, and loquats. The pears are less expensive than the oranges. The mangoes are less expensive than the kiwis. The plums are the second-most expensive. The loquats are more expensive than the apples. The kiwis are less expensive than the apples. The loquats are the fourth-most expensive.
 Options:
 (A) The plums are the second-cheapest
@@ -7337,7 +7337,7 @@ Comparing this to the options:
 
 The correct option is (B).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 146,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eve, Ana, Amy, Dan, Eli, Rob, and Mya. Mya finished above Eli. Eve finished below Rob. Amy finished second. Rob finished below Dan. Ana finished second-to-last. Dan finished fourth.
 Options:
 (A) Eve finished fourth
@@ -7370,7 +7370,7 @@ Options:
     *   7th: Eve
 5.  **Conclusion:** The golfer who finished fourth is Dan. This matches the explicit statement in the text and Option (D).
 
-Final Answer: Option (D)",Option (D),True,0
+Final Answer: Option (D)",Option (D),True,0,
 147,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a station wagon, a sedan, a bus, a motorcyle, a hatchback, a tractor, and a minivan. The sedan is the third-oldest. The tractor is newer than the motorcyle. The bus is older than the motorcyle. The bus is newer than the hatchback. The minivan is the newest. The station wagon is the oldest.
 Options:
 (A) The station wagon is the second-newest
@@ -7430,7 +7430,7 @@ Based on our arrangement, the vehicle at Position 6 is the **Tractor**.
 
 Option (F) states that the tractor is the second-newest.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 148,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: mangoes, watermelons, peaches, kiwis, oranges, cantaloupes, and plums. The watermelons are the cheapest. The peaches are more expensive than the mangoes. The cantaloupes are the second-most expensive. The oranges are more expensive than the cantaloupes. The peaches are less expensive than the plums. The kiwis are the third-cheapest.
 Options:
 (A) The mangoes are the most expensive
@@ -7465,7 +7465,7 @@ Options:
 
 The fruit at Rank 7 is the most expensive. Based on the deduction, the Oranges are the most expensive.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 149,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a red book, a white book, a purple book, a black book, a gray book, an orange book, and a blue book. The red book is to the right of the white book. The gray book is to the left of the orange book. The gray book is to the right of the blue book. The red book is the second from the right. The black book is the fourth from the left. The orange book is to the left of the white book.
 Options:
 (A) The red book is the third from the left
@@ -7530,7 +7530,7 @@ We know the specific positions for Red and Black:
 *   (F) **Orange is 3rd from left?** Yes, it is at position 3.
 *   (G) Blue is 3rd from left? No, it is 1st.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 150,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a minivan, a bus, a limousine, a truck, a convertible, a tractor, and a motorcyle. The limousine is older than the minivan. The tractor is older than the limousine. The bus is the newest. The truck is the third-newest. The motorcyle is the fourth-newest. The convertible is older than the tractor.
 Options:
 (A) The minivan is the third-newest
@@ -7584,7 +7584,7 @@ We have four vehicles (Minivan, Limousine, Tractor, Convertible) and four availa
 *   (F) The tractor is the third-newest: False (It is 6th).
 *   (G) The motorcyle is the third-newest: False (It is 4th).
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 151,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a motorcyle, a sedan, a station wagon, a tractor, a minivan, a bus, and a truck. The motorcyle is older than the minivan. The minivan is older than the tractor. The bus is newer than the truck. The station wagon is the third-newest. The sedan is older than the truck. The tractor is older than the sedan.
 Options:
 (A) The motorcyle is the third-newest
@@ -7632,7 +7632,7 @@ Options:
     *   Our logical deduction confirms the Station Wagon occupies the 3rd position from the newest.
     *   This corresponds to Option (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 152,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a truck, a hatchback, a minivan, a bus, a tractor, a station wagon, and a convertible. The station wagon is the fourth-newest. The minivan is the third-newest. The tractor is the second-oldest. The convertible is older than the station wagon. The truck is newer than the bus. The hatchback is older than the convertible.
 Options:
 (A) The truck is the third-newest
@@ -7700,7 +7700,7 @@ Comparing this to the options:
 (F) The station wagon is the third-newest (False, it is 4th)
 (G) The convertible is the third-newest (False, it is 5th)
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 153,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eli, Ada, Amy, Ana, Eve, Mel, and Dan. Ada finished above Mel. Dan finished above Ada. Amy finished last. Ana finished third-to-last. Dan finished below Eli. Eve finished third.
 Options:
 (A) Eli finished second-to-last
@@ -7746,7 +7746,7 @@ Comparing this to the options:
 
 Option (F) matches our deduction.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 154,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a black book, an orange book, a yellow book, a white book, a blue book, a red book, and a green book. The red book is to the right of the yellow book. The white book is the second from the right. The red book is to the left of the green book. The blue book is to the right of the black book. The black book is the third from the right. The orange book is the leftmost.
 Options:
 (A) The black book is the second from the left
@@ -7797,7 +7797,7 @@ Now we evaluate the options:
 (F) The red book is the second from the left (False, it is 3rd).
 (G) The green book is the second from the left (False, it is 4th).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 155,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a minivan, a bus, a station wagon, a tractor, a truck, and a hatchback. The truck is the oldest. The tractor is older than the minivan. The minivan is the third-newest. The limousine is the fourth-newest. The station wagon is newer than the hatchback. The bus is the second-oldest.
 Options:
 (A) The limousine is the third-oldest
@@ -7856,7 +7856,7 @@ Options:
 5.  **Conclusion:**
     The vehicle in the 3rd Oldest position is the Tractor.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 156,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a quail, a raven, a hummingbird, a robin, a falcon, an owl, and a blue jay. The blue jay is to the left of the falcon. The blue jay is the second from the right. The raven is to the left of the robin. The owl is the third from the right. The hummingbird is to the left of the quail. The raven is the third from the left.
 Options:
 (A) The quail is the third from the left
@@ -7921,7 +7921,7 @@ The question asks which statement is correct. We need to identify which bird is 
 
 Option (B) matches our derived arrangement.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 157,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Dan, Ada, Amy, Rob, Mya, and Mel. Ada finished below Amy. Joe finished below Dan. Dan finished below Ada. Mel finished third-to-last. Amy finished third. Rob finished below Mya.
 Options:
 (A) Joe finished fourth
@@ -7964,7 +7964,7 @@ Options:
 
 The golfer who finished fourth is Ada.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 158,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, a falcon, a raven, a crow, a robin, an owl, and a hummingbird. The robin is to the left of the owl. The crow is the rightmost. The hummingbird is the fourth from the left. The owl is the third from the right. The blue jay is to the left of the robin. The raven is the second from the left.
 Options:
 (A) The blue jay is the second from the right
@@ -8027,7 +8027,7 @@ Now, let's evaluate the options based on the final arrangement:
 *   (F) Owl is at 5.
 *   (G) Hummingbird is at 4.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 159,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, a falcon, a raven, a crow, a robin, an owl, and a hummingbird. The robin is to the left of the owl. The crow is the rightmost. The hummingbird is the fourth from the left. The owl is the third from the right. The blue jay is to the left of the robin. The raven is the second from the left.
 Options:
 (A) The blue jay is the third from the left
@@ -8084,7 +8084,7 @@ Options:
     *   (F) The owl is the third from the left (False, it is fifth).
     *   (G) The hummingbird is the third from the left (False, it is fourth).
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 160,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: an orange book, a green book, a gray book, a purple book, a black book, a yellow book, and a white book. The orange book is to the right of the gray book. The yellow book is the third from the right. The purple book is the second from the left. The yellow book is to the right of the orange book. The white book is the second from the right. The black book is the leftmost.
 Options:
 (A) The orange book is the leftmost
@@ -8122,7 +8122,7 @@ Options:
     *   The statement ""The black book is the leftmost"" is explicitly given in the text and confirmed by the logical arrangement.
     *   Therefore, the Black book is the leftmost.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 161,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eve, Mya, Rob, Ana, Ada, Mel, and Joe. Eve finished third. Mya finished above Joe. Mel finished above Ada. Mya finished above Rob. Mel finished below Joe. Mya finished second. Ada finished second-to-last.
 Options:
 (A) Eve finished third
@@ -8162,7 +8162,7 @@ Options:
     7.  Rob
 6.  **Conclusion:** The question asks to identify the correct statement among the options. The text explicitly states ""Eve finished third,"" and our logical deduction confirms that Eve is in the 3rd position.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 162,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a convertible, a limousine, a hatchback, a bus, a station wagon, a tractor, and a minivan. The station wagon is the fourth-newest. The hatchback is older than the bus. The hatchback is the second-newest. The minivan is newer than the limousine. The convertible is older than the limousine. The tractor is the second-oldest.
 Options:
 (A) The convertible is the second-oldest
@@ -8227,7 +8227,7 @@ We are looking for the statement that is true based on this arrangement.
 
 Note: The text explicitly states ""The tractor is the second-oldest,"" which directly confirms Option (F). Our logical deduction confirms this fits perfectly within the constraints of the other statements.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 163,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a raven, a hummingbird, a falcon, an owl, a quail, and a cardinal. The quail is to the left of the hummingbird. The raven is to the right of the hummingbird. The cardinal is the second from the left. The owl is to the left of the cardinal. The raven is the third from the right. The falcon is the rightmost.
 Options:
 (A) The hawk is the leftmost
@@ -8264,7 +8264,7 @@ Options:
 
 The question asks which bird is the leftmost. Based on the arrangement, the bird at Position 1 is the Owl.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 164,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a station wagon, a limousine, a truck, a minivan, a motorcyle, a hatchback, and a bus. The motorcyle is older than the truck. The station wagon is older than the hatchback. The motorcyle is newer than the hatchback. The bus is the second-newest. The minivan is the oldest. The limousine is older than the station wagon.
 Options:
 (A) The station wagon is the third-oldest
@@ -8330,7 +8330,7 @@ Comparing this to the options:
 (F) The hatchback is the third-oldest - Incorrect (Rank 4)
 (G) The bus is the third-oldest - Incorrect (Rank 6)
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 165,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Amy, Eve, Ada, Rob, Dan, Mel, and Joe. Joe finished third. Dan finished last. Eve finished first. Mel finished below Rob. Ada finished above Joe. Rob finished third-to-last.
 Options:
 (A) Amy finished first
@@ -8371,7 +8371,7 @@ Options:
     *   (F) Mel finished first: Incorrect.
     *   (G) Joe finished first: Incorrect.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 166,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: mangoes, kiwis, oranges, watermelons, apples, pears, and loquats. The loquats are less expensive than the oranges. The oranges are the third-most expensive. The apples are the cheapest. The kiwis are more expensive than the pears. The mangoes are more expensive than the watermelons. The loquats are more expensive than the kiwis.
 Options:
 (A) The mangoes are the third-most expensive
@@ -8416,7 +8416,7 @@ Options:
 **4. Conclusion:**
 The question asks which fruit is the third-most expensive. Based on the deduction and the explicit statement in the text (""The oranges are the third-most expensive""), the Oranges hold this position. This matches Option (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 167,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ada, Ana, Rob, Amy, Dan, Joe, and Eli. Eli finished below Amy. Ada finished third. Amy finished below Rob. Dan finished last. Rob finished second. Ana finished fourth.
 Options:
 (A) Ada finished second-to-last
@@ -8457,7 +8457,7 @@ Options:
 5.  **Match with Options:**
     *   Option (G) states ""Eli finished second-to-last"".
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 168,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: mangoes, watermelons, peaches, kiwis, oranges, cantaloupes, and plums. The watermelons are the cheapest. The peaches are more expensive than the mangoes. The cantaloupes are the second-most expensive. The oranges are more expensive than the cantaloupes. The peaches are less expensive than the plums. The kiwis are the third-cheapest.
 Options:
 (A) The mangoes are the second-most expensive
@@ -8507,7 +8507,7 @@ The question asks to identify the correct statement among the options. We are lo
 
 This matches our deduction and the information given in the text.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 169,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a robin, a hummingbird, a raven, a blue jay, a crow, a cardinal, and a quail. The hummingbird is to the left of the crow. The cardinal is to the right of the quail. The blue jay is the fourth from the left. The robin is the second from the left. The quail is to the right of the crow. The raven is to the left of the robin.
 Options:
 (A) The robin is the leftmost
@@ -8557,7 +8557,7 @@ Comparing this to the options:
 (F) The cardinal is the leftmost (False, Cardinal is 7th)
 (G) The quail is the leftmost (False, Quail is 6th)
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 170,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a cardinal, a blue jay, a robin, a crow, a falcon, a hawk, and a raven. The hawk is the second from the right. The raven is the fourth from the left. The robin is the second from the left. The cardinal is to the left of the raven. The falcon is to the left of the robin. The crow is to the right of the blue jay.
 Options:
 (A) The cardinal is the third from the left
@@ -8606,7 +8606,7 @@ Now, let's evaluate the options:
 (F) The hawk is the third from the left - False (Position 6)
 (G) The raven is the third from the left - False (Position 4)
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 171,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: an orange book, a green book, a red book, a gray book, a purple book, a blue book, and a brown book. The purple book is the fourth from the left. The brown book is the third from the left. The green book is to the left of the blue book. The red book is the leftmost. The gray book is the third from the right. The orange book is the rightmost.
 Options:
 (A) The orange book is the leftmost
@@ -8663,7 +8663,7 @@ Options:
 
 The statement ""The red book is the leftmost"" is explicitly given in the text and confirmed by the logical arrangement.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 172,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Eve, Mel, Amy, Mya, Dan, and Rob. Amy finished above Dan. Rob finished third. Mel finished below Rob. Dan finished second-to-last. Eve finished above Amy. Mel finished above Dan. Joe finished fourth.
 Options:
 (A) Joe finished fourth
@@ -8707,7 +8707,7 @@ Options:
 
 The question asks to identify the correct statement among the options regarding who finished fourth. Based on the explicit statement ""Joe finished fourth"" and our derived order, Joe is in the 4th position.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 173,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Mya, Eli, Ana, Amy, Mel, Dan, and Joe. Amy finished below Joe. Dan finished above Mya. Eli finished third. Ana finished first. Amy finished second-to-last. Mya finished fourth.
 Options:
 (A) Mya finished last
@@ -8756,7 +8756,7 @@ Options:
 5.  **Conclusion:**
     The golfer who finished last (7th) is Mel.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 174,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: kiwis, cantaloupes, oranges, loquats, pears, watermelons, and peaches. The loquats are less expensive than the peaches. The pears are the third-cheapest. The oranges are less expensive than the cantaloupes. The loquats are more expensive than the watermelons. The peaches are less expensive than the oranges. The kiwis are the second-most expensive.
 Options:
 (A) The kiwis are the cheapest
@@ -8811,7 +8811,7 @@ Since the chain of 5 fruits must occupy the 5 remaining ranks in the specific or
 
 All constraints are satisfied. The fruit at Rank 1 is the Watermelons.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 175,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a blue jay, a falcon, a raven, a crow, a robin, an owl, and a hummingbird. The robin is to the left of the owl. The crow is the rightmost. The hummingbird is the fourth from the left. The owl is the third from the right. The blue jay is to the left of the robin. The raven is the second from the left.
 Options:
 (A) The blue jay is the fourth from the left
@@ -8850,7 +8850,7 @@ Options:
     Comparing this to the options:
     (G) The hummingbird is the fourth from the left
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 176,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a convertible, a station wagon, a minivan, a bus, a tractor, and a truck. The minivan is the oldest. The truck is older than the station wagon. The truck is newer than the limousine. The bus is newer than the convertible. The bus is older than the tractor. The limousine is newer than the tractor.
 Options:
 (A) The limousine is the fourth-newest
@@ -8916,7 +8916,7 @@ The ""fourth-newest"" vehicle is the one in the 4th position from the newest end
 
 Therefore, the Tractor is the fourth-newest vehicle.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 177,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a robin, an owl, a quail, a falcon, a hummingbird, a cardinal, and a crow. The hummingbird is to the left of the falcon. The crow is to the right of the cardinal. The cardinal is the second from the right. The quail is the third from the right. The falcon is to the left of the robin. The owl is the second from the left.
 Options:
 (A) The robin is the second from the right
@@ -8964,7 +8964,7 @@ Options:
 
 The only statement that is consistent with the logical arrangement is Option (F).
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 178,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Dan, Ana, Mel, Ada, Eve, and Amy. Eve finished above Amy. Dan finished second. Ada finished below Ana. Ana finished third-to-last. Mel finished last. Amy finished third.
 Options:
 (A) Joe finished fourth
@@ -8999,7 +8999,7 @@ Comparing this result to the options:
 (F) Eve finished fourth - Incorrect (1st)
 (G) Amy finished fourth - Incorrect (3rd)
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 179,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: oranges, watermelons, peaches, pears, kiwis, cantaloupes, and plums. The kiwis are the second-cheapest. The plums are the cheapest. The cantaloupes are less expensive than the watermelons. The oranges are the most expensive. The pears are the third-cheapest. The peaches are the third-most expensive.
 Options:
 (A) The oranges are the second-most expensive
@@ -9047,7 +9047,7 @@ Let's check the options:
 (F) Cantaloupes are the second-most expensive (False, they are 4th).
 (G) Plums are the second-most expensive (False, they are 7th).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 180,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: kiwis, loquats, pears, peaches, mangoes, plums, and apples. The loquats are the fourth-most expensive. The peaches are less expensive than the mangoes. The apples are more expensive than the pears. The peaches are the second-most expensive. The plums are the cheapest. The pears are more expensive than the kiwis.
 Options:
 (A) The kiwis are the third-most expensive
@@ -9099,7 +9099,7 @@ Options:
     *   (F) Plums are 3rd-most expensive (False, they are 7th).
     *   (G) **Apples are the third-most expensive** (True, they are Rank 3).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 181,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ada, Amy, Eli, Rob, Joe, Eve, and Ana. Rob finished second. Rob finished above Eve. Joe finished above Ada. Joe finished below Eve. Ada finished above Ana. Eli finished third-to-last.
 Options:
 (A) Ada finished second-to-last
@@ -9134,7 +9134,7 @@ Options:
     *   The second-to-last position in a 7-person race is 6th.
     *   Based on the assignment above, **Ada finished 6th**.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 182,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ana, Rob, Eve, Mel, Mya, Joe, and Eli. Joe finished second-to-last. Eli finished first. Mya finished below Joe. Mel finished second. Rob finished third-to-last. Ana finished third.
 Options:
 (A) Ana finished fourth
@@ -9168,7 +9168,7 @@ Comparing this to the options:
 (F) Joe finished fourth (Incorrect, he finished sixth)
 (G) Eli finished fourth (Incorrect, he finished first)
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 183,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Ada, Ana, Rob, Amy, Dan, Joe, and Eli. Eli finished below Amy. Ada finished third. Amy finished below Rob. Dan finished last. Rob finished second. Ana finished fourth.
 Options:
 (A) Ada finished fourth
@@ -9211,7 +9211,7 @@ Options:
     *   Option (B) states ""Ana finished fourth.""
     *   All other options contradict the explicit text or the deduced order.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 184,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: plums, kiwis, cantaloupes, pears, watermelons, apples, and loquats. The watermelons are more expensive than the cantaloupes. The apples are less expensive than the cantaloupes. The watermelons are the second-most expensive. The loquats are less expensive than the kiwis. The apples are more expensive than the loquats. The loquats are the third-cheapest. The plums are the cheapest.
 Options:
 (A) The plums are the second-cheapest
@@ -9256,7 +9256,7 @@ Comparing this to the options:
 (F) Apples are Rank 4.
 (G) Loquats are Rank 3.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 185,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: watermelons, oranges, mangoes, cantaloupes, kiwis, pears, and peaches. The pears are the second-cheapest. The peaches are more expensive than the cantaloupes. The peaches are less expensive than the mangoes. The cantaloupes are more expensive than the kiwis. The oranges are the fourth-most expensive. The watermelons are the second-most expensive.
 Options:
 (A) The watermelons are the second-most expensive
@@ -9286,7 +9286,7 @@ We can verify this against the other options:
 
 Therefore, the statement that the watermelons are the second-most expensive is the correct one.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 186,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Rob, Eli, Dan, Mya, Ada, and Ana. Joe finished above Ana. Ana finished second-to-last. Mya finished fourth. Dan finished third. Ada finished second. Eli finished third-to-last.
 Options:
 (A) Joe finished second-to-last
@@ -9331,7 +9331,7 @@ Options:
 6.  **Match with Options:**
     *   (G) Ana finished second-to-last matches our deduction.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 187,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a convertible, a truck, a tractor, a limousine, a motorcyle, a hatchback, and a sedan. The hatchback is the fourth-newest. The limousine is older than the motorcyle. The truck is newer than the motorcyle. The sedan is the second-newest. The tractor is newer than the convertible. The hatchback is older than the convertible.
 Options:
 (A) The convertible is the third-oldest
@@ -9387,7 +9387,7 @@ Comparing this to the options:
 (F) The hatchback is the third-oldest (False, it is 4th-oldest)
 (G) The sedan is the third-oldest (False, it is 6th-oldest)
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 188,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Rob, Eli, Dan, Mya, Ada, and Ana. Joe finished above Ana. Ana finished second-to-last. Mya finished fourth. Dan finished third. Ada finished second. Eli finished third-to-last.
 Options:
 (A) Joe finished third-to-last
@@ -9431,7 +9431,7 @@ Options:
     *   From step 2, we explicitly determined that **Eli finished third-to-last** (5th place).
     *   This matches Option (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 189,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: an orange book, a red book, a green book, a white book, a purple book, a brown book, and a yellow book. The green book is to the left of the purple book. The white book is to the right of the orange book. The green book is to the right of the brown book. The yellow book is to the right of the white book. The red book is to the right of the yellow book. The brown book is to the right of the red book.
 Options:
 (A) The orange book is the fourth from the left
@@ -9480,7 +9480,7 @@ Comparing this to the options:
 
 Option (B) matches our finding.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 190,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a minivan, a bus, a station wagon, a tractor, a truck, and a hatchback. The truck is the oldest. The tractor is older than the minivan. The minivan is the third-newest. The limousine is the fourth-newest. The station wagon is newer than the hatchback. The bus is the second-oldest.
 Options:
 (A) The limousine is the third-newest
@@ -9522,7 +9522,7 @@ Options:
 4.  **Conclusion:**
     The vehicle at the third-newest position is the Minivan. This matches the explicit statement in the text and Option (B).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 191,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: loquats, watermelons, oranges, kiwis, apples, plums, and peaches. The plums are the cheapest. The watermelons are the third-most expensive. The apples are more expensive than the oranges. The kiwis are the most expensive. The apples are less expensive than the peaches. The loquats are the third-cheapest.
 Options:
 (A) The loquats are the fourth-most expensive
@@ -9582,7 +9582,7 @@ We have positions 2, 4, and 6 available.
 *   (F) Plums are 4th-most expensive (False, they are 7th).
 *   (G) Peaches are 4th-most expensive (False, they are 2nd).
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 192,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Rob, Eli, Dan, Mya, Ada, and Ana. Joe finished above Ana. Ana finished second-to-last. Mya finished fourth. Dan finished third. Ada finished second. Eli finished third-to-last.
 Options:
 (A) Joe finished fourth
@@ -9631,7 +9631,7 @@ Options:
 
 The statement ""Mya finished fourth"" is explicitly given in the text and confirmed by the logical arrangement.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 193,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a bus, a motorcyle, a hatchback, a station wagon, a minivan, a truck, and a limousine. The station wagon is the fourth-newest. The motorcyle is newer than the truck. The station wagon is older than the hatchback. The minivan is newer than the hatchback. The bus is newer than the minivan. The truck is newer than the limousine.
 Options:
 (A) The bus is the third-newest
@@ -9678,7 +9678,7 @@ Options:
 
 Final Answer: (C)
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 194,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a quail, a raven, a hummingbird, a robin, a falcon, an owl, and a blue jay. The blue jay is to the left of the falcon. The blue jay is the second from the right. The raven is to the left of the robin. The owl is the third from the right. The hummingbird is to the left of the quail. The raven is the third from the left.
 Options:
 (A) The quail is the second from the right
@@ -9729,7 +9729,7 @@ Options:
 
     Option (G) matches the derived arrangement and is explicitly stated in the problem description.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 195,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: loquats, watermelons, oranges, kiwis, apples, plums, and peaches. The plums are the cheapest. The watermelons are the third-most expensive. The apples are more expensive than the oranges. The kiwis are the most expensive. The apples are less expensive than the peaches. The loquats are the third-cheapest.
 Options:
 (A) The loquats are the second-cheapest
@@ -9773,7 +9773,7 @@ Comparing this to the options:
 (F) The plums are the second-cheapest (Incorrect, they are 1st)
 (G) The peaches are the second-cheapest (Incorrect, they are 6th)
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 196,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a raven, a hummingbird, a falcon, an owl, a quail, and a cardinal. The quail is to the left of the hummingbird. The raven is to the right of the hummingbird. The cardinal is the second from the left. The owl is to the left of the cardinal. The raven is the third from the right. The falcon is the rightmost.
 Options:
 (A) The hawk is the rightmost
@@ -9827,7 +9827,7 @@ Options:
 
 The statement ""The falcon is the rightmost"" is explicitly stated in the text and confirmed by our logical deduction.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 197,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a truck, a motorcyle, a sedan, a minivan, a station wagon, a hatchback, and a tractor. The hatchback is newer than the truck. The sedan is the third-newest. The station wagon is the newest. The motorcyle is older than the truck. The minivan is newer than the sedan. The tractor is the third-oldest.
 Options:
 (A) The truck is the newest
@@ -9869,7 +9869,7 @@ Options:
 5.  **Conclusion:**
     The vehicle at rank 7 (the newest) is the Station Wagon. This matches Option (E).
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 198,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a raven, a falcon, a crow, a hummingbird, a robin, and a cardinal. The hawk is the second from the right. The robin is to the left of the raven. The raven is to the left of the crow. The falcon is to the left of the cardinal. The hummingbird is the second from the left. The falcon is the third from the right.
 Options:
 (A) The hawk is the third from the left
@@ -9939,7 +9939,7 @@ Options:
 *   (F) The robin is the third from the left (False, it is 1st).
 *   (G) The cardinal is the third from the left (False, it is 7th).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 199,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a yellow book, a brown book, a white book, an orange book, a black book, a blue book, and a purple book. The black book is the second from the left. The white book is to the right of the orange book. The black book is to the right of the brown book. The yellow book is the third from the right. The purple book is the third from the left. The orange book is the second from the right.
 Options:
 (A) The yellow book is the second from the right
@@ -9993,7 +9993,7 @@ Options:
 
 Option (D) matches the derived arrangement and the explicit clue provided in the text.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 200,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a sedan, a truck, a bus, a station wagon, a tractor, a convertible, and a limousine. The truck is the oldest. The tractor is the newest. The sedan is older than the station wagon. The station wagon is the third-newest. The bus is older than the convertible. The sedan is newer than the convertible.
 Options:
 (A) The sedan is the newest
@@ -10065,7 +10065,7 @@ The question asks to identify the correct statement regarding the options provid
 
 The statement ""The tractor is the newest"" is explicitly given in the text and confirmed by our logical deduction.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 201,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a station wagon, a truck, a sedan, a limousine, a convertible, a bus, and a hatchback. The limousine is the newest. The bus is the third-newest. The bus is older than the convertible. The sedan is the third-oldest. The station wagon is older than the truck. The hatchback is the oldest.
 Options:
 (A) The station wagon is the fourth-newest
@@ -10119,7 +10119,7 @@ Comparing this to the options:
 (F) The bus is the fourth-newest (False, it is 3rd)
 (G) The hatchback is the fourth-newest (False, it is 7th)
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 202,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a raven, a hummingbird, a robin, a crow, a quail, a blue jay, and a cardinal. The hummingbird is to the left of the crow. The quail is to the right of the crow. The raven is to the left of the robin. The blue jay is the third from the right. The cardinal is the leftmost. The hummingbird is the fourth from the left.
 Options:
 (A) The raven is the fourth from the left
@@ -10167,7 +10167,7 @@ Now we evaluate the options:
 (F) The blue jay is the fourth from the left (False, it is 5th)
 (G) The cardinal is the fourth from the left (False, it is 1st)
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 203,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a robin, an owl, a quail, a falcon, a hummingbird, a cardinal, and a crow. The hummingbird is to the left of the falcon. The crow is to the right of the cardinal. The cardinal is the second from the right. The quail is the third from the right. The falcon is to the left of the robin. The owl is the second from the left.
 Options:
 (A) The robin is the rightmost
@@ -10221,7 +10221,7 @@ Options:
 
 This corresponds to option (G).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 204,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a minivan, a bus, a station wagon, a tractor, a truck, and a hatchback. The truck is the oldest. The tractor is older than the minivan. The minivan is the third-newest. The limousine is the fourth-newest. The station wagon is newer than the hatchback. The bus is the second-oldest.
 Options:
 (A) The limousine is the fourth-newest
@@ -10282,7 +10282,7 @@ Options:
 *   (F) The truck is the fourth-newest: False (It is 7th-newest).
 *   (G) The hatchback is the fourth-newest: False (It is 2nd-newest).
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 205,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a robin, an owl, a quail, a falcon, a hummingbird, a cardinal, and a crow. The hummingbird is to the left of the falcon. The crow is to the right of the cardinal. The cardinal is the second from the right. The quail is the third from the right. The falcon is to the left of the robin. The owl is the second from the left.
 Options:
 (A) The robin is the third from the left
@@ -10341,7 +10341,7 @@ Options:
 
 The correct statement is that the falcon is the third from the left.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 206,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: cantaloupes, plums, mangoes, apples, loquats, pears, and peaches. The apples are less expensive than the cantaloupes. The apples are more expensive than the peaches. The mangoes are the fourth-most expensive. The peaches are more expensive than the plums. The pears are the third-most expensive. The loquats are the third-cheapest.
 Options:
 (A) The cantaloupes are the cheapest
@@ -10394,7 +10394,7 @@ The cheapest fruit is at Rank 7. Based on our assignment, the Plums are at Rank 
 
 The Plums are the cheapest.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 207,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: plums, kiwis, cantaloupes, pears, watermelons, apples, and loquats. The watermelons are more expensive than the cantaloupes. The apples are less expensive than the cantaloupes. The watermelons are the second-most expensive. The loquats are less expensive than the kiwis. The apples are more expensive than the loquats. The loquats are the third-cheapest. The plums are the cheapest.
 Options:
 (A) The plums are the cheapest
@@ -10428,7 +10428,7 @@ Options:
 
 This arrangement satisfies all conditions provided in the text. Since the text explicitly states that the plums are the cheapest, and our logical deduction confirms this without contradiction, Option (A) is the correct answer.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 208,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Dan, Ana, Mel, Ada, Eve, and Amy. Eve finished above Amy. Dan finished second. Ada finished below Ana. Ana finished third-to-last. Mel finished last. Amy finished third.
 Options:
 (A) Joe finished second-to-last
@@ -10479,7 +10479,7 @@ Options:
 5.  **Match with options:**
     *   Option (E) states ""Ada finished second-to-last"".
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 209,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Eli, Ada, Mel, Eve, Rob, and Ana. Joe finished first. Mel finished second-to-last. Rob finished above Eve. Mel finished above Eli. Rob finished below Ada. Eve finished fourth.
 Options:
 (A) Joe finished third-to-last
@@ -10523,7 +10523,7 @@ Options:
     *   In a set of 7, the last is 7th, second-to-last is 6th, and third-to-last is 5th.
     *   The golfer in 5th place is Ana.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 210,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: plums, kiwis, pears, mangoes, apples, oranges, and loquats. The pears are less expensive than the oranges. The mangoes are less expensive than the kiwis. The plums are the second-most expensive. The loquats are more expensive than the apples. The kiwis are less expensive than the apples. The loquats are the fourth-most expensive.
 Options:
 (A) The plums are the third-most expensive
@@ -10583,7 +10583,7 @@ Options:
 (F) The oranges are the third-most expensive (False, they are 1st)
 (G) The loquats are the third-most expensive (False, they are 4th)
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 211,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: oranges, plums, loquats, apples, kiwis, cantaloupes, and peaches. The loquats are less expensive than the kiwis. The plums are the cheapest. The loquats are the fourth-most expensive. The peaches are less expensive than the oranges. The peaches are more expensive than the kiwis. The apples are the second-cheapest.
 Options:
 (A) The oranges are the fourth-most expensive
@@ -10645,7 +10645,7 @@ Since the ranks are integers from 1 to 7, and we know Loquats is Rank 4:
 
 The only statement consistent with the logical deduction is (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 212,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eve, Ana, Amy, Dan, Eli, Rob, and Mya. Mya finished above Eli. Eve finished below Rob. Amy finished second. Rob finished below Dan. Ana finished second-to-last. Dan finished fourth.
 Options:
 (A) Eve finished first
@@ -10693,7 +10693,7 @@ Options:
 5.  **Conclusion:**
     Mya finished first. This corresponds to option (G).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 213,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: watermelons, oranges, mangoes, cantaloupes, kiwis, pears, and peaches. The pears are the second-cheapest. The peaches are more expensive than the cantaloupes. The peaches are less expensive than the mangoes. The cantaloupes are more expensive than the kiwis. The oranges are the fourth-most expensive. The watermelons are the second-most expensive.
 Options:
 (A) The watermelons are the second-cheapest
@@ -10753,7 +10753,7 @@ We are looking for the statement that is true based on this order.
 
 Additionally, the text explicitly states ""The pears are the second-cheapest,"" which directly matches Option (F).
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 214,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Mel, Rob, Eli, Dan, Ana, Ada, and Mya. Ana finished last. Mya finished above Rob. Dan finished above Mya. Rob finished fourth. Eli finished second. Mel finished above Ada.
 Options:
 (A) Mel finished second
@@ -10817,7 +10817,7 @@ Options:
     *   Based on the final order, **Eli finished second**.
     *   This corresponds to Option (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 215,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a hatchback, a sedan, a station wagon, a convertible, a tractor, a bus, and a truck. The convertible is the second-newest. The station wagon is newer than the truck. The bus is newer than the hatchback. The truck is the fourth-newest. The station wagon is older than the tractor. The sedan is the oldest.
 Options:
 (A) The hatchback is the second-newest
@@ -10868,7 +10868,7 @@ The question asks to identify the correct statement regarding the second-newest 
 
 Note: The statement ""The convertible is the second-newest"" is explicitly given in the text, and our logical deduction confirms it is consistent with the rest of the arrangement.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 216,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: an owl, a crow, a falcon, a cardinal, a hummingbird, a quail, and a hawk. The falcon is to the left of the crow. The quail is to the right of the cardinal. The hummingbird is to the right of the quail. The falcon is the second from the right. The hummingbird is to the left of the hawk. The owl is the third from the left.
 Options:
 (A) The owl is the leftmost
@@ -10911,7 +10911,7 @@ Comparing this to the options:
 (F) The quail is the leftmost (False, Position 2)
 (G) The hawk is the leftmost (False, Position 5)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 217,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a sedan, a truck, a bus, a station wagon, a tractor, a convertible, and a limousine. The truck is the oldest. The tractor is the newest. The sedan is older than the station wagon. The station wagon is the third-newest. The bus is older than the convertible. The sedan is newer than the convertible.
 Options:
 (A) The sedan is the oldest
@@ -10956,7 +10956,7 @@ Options:
 
 This matches Option (B).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 218,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a sedan, a minivan, a motorcyle, a limousine, a hatchback, a truck, and a tractor. The motorcyle is older than the tractor. The hatchback is older than the limousine. The hatchback is newer than the truck. The truck is newer than the tractor. The minivan is the second-newest. The sedan is the third-newest.
 Options:
 (A) The sedan is the newest
@@ -10995,7 +10995,7 @@ Options:
     *   Rank 7 corresponds to the newest vehicle.
     *   The Limousine is at Rank 7.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 219,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a hatchback, a sedan, a station wagon, a convertible, a tractor, a bus, and a truck. The convertible is the second-newest. The station wagon is newer than the truck. The bus is newer than the hatchback. The truck is the fourth-newest. The station wagon is older than the tractor. The sedan is the oldest.
 Options:
 (A) The hatchback is the second-oldest
@@ -11047,7 +11047,7 @@ The remaining positions are: 1, 3, 5, 6.
 
 This corresponds to Option (A).
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 220,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a crow, an owl, a raven, a falcon, a quail, and a hummingbird. The hummingbird is the second from the left. The raven is the fourth from the left. The raven is to the right of the hawk. The owl is to the right of the crow. The falcon is the rightmost. The hawk is to the right of the hummingbird. The quail is the second from the right.
 Options:
 (A) The hawk is the second from the left
@@ -11113,7 +11113,7 @@ Options:
     *   (F) The quail is the second from the left (False, it is sixth).
     *   (G) The hummingbird is the second from the left (True, it is at Position 2).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 221,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eve, Mya, Rob, Ana, Ada, Mel, and Joe. Eve finished third. Mya finished above Joe. Mel finished above Ada. Mya finished above Rob. Mel finished below Joe. Mya finished second. Ada finished second-to-last.
 Options:
 (A) Eve finished second
@@ -11141,7 +11141,7 @@ Options:
 
 Since the text explicitly states that Mya finished second, and the logic holds up, Option (B) is the correct answer.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 222,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a sedan, a minivan, a motorcyle, a limousine, a hatchback, a truck, and a tractor. The motorcyle is older than the tractor. The hatchback is older than the limousine. The hatchback is newer than the truck. The truck is newer than the tractor. The minivan is the second-newest. The sedan is the third-newest.
 Options:
 (A) The sedan is the oldest
@@ -11198,7 +11198,7 @@ Comparing this to the options:
 
 The correct option is (C).
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 223,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a hummingbird, a quail, an owl, a crow, a robin, and a cardinal. The cardinal is the second from the right. The hawk is the rightmost. The owl is to the left of the hummingbird. The robin is to the left of the quail. The owl is to the right of the crow. The robin is the fourth from the left.
 Options:
 (A) The hawk is the second from the right
@@ -11253,7 +11253,7 @@ Options:
 *   (F) The robin is the second from the right: False (Robin is 4th).
 *   (G) The cardinal is the second from the right: True (Cardinal is at Position 6, which is the second from the right).
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 224,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Mya, Eli, Ana, Amy, Mel, Dan, and Joe. Amy finished below Joe. Dan finished above Mya. Eli finished third. Ana finished first. Amy finished second-to-last. Mya finished fourth.
 Options:
 (A) Mya finished second-to-last
@@ -11314,7 +11314,7 @@ Options:
 
 Option (D) is the correct statement.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 225,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a purple book, a green book, a white book, a gray book, a red book, a black book, and a brown book. The gray book is to the left of the purple book. The white book is to the right of the brown book. The black book is the third from the right. The purple book is to the left of the white book. The white book is the second from the right. The gray book is the third from the left. The brown book is to the right of the green book.
 Options:
 (A) The purple book is the third from the right
@@ -11381,7 +11381,7 @@ Options:
 *   (F) **The black book is the third from the right.** The black book is at Position 5. The 3rd position from the right (7, 6, 5) is indeed Position 5. (True)
 *   (G) The brown book is the third from the right (Position 5). Brown is at 2. (False)
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 226,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Mel, Mya, Eve, Rob, Ada, and Dan. Rob finished first. Eve finished last. Dan finished above Ada. Mel finished above Mya. Joe finished second-to-last. Mya finished third.
 Options:
 (A) Joe finished second
@@ -11425,7 +11425,7 @@ Options:
 4.  **Conclusion:**
     The golfer who finished second is Mel. This corresponds to option (B).
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 227,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: an owl, a crow, a falcon, a cardinal, a hummingbird, a quail, and a hawk. The falcon is to the left of the crow. The quail is to the right of the cardinal. The hummingbird is to the right of the quail. The falcon is the second from the right. The hummingbird is to the left of the hawk. The owl is the third from the left.
 Options:
 (A) The owl is the second from the right
@@ -11478,7 +11478,7 @@ Options:
 
     Only Option (C) matches the derived arrangement and the explicit statement in the text.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 228,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a sedan, a tractor, a motorcyle, a minivan, a hatchback, and a truck. The minivan is newer than the limousine. The tractor is the second-newest. The truck is older than the sedan. The minivan is older than the truck. The hatchback is newer than the tractor. The motorcyle is the fourth-newest.
 Options:
 (A) The limousine is the second-oldest
@@ -11528,7 +11528,7 @@ We have four vehicles (Sedan, Truck, Minivan, Limousine) and four available rank
 
 The second-oldest vehicle is the Minivan.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 229,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a gray book, an orange book, a green book, a black book, a purple book, and a yellow book. The purple book is the leftmost. The brown book is to the right of the yellow book. The green book is to the left of the orange book. The orange book is to the left of the gray book. The black book is the third from the left. The green book is the third from the right.
 Options:
 (A) The brown book is the third from the left
@@ -11575,7 +11575,7 @@ Options:
 
 The statement in Option (E) matches the deduced arrangement and is explicitly stated in the problem description.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 230,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: oranges, loquats, apples, kiwis, mangoes, plums, and peaches. The apples are the second-cheapest. The peaches are the cheapest. The plums are the fourth-most expensive. The loquats are the third-cheapest. The kiwis are more expensive than the mangoes. The oranges are less expensive than the mangoes.
 Options:
 (A) The oranges are the fourth-most expensive
@@ -11625,7 +11625,7 @@ We need to find which fruit is the ""fourth-most expensive"" (Position 4).
 
 Option (F) is the only statement that is true based on the logical arrangement.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 231,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: an owl, a crow, a falcon, a cardinal, a hummingbird, a quail, and a hawk. The falcon is to the left of the crow. The quail is to the right of the cardinal. The hummingbird is to the right of the quail. The falcon is the second from the right. The hummingbird is to the left of the hawk. The owl is the third from the left.
 Options:
 (A) The owl is the second from the left
@@ -11684,7 +11684,7 @@ Options:
     *   (F) **Quail is 2nd from left?** Yes (Position 2).
     *   (G) Hawk is 2nd from left? No (5th).
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 232,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a black book, an orange book, a yellow book, a white book, a blue book, a red book, and a green book. The red book is to the right of the yellow book. The white book is the second from the right. The red book is to the left of the green book. The blue book is to the right of the black book. The black book is the third from the right. The orange book is the leftmost.
 Options:
 (A) The black book is the fourth from the left
@@ -11737,7 +11737,7 @@ Options:
 
 Option (G) matches our derived arrangement.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 233,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a station wagon, a sedan, a bus, a motorcyle, a hatchback, a tractor, and a minivan. The sedan is the third-oldest. The tractor is newer than the motorcyle. The bus is older than the motorcyle. The bus is newer than the hatchback. The minivan is the newest. The station wagon is the oldest.
 Options:
 (A) The station wagon is the fourth-newest
@@ -11793,7 +11793,7 @@ The vehicle at Rank 4 is the Bus. Therefore, the Bus is the fourth-newest.
 **5. Match with Options:**
 Option (C) states ""The bus is the fourth-newest"".
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 234,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a truck, a motorcyle, a sedan, a minivan, a station wagon, a hatchback, and a tractor. The hatchback is newer than the truck. The sedan is the third-newest. The station wagon is the newest. The motorcyle is older than the truck. The minivan is newer than the sedan. The tractor is the third-oldest.
 Options:
 (A) The truck is the oldest
@@ -11876,7 +11876,7 @@ The question asks for the oldest vehicle. Based on our order, the Motorcycle is 
 (F) The hatchback is the oldest (False, it is 4th)
 (G) The tractor is the oldest (False, it is 3rd)
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 235,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Eli, Ada, Amy, Ana, Eve, Mel, and Dan. Ada finished above Mel. Dan finished above Ada. Amy finished last. Ana finished third-to-last. Dan finished below Eli. Eve finished third.
 Options:
 (A) Eli finished first
@@ -11928,7 +11928,7 @@ Options:
 5.  **Conclusion:**
     The question asks who finished first. Based on the order derived, Eli finished first.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 236,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a minivan, a bus, a limousine, a truck, a convertible, a tractor, and a motorcyle. The limousine is older than the minivan. The tractor is older than the limousine. The bus is the newest. The truck is the third-newest. The motorcyle is the fourth-newest. The convertible is older than the tractor.
 Options:
 (A) The minivan is the second-oldest
@@ -11993,7 +11993,7 @@ Comparing this to the options:
 (F) The tractor is the second-oldest (Correct)
 (G) The motorcyle is the second-oldest (Incorrect, Rank 4)
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 237,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a truck, a sedan, a tractor, a minivan, a motorcyle, and a hatchback. The minivan is older than the tractor. The hatchback is older than the sedan. The truck is the third-newest. The hatchback is the second-newest. The tractor is older than the limousine. The motorcyle is newer than the limousine.
 Options:
 (A) The limousine is the third-oldest
@@ -12046,7 +12046,7 @@ Combining the inequalities for Minivan, Tractor, Limousine, and Motorcycle, we g
 **6. Match with options:**
 *   (A) The limousine is the third-oldest
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 238,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a brown book, a green book, a black book, an orange book, a white book, a blue book, and a gray book. The brown book is the rightmost. The black book is to the right of the white book. The gray book is the third from the left. The orange book is to the right of the gray book. The orange book is to the left of the green book. The blue book is the third from the right.
 Options:
 (A) The brown book is the third from the right
@@ -12100,7 +12100,7 @@ Options:
     Comparing this to the options:
     (F) The blue book is the third from the right.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 239,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a falcon, a crow, a hawk, a hummingbird, a blue jay, a robin, and a raven. The blue jay is to the right of the robin. The hawk is to the left of the hummingbird. The robin is the second from the right. The falcon is the third from the left. The crow is to the right of the hummingbird. The raven is the second from the left.
 Options:
 (A) The falcon is the second from the right
@@ -12158,7 +12158,7 @@ Options:
 
 The only statement that matches the derived arrangement is that the robin is the second from the right.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 240,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a limousine, a convertible, a station wagon, a minivan, a bus, a tractor, and a truck. The minivan is the oldest. The truck is older than the station wagon. The truck is newer than the limousine. The bus is newer than the convertible. The bus is older than the tractor. The limousine is newer than the tractor.
 Options:
 (A) The limousine is the third-oldest
@@ -12205,7 +12205,7 @@ Let's assign the positions (1 being the oldest):
 
 The third-oldest vehicle is the Bus.
 
-Final Answer: (E)",(E),True,1
+Final Answer: (E)",(E),True,1,
 241,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a raven, a falcon, a crow, a hummingbird, a robin, and a cardinal. The hawk is the second from the right. The robin is to the left of the raven. The raven is to the left of the crow. The falcon is to the left of the cardinal. The hummingbird is the second from the left. The falcon is the third from the right.
 Options:
 (A) The hawk is the rightmost
@@ -12247,7 +12247,7 @@ Options:
 4.  **Conclusion:**
     The rightmost position (Position 7) is occupied by the Cardinal.
 
-Final Answer: (G)",(G),True,1
+Final Answer: (G)",(G),True,1,
 242,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: an orange book, a red book, a green book, a white book, a purple book, a brown book, and a yellow book. The green book is to the left of the purple book. The white book is to the right of the orange book. The green book is to the right of the brown book. The yellow book is to the right of the white book. The red book is to the right of the yellow book. The brown book is to the right of the red book.
 Options:
 (A) The orange book is the third from the right
@@ -12303,7 +12303,7 @@ Options:
 
 The statement that matches our finding is that the brown book is the third from the right.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 243,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a hummingbird, a falcon, a cardinal, an owl, a robin, and a blue jay. The hummingbird is to the left of the owl. The robin is the rightmost. The blue jay is to the left of the hawk. The blue jay is the third from the left. The falcon is the fourth from the left. The cardinal is the second from the right.
 Options:
 (A) The hawk is the fourth from the left
@@ -12354,7 +12354,7 @@ Options:
 
 Option (C) is the only statement that is consistent with the logical arrangement derived from the text.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 244,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. A fruit stand sells seven fruits: watermelons, mangoes, kiwis, pears, cantaloupes, oranges, and peaches. The oranges are more expensive than the peaches. The cantaloupes are the fourth-most expensive. The pears are less expensive than the cantaloupes. The peaches are the second-most expensive. The mangoes are the cheapest. The kiwis are the third-cheapest.
 Options:
 (A) The watermelons are the third-cheapest
@@ -12395,7 +12395,7 @@ Options:
 
     Option (C) is the only statement that is consistent with the logical arrangement derived from the text.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 245,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In a golf tournament, there were seven golfers: Joe, Mel, Mya, Eve, Rob, Ada, and Dan. Rob finished first. Eve finished last. Dan finished above Ada. Mel finished above Mya. Joe finished second-to-last. Mya finished third.
 Options:
 (A) Joe finished second-to-last
@@ -12439,7 +12439,7 @@ Options:
 4.  **Conclusion:**
     The question asks who finished second-to-last. Based on the deduction and the explicit statement in the text, Joe finished in 6th place, which is second-to-last.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 246,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a hawk, a hummingbird, a quail, an owl, a crow, a robin, and a cardinal. The cardinal is the second from the right. The hawk is the rightmost. The owl is to the left of the hummingbird. The robin is to the left of the quail. The owl is to the right of the crow. The robin is the fourth from the left.
 Options:
 (A) The hawk is the second from the left
@@ -12483,7 +12483,7 @@ Now we evaluate the options:
 (F) The robin is the second from the left (False, it is 4th)
 (G) The cardinal is the second from the left (False, it is 6th)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 247,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a shelf, there are seven books: a white book, a gray book, a yellow book, a purple book, a red book, a black book, and a green book. The black book is the second from the right. The red book is to the left of the green book. The red book is the second from the left. The gray book is the third from the right. The yellow book is the third from the left. The white book is the fourth from the left.
 Options:
 (A) The white book is the fourth from the left
@@ -12541,7 +12541,7 @@ Options:
 
 Option (A) is the only statement that is consistent with the logical arrangement derived from the text.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 248,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. On a branch, there are seven birds: a quail, a raven, a hummingbird, a robin, a falcon, an owl, and a blue jay. The blue jay is to the left of the falcon. The blue jay is the second from the right. The raven is to the left of the robin. The owl is the third from the right. The hummingbird is to the left of the quail. The raven is the third from the left.
 Options:
 (A) The quail is the third from the right
@@ -12592,7 +12592,7 @@ Options:
 
 Option (F) is consistent with the derived arrangement and the explicit statement in the text.
 
-Final Answer: (F)",(F),True,1
+Final Answer: (F)",(F),True,1,
 249,"The following paragraphs each describe a set of seven objects arranged in a fixed order. The statements are logically consistent within each paragraph. In an antique car show, there are seven vehicles: a sedan, a truck, a bus, a station wagon, a tractor, a convertible, and a limousine. The truck is the oldest. The tractor is the newest. The sedan is older than the station wagon. The station wagon is the third-newest. The bus is older than the convertible. The sedan is newer than the convertible.
 Options:
 (A) The sedan is the third-newest
@@ -12628,4 +12628,4 @@ Comparing this to the options:
 
 Option (D) matches the explicit statement in the text.
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,

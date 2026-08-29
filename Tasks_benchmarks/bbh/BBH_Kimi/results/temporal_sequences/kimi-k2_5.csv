@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,"Today, Susan went to the coffee shop. Between what times could they have gone?
 We know that:
 Susan woke up at 7am.
@@ -35,7 +35,7 @@ Checking the options:
 - (D) 2pm-6pm: She was reading at the library
 - (A) 6pm-9pm: She was free after the library and before the coffee shop closed
 
-Final Answer: (A) 6pm to 9pm",(A) 6pm to 9pm,True,1
+Final Answer: (A) 6pm to 9pm",(A) 6pm to 9pm,True,1,
 1,"Today, Emily went to the soccer field. Between what times could they have gone?
 We know that:
 Emily woke up at 10am.
@@ -57,7 +57,7 @@ Options:
 
 This means Emily was occupied from 10am to 2pm and could not have been at the soccer field during those times. The only window when she was free and the soccer field was still open is between 2pm and 8pm.
 
-Final Answer: (C) 2pm to 8pm",(C) 2pm to 8pm,True,1
+Final Answer: (C) 2pm to 8pm",(C) 2pm to 8pm,True,1,
 2,"Today, Susan went to the restaurant. Between what times could they have gone?
 We know that:
 Susan woke up at 11am.
@@ -84,7 +84,7 @@ Options:
 
 Susan is only free after 9pm, and the restaurant is open until 10pm. Therefore, the only possible window for her to visit the restaurant is between 9pm and 10pm.
 
-Final Answer: (B) 9pm to 10pm",(B) 9pm to 10pm,True,1
+Final Answer: (B) 9pm to 10pm",(B) 9pm to 10pm,True,1,
 3,"Today, James went to the beach. Between what times could they have gone?
 We know that:
 James woke up at 5am.
@@ -113,7 +113,7 @@ Options:
 - The only gap in his schedule is between 3pm (when he left the library) and 4pm (when he started getting coffee).
 - Since the beach was open until 9pm, the 3pm–4pm window is valid for a beach visit.
 
-Final Answer: (D) 3pm to 4pm",(D) 3pm to 4pm,True,1
+Final Answer: (D) 3pm to 4pm",(D) 3pm to 4pm,True,1,
 4,"Today, Jason went to the movies. Between what times could they have gone?
 We know that:
 Jason woke up at 10am.
@@ -143,7 +143,7 @@ Options:
 
 Therefore, the only possible time Jason could have gone to the movies is between **3pm and 6pm**.
 
-Final Answer: (A) 3pm to 6pm",(A) 3pm to 6pm,True,1
+Final Answer: (A) 3pm to 6pm",(A) 3pm to 6pm,True,1,
 5,"Today, Elizabeth went to the amusement park. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 6am.
@@ -170,7 +170,7 @@ Elizabeth was occupied during all the listed time slots except for the period be
 
 Therefore, the only possible time she could have gone to the amusement park is between 6am and 8am.
 
-Final Answer: (B) 6am to 8am",(B) 6am to 8am,True,1
+Final Answer: (B) 6am to 8am",(B) 6am to 8am,True,1,
 6,"Today, Ashley went to the bookstore. Between what times could they have gone?
 We know that:
 Ashley woke up at 7am.
@@ -201,7 +201,7 @@ Checking the options:
 *   (C) 12pm to 4pm: Ashley was at the gym.
 *   (D) 7am to 11am: Ashley had no prior engagements and the bookstore was open.
 
-Final Answer: (D) 7am to 11am",(D) 7am to 11am,True,1
+Final Answer: (D) 7am to 11am",(D) 7am to 11am,True,1,
 7,"Today, Sarah went to the construction site. Between what times could they have gone?
 We know that:
 Sarah woke up at 6am.
@@ -234,7 +234,7 @@ Options:
 
 Therefore, the only possible time Sarah could have gone to the construction site is between 6am and 8am.
 
-Final Answer: (C) 6am to 8am",(C) 6am to 8am,True,1
+Final Answer: (C) 6am to 8am",(C) 6am to 8am,True,1,
 8,"Today, Leslie went to the orchestra hall. Between what times could they have gone?
 We know that:
 Leslie woke up at 7am.
@@ -261,7 +261,7 @@ Options:
 
 The only time slot when Leslie was not seen doing something else and the orchestra hall was still open is **3pm to 6pm**.
 
-Final Answer: (A) 3pm to 6pm",(A) 3pm to 6pm,True,1
+Final Answer: (A) 3pm to 6pm",(A) 3pm to 6pm,True,1,
 9,"Today, Sarah went to the art studio. Between what times could they have gone?
 We know that:
 Sarah woke up at 9am.
@@ -295,7 +295,7 @@ Now checking the options:
 
 Therefore, the only possible time is between 8pm and 10pm.
 
-Final Answer: (D) 8pm to 10pm",(D) 8pm to 10pm,True,1
+Final Answer: (D) 8pm to 10pm",(D) 8pm to 10pm,True,1,
 10,"Today, Sarah went to the clothing store. Between what times could they have gone?
 We know that:
 Sarah woke up at 9am.
@@ -326,7 +326,7 @@ Checking the options:
 - (C) 9am to 12pm: Invalid - Sarah was at the bike shop
 - (D) 12pm to 1pm: Invalid - Sarah was at the airport
 
-Final Answer: (A) 1pm to 2pm",(A) 1pm to 2pm,True,1
+Final Answer: (A) 1pm to 2pm",(A) 1pm to 2pm,True,1,
 11,"Today, Richard went to the physics classroom. Between what times could they have gone?
 We know that:
 Richard woke up at 7am.
@@ -365,7 +365,7 @@ Options:
 - (C) 11am to 2pm: Invalid - Richard was on the rooftop
 - (D) 4pm to 8pm: Invalid - Richard was at the electronic store
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 12,"Today, Hannah went to the park. Between what times could they have gone?
 We know that:
 Hannah woke up at 11am.
@@ -392,7 +392,7 @@ Options:
 
 The only gap in Hannah's schedule where she was not seen by anyone and the park was open is between **4pm and 6pm**.
 
-Final Answer: (A) 4pm to 6pm",(A) 4pm to 6pm,True,1
+Final Answer: (A) 4pm to 6pm",(A) 4pm to 6pm,True,1,
 13,"Today, Betty went to the art show. Between what times could they have gone?
 We know that:
 Betty woke up at 8am.
@@ -423,7 +423,7 @@ The only time slot where Betty is not accounted for is between **2pm and 7pm**.
 
 Therefore, Betty could only have gone to the art show between 2pm and 7pm.
 
-Final Answer: (A) 2pm to 7pm",(A) 2pm to 7pm,True,1
+Final Answer: (A) 2pm to 7pm",(A) 2pm to 7pm,True,1,
 14,"Today, Leslie went to the clothing store. Between what times could they have gone?
 We know that:
 Leslie woke up at 5am.
@@ -454,7 +454,7 @@ Now let's evaluate the options:
 
 Therefore, the only time Leslie could have gone to the clothing store is between 7am and 11am.
 
-Final Answer: (C) 7am to 11am",(C) 7am to 11am,True,1
+Final Answer: (C) 7am to 11am",(C) 7am to 11am,True,1,
 15,"Today, Sean went to the orchestra hall. Between what times could they have gone?
 We know that:
 Sean woke up at 5am.
@@ -487,7 +487,7 @@ The only unaccounted time period is between 9am (when he finished on the rooftop
 
 Therefore, Sean could have gone to the orchestra hall between 9am and 5pm.
 
-Final Answer: (A) 9am to 5pm",(A) 9am to 5pm,True,1
+Final Answer: (A) 9am to 5pm",(A) 9am to 5pm,True,1,
 16,"Today, Jessica went to the basketball court. Between what times could they have gone?
 We know that:
 Jessica woke up at 5am.
@@ -522,7 +522,7 @@ Looking at the options:
 *   (C) 9pm to 10pm - This is the only free time available before the court closes
 *   (D) 2pm to 6pm - She was at the Eiffel Tower
 
-Final Answer: (C) 9pm to 10pm",(C) 9pm to 10pm,True,1
+Final Answer: (C) 9pm to 10pm",(C) 9pm to 10pm,True,1,
 17,"Today, Jessica went to the beach. Between what times could they have gone?
 We know that:
 Jessica woke up at 5am.
@@ -549,7 +549,7 @@ Options:
 
 The only gap in Jessica's schedule is between **9am and 12pm**. All other options conflict with confirmed activities, and the beach is closed after 10pm.
 
-Final Answer: (C) 9am to 12pm",(C) 9am to 12pm,True,1
+Final Answer: (C) 9am to 12pm",(C) 9am to 12pm,True,1,
 18,"Today, Lisa went to the football field. Between what times could they have gone?
 We know that:
 Lisa woke up at 6am.
@@ -579,7 +579,7 @@ Options:
 
 The only time slot where Lisa is unaccounted for and the football field is open is **6am to 8am**.
 
-Final Answer: (B) 6am to 8am",(B) 6am to 8am,True,1
+Final Answer: (B) 6am to 8am",(B) 6am to 8am,True,1,
 19,"Today, Ashley went to the bookstore. Between what times could they have gone?
 We know that:
 Ashley woke up at 5am.
@@ -609,7 +609,7 @@ Options:
 - (C) 3pm to 6pm: Ashley was at yoga ✗
 - (D) 5am to 11am: Ashley was awake and had no conflicting activities ✓
 
-Final Answer: (D) 5am to 11am",(D) 5am to 11am,True,1
+Final Answer: (D) 5am to 11am",(D) 5am to 11am,True,1,
 20,"Today, Tiffany went to the market. Between what times could they have gone?
 We know that:
 Tiffany woke up at 6am.
@@ -634,7 +634,7 @@ Options:
 
 The only available window in Tiffany's schedule is between 10am and 12pm. During all other listed time periods, she was occupied with other activities, and after 10pm the market was closed.
 
-Final Answer: (B) 10am to 12pm",(B) 10am to 12pm,True,1
+Final Answer: (B) 10am to 12pm",(B) 10am to 12pm,True,1,
 21,"Today, Betty went to the bookstore. Between what times could they have gone?
 We know that:
 Betty woke up at 8am.
@@ -662,7 +662,7 @@ Options:
 
 Betty was occupied with other activities from 8am to 6pm. The only available window in her schedule is after 6pm but before the bookstore closes at 8pm.
 
-Final Answer: (D) 6pm to 8pm",(D) 6pm to 8pm,True,1
+Final Answer: (D) 6pm to 8pm",(D) 6pm to 8pm,True,1,
 22,"Today, Linda went to the beach. Between what times could they have gone?
 We know that:
 Linda woke up at 10am.
@@ -690,7 +690,7 @@ Options:
 
 The only unaccounted time slot in Linda's schedule is **12pm to 2pm**. All other options conflict with confirmed sightings of Linda elsewhere, and she couldn't have gone before waking up (10am) or after the beach closed (10pm).
 
-Final Answer: (A) 12pm to 2pm",(A) 12pm to 2pm,True,1
+Final Answer: (A) 12pm to 2pm",(A) 12pm to 2pm,True,1,
 23,"Today, William went to the art studio. Between what times could they have gone?
 We know that:
 William woke up at 6am.
@@ -715,7 +715,7 @@ Options:
 
 The only unoccupied period before the studio closes is between **7am and 9am**. The other options conflict with confirmed activities: 6am–7am (gym), 9am–12pm (Eiffel Tower), and 8pm–10pm (bike shop).
 
-Final Answer: (D) 7am to 9am",(D) 7am to 9am,True,1
+Final Answer: (D) 7am to 9am",(D) 7am to 9am,True,1,
 24,"Today, Andrew went to the art studio. Between what times could they have gone?
 We know that:
 Andrew woke up at 8am.
@@ -740,7 +740,7 @@ Options:
 
 The only gap in Andrew's schedule is between 2pm and 3pm. This is the only time when he wasn't seen by anyone else and the art studio was still open (since it closes after 6pm).
 
-Final Answer: (B) 2pm to 3pm",(B) 2pm to 3pm,True,1
+Final Answer: (B) 2pm to 3pm",(B) 2pm to 3pm,True,1,
 25,"Today, Sean went to the basketball court. Between what times could they have gone?
 We know that:
 Sean woke up at 5am.
@@ -767,7 +767,7 @@ Options:
 
 Sean could only have gone to the basketball court during a time when he was not already occupied by another activity and when the court was open. The only gap in his schedule that satisfies both conditions is **9am to 11am**.
 
-Final Answer: (A) 9am to 11am",(A) 9am to 11am,True,1
+Final Answer: (A) 9am to 11am",(A) 9am to 11am,True,1,
 26,"Today, David went to the gas station. Between what times could they have gone?
 We know that:
 David woke up at 7am.
@@ -800,7 +800,7 @@ Checking the options:
 - (C) 5pm to 6pm: He was at the library
 - (D) 7am to 12pm: He was at the train station
 
-Final Answer: B",B,True,1
+Final Answer: B",B,True,1,
 27,"Today, Samantha went to the bakery. Between what times could they have gone?
 We know that:
 Samantha woke up at 5am.
@@ -832,7 +832,7 @@ Checking the options:
 - (C) 5am-6am: She was at the electronics store
 - (D) 3pm-9pm: She was free and the bakery was open
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 28,"Today, William went to the coffee shop. Between what times could they have gone?
 We know that:
 William woke up at 9am.
@@ -865,7 +865,7 @@ Options:
 *   (B) 9am to 11am: He was playing tennis.
 *   (C) 11am to 1pm: He was in class.
 
-Final Answer: (D) 1pm to 6pm",(D) 1pm to 6pm,True,1
+Final Answer: (D) 1pm to 6pm",(D) 1pm to 6pm,True,1,
 29,"Today, Hannah went to the beach. Between what times could they have gone?
 We know that:
 Hannah woke up at 5am.
@@ -888,7 +888,7 @@ Options:
 
 The only gap in Hannah's schedule when she could have gone to the beach is between **7am and 9am**.
 
-Final Answer: (B) 7am to 9am",(B) 7am to 9am,True,1
+Final Answer: (B) 7am to 9am",(B) 7am to 9am,True,1,
 30,"Today, Richard went to the coffee shop. Between what times could they have gone?
 We know that:
 Richard woke up at 10am.
@@ -911,7 +911,7 @@ Options:
 
 Richard was occupied from 10am to 5pm according to the witness statements. The only free time slot he had before the coffee shop closed was **5pm to 7pm**.
 
-Final Answer: (A) 5pm to 7pm",(A) 5pm to 7pm,True,1
+Final Answer: (A) 5pm to 7pm",(A) 5pm to 7pm,True,1,
 31,"Today, Sarah went to the bakery. Between what times could they have gone?
 We know that:
 Sarah woke up at 9am.
@@ -941,7 +941,7 @@ Options:
 
 Therefore, the only possible time Sarah could have gone to the bakery is between 9am and 10am.
 
-Final Answer: (C) 9am to 10am",(C) 9am to 10am,True,1
+Final Answer: (C) 9am to 10am",(C) 9am to 10am,True,1,
 32,"Today, Samantha went to the swimming pool. Between what times could they have gone?
 We know that:
 Samantha woke up at 6am.
@@ -971,7 +971,7 @@ Options:
 
 The only time slot where Samantha is not occupied by other activities and the swimming pool is open is 2pm to 4pm.
 
-Final Answer: (B) 2pm to 4pm",(B) 2pm to 4pm,True,1
+Final Answer: (B) 2pm to 4pm",(B) 2pm to 4pm,True,1,
 33,"Today, Ashley went to the amusement park. Between what times could they have gone?
 We know that:
 Ashley woke up at 7am.
@@ -1003,7 +1003,7 @@ Looking at the gaps in Ashley's schedule:
 
 Therefore, Ashley could have gone to the amusement park between **7pm and 9pm**, as this is the only time slot where she is not witnessed elsewhere and the park is still open.
 
-Final Answer: (D) 7pm to 9pm",(D) 7pm to 9pm,True,1
+Final Answer: (D) 7pm to 9pm",(D) 7pm to 9pm,True,1,
 34,"Today, David went to the gas station. Between what times could they have gone?
 We know that:
 David woke up at 5am.
@@ -1034,7 +1034,7 @@ The only time David was not accounted for was between waking up at 5am and when 
 - (C) 3pm to 9pm: Invalid - David was walking towards the Statue of Liberty
 - (D) 9am to 3pm: Invalid - David was at the bike shop
 
-Final Answer: (A) 5am to 7am",(A) 5am to 7am,True,1
+Final Answer: (A) 5am to 7am",(A) 5am to 7am,True,1,
 35,"Today, David went to the dance studio. Between what times could they have gone?
 We know that:
 David woke up at 5am.
@@ -1057,7 +1057,7 @@ Options:
 
 The only time slot when David was not accounted for elsewhere and the studio was still open is **11am to 12pm**.
 
-Final Answer: (B) 11am to 12pm",(B) 11am to 12pm,True,1
+Final Answer: (B) 11am to 12pm",(B) 11am to 12pm,True,1,
 36,"Today, Anthony went to the orchestra hall. Between what times could they have gone?
 We know that:
 Anthony woke up at 6am.
@@ -1091,7 +1091,7 @@ Options:
 
 The only time slot where Anthony is unaccounted for and the orchestra hall is open is **3pm to 5pm**.
 
-Final Answer: (C) 3pm to 5pm",(C) 3pm to 5pm,True,1
+Final Answer: (C) 3pm to 5pm",(C) 3pm to 5pm,True,1,
 37,"Today, James went to the dance studio. Between what times could they have gone?
 We know that:
 James woke up at 7am.
@@ -1116,7 +1116,7 @@ Options:
 
 The only unoccupied time slot before the studio closes is **4pm to 5pm**, which falls between the electronics store visit and the deli visit.
 
-Final Answer: (C) 4pm to 5pm",(C) 4pm to 5pm,True,1
+Final Answer: (C) 4pm to 5pm",(C) 4pm to 5pm,True,1,
 38,"Today, David went to the coffee shop. Between what times could they have gone?
 We know that:
 David woke up at 8am.
@@ -1146,7 +1146,7 @@ The only gap in David's schedule where he was not occupied with another activity
 - Option (B) 10am–1pm: David was at the airport
 - Option (D) 1pm–2pm: David was at the tennis court
 
-Final Answer: (C) 8am to 10am",(C) 8am to 10am,True,1
+Final Answer: (C) 8am to 10am",(C) 8am to 10am,True,1,
 39,"Today, Andrew went to the coffee shop. Between what times could they have gone?
 We know that:
 Andrew woke up at 8am.
@@ -1184,7 +1184,7 @@ Therefore, the only possible time Andrew could have gone to the coffee shop is b
 - (C) 8am-11am: Andrew was free (correct)
 - (D) 11am-3pm: Andrew was at the electronic store
 
-Final Answer: (C) 8am to 11am",(C) 8am to 11am,True,1
+Final Answer: (C) 8am to 11am",(C) 8am to 11am,True,1,
 40,"Today, Susan went to the park. Between what times could they have gone?
 We know that:
 Susan woke up at 7am.
@@ -1209,7 +1209,7 @@ Options:
 
 The only time window when Susan was not occupied with other activities and the park was open is **between 7am and 1pm**.
 
-Final Answer: (C) 7am to 1pm",(C) 7am to 1pm,True,1
+Final Answer: (C) 7am to 1pm",(C) 7am to 1pm,True,1,
 41,"Today, Betty went to the bookstore. Between what times could they have gone?
 We know that:
 Betty woke up at 6am.
@@ -1232,7 +1232,7 @@ Options:
 
 The only gap in Betty's schedule where she could have gone to the bookstore is between **7am and 8am** — after yoga but before going to the bakery.
 
-Final Answer: (A) 7am to 8am",(A) 7am to 8am,True,1
+Final Answer: (A) 7am to 8am",(A) 7am to 8am,True,1,
 42,"Today, David went to the museum. Between what times could they have gone?
 We know that:
 David woke up at 8am.
@@ -1271,7 +1271,7 @@ Checking the options:
 - (C) 10am to 11am: Invalid - He was playing tennis
 - (D) 5pm to 6pm: Invalid - He was at the deli
 
-Final Answer: (A) 8am to 10am",(A) 8am to 10am,True,1
+Final Answer: (A) 8am to 10am",(A) 8am to 10am,True,1,
 43,"Today, Sean went to the amusement park. Between what times could they have gone?
 We know that:
 Sean woke up at 11am.
@@ -1294,7 +1294,7 @@ Options:
 
 The only gap in Sean's schedule where he could have gone to the amusement park is between **3pm and 6pm**, since he was occupied during all other times before 8pm, and the park was closed after 8pm.
 
-Final Answer: (D) 3pm to 6pm",(D) 3pm to 6pm,True,1
+Final Answer: (D) 3pm to 6pm",(D) 3pm to 6pm,True,1,
 44,"Today, Michael went to the physics classroom. Between what times could they have gone?
 We know that:
 Michael woke up at 5am.
@@ -1317,7 +1317,7 @@ Options:
 
 The only window where Michael is not occupied by other activities and the physics classroom is still open (before 10pm) is between 9am and 1pm.
 
-Final Answer: (A) 9am to 1pm",(A) 9am to 1pm,True,1
+Final Answer: (A) 9am to 1pm",(A) 9am to 1pm,True,1,
 45,"Today, Jessica went to the restaurant. Between what times could they have gone?
 We know that:
 Jessica woke up at 3pm.
@@ -1340,7 +1340,7 @@ Options:
 
 Since Jessica was occupied during 3pm-4pm, 4pm-5pm, and 7pm-10pm, and the restaurant is closed after 10pm, the only available window when she could have gone to the restaurant is **5pm to 7pm**.
 
-Final Answer: (D) 5pm to 7pm",(D) 5pm to 7pm,True,1
+Final Answer: (D) 5pm to 7pm",(D) 5pm to 7pm,True,1,
 46,"Today, Mark went to the bookstore. Between what times could they have gone?
 We know that:
 Mark woke up at 5am.
@@ -1369,7 +1369,7 @@ The bookstore is open until 10pm, so Mark could only visit during his free time 
 - Option (C) 5pm–8pm is invalid because Mark was on the rooftop.
 - Option (D) 10am–5pm is invalid because Mark was at school.
 
-Final Answer: (A) 8pm to 9pm",(A) 8pm to 9pm,True,1
+Final Answer: (A) 8pm to 9pm",(A) 8pm to 9pm,True,1,
 47,"Today, Lisa went to the bakery. Between what times could they have gone?
 We know that:
 Lisa woke up at 5am.
@@ -1401,7 +1401,7 @@ Options:
 
 The only time window when Lisa was both free and the bakery was open is 11am to 3pm.
 
-Final Answer: (C) 11am to 3pm",(C) 11am to 3pm,True,1
+Final Answer: (C) 11am to 3pm",(C) 11am to 3pm,True,1,
 48,"Today, Thomas went to the clothing store. Between what times could they have gone?
 We know that:
 Thomas woke up at 6am.
@@ -1433,7 +1433,7 @@ Options:
 
 The only time slot where Thomas was not occupied by another activity and the store was open is **9am to 12pm**.
 
-Final Answer: (B) 9am to 12pm",(B) 9am to 12pm,True,1
+Final Answer: (B) 9am to 12pm",(B) 9am to 12pm,True,1,
 49,"Today, Leslie went to the swimming pool. Between what times could they have gone?
 We know that:
 Leslie woke up at 5am.
@@ -1467,7 +1467,7 @@ Checking the options:
 - (C) 5am to 8am: Leslie was on the rooftop with Sarah
 - (D) 8am to 12pm: Leslie was walking to the Statue of Liberty with William
 
-Final Answer: (B) 2pm to 4pm",(B) 2pm to 4pm,True,1
+Final Answer: (B) 2pm to 4pm",(B) 2pm to 4pm,True,1,
 50,"Today, Tiffany went to the clothing store. Between what times could they have gone?
 We know that:
 Tiffany woke up at 6am.
@@ -1496,7 +1496,7 @@ The only free time slot in Tiffany's schedule is between when she woke up (6am) 
 - Option (B) 6pm-8pm: She was driving to the water park
 - Option (D) 8pm-10pm: She was watching a movie
 
-Final Answer: (C) 6am to 12pm",(C) 6am to 12pm,True,1
+Final Answer: (C) 6am to 12pm",(C) 6am to 12pm,True,1,
 51,"Today, William went to the bookstore. Between what times could they have gone?
 We know that:
 William woke up at 7am.
@@ -1528,7 +1528,7 @@ Options:
 - (C) 3pm–5pm: William was at the Eiffel Tower
 - (D) 8am–12pm: This is the only gap in William's schedule where he is unaccounted for, and it's before the bookstore closes at 7pm
 
-Final Answer: (D) 8am to 12pm",(D) 8am to 12pm,True,1
+Final Answer: (D) 8am to 12pm",(D) 8am to 12pm,True,1,
 52,"Today, Leslie went to the beach. Between what times could they have gone?
 We know that:
 Leslie woke up at 7am.
@@ -1551,7 +1551,7 @@ Options:
 
 Since Leslie was occupied until 4pm and the beach closed at 8pm, the only available window is **4pm to 8pm**.
 
-Final Answer: (B) 4pm to 8pm",(B) 4pm to 8pm,True,1
+Final Answer: (B) 4pm to 8pm",(B) 4pm to 8pm,True,1,
 53,"Today, Thomas went to the physics classroom. Between what times could they have gone?
 We know that:
 Thomas woke up at 6am.
@@ -1576,7 +1576,7 @@ Options:
 
 The only time slot where Thomas was not occupied by another activity and the classroom was potentially open is **6am to 12pm**.
 
-Final Answer: (A) 6am to 12pm",(A) 6am to 12pm,True,1
+Final Answer: (A) 6am to 12pm",(A) 6am to 12pm,True,1,
 54,"Today, Emily went to the bakery. Between what times could they have gone?
 We know that:
 Emily woke up at 5am.
@@ -1607,7 +1607,7 @@ The only time slot when Emily is not accounted for by a witness and the bakery c
 - Option (C) conflicts with school attendance.
 - Option (D) conflicts with the library visit.
 
-Final Answer: (A) 5am to 6am",(A) 5am to 6am,True,1
+Final Answer: (A) 5am to 6am",(A) 5am to 6am,True,1,
 55,"Today, Emily went to the construction site. Between what times could they have gone?
 We know that:
 Emily woke up at 8am.
@@ -1634,7 +1634,7 @@ Options:
 
 The only gap in Emily's schedule where she is not accounted for at another location is between **8am and 9am** (between waking up and arriving at the Eiffel Tower). All other time slots listed in the options conflict with known activities, and any time after 10pm is invalid because the construction site is closed.
 
-Final Answer: (C) 8am to 9am",(C) 8am to 9am,True,1
+Final Answer: (C) 8am to 9am",(C) 8am to 9am,True,1,
 56,"Today, David went to the swimming pool. Between what times could they have gone?
 We know that:
 David woke up at 9am.
@@ -1661,7 +1661,7 @@ Options:
 
 The only gap in David's schedule is between **10am and 11am**, which is after he left the gym and before he went to the movie theater. All other time slots conflict with his confirmed activities, and the pool is closed after 10pm.
 
-Final Answer: (A) 10am to 11am",(A) 10am to 11am,True,1
+Final Answer: (A) 10am to 11am",(A) 10am to 11am,True,1,
 57,"Today, Michael went to the football field. Between what times could they have gone?
 We know that:
 Michael woke up at 10am.
@@ -1684,7 +1684,7 @@ Options:
 
 Since Michael was occupied during 12pm–2pm, 2pm–4pm, and 4pm–8pm, and the field closed after 8pm, the only available window is between when he woke up (10am) and when he was first seen elsewhere (12pm).
 
-Final Answer: (B) 10am to 12pm",(B) 10am to 12pm,True,1
+Final Answer: (B) 10am to 12pm",(B) 10am to 12pm,True,1,
 58,"Today, Richard went to the amusement park. Between what times could they have gone?
 We know that:
 Richard woke up at 5am.
@@ -1716,7 +1716,7 @@ Options:
 
 The only time window where Richard is not accounted for at another location and the amusement park could be open is **5am to 11am** (before he was seen at the electronics store).
 
-Final Answer: B",B,True,1
+Final Answer: B",B,True,1,
 59,"Today, Richard went to the bakery. Between what times could they have gone?
 We know that:
 Richard woke up at 8am.
@@ -1755,7 +1755,7 @@ The bakery must be visited when:
 - (C) 5:00 pm - 6:00 pm: Richard was on a rooftop ❌
 - (D) 8:00 am - 9:00 am: Richard was free and awake, bakery was presumably open ✅
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 60,"Today, Thomas went to the gas station. Between what times could they have gone?
 We know that:
 Thomas woke up at 8am.
@@ -1792,7 +1792,7 @@ Checking the options:
 - (C) 5pm to 8pm: Occupied (at mall)
 - (D) 1pm to 4pm: Occupied (at office)
 
-Final Answer: (A) 8am to 9am",(A) 8am to 9am,True,1
+Final Answer: (A) 8am to 9am",(A) 8am to 9am,True,1,
 61,"Today, Nancy went to the beach. Between what times could they have gone?
 We know that:
 Nancy woke up at 6am.
@@ -1817,7 +1817,7 @@ Options:
 
 The only time slot that does not conflict with any other activity and occurs before the beach closes is **12pm to 1pm**.
 
-Final Answer: (A) 12pm to 1pm",(A) 12pm to 1pm,True,1
+Final Answer: (A) 12pm to 1pm",(A) 12pm to 1pm,True,1,
 62,"Today, Andrew went to the dance studio. Between what times could they have gone?
 We know that:
 Andrew woke up at 8am.
@@ -1850,7 +1850,7 @@ Options:
 
 The only time slot where Andrew is free AND the dance studio is open is **1pm to 8pm**.
 
-Final Answer: (D) 1pm to 8pm",(D) 1pm to 8pm,True,1
+Final Answer: (D) 1pm to 8pm",(D) 1pm to 8pm,True,1,
 63,"Today, Samantha went to the coffee shop. Between what times could they have gone?
 We know that:
 Samantha woke up at 6am.
@@ -1880,7 +1880,7 @@ Options:
 - Option (C) 6am-10am: Samantha was at the theater.
 - Option (D) 6pm-8pm: This is after yoga ended (6pm) and before the coffee shop closed (8pm), making it the only available window.
 
-Final Answer: (D) 6pm to 8pm",(D) 6pm to 8pm,True,1
+Final Answer: (D) 6pm to 8pm",(D) 6pm to 8pm,True,1,
 64,"Today, Betty went to the dance studio. Between what times could they have gone?
 We know that:
 Betty woke up at 7am.
@@ -1905,7 +1905,7 @@ Options:
 
 The only unaccounted-for window in Betty's schedule is between **2pm** (when she left the airport) and **5pm** (when she started working at the office). This is the only time she could have visited the dance studio before it closed at 8pm.
 
-Final Answer: (A) 2pm to 5pm",(A) 2pm to 5pm,True,1
+Final Answer: (A) 2pm to 5pm",(A) 2pm to 5pm,True,1,
 65,"Today, William went to the art show. Between what times could they have gone?
 We know that:
 William woke up at 5am.
@@ -1938,7 +1938,7 @@ To find when William could have gone to the art show, we look for gaps in his sc
 
 Therefore, the only available window for William to visit the art show was between 5am and 8am.
 
-Final Answer: (C) 5am to 8am",(C) 5am to 8am,True,1
+Final Answer: (C) 5am to 8am",(C) 5am to 8am,True,1,
 66,"Today, James went to the clothing store. Between what times could they have gone?
 We know that:
 James woke up at 6am.
@@ -1966,7 +1966,7 @@ Since the clothing store closes after 6pm, James must have gone there before 6pm
 
 The only unaccounted time is between 2pm and 3pm, which falls between leaving the library and starting tennis, and occurs before the store closes.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 67,"Today, Samantha went to the swimming pool. Between what times could they have gone?
 We know that:
 Samantha woke up at 5am.
@@ -1993,7 +1993,7 @@ Options:
 
 The only gap in Samantha's schedule is between **8am and 9am**. This is the only time she was not occupied with another activity and the pool was still open.
 
-Final Answer: (A) 8am to 9am",(A) 8am to 9am,True,1
+Final Answer: (A) 8am to 9am",(A) 8am to 9am,True,1,
 68,"Today, William went to the coffee shop. Between what times could they have gone?
 We know that:
 William woke up at 6am.
@@ -2021,7 +2021,7 @@ Options:
 
 The only gap in William's schedule is between 3pm (when he left the airport) and 4pm (when he started playing tennis). Since the coffee shop was open during this time (before 10pm), this is the only possible window when he could have gone.
 
-Final Answer: (A) 3pm to 4pm",(A) 3pm to 4pm,True,1
+Final Answer: (A) 3pm to 4pm",(A) 3pm to 4pm,True,1,
 69,"Today, Kimberly went to the market. Between what times could they have gone?
 We know that:
 Kimberly woke up at 5am.
@@ -2051,7 +2051,7 @@ Kimberly is only free **after 7pm**, and the market is open until 9pm. Therefore
 - Option (D) 6pm–7pm: She was at the electronic store
 - Option (C) 7pm–9pm: She was free and the market was open
 
-Final Answer: (C) 7pm to 9pm",(C) 7pm to 9pm,True,1
+Final Answer: (C) 7pm to 9pm",(C) 7pm to 9pm,True,1,
 70,"Today, Susan went to the amusement park. Between what times could they have gone?
 We know that:
 Susan woke up at 5am.
@@ -2074,7 +2074,7 @@ Options:
 
 Since Susan was occupied during all other time slots, the only window available for her to visit the amusement park is between **8am and 11am**.
 
-Final Answer: (A) 8am to 11am",(A) 8am to 11am,True,1
+Final Answer: (A) 8am to 11am",(A) 8am to 11am,True,1,
 71,"Today, James went to the swimming pool. Between what times could they have gone?
 We know that:
 James woke up at 12pm.
@@ -2103,7 +2103,7 @@ Options:
 
 Therefore, the only possible window is between 12pm and 2pm.
 
-Final Answer: (C) 12pm to 2pm",(C) 12pm to 2pm,True,1
+Final Answer: (C) 12pm to 2pm",(C) 12pm to 2pm,True,1,
 72,"Today, Ashley went to the art studio. Between what times could they have gone?
 We know that:
 Ashley woke up at 5am.
@@ -2133,7 +2133,7 @@ This leaves only one free window in Ashley's schedule when they could have visit
 - Option (C) 6pm–8pm: Ashley had no commitments and the studio was open.
 - Option (D) 5am–6am: Ashley was at the cafe.
 
-Final Answer: (C) 6pm to 8pm",(C) 6pm to 8pm,True,1
+Final Answer: (C) 6pm to 8pm",(C) 6pm to 8pm,True,1,
 73,"Today, Jennifer went to the dance studio. Between what times could they have gone?
 We know that:
 Jennifer woke up at 8am.
@@ -2164,7 +2164,7 @@ Options:
 
 The only time slot when Jennifer has no alibi and the dance studio is still open is from 6pm to 10pm.
 
-Final Answer: (B) 6pm to 10pm",(B) 6pm to 10pm,True,1
+Final Answer: (B) 6pm to 10pm",(B) 6pm to 10pm,True,1,
 74,"Today, James went to the physics classroom. Between what times could they have gone?
 We know that:
 James woke up at 8am.
@@ -2194,7 +2194,7 @@ Options:
 
 **Conclusion:** The only time slot when James was not occupied by other activities and the physics classroom was open is 4pm to 5pm.
 
-Final Answer: (D) 4pm to 5pm",(D) 4pm to 5pm,True,1
+Final Answer: (D) 4pm to 5pm",(D) 4pm to 5pm,True,1,
 75,"Today, Anthony went to the bakery. Between what times could they have gone?
 We know that:
 Anthony woke up at 6am.
@@ -2219,7 +2219,7 @@ Options:
 
 The only unaccounted-for window in Anthony's schedule is between 1pm and 3pm. All other time slots are occupied by confirmed activities, and the bakery is closed after 5pm.
 
-Final Answer: (A) 1pm to 3pm",(A) 1pm to 3pm,True,1
+Final Answer: (A) 1pm to 3pm",(A) 1pm to 3pm,True,1,
 76,"Today, Thomas went to the football field. Between what times could they have gone?
 We know that:
 Thomas woke up at 8am.
@@ -2246,7 +2246,7 @@ Options:
 
 Thomas is accounted for during all time slots except **5pm to 6pm**. This is the only window of time when he was not seen doing something else, and it's before the football field closed at 9pm.
 
-Final Answer: (D) 5pm to 6pm",(D) 5pm to 6pm,True,1
+Final Answer: (D) 5pm to 6pm",(D) 5pm to 6pm,True,1,
 77,"Today, Jennifer went to the basketball court. Between what times could they have gone?
 We know that:
 Jennifer woke up at 6am.
@@ -2272,7 +2272,7 @@ Options:
 
 The only unaccounted time slot in Jennifer's schedule is **1pm to 3pm**. All other time slots have her engaged in other activities, and after 5pm the basketball court is closed.
 
-Final Answer: (D) 1pm to 3pm",(D) 1pm to 3pm,True,1
+Final Answer: (D) 1pm to 3pm",(D) 1pm to 3pm,True,1,
 78,"Today, Sarah went to the art show. Between what times could they have gone?
 We know that:
 Sarah woke up at 11am.
@@ -2296,7 +2296,7 @@ Options:
 
 Sarah could only visit the art show during times when she was not occupied with other activities. This eliminates options A, C, and D. The only window when she is free and the art show is still open is between 7pm (when she left the electronic store) and 9pm (when the art show closed).
 
-Final Answer: (B) 7pm to 9pm",(B) 7pm to 9pm,True,1
+Final Answer: (B) 7pm to 9pm",(B) 7pm to 9pm,True,1,
 79,"Today, Susan went to the art studio. Between what times could they have gone?
 We know that:
 Susan woke up at 5am.
@@ -2329,7 +2329,7 @@ Susan was occupied with other activities from 5am until 12pm. The only time she 
 - (C) 6am to 11am: Susan was at the gym ✗
 - (D) 5am to 6am: Susan was at the train station ✗
 
-Final Answer: (A) 12pm to 1pm",(A) 12pm to 1pm,True,1
+Final Answer: (A) 12pm to 1pm",(A) 12pm to 1pm,True,1,
 80,"Today, William went to the art studio. Between what times could they have gone?
 We know that:
 William woke up at 6am.
@@ -2360,7 +2360,7 @@ The only gap in William's schedule before the art studio closes at 6pm is betwee
 - Option (C) 1pm–6pm: He was at the gym.
 - Option (D) 12pm–1pm: He was walking towards the Statue of Liberty.
 
-Final Answer: (B) 7am to 8am",(B) 7am to 8am,True,1
+Final Answer: (B) 7am to 8am",(B) 7am to 8am,True,1,
 81,"Today, Jessica went to the bookstore. Between what times could they have gone?
 We know that:
 Jessica woke up at 6am.
@@ -2397,7 +2397,7 @@ Looking at the options:
 - (C) 7am to 2pm: She was at the gym
 - (D) 3pm to 9pm: She was at the Eiffel Tower
 
-Final Answer: (B) 6am to 7am",(B) 6am to 7am,True,1
+Final Answer: (B) 6am to 7am",(B) 6am to 7am,True,1,
 82,"Today, Kimberly went to the football field. Between what times could they have gone?
 We know that:
 Kimberly woke up at 6am.
@@ -2431,7 +2431,7 @@ Checking the options:
 - **(C) 1pm-3pm**: This is the only free slot in her schedule
 - (D) 8pm-9pm: She's driving to the water park
 
-Final Answer: C",C,True,1
+Final Answer: C",C,True,1,
 83,"Today, Elizabeth went to the park. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 10am.
@@ -2459,7 +2459,7 @@ Options:
 - (C) 4pm to 8pm: Elizabeth was playing tennis
 - (D) 2pm to 4pm: This is the only window where Elizabeth had no conflicting activities and the park was still open (before 8pm)
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 84,"Today, James went to the swimming pool. Between what times could they have gone?
 We know that:
 James woke up at 10am.
@@ -2493,7 +2493,7 @@ Options:
 
 The only gap in James's schedule where he could have visited the swimming pool (which closes after 7pm) is between 11am and 12pm.
 
-Final Answer: C",C,True,1
+Final Answer: C",C,True,1,
 85,"Today, Michael went to the clothing store. Between what times could they have gone?
 We know that:
 Michael woke up at 5am.
@@ -2525,7 +2525,7 @@ All other options overlap with times when Michael was seen elsewhere:
 - (B) 9pm-10pm: He was at the electronic store
 - (C) 6am-1pm: He was at the train station
 
-Final Answer: (D) 5am to 6am",(D) 5am to 6am,True,1
+Final Answer: (D) 5am to 6am",(D) 5am to 6am,True,1,
 86,"Today, Sarah went to the amusement park. Between what times could they have gone?
 We know that:
 Sarah woke up at 10am.
@@ -2558,7 +2558,7 @@ Options:
 
 The only gap in Sarah's schedule is between **10am** (when she woke up) and **11am** (when she was seen at the cafe). This is the only time she could have visited the amusement park.
 
-Final Answer: (C) 10am to 11am",(C) 10am to 11am,True,1
+Final Answer: (C) 10am to 11am",(C) 10am to 11am,True,1,
 87,"Today, Mark went to the art show. Between what times could they have gone?
 We know that:
 Mark woke up at 10am.
@@ -2589,7 +2589,7 @@ Mark could only visit the art show during his free time, which is between **11am
 - Option (C) 10am-11am: Mark was at the bike shop
 - Option (D) 2pm-4pm: Mark was at the gym
 
-Final Answer: (A) 11am to 1pm",(A) 11am to 1pm,True,1
+Final Answer: (A) 11am to 1pm",(A) 11am to 1pm,True,1,
 88,"Today, Sean went to the swimming pool. Between what times could they have gone?
 We know that:
 Sean woke up at 6am.
@@ -2623,7 +2623,7 @@ Options:
 - (C) 7am to 8am: Sean was at the bakery ✗
 - (D) 6pm to 7pm: Sean was at the electronic store ✗
 
-Final Answer: (A) 6am to 7am",(A) 6am to 7am,True,1
+Final Answer: (A) 6am to 7am",(A) 6am to 7am,True,1,
 89,"Today, James went to the swimming pool. Between what times could they have gone?
 We know that:
 James woke up at 5am.
@@ -2654,7 +2654,7 @@ Checking the options:
 - **(C) 5am to 7am**: James was awake and free
 - (D) 7am to 9am: James was on a rooftop
 
-Final Answer: (C) 5am to 7am",(C) 5am to 7am,True,1
+Final Answer: (C) 5am to 7am",(C) 5am to 7am,True,1,
 90,"Today, Jessica went to the swimming pool. Between what times could they have gone?
 We know that:
 Jessica woke up at 9am.
@@ -2677,7 +2677,7 @@ Options:
 
 Therefore, the only available window when Jessica was not occupied by other activities and the pool was still open is **4pm to 7pm**.
 
-Final Answer: (D) 4pm to 7pm",(D) 4pm to 7pm,True,1
+Final Answer: (D) 4pm to 7pm",(D) 4pm to 7pm,True,1,
 91,"Today, Tiffany went to the library. Between what times could they have gone?
 We know that:
 Tiffany woke up at 5am.
@@ -2702,7 +2702,7 @@ Options:
 
 The only time slot where Tiffany was not occupied with another activity was **5am to 6am** (between waking up and going to the garden). All other time slots conflict with her confirmed activities, and any time after 8pm is impossible because the library was closed.
 
-Final Answer: (B) 5am to 6am",(B) 5am to 6am,True,1
+Final Answer: (B) 5am to 6am",(B) 5am to 6am,True,1,
 92,"Today, James went to the market. Between what times could they have gone?
 We know that:
 James woke up at 7am.
@@ -2727,7 +2727,7 @@ Options:
 
 The only time slot when James was not occupied by other activities and the market was still open is **8am to 10am**.
 
-Final Answer: (D) 8am to 10am",(D) 8am to 10am,True,1
+Final Answer: (D) 8am to 10am",(D) 8am to 10am,True,1,
 93,"Today, Nancy went to the bookstore. Between what times could they have gone?
 We know that:
 Nancy woke up at 8am.
@@ -2754,7 +2754,7 @@ This means Nancy was occupied during all of these time periods and could not hav
 
 The only remaining time slot is after 2pm (when tennis ended) until the bookstore closes. We know the bookstore was closed after 9pm, meaning it was open until 9pm. Therefore, Nancy could have gone to the bookstore anytime between **2pm and 9pm**.
 
-Final Answer: (C) 2pm to 9pm",(C) 2pm to 9pm,True,1
+Final Answer: (C) 2pm to 9pm",(C) 2pm to 9pm,True,1,
 94,"Today, Tiffany went to the construction site. Between what times could they have gone?
 We know that:
 Tiffany woke up at 7am.
@@ -2777,7 +2777,7 @@ Options:
 
 Since Tiffany was occupied during all other time slots (school, airport, and deli), and the construction site closed after 7pm, the only possible time she could have visited the construction site is during the gap between leaving the airport and arriving at the deli.
 
-Final Answer: (D) 1pm to 4pm",(D) 1pm to 4pm,True,1
+Final Answer: (D) 1pm to 4pm",(D) 1pm to 4pm,True,1,
 95,"Today, Jennifer went to the orchestra hall. Between what times could they have gone?
 We know that:
 Jennifer woke up at 6am.
@@ -2807,7 +2807,7 @@ Options:
 
 The only time slot where Jennifer has no conflicting activities and the orchestra hall is open is 6am to 7am.
 
-Final Answer: (A) 6am to 7am",(A) 6am to 7am,True,1
+Final Answer: (A) 6am to 7am",(A) 6am to 7am,True,1,
 96,"Today, Sean went to the bakery. Between what times could they have gone?
 We know that:
 Sean woke up at 5am.
@@ -2840,7 +2840,7 @@ Since the bakery was closed after 9pm, and Sean was driving from 8pm–9pm, the 
 *   **(C) 8am to 9am:** Incorrect. Sean was at the mall.
 *   **(D) 9am to 5pm:** Incorrect. Sean was on a rooftop.
 
-Final Answer: (B) 5pm to 8pm",(B) 5pm to 8pm,True,1
+Final Answer: (B) 5pm to 8pm",(B) 5pm to 8pm,True,1,
 97,"Today, Samantha went to the bakery. Between what times could they have gone?
 We know that:
 Samantha woke up at 6am.
@@ -2874,7 +2874,7 @@ Options:
 
 The only time slot where Samantha was not accounted for elsewhere and the bakery was potentially open (closed only after 9pm) is **11am to 12pm**.
 
-Final Answer: (B) 11am to 12pm",(B) 11am to 12pm,True,1
+Final Answer: (B) 11am to 12pm",(B) 11am to 12pm,True,1,
 98,"Today, Ashley went to the basketball court. Between what times could they have gone?
 We know that:
 Ashley woke up at 9am.
@@ -2901,7 +2901,7 @@ This means Ashley was busy from 9am until 2pm, leaving no free time during optio
 
 Therefore, the only time window when Ashley was both **free** and the basketball court was **open** is from 2pm to 7pm.
 
-Final Answer: (A) 2pm to 7pm",(A) 2pm to 7pm,True,1
+Final Answer: (A) 2pm to 7pm",(A) 2pm to 7pm,True,1,
 99,"Today, Sarah went to the clothing store. Between what times could they have gone?
 We know that:
 Sarah woke up at 5am.
@@ -2931,7 +2931,7 @@ Sarah could only have gone to the clothing store during a time when she wasn't s
 - Option (C) 7am to 10am: She's unaccounted for (free)
 - Option (D) 10am to 4pm: She's on the rooftop
 
-Final Answer: (C) 7am to 10am",(C) 7am to 10am,True,1
+Final Answer: (C) 7am to 10am",(C) 7am to 10am,True,1,
 100,"Today, Steven went to the clothing store. Between what times could they have gone?
 We know that:
 Steven woke up at 9am.
@@ -2957,7 +2957,7 @@ Options:
 
 The only time slot where Steven is not accounted for and the store is open is **1pm to 4pm**.
 
-Final Answer: (B) 1pm to 4pm",(B) 1pm to 4pm,True,1
+Final Answer: (B) 1pm to 4pm",(B) 1pm to 4pm,True,1,
 101,"Today, Jessica went to the dance studio. Between what times could they have gone?
 We know that:
 Jessica woke up at 5am.
@@ -2989,7 +2989,7 @@ The only time slot where Jessica is not accounted for at another location and th
 *   Option (C) 5am to 8am: She was free (between waking up and going to Pisa).
 *   Option (D) 7pm to 8pm: She was at the electronic store.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 102,"Today, Jessica went to the restaurant. Between what times could they have gone?
 We know that:
 Jessica woke up at 6am.
@@ -3027,7 +3027,7 @@ Options:
     *   (C) 12pm to 2pm: Invalid (She was at the cafe).
     *   (D) 2pm to 6pm: Invalid (She was walking towards the Statue of Liberty).
 
-Final Answer: (A) 6pm to 7pm",(A) 6pm to 7pm,True,1
+Final Answer: (A) 6pm to 7pm",(A) 6pm to 7pm,True,1,
 103,"Today, Emily went to the dance studio. Between what times could they have gone?
 We know that:
 Emily woke up at 5am.
@@ -3054,7 +3054,7 @@ Options:
 
 The only available window when Emily is not accounted for elsewhere is **8pm to 9pm**. Since the dance studio was closed after 10pm (meaning it was open until 10pm), she could have gone during this free hour between leaving the Eiffel Tower and arriving at the train station.
 
-Final Answer: (B) 8pm to 9pm",(B) 8pm to 9pm,True,1
+Final Answer: (B) 8pm to 9pm",(B) 8pm to 9pm,True,1,
 104,"Today, Anthony went to the orchestra hall. Between what times could they have gone?
 We know that:
 Anthony woke up at 6am.
@@ -3080,7 +3080,7 @@ Options:
 
 Therefore, the only possible time Anthony could have gone to the orchestra hall is between **6pm and 7pm**.
 
-Final Answer: (B) 6pm to 7pm",(B) 6pm to 7pm,True,1
+Final Answer: (B) 6pm to 7pm",(B) 6pm to 7pm,True,1,
 105,"Today, Mark went to the coffee shop. Between what times could they have gone?
 We know that:
 Mark woke up at 7am.
@@ -3112,7 +3112,7 @@ Evaluating the options:
 - (C) 3pm-6pm: Mark was free
 - (D) 12pm-1pm: Mark was at the office
 
-Final Answer: (C) 3pm to 6pm",(C) 3pm to 6pm,True,1
+Final Answer: (C) 3pm to 6pm",(C) 3pm to 6pm,True,1,
 106,"Today, William went to the swimming pool. Between what times could they have gone?
 We know that:
 William woke up at 5am.
@@ -3140,7 +3140,7 @@ The other options are all impossible:
 - (B) 6pm–10pm: He was at the deli
 - (D) 7am–5pm: He was walking in the garden
 
-Final Answer: (C) 5am to 7am",(C) 5am to 7am,True,1
+Final Answer: (C) 5am to 7am",(C) 5am to 7am,True,1,
 107,"Today, Hannah went to the bakery. Between what times could they have gone?
 We know that:
 Hannah woke up at 5am.
@@ -3168,7 +3168,7 @@ Since Hannah was busy from 11am until 5pm, and the bakery closed after 5pm, the 
 **Option (C)** 3pm-5pm: Hannah was at the mall
 **Option (D)** 11am-2pm: Hannah was at the electronics store
 
-Final Answer: B",B,True,1
+Final Answer: B",B,True,1,
 108,"Today, William went to the orchestra hall. Between what times could they have gone?
 We know that:
 William woke up at 5am.
@@ -3191,7 +3191,7 @@ Options:
 
 William could only have gone to the orchestra hall during the window when he was not occupied by other activities and when the hall was open. The only gap in his schedule is between 10am and 12pm.
 
-Final Answer: (A) 10am to 12pm",(A) 10am to 12pm,True,1
+Final Answer: (A) 10am to 12pm",(A) 10am to 12pm,True,1,
 109,"Today, Nancy went to the physics classroom. Between what times could they have gone?
 We know that:
 Nancy woke up at 5am.
@@ -3216,7 +3216,7 @@ Options:
 
 The physics classroom is only open before 5pm, and Nancy is occupied with other activities during all other available time slots. The only gap in her schedule is between 10am and 12pm, which is also before the 5pm closing time.
 
-Final Answer: (A) 10am to 12pm",(A) 10am to 12pm,True,1
+Final Answer: (A) 10am to 12pm",(A) 10am to 12pm,True,1,
 110,"Today, Andrew went to the coffee shop. Between what times could they have gone?
 We know that:
 Andrew woke up at 8am.
@@ -3239,7 +3239,7 @@ Options:
 
 The only unaccounted-for window in Andrew's schedule is between 1pm (when he left the bakery) and 2pm (when he started at the office). Since the coffee shop was open during this time (it only closed after 5pm), this is when he must have gone.
 
-Final Answer: (C) 1pm to 2pm",(C) 1pm to 2pm,True,1
+Final Answer: (C) 1pm to 2pm",(C) 1pm to 2pm,True,1,
 111,"Today, David went to the construction site. Between what times could they have gone?
 We know that:
 David woke up at 7am.
@@ -3270,7 +3270,7 @@ The only time slot where David has no alibi and the construction site is open is
 *   Option (C) 4pm-6pm is incorrect because he was walking to the Statue of Liberty.
 *   Option (D) 3pm-4pm is incorrect because he was on a rooftop.
 
-Final Answer: (A) 8am to 12pm",(A) 8am to 12pm,True,1
+Final Answer: (A) 8am to 12pm",(A) 8am to 12pm,True,1,
 112,"Today, Anthony went to the park. Between what times could they have gone?
 We know that:
 Anthony woke up at 6am.
@@ -3298,7 +3298,7 @@ The other options conflict with his known activities:
 - (B) 5pm to 8pm: He was at the library  
 - (C) 6am to 2pm: He was at school
 
-Final Answer: (D) 8pm to 9pm",(D) 8pm to 9pm,True,1
+Final Answer: (D) 8pm to 9pm",(D) 8pm to 9pm,True,1,
 113,"Today, Sarah went to the dance studio. Between what times could they have gone?
 We know that:
 Sarah woke up at 5am.
@@ -3328,7 +3328,7 @@ Options:
 
 The only unaccounted time in Sarah's schedule is between 8am (when she left the theater) and 10am (when she was seen on the rooftop). Since the dance studio is open during daytime hours and only closes after 9pm, this is the only window when she could have gone.
 
-Final Answer: (B) 8am to 10am",(B) 8am to 10am,True,1
+Final Answer: (B) 8am to 10am",(B) 8am to 10am,True,1,
 114,"Today, Mary went to the restaurant. Between what times could they have gone?
 We know that:
 Mary woke up at 9am.
@@ -3354,7 +3354,7 @@ Options:
 
 Therefore, the only possible time Mary could have gone to the restaurant is between 11am and 2pm.
 
-Final Answer: (D) 11am to 2pm",(D) 11am to 2pm,True,1
+Final Answer: (D) 11am to 2pm",(D) 11am to 2pm,True,1,
 115,"Today, Mark went to the football field. Between what times could they have gone?
 We know that:
 Mark woke up at 5am.
@@ -3383,7 +3383,7 @@ Since Mark was occupied during all the other time periods listed in the options,
 - Option (C) 5am to 6am: Mark was walking to the Statue of Liberty
 - Option (D) 9pm to 10pm: Mark was free and the field was open
 
-Final Answer: (D)",(D),True,1
+Final Answer: (D)",(D),True,1,
 116,"Today, William went to the soccer field. Between what times could they have gone?
 We know that:
 William woke up at 1pm.
@@ -3406,7 +3406,7 @@ Options:
 
 The only gap in William's schedule where he could have visited the soccer field is between 4pm and 8pm. This is the only time slot that doesn't conflict with any witness accounts and occurs before the field closes at 10pm.
 
-Final Answer: (D) 4pm to 8pm",(D) 4pm to 8pm,True,1
+Final Answer: (D) 4pm to 8pm",(D) 4pm to 8pm,True,1,
 117,"Today, Steven went to the gas station. Between what times could they have gone?
 We know that:
 Steven woke up at 7am.
@@ -3441,7 +3441,7 @@ Options:
 
 The only time slot when Steven was not occupied by other activities and the gas station was still open is between 10am and 1pm.
 
-Final Answer: (C)",(C),True,1
+Final Answer: (C)",(C),True,1,
 118,"Today, Leslie went to the movies. Between what times could they have gone?
 We know that:
 Leslie woke up at 6am.
@@ -3474,7 +3474,7 @@ Evaluating the options:
 
 Therefore, the only possible time Leslie could have gone to the movies is between 6am and 7am.
 
-Final Answer: (D) 6am to 7am",(D) 6am to 7am,True,1
+Final Answer: (D) 6am to 7am",(D) 6am to 7am,True,1,
 119,"Today, Sarah went to the construction site. Between what times could they have gone?
 We know that:
 Sarah woke up at 5am.
@@ -3499,7 +3499,7 @@ Options:
 
 The only available window in her schedule is between 4pm (when she finished walking to the Statue of Liberty) and 7pm (when she started playing tennis).
 
-Final Answer: (B) 4pm to 7pm",(B) 4pm to 7pm,True,1
+Final Answer: (B) 4pm to 7pm",(B) 4pm to 7pm,True,1,
 120,"Today, Andrew went to the clothing store. Between what times could they have gone?
 We know that:
 Andrew woke up at 5am.
@@ -3526,7 +3526,7 @@ Options:
 
 The only gap in Andrew's schedule is between **5pm and 6pm** (between leaving the train station and going to the library). All other time slots conflict with confirmed sightings of Andrew elsewhere.
 
-Final Answer: (D) 5pm to 6pm",(D) 5pm to 6pm,True,1
+Final Answer: (D) 5pm to 6pm",(D) 5pm to 6pm,True,1,
 121,"Today, David went to the physics classroom. Between what times could they have gone?
 We know that:
 David woke up at 9am.
@@ -3549,7 +3549,7 @@ Options:
 
 Therefore, the only available window for David to visit the physics classroom is between **8pm and 10pm**, as this is the only time he was not occupied by other activities and the classroom was still open.
 
-Final Answer: (D) 8pm to 10pm",(D) 8pm to 10pm,True,1
+Final Answer: (D) 8pm to 10pm",(D) 8pm to 10pm,True,1,
 122,"Today, Jessica went to the restaurant. Between what times could they have gone?
 We know that:
 Jessica woke up at 9am.
@@ -3584,7 +3584,7 @@ Options:
 
 The only available window is after she finishes at the bakery (5pm) and before the restaurant closes (6pm).
 
-Final Answer: (C) 5pm to 6pm",(C) 5pm to 6pm,True,1
+Final Answer: (C) 5pm to 6pm",(C) 5pm to 6pm,True,1,
 123,"Today, David went to the construction site. Between what times could they have gone?
 We know that:
 David woke up at 7am.
@@ -3614,7 +3614,7 @@ David could only have visited the construction site during the time periods when
 
 The only time slot that works is between 9am (when he left the library) and 6pm (when he arrived at the airport).
 
-Final Answer: B",B,True,1
+Final Answer: B",B,True,1,
 124,"Today, Jessica went to the bookstore. Between what times could they have gone?
 We know that:
 Jessica woke up at 6am.
@@ -3648,7 +3648,7 @@ Now checking the options:
 
 The only time slot where Jessica was awake, not occupied by other activities, and the bookstore was open is 6am to 8am.
 
-Final Answer: (B) 6am to 8am",(B) 6am to 8am,True,1
+Final Answer: (B) 6am to 8am",(B) 6am to 8am,True,1,
 125,"Today, Mary went to the dance studio. Between what times could they have gone?
 We know that:
 Mary woke up at 9am.
@@ -3680,7 +3680,7 @@ Now let's identify the gaps in her schedule where she could have visited the dan
 
 The only available window is between 10am and 12pm.
 
-Final Answer: (D) 10am to 12pm",(D) 10am to 12pm,True,1
+Final Answer: (D) 10am to 12pm",(D) 10am to 12pm,True,1,
 126,"Today, Michael went to the park. Between what times could they have gone?
 We know that:
 Michael woke up at 7am.
@@ -3702,7 +3702,7 @@ Options:
 - The park was closed after 10pm.
 - This leaves only the time between 8am (when he finished tennis) and 1pm (when he started work) as the available window when he could have gone to the park.
 
-Final Answer: (B) 8am to 1pm",(B) 8am to 1pm,True,1
+Final Answer: (B) 8am to 1pm",(B) 8am to 1pm,True,1,
 127,"Today, David went to the clothing store. Between what times could they have gone?
 We know that:
 David woke up at 5am.
@@ -3734,7 +3734,7 @@ Options:
 
 The only time window where David is not occupied with other activities and the clothing store is still open is 10am to 3pm.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 128,"Today, Andrew went to the museum. Between what times could they have gone?
 We know that:
 Andrew woke up at 5am.
@@ -3763,7 +3763,7 @@ Andrew must have gone to the museum during a time when he was not seen elsewhere
 
 Options (A), (B), and (C) all correspond to times when Andrew was seen at other locations. Option (D) represents the only available window.
 
-Final Answer: (D) 11am to 8pm",(D) 11am to 8pm,True,1
+Final Answer: (D) 11am to 8pm",(D) 11am to 8pm,True,1,
 129,"Today, Leslie went to the beach. Between what times could they have gone?
 We know that:
 Leslie woke up at 5am.
@@ -3800,7 +3800,7 @@ Options:
 - (C) 9pm to 10pm: Invalid - Leslie was walking towards the Statue of Liberty.
 - (D) 4pm to 5pm: Invalid - Leslie was at the electronic store.
 
-Final Answer: (A) 5pm to 9pm",(A) 5pm to 9pm,True,1
+Final Answer: (A) 5pm to 9pm",(A) 5pm to 9pm,True,1,
 130,"Today, Mary went to the amusement park. Between what times could they have gone?
 We know that:
 Mary woke up at 1pm.
@@ -3828,7 +3828,7 @@ Options:
 
 The only gap in Mary's schedule is between 7pm (when she left the cafe) and 9pm (when she arrived at the office). This is the only window when she could have visited the amusement park before it closed at 10pm.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 131,"Today, Ashley went to the beach. Between what times could they have gone?
 We know that:
 Ashley woke up at 5am.
@@ -3860,7 +3860,7 @@ Options:
 - (C) 9am to 1pm: Ashley was on the rooftop, so impossible.
 - (D) 7am to 9am: This is the only gap in the schedule where Ashley wasn't seen elsewhere, and the beach was still open (before 9pm).
 
-Final Answer: (D) 7am to 9am",(D) 7am to 9am,True,1
+Final Answer: (D) 7am to 9am",(D) 7am to 9am,True,1,
 132,"Today, Samantha went to the market. Between what times could they have gone?
 We know that:
 Samantha woke up at 5am.
@@ -3883,7 +3883,7 @@ Options:
 
 Since Samantha was occupied during 5am-11am, 11am-1pm, and 5pm-8pm, and the market is closed after 8pm, the only available window for her to visit the market is between 1pm and 5pm.
 
-Final Answer: (D) 1pm to 5pm",(D) 1pm to 5pm,True,1
+Final Answer: (D) 1pm to 5pm",(D) 1pm to 5pm,True,1,
 133,"Today, Elizabeth went to the gas station. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 5am.
@@ -3919,7 +3919,7 @@ Looking at the gaps:
 
 Therefore, the only possible time Elizabeth could have gone to the gas station is between 5am and 6am.
 
-Final Answer: (A) 5am to 6am",(A) 5am to 6am,True,1
+Final Answer: (A) 5am to 6am",(A) 5am to 6am,True,1,
 134,"Today, Sean went to the soccer field. Between what times could they have gone?
 We know that:
 Sean woke up at 5am.
@@ -3951,7 +3951,7 @@ Options:
     *   (C) 5pm to 8pm: Sean was at the cafe.
     *   (D) 5am to 7am: Sean was awake and had no other commitments.
 
-Final Answer: (D) 5am to 7am",(D) 5am to 7am,True,1
+Final Answer: (D) 5am to 7am",(D) 5am to 7am,True,1,
 135,"Today, Elizabeth went to the swimming pool. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 6am.
@@ -3984,7 +3984,7 @@ Options:
 
 The only time slot when Elizabeth was not occupied by other activities and the swimming pool was still open is 6pm to 7pm.
 
-Final Answer: C",C,True,1
+Final Answer: C",C,True,1,
 136,"Today, Michael went to the clothing store. Between what times could they have gone?
 We know that:
 Michael woke up at 10am.
@@ -4017,7 +4017,7 @@ Options:
 
 The only time slot when Michael was not occupied with other activities and the store was open is 12pm to 4pm.
 
-Final Answer: (D) 12pm to 4pm",(D) 12pm to 4pm,True,1
+Final Answer: (D) 12pm to 4pm",(D) 12pm to 4pm,True,1,
 137,"Today, Andrew went to the construction site. Between what times could they have gone?
 We know that:
 Andrew woke up at 9am.
@@ -4047,7 +4047,7 @@ The other options are impossible:
 - (C) 2pm to 3pm: He was at the Leaning Tower
 - (D) 7pm to 9pm: He was at the train station
 
-Final Answer: (A) 3pm to 4pm",(A) 3pm to 4pm,True,1
+Final Answer: (A) 3pm to 4pm",(A) 3pm to 4pm,True,1,
 138,"Today, Nancy went to the soccer field. Between what times could they have gone?
 We know that:
 Nancy woke up at 5am.
@@ -4079,7 +4079,7 @@ Options:
 **Available window:**
 The only time slot when Nancy was not occupied and the soccer field was open is **12pm to 3pm**.
 
-Final Answer: (B) 12pm to 3pm",(B) 12pm to 3pm,True,1
+Final Answer: (B) 12pm to 3pm",(B) 12pm to 3pm,True,1,
 139,"Today, Jason went to the museum. Between what times could they have gone?
 We know that:
 Jason woke up at 7am.
@@ -4114,7 +4114,7 @@ Checking the options:
 - (C) 5pm to 8pm: Jason was at the electronics store
 - (D) 8am to 9am: Jason was free and the museum was open
 
-Final Answer: (D) 8am to 9am",(D) 8am to 9am,True,1
+Final Answer: (D) 8am to 9am",(D) 8am to 9am,True,1,
 140,"Today, Anthony went to the gas station. Between what times could they have gone?
 We know that:
 Anthony woke up at 5am.
@@ -4139,7 +4139,7 @@ Options:
 
 The only time slot when Anthony was not occupied with another activity and the gas station was open is between **10am and 5pm**.
 
-Final Answer: (B) 10am to 5pm",(B) 10am to 5pm,True,1
+Final Answer: (B) 10am to 5pm",(B) 10am to 5pm,True,1,
 141,"Today, Leslie went to the movies. Between what times could they have gone?
 We know that:
 Leslie woke up at 6am.
@@ -4171,7 +4171,7 @@ Checking the options:
 - (C) 12pm to 2pm: Invalid - Leslie was at the office
 - (D) 6am to 7am: Invalid - Leslie was on the rooftop
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 142,"Today, David went to the clothing store. Between what times could they have gone?
 We know that:
 David woke up at 6am.
@@ -4205,7 +4205,7 @@ To find when David could have gone to the clothing store, we must identify a tim
 
 The only free time slot available before the store closes at 4pm is between **6am and 8am**.
 
-Final Answer: (C) 6am to 8am",(C) 6am to 8am,True,1
+Final Answer: (C) 6am to 8am",(C) 6am to 8am,True,1,
 143,"Today, Hannah went to the basketball court. Between what times could they have gone?
 We know that:
 Hannah woke up at 6am.
@@ -4239,7 +4239,7 @@ Checking the options:
 - (C) 8pm-10pm: She's at the library
 - **(D) 3pm-5pm**: She's free during this time
 
-Final Answer: (D) 3pm to 5pm",(D) 3pm to 5pm,True,1
+Final Answer: (D) 3pm to 5pm",(D) 3pm to 5pm,True,1,
 144,"Today, Sarah went to the market. Between what times could they have gone?
 We know that:
 Sarah woke up at 6am.
@@ -4271,7 +4271,7 @@ Checking the options:
 - (C) 10am–12pm: She was at the bakery.
 - (D) 2pm–6pm: She was free and the market was open.
 
-Final Answer: (D) 2pm to 6pm",(D) 2pm to 6pm,True,1
+Final Answer: (D) 2pm to 6pm",(D) 2pm to 6pm,True,1,
 145,"Today, Andrew went to the park. Between what times could they have gone?
 We know that:
 Andrew woke up at 5am.
@@ -4298,7 +4298,7 @@ Andrew is accounted for continuously from 6am to 9pm. The only unaccounted time 
 
 Therefore, the only possible window for Andrew to have gone to the park is between 5am and 6am.
 
-Final Answer: (D) 5am to 6am",(D) 5am to 6am,True,1
+Final Answer: (D) 5am to 6am",(D) 5am to 6am,True,1,
 146,"Today, William went to the art studio. Between what times could they have gone?
 We know that:
 William woke up at 6am.
@@ -4335,7 +4335,7 @@ Checking the gaps:
 
 Therefore, the only time William could have gone to the art studio is between 6am and 12pm.
 
-Final Answer: (B) 6am to 12pm",(B) 6am to 12pm,True,1
+Final Answer: (B) 6am to 12pm",(B) 6am to 12pm,True,1,
 147,"Today, Elizabeth went to the bakery. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 8am.
@@ -4364,7 +4364,7 @@ Checking the options:
 
 The only available window is between 9pm (when she left the cafe) and 10pm (when the bakery closes).
 
-Final Answer: B",B,True,1
+Final Answer: B",B,True,1,
 148,"Today, Sarah went to the soccer field. Between what times could they have gone?
 We know that:
 Sarah woke up at 5am.
@@ -4402,7 +4402,7 @@ The only time window when Sarah was both awake and not occupied by other activit
 - (C) 5am to 11am: Sarah was available
 - (D) 5pm to 9pm: Sarah was at the airport
 
-Final Answer: (C) 5am to 11am",(C) 5am to 11am,True,1
+Final Answer: (C) 5am to 11am",(C) 5am to 11am,True,1,
 149,"Today, David went to the art show. Between what times could they have gone?
 We know that:
 David woke up at 5am.
@@ -4425,7 +4425,7 @@ Options:
 
 David could only visit the art show during his free time when he wasn't seen elsewhere and when the art show was open. The only gap in his schedule is between 1pm (when Mary stopped seeing him) and 3pm (when Leslie started seeing him).
 
-Final Answer: (D) 1pm to 3pm",(D) 1pm to 3pm,True,1
+Final Answer: (D) 1pm to 3pm",(D) 1pm to 3pm,True,1,
 150,"Today, Jason went to the park. Between what times could they have gone?
 We know that:
 Jason woke up at 5am.
@@ -4458,7 +4458,7 @@ Jason was occupied during all the listed time slots except for the gap between 4
 - (C) 2pm to 4pm: He was in the garden
 - (D) 8pm to 9pm: He was at the deli
 
-Final Answer: (B) 4pm to 5pm",(B) 4pm to 5pm,True,1
+Final Answer: (B) 4pm to 5pm",(B) 4pm to 5pm,True,1,
 151,"Today, Anthony went to the dance studio. Between what times could they have gone?
 We know that:
 Anthony woke up at 8am.
@@ -4486,7 +4486,7 @@ Anthony could only visit the dance studio during times when:
 
 This leaves only the **8am to 10am** window as a possible time for the dance studio visit. All other time slots conflict with confirmed activities, and any time after 4pm is impossible because the studio was closed.
 
-Final Answer: (C) 8am to 10am",(C) 8am to 10am,True,1
+Final Answer: (C) 8am to 10am",(C) 8am to 10am,True,1,
 152,"Today, Sarah went to the beach. Between what times could they have gone?
 We know that:
 Sarah woke up at 10am.
@@ -4514,7 +4514,7 @@ The only gap in Sarah's schedule where she isn't accounted for is between **12pm
 
 Therefore, Sarah must have gone to the beach between 12pm and 1pm.
 
-Final Answer: (B) 12pm to 1pm",(B) 12pm to 1pm,True,1
+Final Answer: (B) 12pm to 1pm",(B) 12pm to 1pm,True,1,
 153,"Today, Hannah went to the art show. Between what times could they have gone?
 We know that:
 Hannah woke up at 7am.
@@ -4541,7 +4541,7 @@ Options:
 
 The only time slot where Hannah has no conflicting activities and the art show would still be open (before 10pm) is between **1pm and 7pm**.
 
-Final Answer: (C) 1pm to 7pm",(C) 1pm to 7pm,True,1
+Final Answer: (C) 1pm to 7pm",(C) 1pm to 7pm,True,1,
 154,"Today, Mark went to the basketball court. Between what times could they have gone?
 We know that:
 Mark woke up at 12pm.
@@ -4566,7 +4566,7 @@ Options:
 
 The only gap in Mark's schedule is between 4pm and 5pm, which fits within the operating hours of the basketball court (before 10pm).
 
-Final Answer: (C) 4pm to 5pm",(C) 4pm to 5pm,True,1
+Final Answer: (C) 4pm to 5pm",(C) 4pm to 5pm,True,1,
 155,"Today, Sarah went to the art show. Between what times could they have gone?
 We know that:
 Sarah woke up at 5am.
@@ -4595,7 +4595,7 @@ Options:
 
 Therefore, the only possible window for Sarah to visit the art show is between 2pm (when she finished fixing the computer) and 10pm (when the art show closed).
 
-Final Answer: (C) 2pm to 10pm",(C) 2pm to 10pm,True,1
+Final Answer: (C) 2pm to 10pm",(C) 2pm to 10pm,True,1,
 156,"Today, James went to the basketball court. Between what times could they have gone?
 We know that:
 James woke up at 6am.
@@ -4622,7 +4622,7 @@ Options:
 
 James was occupied continuously from 7am to 8pm. The only free time he had after waking up and before the basketball court closed is **6am to 7am**.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 157,"Today, Emily went to the orchestra hall. Between what times could they have gone?
 We know that:
 Emily woke up at 5am.
@@ -4647,7 +4647,7 @@ Options:
 
 Since Emily was occupied at the airport, bakery, mall, and gym during the other time slots, and the hall was closed after 10pm, the only available window for her to visit the orchestra hall is between **6am and 2pm**.
 
-Final Answer: (D) 6am to 2pm",(D) 6am to 2pm,True,1
+Final Answer: (D) 6am to 2pm",(D) 6am to 2pm,True,1,
 158,"Today, David went to the market. Between what times could they have gone?
 We know that:
 David woke up at 7am.
@@ -4679,7 +4679,7 @@ Options:
 
 The only time slot when David was not seen elsewhere and the market was open is between 9am and 10am.
 
-Final Answer: (B) 9am to 10am",(B) 9am to 10am,True,1
+Final Answer: (B) 9am to 10am",(B) 9am to 10am,True,1,
 159,"Today, Jennifer went to the amusement park. Between what times could they have gone?
 We know that:
 Jennifer woke up at 5am.
@@ -4713,7 +4713,7 @@ Checking the options:
 - (C) 5am-10am: She's at the bike shop
 - (D) 3pm-4pm: She's free during this gap
 
-Final Answer: (D) 3pm to 4pm",(D) 3pm to 4pm,True,1
+Final Answer: (D) 3pm to 4pm",(D) 3pm to 4pm,True,1,
 160,"Today, Ashley went to the dance studio. Between what times could they have gone?
 We know that:
 Ashley woke up at 5am.
@@ -4738,7 +4738,7 @@ Options:
 
 The only time slot that fits between Ashley's scheduled activities and while the dance studio is open is **12pm to 6pm**.
 
-Final Answer: (A) 12pm to 6pm",(A) 12pm to 6pm,True,1
+Final Answer: (A) 12pm to 6pm",(A) 12pm to 6pm,True,1,
 161,"Today, William went to the market. Between what times could they have gone?
 We know that:
 William woke up at 7am.
@@ -4763,7 +4763,7 @@ Options:
 
 The only gap in William's schedule is between 4pm and 6pm. Since the market was closed after 9pm, and William was busy during all other listed times, he could only have gone to the market during the 4pm-6pm window.
 
-Final Answer: (A) 4pm to 6pm",(A) 4pm to 6pm,True,1
+Final Answer: (A) 4pm to 6pm",(A) 4pm to 6pm,True,1,
 162,"Today, Jennifer went to the restaurant. Between what times could they have gone?
 We know that:
 Jennifer woke up at 6am.
@@ -4788,7 +4788,7 @@ Options:
 
 The only gap in Jennifer's schedule is between **11am and 1pm**. All other time slots are accounted for by witnesses placing her at other locations, and after 10pm the restaurant is closed.
 
-Final Answer: (B) 11am to 1pm",(B) 11am to 1pm,True,1
+Final Answer: (B) 11am to 1pm",(B) 11am to 1pm,True,1,
 163,"Today, Jennifer went to the art show. Between what times could they have gone?
 We know that:
 Jennifer woke up at 8am.
@@ -4818,7 +4818,7 @@ Options:
 
 Therefore, the only time Jennifer could have gone to the art show is between 2pm and 4pm.
 
-Final Answer: (A) 2pm to 4pm",(A) 2pm to 4pm,True,1
+Final Answer: (A) 2pm to 4pm",(A) 2pm to 4pm,True,1,
 164,"Today, Jennifer went to the orchestra hall. Between what times could they have gone?
 We know that:
 Jennifer woke up at 5am.
@@ -4848,7 +4848,7 @@ Options:
 
 The only time Jennifer is not seen doing something else AND the orchestra hall is open is the 1-hour gap between leaving work (4pm) and arriving at the mall (5pm).
 
-Final Answer: C",C,True,1
+Final Answer: C",C,True,1,
 165,"Today, Nancy went to the basketball court. Between what times could they have gone?
 We know that:
 Nancy woke up at 9am.
@@ -4881,7 +4881,7 @@ The only period when Nancy was not occupied with other activities and the basket
 - (C) 5pm to 6pm: Invalid - Nancy was at the electronics store
 - (D) 2pm to 4pm: Invalid - Nancy was at the train station
 
-Final Answer: (A) 9am to 2pm",(A) 9am to 2pm,True,1
+Final Answer: (A) 9am to 2pm",(A) 9am to 2pm,True,1,
 166,"Today, Samantha went to the movies. Between what times could they have gone?
 We know that:
 Samantha woke up at 5am.
@@ -4904,7 +4904,7 @@ Options:
 
 Samantha was busy during the time periods listed in options (A), (B), and (D). The only time she was awake and not occupied by another activity was between 5am (when she woke up) and 8am (when she started driving to the water park). Since the movies were only closed after 6pm, she could have gone during this free morning window.
 
-Final Answer: (C) 5am to 8am",(C) 5am to 8am,True,1
+Final Answer: (C) 5am to 8am",(C) 5am to 8am,True,1,
 167,"Today, Tiffany went to the market. Between what times could they have gone?
 We know that:
 Tiffany woke up at 5am.
@@ -4933,7 +4933,7 @@ The only unaccounted time slot is **4pm–5pm**, which falls between buying lunc
 - Option (D) 5pm–7pm: She was working at the office.
 - Option (B) 4pm–5pm: She was free during this gap.
 
-Final Answer: (B) 4pm to 5pm",(B) 4pm to 5pm,True,1
+Final Answer: (B) 4pm to 5pm",(B) 4pm to 5pm,True,1,
 168,"Today, Leslie went to the dance studio. Between what times could they have gone?
 We know that:
 Leslie woke up at 7am.
@@ -4961,7 +4961,7 @@ Options:
 
 Leslie is accounted for during all times except **12pm to 1pm**, which is the only window between leaving the deli and arriving at the Eiffel Tower, and it's before the studio closes at 7pm.
 
-Final Answer: (C) 12pm to 1pm",(C) 12pm to 1pm,True,1
+Final Answer: (C) 12pm to 1pm",(C) 12pm to 1pm,True,1,
 169,"Today, Hannah went to the soccer field. Between what times could they have gone?
 We know that:
 Hannah woke up at 5am.
@@ -4989,7 +4989,7 @@ Options:
 
 Since Hannah was occupied during all the other time slots listed in the options (mall, theater, cafe, office, airport), the only available window is **5pm to 6pm**, which is also before the field closed.
 
-Final Answer: (C) 5pm to 6pm",(C) 5pm to 6pm,True,1
+Final Answer: (C) 5pm to 6pm",(C) 5pm to 6pm,True,1,
 170,"Today, Anthony went to the amusement park. Between what times could they have gone?
 We know that:
 Anthony woke up at 6am.
@@ -5023,7 +5023,7 @@ Options:
 
 The only time window when Anthony was not occupied and the amusement park was open is 9am to 2pm.
 
-Final Answer: (B)",(B),True,1
+Final Answer: (B)",(B),True,1,
 171,"Today, Hannah went to the art studio. Between what times could they have gone?
 We know that:
 Hannah woke up at 6am.
@@ -5055,7 +5055,7 @@ Options:
 - **(B) 7pm to 8pm**: Hannah was walking towards the Statue of Liberty
 - **(A) 10am to 6pm**: This is the only time slot where Hannah has no confirmed alibi and the art studio would be open (since it closes after 8pm)
 
-Final Answer: (A) 10am to 6pm",(A) 10am to 6pm,True,1
+Final Answer: (A) 10am to 6pm",(A) 10am to 6pm,True,1,
 172,"Today, Leslie went to the swimming pool. Between what times could they have gone?
 We know that:
 Leslie woke up at 7am.
@@ -5083,7 +5083,7 @@ Leslie must have gone to the swimming pool during a time when they were not occu
 *   **Option (D) 8pm to 10pm:** Leslie was at the Leaning Tower of Pisa.
 *   **Option (C) 7am to 6pm:** This is the period after Leslie woke up and before they went to the gym. There are no conflicting activities during this window, and the pool was open (as it only closed after 10pm).
 
-Final Answer: (C) 7am to 6pm",(C) 7am to 6pm,True,1
+Final Answer: (C) 7am to 6pm",(C) 7am to 6pm,True,1,
 173,"Today, Anthony went to the bookstore. Between what times could they have gone?
 We know that:
 Anthony woke up at 7am.
@@ -5115,7 +5115,7 @@ Options:
 
 The only possible time window is **11am to 1pm**.
 
-Final Answer: (A) 11am to 1pm",(A) 11am to 1pm,True,1
+Final Answer: (A) 11am to 1pm",(A) 11am to 1pm,True,1,
 174,"Today, Thomas went to the construction site. Between what times could they have gone?
 We know that:
 Thomas woke up at 6am.
@@ -5146,7 +5146,7 @@ Now I'll check each option:
 
 The activities are back-to-back with no gaps between them (gym ends at 11am when yoga starts, yoga ends at 3pm when movies start, movies end at 6pm when Pisa visit starts, Pisa visit ends at 7pm when site closes). The only available window is between waking up at 6am and going to the gym at 8am.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 175,"Today, Jason went to the bakery. Between what times could they have gone?
 We know that:
 Jason woke up at 6am.
@@ -5176,7 +5176,7 @@ Jason could only have gone to the bakery during the time when he was not occupie
 - Option (C) 7am to 12pm: He was at the cafe.
 - Option (D) 12pm to 4pm: He was free and the bakery was open.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 176,"Today, Betty went to the bakery. Between what times could they have gone?
 We know that:
 Betty woke up at 5am.
@@ -5208,7 +5208,7 @@ Options:
 
 This is the only time slot where Betty was not occupied by another activity and the bakery was still open.
 
-Final Answer: (D) 9pm to 10pm",(D) 9pm to 10pm,True,1
+Final Answer: (D) 9pm to 10pm",(D) 9pm to 10pm,True,1,
 177,"Today, Ashley went to the basketball court. Between what times could they have gone?
 We know that:
 Ashley woke up at 11am.
@@ -5237,7 +5237,7 @@ Checking the options:
 - (C) 5pm to 8pm: Ashley was free and the court was open
 - (D) 11am to 12pm: Ashley was at the bike shop
 
-Final Answer: (C) 5pm to 8pm",(C) 5pm to 8pm,True,1
+Final Answer: (C) 5pm to 8pm",(C) 5pm to 8pm,True,1,
 178,"Today, David went to the market. Between what times could they have gone?
 We know that:
 David woke up at 5am.
@@ -5265,7 +5265,7 @@ Options:
 
 Since the market closes after 10pm, and David was occupied from 7pm–10pm, the only window when he could have gone to the market is between 12pm and 7pm.
 
-Final Answer: (A) 12pm to 7pm",(A) 12pm to 7pm,True,1
+Final Answer: (A) 12pm to 7pm",(A) 12pm to 7pm,True,1,
 179,"Today, Leslie went to the physics classroom. Between what times could they have gone?
 We know that:
 Leslie woke up at 5am.
@@ -5290,7 +5290,7 @@ Options:
 
 Since Leslie was occupied during all the other listed time blocks, the only available window to visit the physics classroom is between **7am and 9am**.
 
-Final Answer: (C) 7am to 9am",(C) 7am to 9am,True,1
+Final Answer: (C) 7am to 9am",(C) 7am to 9am,True,1,
 180,"Today, Ashley went to the beach. Between what times could they have gone?
 We know that:
 Ashley woke up at 7am.
@@ -5324,7 +5324,7 @@ Options:
 - (C) 5pm to 6pm: She was free and the beach was open
 - (D) 7am to 8am: She was at yoga
 
-Final Answer: (C) 5pm to 6pm",(C) 5pm to 6pm,True,1
+Final Answer: (C) 5pm to 6pm",(C) 5pm to 6pm,True,1,
 181,"Today, Michael went to the construction site. Between what times could they have gone?
 We know that:
 Michael woke up at 5am.
@@ -5356,7 +5356,7 @@ Options:
 - (D) 5pm-7pm: Michael was in the garden ✗
 - (A) 10am-5pm: Michael was free and construction site was open ✓
 
-Final Answer: (A) 10am to 5pm",(A) 10am to 5pm,True,1
+Final Answer: (A) 10am to 5pm",(A) 10am to 5pm,True,1,
 182,"Today, Jason went to the gas station. Between what times could they have gone?
 We know that:
 Jason woke up at 5am.
@@ -5388,7 +5388,7 @@ Checking the options:
 *   (C) 6pm to 7pm: He was at the movie theater.
 *   (D) 8am to 2pm: He was at the deli.
 
-Final Answer: (A) 5pm to 6pm",(A) 5pm to 6pm,True,1
+Final Answer: (A) 5pm to 6pm",(A) 5pm to 6pm,True,1,
 183,"Today, Sean went to the restaurant. Between what times could they have gone?
 We know that:
 Sean woke up at 5am.
@@ -5413,7 +5413,7 @@ Options:
 
 The only gap in Sean's schedule is between **8am and 9am**. All other time slots conflict with confirmed activities, and any time after 7pm is impossible because the restaurant is closed.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 184,"Today, Sarah went to the gas station. Between what times could they have gone?
 We know that:
 Sarah woke up at 7am.
@@ -5438,7 +5438,7 @@ Options:
 
 Since the gas station closes after 4pm, Sarah must visit before then. However, she is occupied from 7am–9am, 11am–2pm, 2pm–3pm, and 3pm–4pm. The only unaccounted time slot is **9am to 11am**.
 
-Final Answer: (C) 9am to 11am",(C) 9am to 11am,True,1
+Final Answer: (C) 9am to 11am",(C) 9am to 11am,True,1,
 185,"Today, Andrew went to the art show. Between what times could they have gone?
 We know that:
 Andrew woke up at 6am.
@@ -5467,7 +5467,7 @@ Andrew could only visit the art show during his free time when he was not seen a
 
 Therefore, the only possible time is **6am to 10am**.
 
-Final Answer: (A)",(A),True,1
+Final Answer: (A)",(A),True,1,
 186,"Today, James went to the restaurant. Between what times could they have gone?
 We know that:
 James woke up at 12pm.
@@ -5498,7 +5498,7 @@ Options analysis:
 - (C) 7pm to 9pm: James was at the office
 - (D) 9pm to 10pm: James was at the gym
 
-Final Answer: (A) 12pm to 3pm",(A) 12pm to 3pm,True,1
+Final Answer: (A) 12pm to 3pm",(A) 12pm to 3pm,True,1,
 187,"Today, Ashley went to the construction site. Between what times could they have gone?
 We know that:
 Ashley woke up at 5am.
@@ -5527,7 +5527,7 @@ The only unaccounted-for time block during which the construction site was open 
 *   Option (B) 5am–9am: Ashley was at the office.
 *   Option (D) 8pm–10pm: Ashley was at the theater.
 
-Final Answer: (C) 9am to 4pm",(C) 9am to 4pm,True,1
+Final Answer: (C) 9am to 4pm",(C) 9am to 4pm,True,1,
 188,"Today, Ashley went to the gas station. Between what times could they have gone?
 We know that:
 Ashley woke up at 5am.
@@ -5561,7 +5561,7 @@ Checking the options:
 - (C) 7am to 1pm: Ashley was at the office
 - (D) 5am to 6am: Ashley was free (between waking up and going to the bakery)
 
-Final Answer: (D) 5am to 6am",(D) 5am to 6am,True,1
+Final Answer: (D) 5am to 6am",(D) 5am to 6am,True,1,
 189,"Today, Sarah went to the clothing store. Between what times could they have gone?
 We know that:
 Sarah woke up at 5am.
@@ -5588,7 +5588,7 @@ The clothing store was **closed after 7pm**, meaning the latest she could have g
 
 Therefore, the only time window when Sarah was free AND the clothing store was open is **3pm to 7pm**.
 
-Final Answer: (A) 3pm to 7pm",(A) 3pm to 7pm,True,1
+Final Answer: (A) 3pm to 7pm",(A) 3pm to 7pm,True,1,
 190,"Today, Michael went to the football field. Between what times could they have gone?
 We know that:
 Michael woke up at 5am.
@@ -5617,7 +5617,7 @@ The only gap in Michael's schedule is between 12pm (when he finished at the airp
 
 Options (B), (C), and (D) all correspond to times when Michael was occupied with other activities.
 
-Final Answer: (A) 12pm to 1pm",(A) 12pm to 1pm,True,1
+Final Answer: (A) 12pm to 1pm",(A) 12pm to 1pm,True,1,
 191,"Today, Anthony went to the basketball court. Between what times could they have gone?
 We know that:
 Anthony woke up at 5am.
@@ -5642,7 +5642,7 @@ Options:
 
 Therefore, the only available window when Anthony was not occupied with other activities and the basketball court was still open is **4pm to 9pm**.
 
-Final Answer: (C) 4pm to 9pm",(C) 4pm to 9pm,True,1
+Final Answer: (C) 4pm to 9pm",(C) 4pm to 9pm,True,1,
 192,"Today, William went to the restaurant. Between what times could they have gone?
 We know that:
 William woke up at 11am.
@@ -5665,7 +5665,7 @@ Options:
 
 The only time slot when William was both awake and not occupied by other activities is **11am to 3pm**.
 
-Final Answer: (B) 11am to 3pm",(B) 11am to 3pm,True,1
+Final Answer: (B) 11am to 3pm",(B) 11am to 3pm,True,1,
 193,"Today, Susan went to the soccer field. Between what times could they have gone?
 We know that:
 Susan woke up at 5am.
@@ -5698,7 +5698,7 @@ Checking the options:
 - (C) 7am to 2pm: She was free.
 - (D) 6pm to 8pm: She was at the bakery.
 
-Final Answer: (C) 7am to 2pm",(C) 7am to 2pm,True,1
+Final Answer: (C) 7am to 2pm",(C) 7am to 2pm,True,1,
 194,"Today, Sarah went to the dance studio. Between what times could they have gone?
 We know that:
 Sarah woke up at 5am.
@@ -5723,7 +5723,7 @@ Let me map out Sarah's schedule based on the given information:
 
 Since Sarah was occupied during all the other time slots, and the dance studio closes after 6pm, the only available window for her to visit the dance studio is between **11am and 1pm** - the gap between her tennis game and when she was seen on the rooftop.
 
-Final Answer: (D) 11am to 1pm",(D) 11am to 1pm,True,1
+Final Answer: (D) 11am to 1pm",(D) 11am to 1pm,True,1,
 195,"Today, Emily went to the park. Between what times could they have gone?
 We know that:
 Emily woke up at 5am.
@@ -5746,7 +5746,7 @@ Options:
 
 The only gap in Emily's schedule where she could have visited the park is between 2pm (when Kimberly stopped seeing her) and 4pm (when Richard started seeing her at the airport).
 
-Final Answer: (D) 2pm to 4pm",(D) 2pm to 4pm,True,1
+Final Answer: (D) 2pm to 4pm",(D) 2pm to 4pm,True,1,
 196,"Today, Emily went to the basketball court. Between what times could they have gone?
 We know that:
 Emily woke up at 12pm.
@@ -5781,7 +5781,7 @@ Options:
 - (C) 6pm to 8pm: Emily was at the mall ✗
 - (D) 2pm to 3pm: Emily was at the airport ✗
 
-Final Answer: (A) 3pm to 6pm",(A) 3pm to 6pm,True,1
+Final Answer: (A) 3pm to 6pm",(A) 3pm to 6pm,True,1,
 197,"Today, Sean went to the art show. Between what times could they have gone?
 We know that:
 Sean woke up at 7am.
@@ -5806,7 +5806,7 @@ Options:
 
 The only gap in Sean's schedule is between **3pm and 4pm**. All other time slots are accounted for by witnesses who saw him elsewhere, and the art show closes after 8pm.
 
-Final Answer: (A) 3pm to 4pm",(A) 3pm to 4pm,True,1
+Final Answer: (A) 3pm to 4pm",(A) 3pm to 4pm,True,1,
 198,"Today, Elizabeth went to the movies. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 5am.
@@ -5837,7 +5837,7 @@ The other options are impossible because:
 - (C) 5am to 3pm: She was at the cafe
 - (D) 6pm to 7pm: She was at the train station
 
-Final Answer: (A) 8pm to 9pm",(A) 8pm to 9pm,True,1
+Final Answer: (A) 8pm to 9pm",(A) 8pm to 9pm,True,1,
 199,"Today, William went to the basketball court. Between what times could they have gone?
 We know that:
 William woke up at 7am.
@@ -5876,7 +5876,7 @@ Options:
 - (C) 7am to 11am: He's awake and not occupied by other activities
 - (D) 11am to 2pm: He's at the yoga studio
 
-Final Answer: (C) 7am to 11am",(C) 7am to 11am,True,1
+Final Answer: (C) 7am to 11am",(C) 7am to 11am,True,1,
 200,"Today, Thomas went to the market. Between what times could they have gone?
 We know that:
 Thomas woke up at 6am.
@@ -5903,7 +5903,7 @@ Options:
 
 The only unaccounted time slot when Thomas could have visited the market (which was open before 7pm) is between **7am and 9am**.
 
-Final Answer: (B) 7am to 9am",(B) 7am to 9am,True,1
+Final Answer: (B) 7am to 9am",(B) 7am to 9am,True,1,
 201,"Today, Susan went to the museum. Between what times could they have gone?
 We know that:
 Susan woke up at 9am.
@@ -5928,7 +5928,7 @@ Options:
 
 The only gap in Susan's schedule when she could have visited the museum is between **1pm and 4pm**, after leaving the airport and before arriving at the office. The other time slots conflict with her confirmed whereabouts, and any time after 9pm is impossible because the museum was closed.
 
-Final Answer: (D) 1pm to 4pm",(D) 1pm to 4pm,True,1
+Final Answer: (D) 1pm to 4pm",(D) 1pm to 4pm,True,1,
 202,"Today, Kimberly went to the construction site. Between what times could they have gone?
 We know that:
 Kimberly woke up at 6am.
@@ -5962,7 +5962,7 @@ Kimberly must visit the construction site when she is not occupied with other ac
 
 Therefore, the only possible time is between 6am and 7am.
 
-Final Answer: (A) 6am to 7am",(A) 6am to 7am,True,1
+Final Answer: (A) 6am to 7am",(A) 6am to 7am,True,1,
 203,"Today, Leslie went to the soccer field. Between what times could they have gone?
 We know that:
 Leslie woke up at 5am.
@@ -5987,7 +5987,7 @@ Options:
 
 The only unaccounted time in Leslie's schedule is between 2pm (when they left the rooftop) and 3pm (when they arrived at the bike shop). This is the only window when Leslie could have visited the soccer field.
 
-Final Answer: (B) 2pm to 3pm",(B) 2pm to 3pm,True,1
+Final Answer: (B) 2pm to 3pm",(B) 2pm to 3pm,True,1,
 204,"Today, William went to the amusement park. Between what times could they have gone?
 We know that:
 William woke up at 5am.
@@ -6010,7 +6010,7 @@ Options:
 
 The only time slot where William was not occupied with another activity and the park was open is between **9am and 4pm**.
 
-Final Answer: (A) 9am to 4pm",(A) 9am to 4pm,True,1
+Final Answer: (A) 9am to 4pm",(A) 9am to 4pm,True,1,
 205,"Today, Andrew went to the clothing store. Between what times could they have gone?
 We know that:
 Andrew woke up at 9am.
@@ -6035,7 +6035,7 @@ Options:
 
 Andrew could only have gone to the clothing store during a time when he was not occupied with another activity and when the store was open. The only gap in his schedule that fits these criteria is between **8pm and 9pm**.
 
-Final Answer: (D) 8pm to 9pm",(D) 8pm to 9pm,True,1
+Final Answer: (D) 8pm to 9pm",(D) 8pm to 9pm,True,1,
 206,"Today, Jennifer went to the coffee shop. Between what times could they have gone?
 We know that:
 Jennifer woke up at 5am.
@@ -6063,7 +6063,7 @@ Options:
 
 Therefore, the only possible time window when Jennifer could have gone to the coffee shop is between 10am and 12pm.
 
-Final Answer: (A) 10am to 12pm",(A) 10am to 12pm,True,1
+Final Answer: (A) 10am to 12pm",(A) 10am to 12pm,True,1,
 207,"Today, Susan went to the art studio. Between what times could they have gone?
 We know that:
 Susan woke up at 6am.
@@ -6086,7 +6086,7 @@ Options:
 
 The only window of time when Susan is awake, not occupied with another activity, and the art studio is still open is between **6am and 11am**.
 
-Final Answer: (C) 6am to 11am",(C) 6am to 11am,True,1
+Final Answer: (C) 6am to 11am",(C) 6am to 11am,True,1,
 208,"Today, James went to the coffee shop. Between what times could they have gone?
 We know that:
 James woke up at 7am.
@@ -6120,7 +6120,7 @@ Options:
 
 The only time window where James is unaccounted for and the coffee shop is open is **8am to 1pm**.
 
-Final Answer: (C) 8am to 1pm",(C) 8am to 1pm,True,1
+Final Answer: (C) 8am to 1pm",(C) 8am to 1pm,True,1,
 209,"Today, Tiffany went to the clothing store. Between what times could they have gone?
 We know that:
 Tiffany woke up at 10am.
@@ -6143,7 +6143,7 @@ Options:
 
 Tiffany could only have visited the clothing store during the unaccounted time when she wasn't seen elsewhere and when the store was open. The only available window is **12pm to 1pm**.
 
-Final Answer: (C) 12pm to 1pm",(C) 12pm to 1pm,True,1
+Final Answer: (C) 12pm to 1pm",(C) 12pm to 1pm,True,1,
 210,"Today, Andrew went to the basketball court. Between what times could they have gone?
 We know that:
 Andrew woke up at 6am.
@@ -6173,7 +6173,7 @@ Options:
 
 The only unaccounted-for window of time when Andrew could have gone to the basketball court is between 6pm and 8pm.
 
-Final Answer: (D) 6pm to 8pm",(D) 6pm to 8pm,True,1
+Final Answer: (D) 6pm to 8pm",(D) 6pm to 8pm,True,1,
 211,"Today, Thomas went to the restaurant. Between what times could they have gone?
 We know that:
 Thomas woke up at 9am.
@@ -6203,7 +6203,7 @@ Options:
     *   **(C) 5pm to 7pm:** Thomas was at the deli.
     *   **(D) 12pm to 5pm:** This is the gap between when Thomas left the airport (12pm) and when he went to the deli (5pm). The restaurant was open during this time.
 
-Final Answer: (D) 12pm to 5pm",(D) 12pm to 5pm,True,1
+Final Answer: (D) 12pm to 5pm",(D) 12pm to 5pm,True,1,
 212,"Today, David went to the museum. Between what times could they have gone?
 We know that:
 David woke up at 6am.
@@ -6230,7 +6230,7 @@ Options:
 
 The only gap in David's schedule where he could have visited the museum is between **10am and 12pm**. All other listed time slots conflict with his known activities, and the museum is closed after 8pm.
 
-Final Answer: (C) 10am to 12pm",(C) 10am to 12pm,True,1
+Final Answer: (C) 10am to 12pm",(C) 10am to 12pm,True,1,
 213,"Today, Elizabeth went to the art studio. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 6am.
@@ -6256,7 +6256,7 @@ Options:
 
 The only time slot when Elizabeth was not accounted for elsewhere and the art studio was open is **9am to 12pm**.
 
-Final Answer: (A) 9am to 12pm",(A) 9am to 12pm,True,1
+Final Answer: (A) 9am to 12pm",(A) 9am to 12pm,True,1,
 214,"Today, Jason went to the physics classroom. Between what times could they have gone?
 We know that:
 Jason woke up at 5am.
@@ -6281,7 +6281,7 @@ Options:
 
 The only time slot where Jason is not accounted for and the physics classroom is open is between **9am and 1pm**.
 
-Final Answer: (B) 9am to 1pm",(B) 9am to 1pm,True,1
+Final Answer: (B) 9am to 1pm",(B) 9am to 1pm,True,1,
 215,"Today, Sarah went to the gas station. Between what times could they have gone?
 We know that:
 Sarah woke up at 6am.
@@ -6302,7 +6302,7 @@ Options:
 
 Since Sarah was occupied during all the other time slots listed in the options, the only remaining window when she could have gone to the gas station is after she left the bakery (2pm) but before the gas station closed (9pm).
 
-Final Answer: (B) 2pm to 9pm",(B) 2pm to 9pm,True,1
+Final Answer: (B) 2pm to 9pm",(B) 2pm to 9pm,True,1,
 216,"Today, William went to the coffee shop. Between what times could they have gone?
 We know that:
 William woke up at 7am.
@@ -6327,7 +6327,7 @@ Options:
 
 William was occupied during all the time slots mentioned in options A, B, and C. The only available window is between when he woke up (7am) and when Lisa saw him on the rooftop (9am). Since the coffee shop was open during this time (before 10pm), this is the only possible time he could have gone.
 
-Final Answer: (D) 7am to 9am",(D) 7am to 9am,True,1
+Final Answer: (D) 7am to 9am",(D) 7am to 9am,True,1,
 217,"Today, Ashley went to the basketball court. Between what times could they have gone?
 We know that:
 Ashley woke up at 7am.
@@ -6357,7 +6357,7 @@ Checking the options:
 - (C) 10am to 1pm: Ashley was free and available
 - (D) 7am to 8am: Ashley was working at the office
 
-Final Answer: (C) 10am to 1pm",(C) 10am to 1pm,True,1
+Final Answer: (C) 10am to 1pm",(C) 10am to 1pm,True,1,
 218,"Today, William went to the market. Between what times could they have gone?
 We know that:
 William woke up at 8am.
@@ -6388,7 +6388,7 @@ Checking the options:
 - (C) 6pm to 9pm: William was taking photos - impossible
 - (D) 8am to 10am: William was fixing a computer - impossible
 
-Final Answer: (B) 9pm to 10pm",(B) 9pm to 10pm,True,1
+Final Answer: (B) 9pm to 10pm",(B) 9pm to 10pm,True,1,
 219,"Today, Sarah went to the soccer field. Between what times could they have gone?
 We know that:
 Sarah woke up at 5am.
@@ -6425,7 +6425,7 @@ Checking the options:
 - (C) 8am-10am: She was playing tennis
 - (D) 7pm-9pm: She was working at the office
 
-Final Answer: (B) 6am to 8am",(B) 6am to 8am,True,1
+Final Answer: (B) 6am to 8am",(B) 6am to 8am,True,1,
 220,"Today, Nancy went to the beach. Between what times could they have gone?
 We know that:
 Nancy woke up at 11am.
@@ -6449,7 +6449,7 @@ Options:
 
 The only unaccounted for time between when Nancy woke up and when the beach closed is **2pm to 4pm**. During this window, she wasn't seen anywhere else, and the beach was still open.
 
-Final Answer: (C) 2pm to 4pm",(C) 2pm to 4pm,True,1
+Final Answer: (C) 2pm to 4pm",(C) 2pm to 4pm,True,1,
 221,"Today, Betty went to the coffee shop. Between what times could they have gone?
 We know that:
 Betty woke up at 8am.
@@ -6481,7 +6481,7 @@ Options:
 - (C) 10am to 12pm: Betty was walking in the garden
 - (D) 12pm to 1pm: This is the only gap in her schedule between the garden (ending at 12pm) and the office (starting at 1pm), and it's before the coffee shop closes at 5pm.
 
-Final Answer: (D) 12pm to 1pm",(D) 12pm to 1pm,True,1
+Final Answer: (D) 12pm to 1pm",(D) 12pm to 1pm,True,1,
 222,"Today, Leslie went to the market. Between what times could they have gone?
 We know that:
 Leslie woke up at 6am.
@@ -6524,7 +6524,7 @@ Checking the options:
 - (C) 10am to 11am: Leslie was at the mall
 - (D) 9am to 10am: Leslie was at the Leaning Tower
 
-Final Answer: (B) 11am to 5pm",(B) 11am to 5pm,True,1
+Final Answer: (B) 11am to 5pm",(B) 11am to 5pm,True,1,
 223,"Today, Samantha went to the amusement park. Between what times could they have gone?
 We know that:
 Samantha woke up at 5am.
@@ -6562,7 +6562,7 @@ The other options are incorrect:
 - (C) 5am-7am: She's at the electronics store  
 - (D) 7am-8am: She's at the gym
 
-Final Answer: (A) 2pm to 7pm",(A) 2pm to 7pm,True,1
+Final Answer: (A) 2pm to 7pm",(A) 2pm to 7pm,True,1,
 224,"Today, William went to the gas station. Between what times could they have gone?
 We know that:
 William woke up at 5am.
@@ -6587,7 +6587,7 @@ Options:
 
 The only time slot where William is not accounted for at another location is between **5am and 7am** (after waking up but before the electronics store). All other options correspond to times when William was seen at specific locations, and the gas station is closed after 8pm.
 
-Final Answer: (A) 5am to 7am",(A) 5am to 7am,True,1
+Final Answer: (A) 5am to 7am",(A) 5am to 7am,True,1,
 225,"Today, Jason went to the basketball court. Between what times could they have gone?
 We know that:
 Jason woke up at 8am.
@@ -6611,7 +6611,7 @@ Options:
 
 This leaves Jason free only after 9pm. Since the basketball court closed after 10pm, the only available window for him to visit is between 9pm and 10pm.
 
-Final Answer: (C) 9pm to 10pm",(C) 9pm to 10pm,True,1
+Final Answer: (C) 9pm to 10pm",(C) 9pm to 10pm,True,1,
 226,"Today, David went to the art studio. Between what times could they have gone?
 We know that:
 David woke up at 5am.
@@ -6646,7 +6646,7 @@ Checking the options:
 - (C) 5am to 7am: Invalid - He was at the theater
 - (D) 11am to 2pm: Invalid - He was driving to the water park
 
-Final Answer: (A) 7am to 9am",(A) 7am to 9am,True,1
+Final Answer: (A) 7am to 9am",(A) 7am to 9am,True,1,
 227,"Today, Ashley went to the football field. Between what times could they have gone?
 We know that:
 Ashley woke up at 1pm.
@@ -6681,7 +6681,7 @@ Options:
 
 The only time Ashley could have gone to the football field is between **1pm and 2pm**, when she was awake and not occupied by any other activity, and the football field was still open.
 
-Final Answer: (A) 1pm to 2pm",(A) 1pm to 2pm,True,1
+Final Answer: (A) 1pm to 2pm",(A) 1pm to 2pm,True,1,
 228,"Today, Elizabeth went to the football field. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 5am.
@@ -6714,7 +6714,7 @@ Looking at the options:
 - (C) 5am to 9am - She was playing tennis
 - (D) 10am to 2pm - She was at the bike shop
 
-Final Answer: (A) 4pm to 5pm",(A) 4pm to 5pm,True,1
+Final Answer: (A) 4pm to 5pm",(A) 4pm to 5pm,True,1,
 229,"Today, William went to the bakery. Between what times could they have gone?
 We know that:
 William woke up at 6am.
@@ -6746,7 +6746,7 @@ Options:
 
 **Conclusion:** The only time William could have gone to the bakery is between 6am and 8am.
 
-Final Answer: (D) 6am to 8am",(D) 6am to 8am,True,1
+Final Answer: (D) 6am to 8am",(D) 6am to 8am,True,1,
 230,"Today, Anthony went to the dance studio. Between what times could they have gone?
 We know that:
 Anthony woke up at 7am.
@@ -6777,7 +6777,7 @@ Options:
 
 The only time slot when Anthony was not occupied by another activity and the studio was open is **9am to 10am**.
 
-Final Answer: (C) 9am to 10am",(C) 9am to 10am,True,1
+Final Answer: (C) 9am to 10am",(C) 9am to 10am,True,1,
 231,"Today, John went to the art studio. Between what times could they have gone?
 We know that:
 John woke up at 6am.
@@ -6807,7 +6807,7 @@ Options:
 
 The only time slot when John was available and the art studio could have been open is between 6am (when he woke up) and 7am (when he was seen at the library).
 
-Final Answer: (C) 6am to 7am",(C) 6am to 7am,True,1
+Final Answer: (C) 6am to 7am",(C) 6am to 7am,True,1,
 232,"Today, David went to the football field. Between what times could they have gone?
 We know that:
 David woke up at 5am.
@@ -6841,7 +6841,7 @@ Options:
 
 The only gap in David's schedule is between 8am and 9am.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 233,"Today, Michael went to the park. Between what times could they have gone?
 We know that:
 Michael woke up at 6am.
@@ -6868,7 +6868,7 @@ The only time slot where Michael had no confirmed alibi and the park was open is
 
 Therefore, he could only have gone to the park between 6am and 11am.
 
-Final Answer: (A) 6am to 11am",(A) 6am to 11am,True,1
+Final Answer: (A) 6am to 11am",(A) 6am to 11am,True,1,
 234,"Today, Andrew went to the park. Between what times could they have gone?
 We know that:
 Andrew woke up at 6am.
@@ -6902,7 +6902,7 @@ Checking the options:
 - (C) 7pm-10pm: Andrew was free and the park was open
 - (D) 7am-9am: Andrew was at the deli
 
-Final Answer: (C) 7pm to 10pm",(C) 7pm to 10pm,True,1
+Final Answer: (C) 7pm to 10pm",(C) 7pm to 10pm,True,1,
 235,"Today, Mark went to the clothing store. Between what times could they have gone?
 We know that:
 Mark woke up at 5am.
@@ -6925,7 +6925,7 @@ Options:
 
 The only gap in Mark's schedule when he could have visited the clothing store is between **6am and 9am**, after leaving the Eiffel Tower and before arriving at the train station.
 
-Final Answer: (B) 6am to 9am",(B) 6am to 9am,True,1
+Final Answer: (B) 6am to 9am",(B) 6am to 9am,True,1,
 236,"Today, Richard went to the basketball court. Between what times could they have gone?
 We know that:
 Richard woke up at 5am.
@@ -6959,7 +6959,7 @@ Options:
 
 The only time slot when Richard was not occupied by other activities and the basketball court was still open is between 7am and 3pm.
 
-Final Answer: (D) 7am to 3pm",(D) 7am to 3pm,True,1
+Final Answer: (D) 7am to 3pm",(D) 7am to 3pm,True,1,
 237,"Today, Ashley went to the orchestra hall. Between what times could they have gone?
 We know that:
 Ashley woke up at 5am.
@@ -6986,7 +6986,7 @@ Options:
 
 The only gap in Ashley's schedule is between **6am and 7am**. All other time slots in the options conflict with confirmed sightings of Ashley elsewhere.
 
-Final Answer: (A) 6am to 7am",(A) 6am to 7am,True,1
+Final Answer: (A) 6am to 7am",(A) 6am to 7am,True,1,
 238,"Today, Susan went to the bakery. Between what times could they have gone?
 We know that:
 Susan woke up at 7am.
@@ -7015,7 +7015,7 @@ Checking the options:
 - (B), (C), and (D) all fall during times when Susan was confirmed to be elsewhere.
 - (A) is the only gap in her schedule.
 
-Final Answer: (A) 9am to 12pm",(A) 9am to 12pm,True,1
+Final Answer: (A) 9am to 12pm",(A) 9am to 12pm,True,1,
 239,"Today, John went to the coffee shop. Between what times could they have gone?
 We know that:
 John woke up at 5am.
@@ -7045,7 +7045,7 @@ John could only have gone to the coffee shop during his free time when the shop 
 - (C) 5pm to 7pm: He was at the electronics store.
 - (D) 11am to 4pm: He was free and the coffee shop was open.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 240,"Today, Jennifer went to the swimming pool. Between what times could they have gone?
 We know that:
 Jennifer woke up at 5am.
@@ -7083,7 +7083,7 @@ Checking the options:
 
 The only time window when Jennifer was free and the pool was open is 8am to 12pm.
 
-Final Answer: (A) 8am to 12pm",(A) 8am to 12pm,True,1
+Final Answer: (A) 8am to 12pm",(A) 8am to 12pm,True,1,
 241,"Today, William went to the art studio. Between what times could they have gone?
 We know that:
 William woke up at 8am.
@@ -7110,7 +7110,7 @@ Options:
 
 William is accounted for during all the time periods in options (A), (B), and (C). The only unaccounted time slot is between 5pm (when Kimberly saw him in Pisa) and 6pm (when Mary saw him at the mall). Since the art studio is open during this time (it's before the 10pm closing), this is when he could have gone.
 
-Final Answer: (D) 5pm to 6pm",(D) 5pm to 6pm,True,1
+Final Answer: (D) 5pm to 6pm",(D) 5pm to 6pm,True,1,
 242,"Today, Thomas went to the orchestra hall. Between what times could they have gone?
 We know that:
 Thomas woke up at 10am.
@@ -7140,7 +7140,7 @@ Now let's check each option:
 
 The only time slot with no conflicting activities is **10am to 1pm**. Since the orchestra hall was only closed after 9pm, it would have been open during the morning/early afternoon.
 
-Final Answer: (B) 10am to 1pm",(B) 10am to 1pm,True,1
+Final Answer: (B) 10am to 1pm",(B) 10am to 1pm,True,1,
 243,"Today, Emily went to the orchestra hall. Between what times could they have gone?
 We know that:
 Emily woke up at 6am.
@@ -7174,7 +7174,7 @@ Analyzing the options:
 
 The only available window before the hall closed is 9am to 11am.
 
-Final Answer: (C) 9am to 11am",(C) 9am to 11am,True,1
+Final Answer: (C) 9am to 11am",(C) 9am to 11am,True,1,
 244,"Today, Elizabeth went to the bakery. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 5am.
@@ -7204,7 +7204,7 @@ The other options conflict with her confirmed whereabouts:
 - (B) 5am-6am: She was on a rooftop
 - (D) 7am-11am: She was at yoga
 
-Final Answer: (C) 2pm to 7pm",(C) 2pm to 7pm,True,1
+Final Answer: (C) 2pm to 7pm",(C) 2pm to 7pm,True,1,
 245,"Today, Elizabeth went to the swimming pool. Between what times could they have gone?
 We know that:
 Elizabeth woke up at 5am.
@@ -7228,7 +7228,7 @@ This means Elizabeth was occupied until 3pm. The swimming pool was closed after 
 
 Therefore, the only available window for her to visit the swimming pool is between **3pm and 4pm**.
 
-Final Answer: (C) 3pm to 4pm",(C) 3pm to 4pm,True,1
+Final Answer: (C) 3pm to 4pm",(C) 3pm to 4pm,True,1,
 246,"Today, Lisa went to the art show. Between what times could they have gone?
 We know that:
 Lisa woke up at 10am.
@@ -7257,7 +7257,7 @@ Checking the options:
 - **(C) 10am to 12pm**: She was awake and had no conflicting activities
 - (D) 2pm to 3pm: She was at the airport
 
-Final Answer: (C) 10am to 12pm",(C) 10am to 12pm,True,1
+Final Answer: (C) 10am to 12pm",(C) 10am to 12pm,True,1,
 247,"Today, Nancy went to the movies. Between what times could they have gone?
 We know that:
 Nancy woke up at 8am.
@@ -7284,7 +7284,7 @@ Options:
 
 The only gap in Nancy's schedule is between 6pm and 7pm. All other time slots conflict with confirmed activities, and the movies are closed after 9pm.
 
-Final Answer: (A) 6pm to 7pm",(A) 6pm to 7pm,True,1
+Final Answer: (A) 6pm to 7pm",(A) 6pm to 7pm,True,1,
 248,"Today, John went to the clothing store. Between what times could they have gone?
 We know that:
 John woke up at 7am.
@@ -7319,7 +7319,7 @@ The clothing store is closed after 8pm. To find when John could have gone to the
 
 Therefore, the only possible time window for John to have gone to the clothing store is between 11am and 2pm.
 
-Final Answer: (A) 11am to 2pm",(A) 11am to 2pm,True,1
+Final Answer: (A) 11am to 2pm",(A) 11am to 2pm,True,1,
 249,"Today, Kimberly went to the swimming pool. Between what times could they have gone?
 We know that:
 Kimberly woke up at 8am.
@@ -7346,4 +7346,4 @@ The only gap in her schedule is between **4pm and 5pm**. She cannot have gone be
 
 Therefore, the only possible time is **4pm to 5pm**.
 
-Final Answer: (D) 4pm to 5pm",(D) 4pm to 5pm,True,1
+Final Answer: (D) 4pm to 5pm",(D) 4pm to 5pm,True,1,

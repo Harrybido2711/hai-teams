@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,not ( True ) and ( True ) is,False,"To evaluate the expression `not (True) and (True)`, we can break it down step by step.
 
 1. First, we evaluate the `not (True)` part:
@@ -11,7 +11,7 @@ idx,question,gold_answer,model_response,final_answer,has_marker,score
 
 Putting it all together, we find that `not (True) and (True)` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 1,True and not not ( not False ) is,True,"To evaluate the expression `True and not not (not False)`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`.
@@ -26,7 +26,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `True and not not (not False)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 2,not True or False or ( False ) is,False,"To evaluate the expression ""not True or (False)"", we need to break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -46,7 +46,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of the expression ""not True or (False)"" is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 3,False or not ( True ) and False is,False,"To evaluate the expression ""False or not ( True ) and False"", we need to follow the order of operations for logical expressions.
 
 1. **Evaluate the ""not"" operation**: 
@@ -66,7 +66,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False or not ( True ) and False"" is ""False"".
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 4,True or not False and True and False is,True,"To evaluate the expression ""False and True and False"", we need to understand how the logical ""and"" operator works. The ""and"" operator returns True only if both operands are True. If any operand is False, the entire expression evaluates to False.
 
 Let's break it down step by step:
@@ -80,7 +80,7 @@ Let's break it down step by step:
 
 Thus, the entire expression ""False and True and False"" evaluates to False.
 
-Final Answer: False",False,True,0
+Final Answer: False",False,True,0,
 5,False or not not not False and True is,True,"To evaluate the expression `False or not not not False and True`, we need to break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate `not not not False`:**
@@ -105,7 +105,7 @@ Final Answer: False",False,True,0
 
 Thus, the final result of the expression `False or not not not False and True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 6,not True and ( False or True ) is,False,"To evaluate the expression `not True and (False or True)`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -126,7 +126,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the final result of the expression `not True and (False or True)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 7,True and not False or ( True ) is,True,"To evaluate the expression `True and not False or ( True )`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` first.
@@ -152,7 +152,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `True and not False or ( True )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 8,not True or ( False and True ) is,False,"To evaluate the expression `not True or (False and True)`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -172,7 +172,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not True or (False and True)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 9,not True or ( True or False ) is,True,"To evaluate the expression `not True or (True or False)`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -193,7 +193,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not True or (True or False)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 10,False or ( False ) and not False is,False,"To evaluate the expression `False or ( False ) and not False`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -217,7 +217,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `False or ( False ) and not False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 11,not False or True and False and False is,True,"To evaluate the expression `not False or True and False and False`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not False`:**
@@ -239,7 +239,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not False or True and False and False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 12,not True or False or not not True is,True,"To evaluate the expression ""not True or False or not not True"", we can break it down step by step.
 
 1. **Evaluate ""not True""**: 
@@ -263,7 +263,7 @@ Now we can rewrite the original expression using these evaluations:
 
 Thus, the final result of the expression ""not True or False or not not True"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 13,True and True and False and not True is,False,"To evaluate the expression ""True and True and False and not True"", we will break it down step by step, following the rules of logical operations.
 
 1. **Identify the components**:
@@ -285,7 +285,7 @@ Final Answer: True",True,True,1
 3. **Final result**:
    The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 14,not not True and not True or True is,True,"To evaluate the expression `not not True and not True or True`, we will follow the order of operations for logical expressions, which is typically NOT, AND, then OR.
 
 1. **Evaluate `not True`:**
@@ -311,7 +311,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not not True and not True or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 15,not not not ( True and False ) is,True,"To solve the expression `not not not (True and False)`, we can break it down step by step.
 
 1. First, evaluate the expression inside the parentheses: `True and False`.
@@ -326,7 +326,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not not not (True and False)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 16,not not False and not not not False is,False,"To evaluate the expression `not not False and not not not False`, we can break it down step by step.
 
 1. Start with the innermost expressions:
@@ -347,7 +347,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not not False and not not not False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 17,( True and not True and False ) is,False,"To evaluate the expression (True and not True and False), we need to break it down step by step.
 
 1. **Evaluate `not True`:** 
@@ -367,7 +367,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression (True and not True and False) is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 18,False and False and False or not False is,True,"To evaluate the expression ""False and False and False or not False"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate the ""not"" operation first**:
@@ -388,7 +388,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False and False and False or not False"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 19,False or ( False and not False ) is,False,"To evaluate the expression `False or (False and not False)`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -406,7 +406,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False or (False and not False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 20,True and False or ( not True ) is,False,"To evaluate the expression ""True and False or ( not True )"", we can break it down step by step according to the rules of logical operations.
 
 1. **Evaluate the inner expression**: 
@@ -426,7 +426,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""True and False or ( not True )"" is ""False"".
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 21,not not ( True ) and not False is,True,"To evaluate the expression `not not (True) and not False`, we can break it down step by step.
 
 1. Start with the innermost expression: `not (True)`.
@@ -446,7 +446,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not not (True) and not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 22,not False or ( True ) and True is,True,"To evaluate the expression `not False or (True) and True`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not False`:**
@@ -467,7 +467,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not False or (True) and True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 23,not ( True ) or False or True is,True,"To evaluate the expression `not ( True ) or False or True`, we can break it down step by step.
 
 1. **Evaluate `not ( True )`:**
@@ -483,7 +483,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the final result of the expression `not ( True ) or False or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 24,( True and not not not True ) is,False,"To evaluate the expression (True and not not not True), we can break it down step by step.
 
 1. Start with the innermost part: `not True`. The `not` operator negates the value, so:
@@ -503,7 +503,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression (True and not not not True) is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 25,( False or not False or False ) is,True,"To evaluate the expression (False or not False or False), we can break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -521,7 +521,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression (False or not False or False) is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 26,False and False or True and not False is,True,"To evaluate the expression `False and False or True and not False`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not False`:**
@@ -544,7 +544,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False and False or True and not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 27,not not False or not False or True is,True,"To evaluate the expression `not not False or not False or True`, we can break it down step by step.
 
 1. **Evaluate `not False`:**
@@ -565,7 +565,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not not False or not False or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 28,True and not True or False or True is,True,"To evaluate the expression ""True and not True or False or True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not True`:**
@@ -591,7 +591,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""True and not True or False or True"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 29,not False or True and False or False is,True,"To evaluate the expression `not False or True and False or False`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -620,7 +620,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `not False or True and False or False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 30,False and ( not False ) or False is,False,"To evaluate the expression `False and (not False) or False`, we will follow the order of operations for logical expressions, which is:
 
 1. Evaluate the `not` operator.
@@ -646,7 +646,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `False and (not False) or False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 31,not not not not ( not False ) is,True,"To evaluate the expression `not not not not (not False)`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`. The negation of `False` is `True`.
@@ -674,7 +674,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not not not not (not False)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 32,( True ) and True or not True is,True,"To evaluate the expression ""( True ) and True or not True"", we need to follow the order of operations for logical expressions.
 
 1. First, we evaluate the expression inside the parentheses:
@@ -700,7 +700,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""( True ) and True or not True"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 33,not True or False and False and False is,False,"To evaluate the expression ""not True or False and False and False"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate ""not True""**: 
@@ -722,7 +722,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""not True or False and False and False"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 34,not not not not not not not False is,True,"To evaluate the expression ""not not not not not not not False"", we need to understand how the logical NOT operator works. The NOT operator inverts the truth value of a boolean expression.
 
 Let's break it down step by step:
@@ -738,7 +738,7 @@ Let's break it down step by step:
 
 After applying the NOT operator seven times to `False`, we end up with `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 35,not True or not False and not False is,True,"To evaluate the expression ""not True or not False and not False"", we need to break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate the individual components**:
@@ -762,7 +762,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""not True or not False and not False"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 36,False or True or False and not False is,True,"To evaluate the expression ""False or True or False and not False"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Identify the components**:
@@ -789,7 +789,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""False or True or False and not False"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 37,not ( True or True ) and False is,False,"To evaluate the expression `not ( True or True ) and False`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -803,7 +803,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the final result of the expression `not ( True or True ) and False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 38,not not not not True and not True is,False,"To evaluate the expression `not not not not True and not True`, we can break it down step by step.
 
 1. Start with the innermost expression:
@@ -828,7 +828,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not not not not True and not True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 39,( False ) or False and not True is,False,"To evaluate the expression `( False ) or False and not True`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not True`:**
@@ -848,7 +848,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `( False ) or False and not True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 40,( False and True or not False ) is,True,"To evaluate the expression `(False and True or not False)`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not False`:**
@@ -868,7 +868,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `(False and True or not False)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 41,not not not ( False and True ) is,True,"To evaluate the expression `not not not (False and True)`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -894,7 +894,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not not not (False and True)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 42,not not True and not False or True is,True,"To evaluate the expression `not not True and not False or True`, we will break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate `not True`:**
@@ -922,7 +922,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not not True and not False or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 43,not False or True and not not True is,True,"To evaluate the expression `not False or True and not not True`, we will break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate `not False`:**
@@ -946,7 +946,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not False or True and not not True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 44,True or True or not False or False is,True,"To evaluate the expression ""True or True or not False or False"", we can break it down step by step.
 
 1. **Evaluate ""not False""**: 
@@ -963,7 +963,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of the expression ""True or True or not False or False"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 45,( not False and False and False ) is,False,"To evaluate the expression `(not False and False and False)`, we need to break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -983,7 +983,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `(not False and False and False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 46,( ( not True ) or True ) is,True,"To evaluate the expression \( ( ( \text{not True} ) \text{ or } \text{True} ) \), we can break it down step by step.
 
 1. First, we evaluate \( \text{not True} \). The negation of True is False. So, we have:
@@ -1003,7 +1003,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression \( ( ( \text{not True} ) \text{ or } \text{True} ) \) is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 47,not not ( not False or True ) is,True,"Let's break down the expression step by step:
 
 1. Start with the innermost expression: `not False or True`.
@@ -1016,7 +1016,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of the expression `not not ( not False or True )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 48,not True or False or ( True ) is,True,"To evaluate the expression `not True or (True)`, we can break it down step by step.
 
 1. **Evaluate `not True`:**
@@ -1028,7 +1028,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of `not True or (True)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 49,False or ( not False ) and True is,True,"To evaluate the expression `False or (not False) and True`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -1054,7 +1054,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `False or (not False) and True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 50,not False or False or ( False ) is,True,"To evaluate the expression `not False or False or (False)`, we can break it down step by step.
 
 1. **Evaluate `not False`:**
@@ -1069,7 +1069,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of the expression `not False or False or (False)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 51,not not False or False and not True is,False,"To evaluate the expression `not not False or False and not True`, we will follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -1101,7 +1101,7 @@ Now we have:
 
 Thus, the final result of the expression `not not False or False and not True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 52,True or ( ( not True ) ) is,True,"To evaluate the expression ""True or ( ( not True ) )"", we can break it down step by step.
 
 1. The innermost part is ""not True"". The negation of True is False. So, we have:
@@ -1115,7 +1115,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 53,not False and not False and not False is,True,"To evaluate the expression `not False and not False and not False`, we can break it down step by step.
 
 1. The expression contains three instances of `not False`. 
@@ -1126,7 +1126,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not False and not False and not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 54,( False ) and not False and True is,False,"To evaluate the expression `(False) and not False and True`, we can break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -1146,7 +1146,7 @@ Final Answer: True",True,True,1
 
 Since the entire expression evaluates to `False`, we conclude that:
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 55,( True ) and False or not False is,True,"To evaluate the expression `(True) and False or not False`, we will follow the order of operations for logical expressions.
 
 1. **Evaluate `not False`:**
@@ -1166,7 +1166,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `(True) and False or not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 56,( not False and ( True ) ) is,True,"To evaluate the expression `( not False and ( True ) )`, we can break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -1179,7 +1179,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of the expression `( not False and ( True ) )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 57,False or not ( False ) or True is,True,"To evaluate the expression `False or not (False) or True`, we can break it down step by step.
 
 1. Start with the innermost expression: `not (False)`. The `not` operator negates the value, so `not (False)` becomes `True`.
@@ -1193,7 +1193,7 @@ Final Answer: True",True,True,1
 
 Since the final result of the expression is `True`, we conclude that:
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 58,True and not False and not not True is,True,"To evaluate the expression ""True and not False and not not True"", we can break it down step by step.
 
 1. Start with the innermost parts:
@@ -1209,7 +1209,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 59,not True and True and True or False is,False,"To evaluate the expression `not True and True and True or False`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not True`:**
@@ -1227,7 +1227,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not True and True and True or False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 60,not not ( False and not True ) is,False,"To evaluate the expression `not not (False and not True)`, we can break it down step by step.
 
 1. **Evaluate the innermost expression**: 
@@ -1246,7 +1246,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not not (False and not True)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 61,True or not ( ( False ) ) is,True,"To evaluate the expression `True or not (False)`, we first need to simplify the inner part of the expression.
 
 1. The expression `not (False)` evaluates to `True` because the `not` operator negates the value of `False`.
@@ -1261,7 +1261,7 @@ Final Answer: False",False,True,1
 
 Thus, the final evaluation of the expression `True or not (False)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 62,False or not True or False or False is,False,"To evaluate the expression ""False or not True or False or False"", we can break it down step by step.
 
 1. **Evaluate ""not True""**: 
@@ -1277,7 +1277,7 @@ Final Answer: True",True,True,1
 
 Since all parts of the expression evaluate to False, the final result of the entire expression is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 63,False or not not True or not False is,True,"To evaluate the expression ""False or not not True or not False"", we will break it down step by step.
 
 1. Start with the innermost parts:
@@ -1293,7 +1293,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False or not not True or not False"" is ""True"".
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 64,not ( True or True or False ) is,False,"To evaluate the expression `not (True or True or False)`, we first need to simplify the expression inside the parentheses.
 
 1. Inside the parentheses, we have `True or True or False`. The logical OR operator (`or`) returns `True` if at least one of the operands is `True`. Since there are two `True` values in this expression, the result of `True or True or False` is `True`.
@@ -1302,7 +1302,7 @@ Final Answer: True",True,True,1
 
 Therefore, the final result of the expression `not (True or True or False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 65,False or not not not not not False is,True,"To evaluate the expression ""False or not not not not not False"", we need to break it down step by step.
 
 1. Start with the innermost part: ""not False"". The negation of False is True.
@@ -1319,7 +1319,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False or not not not not not False"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 66,not ( False ) or not not True is,True,"To evaluate the expression `not ( False ) or not not True`, we can break it down step by step.
 
 1. **Evaluate `not ( False )`:**
@@ -1336,7 +1336,7 @@ Final Answer: True",True,True,1
 
 Since both parts of the expression evaluate to `True`, the final result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 67,True and not False or False and False is,True,"To evaluate the expression ""True and not False or False and False"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not False`:**
@@ -1359,7 +1359,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""True and not False or False and False"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 68,True or ( not ( True ) ) is,True,"To evaluate the expression `True or ( not ( True ) )`, we can break it down step by step.
 
 1. Start with the innermost part: `not ( True )`. The `not` operator negates the value of `True`, so:
@@ -1372,7 +1372,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `True or ( not ( True ) )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 69,( False or True and not True ) is,False,"To evaluate the expression (False or True and not True), we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate the ""not"" operation first**:
@@ -1392,7 +1392,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression (False or True and not True) is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 70,False or not True and True or True is,True,"To evaluate the expression ""False or not True and True or True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Identify the components**:
@@ -1419,7 +1419,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False or not True and True or True"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 71,not not not not not not not True is,False,"To solve the expression ""not not not not not not not True"", we need to evaluate the number of ""not"" operations applied to the boolean value True.
 
 1. The first ""not"" negates True, resulting in False.
@@ -1432,7 +1432,7 @@ Final Answer: True",True,True,1
 
 Since there are seven ""not"" operations, and each pair of ""not"" operations cancels each other out, we can see that an odd number of ""not"" operations will result in the opposite of the original value. Since we started with True and applied an odd number of negations, we end up with False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 72,( not False ) and False or True is,True,"To evaluate the expression `(not False) and False or True`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not False`:**
@@ -1452,7 +1452,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `(not False) and False or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 73,False and False or not ( True ) is,False,"To evaluate the expression `False and False or not ( True )`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -1478,7 +1478,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `False and False or not ( True )` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 74,( not False or True ) and True is,True,"To evaluate the expression `(not False or True) and True`, we can break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -1492,7 +1492,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `(not False or True) and True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 75,not ( False ) and ( False ) is,False,"To evaluate the expression `not (False) and (False)`, we can break it down step by step.
 
 1. First, we evaluate `not (False)`. The `not` operator negates the value, so:
@@ -1506,7 +1506,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the final result of the expression `not (False) and (False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 76,False or True and not not not False is,True,"To evaluate the expression ""False or True and not not not False"", we need to break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate the innermost expression**: 
@@ -1528,7 +1528,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False or True and not not not False"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 77,( True ) and True and not True is,False,"To evaluate the expression `( True ) and True and not True`, we will break it down step by step according to the rules of logical operations.
 
 1. **Evaluate `not True`:**
@@ -1546,7 +1546,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `( True ) and True and not True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 78,( not True ) and True and False is,False,"To evaluate the expression `(not True) and True and False`, we can break it down step by step.
 
 1. **Evaluate `not True`:** 
@@ -1566,7 +1566,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `(not True) and True and False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 79,( not not True and not False ) is,True,"To evaluate the expression `(not not True and not False)`, we can break it down step by step.
 
 1. **Evaluate `not True`:**
@@ -1589,7 +1589,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `(not not True and not False)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 80,True and ( False ) or not False is,True,"To evaluate the expression `True and (False) or not False`, we will follow the order of operations for logical expressions.
 
 1. **Evaluate the innermost expression**: 
@@ -1609,7 +1609,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `True and (False) or not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 81,not not not False or False and False is,True,"To evaluate the expression `not not not False or False and False`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -1652,7 +1652,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `not not not False or False and False` is `False`.
 
-Final Answer: False",False,True,0
+Final Answer: False",False,True,0,
 82,not not not False and True or False is,True,"To evaluate the expression `not not not False and True or False`, we will break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate `not False`:**
@@ -1680,7 +1680,7 @@ Now we have simplified the expression to:
 
 Thus, the final result of the entire expression `not not not False and True or False` is `False`.
 
-Final Answer: False",False,True,0
+Final Answer: False",False,True,0,
 83,True or ( True or not False ) is,True,"To evaluate the expression `True or ( True or not False )`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`. The `not` operator negates the value of `False`, so:
@@ -1700,7 +1700,7 @@ Final Answer: False",False,True,0
 
 Thus, the entire expression `True or ( True or not False )` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 84,not False or ( ( False ) ) is,True,"To evaluate the expression `not False or ( ( False ) )`, we can break it down step by step.
 
 1. **Evaluate `not False`:**
@@ -1716,7 +1716,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not False or ( ( False ) )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 85,not not ( False and not False ) is,False,"To evaluate the expression `not not (False and not False)`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`.
@@ -1731,7 +1731,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of the entire expression `not not (False and not False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 86,not not not not True or not True is,True,"To evaluate the expression ""not not not not True or not True"", we can break it down step by step.
 
 1. Start with the innermost expression:
@@ -1756,7 +1756,7 @@ So, ""not not not not True"" evaluates to True.
 
 Thus, the final result of the entire expression ""not not not not True or not True"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 87,False and not ( False or False ) is,False,"To evaluate the expression ""False and not (False or False)"", we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -1774,7 +1774,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, we find that ""False and not (False or False)"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 88,True and True and True or not False is,True,"To evaluate the expression `True and True and True or not False`, we need to follow the order of operations for logical expressions.
 
 1. **Evaluate `not False`:**
@@ -1796,7 +1796,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `True and True and True or not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 89,False or not False or True and True is,True,"To evaluate the expression `False or not False or True and True`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` first.
@@ -1823,7 +1823,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `False or not False or True and True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 90,not False and False and False or False is,False,"To evaluate the expression `not False and False and False or False`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -1851,7 +1851,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `not False and False and False or False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 91,( False ) or not False or True is,True,"To evaluate the expression `( False ) or not False or True`, we can break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -1867,7 +1867,7 @@ Final Answer: False",False,True,1
 
 Since the final result of the expression is `True`, we conclude:
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 92,( not False ) or ( True ) is,True,"To evaluate the expression `(not False) or (True)`, we can break it down step by step:
 
 1. **Evaluate `not False`:** The `not` operator negates the value. Since `False` is being negated, `not False` evaluates to `True`.
@@ -1878,7 +1878,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression `(not False) or (True)` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 93,not not ( False or not True ) is,False,"To solve the expression `not not ( False or not True )`, we will break it down step by step.
 
 1. **Evaluate the innermost expression**: 
@@ -1897,7 +1897,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not not ( False or not True )` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 94,False or not False or False or False is,True,"To evaluate the expression ""False or not False or False or False"", we need to break it down step by step.
 
 1. The expression contains the logical operator ""or"" and the negation operator ""not"".
@@ -1915,7 +1915,7 @@ Final Answer: False",False,True,1
 
 Since the final result of the expression is True, we conclude:
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 95,False or not False and ( False ) is,False,"To evaluate the expression `False or not False and (False)`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not False`:** 
@@ -1935,7 +1935,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False or not False and (False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 96,False or ( False ) or not True is,False,"To evaluate the expression `False or ( False ) or not True`, we can break it down step by step.
 
 1. **Evaluate `not True`:**
@@ -1952,7 +1952,7 @@ Final Answer: False",False,True,1
 
 Since all parts of the expression evaluate to `False`, the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 97,not True or False and True and True is,False,"To evaluate the expression ""not True or False and True and True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate the ""not"" operation first**:
@@ -1974,7 +1974,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""not True or False and True and True"" is ""False"".
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 98,True or ( True or not True ) is,True,"To evaluate the expression ""True or (True or not True)"", we can break it down step by step.
 
 1. Start with the innermost expression: ""not True"". The negation of True is False. So, we have:
@@ -1994,7 +1994,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression ""True or (True or not True)"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 99,True and not False and True or True is,True,"To evaluate the expression `True and not False and True or True`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not False`:** 
@@ -2016,7 +2016,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `True and not False and True or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 100,False or not False or not not True is,True,"To evaluate the expression `False or not False or not not True`, we will break it down step by step.
 
 1. Start with the innermost expressions:
@@ -2032,7 +2032,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False or not False or not not True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 101,( True or not False ) or False is,True,"To evaluate the expression `(True or not False) or False`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`. The `not` operator negates the value of `False`, so `not False` evaluates to `True`.
@@ -2048,7 +2048,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression `(True or not False) or False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 102,False or not ( True ) and True is,False,"To evaluate the expression ""False or not ( True ) and True"", we need to follow the order of operations for logical expressions.
 
 1. **Evaluate the innermost expression**: 
@@ -2068,7 +2068,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""False or not ( True ) and True"" is ""False"".
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 103,not False and not True and not False is,False,"To evaluate the expression `not False and not True and not False`, we will break it down step by step.
 
 1. **Evaluate `not False`:**
@@ -2091,7 +2091,7 @@ Next, we evaluate the `and` operations:
 
 Thus, the final result of the entire expression `not False and not True and not False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 104,False and ( True and not False ) is,False,"To evaluate the expression `False and (True and not False)`, we can break it down step by step.
 
 1. Start with the inner expression: `not False`. The `not` operator negates the value, so:
@@ -2111,7 +2111,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `False and (True and not False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 105,not False or ( False ) or True is,True,"To evaluate the expression `not False or (False) or True`, we can break it down step by step.
 
 1. **Evaluate `not False`:**
@@ -2128,7 +2128,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not False or (False) or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 106,False and not ( False and True ) is,False,"To evaluate the expression ""False and not (False and True)"", we can break it down step by step.
 
 1. First, evaluate the inner expression: 
@@ -2148,7 +2148,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""False and not (False and True)"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 107,( True or not not not False ) is,True,"To evaluate the expression (True or not not not False), we can break it down step by step.
 
 1. Start with the innermost part: `not False`. The `not` operator negates the value, so:
@@ -2165,7 +2165,7 @@ Final Answer: False",False,True,1
 
 Thus, the final evaluation of the expression (True or not not not False) is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 108,False and ( False or not False ) is,False,"To evaluate the expression `False and (False or not False)`, we can break it down step by step.
 
 1. Start with the innermost part of the expression: `not False`.
@@ -2185,7 +2185,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False and (False or not False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 109,False or not True or True and False is,False,"To evaluate the expression ""False or not True or True and False"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not True`:**
@@ -2205,7 +2205,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False or not True or True and False"" is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 110,True and not True or True and True is,True,"To evaluate the expression ""True and not True or True and True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate ""not True"":**
@@ -2228,7 +2228,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""True and not True or True and True"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 111,( not False or ( True ) ) is,True,"To evaluate the expression `( not False or ( True ) )`, we can break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -2240,7 +2240,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of the expression `( not False or ( True ) )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 112,( ( not ( True ) ) ) is,False,"To evaluate the expression \( ( ( \text{not} ( \text{True} ) ) ) \), we need to understand the logical operation involved.
 
 1. The innermost part of the expression is \( \text{True} \).
@@ -2249,7 +2249,7 @@ Final Answer: True",True,True,1
 
 Since there are no further operations to apply, the final result of the entire expression \( ( ( \text{not} ( \text{True} ) ) ) \) is \( \text{False} \).
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 113,False and False and not ( False ) is,False,"To evaluate the expression `False and False and not (False)`, we can break it down step by step.
 
 1. Start with the innermost part of the expression: `not (False)`. The `not` operator negates the value, so:
@@ -2266,7 +2266,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 114,not True and not True and not True is,False,"To evaluate the expression ""not True and not True and not True"", we need to break it down step by step.
 
 1. The expression contains three instances of ""not True"". The logical negation of True is False. Therefore:
@@ -2282,7 +2282,7 @@ Final Answer: False",False,True,1
 
 So, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 115,not ( True or False ) or True is,True,"To evaluate the expression `not (True or False) or True`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -2296,7 +2296,7 @@ Final Answer: False",False,True,1
 
 Putting it all together, the final evaluation of the expression `not (True or False) or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 116,False or ( True ) or not True is,True,"To evaluate the expression `False or ( True ) or not True`, we can break it down step by step.
 
 1. **Evaluate the innermost expression**: 
@@ -2313,7 +2313,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False or ( True ) or not True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 117,False or False and False or not True is,False,"To evaluate the expression ""False or False and False or not True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations. The order of operations is as follows:
 
 1. Evaluate ""not"" first.
@@ -2342,7 +2342,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression ""False or False and False or not True"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 118,True or False or not True or False is,True,"The statement ""True or False or not True or False"" is somewhat ambiguous and can be interpreted in different ways. 
 
 1. If we break it down, ""True or False"" is a logical expression that evaluates to either True or False. 
@@ -2353,7 +2353,7 @@ However, the phrase itself does not form a clear logical statement that can be d
 
 Given this reasoning, the answer is not definitively True or False.
 
-Final Answer: not True or False",not True or False,True,0
+Final Answer: not True or False",not True or False,True,0,
 119,not True and ( True and True ) is,False,"To evaluate the expression `not True and (True and True)`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -2373,7 +2373,7 @@ Final Answer: not True or False",not True or False,True,0
 
 Thus, the final result of the expression `not True and (True and True)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 120,not True and True or True and False is,False,"To evaluate the expression `not True and True or True and False`, we will follow the order of operations for logical expressions, which is NOT, then AND, and finally OR.
 
 1. **Evaluate `not True`:**
@@ -2396,7 +2396,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not True and True or True and False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 121,not False or ( True or True ) is,True,"To evaluate the expression `not False or (True or True)`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -2416,7 +2416,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the entire expression `not False or (True or True)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 122,not ( False or ( False ) ) is,True,"To evaluate the expression `not ( False or ( False ) )`, we can break it down step by step.
 
 1. First, we evaluate the inner expression: `False or (False)`.
@@ -2431,7 +2431,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, we find that `not ( False or ( False ) )` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 123,not ( True or True ) and True is,False,"To evaluate the expression `not ( True or True ) and True`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -2445,7 +2445,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the final evaluation of the expression `not ( True or True ) and True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 124,False or not False or True or True is,True,"To evaluate the expression `False or not False or True or True`, we can break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -2463,7 +2463,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `False or not False or True or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 125,False or False and not not not False is,False,"To evaluate the expression ""False or False and not not not False"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. Start with the innermost expression: ""not not not False"".
@@ -2487,7 +2487,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""False or False and not not not False"" is ""False"".
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 126,not ( True or False or True ) is,False,"To evaluate the expression `not ( True or False or True )`, we first need to simplify the expression inside the parentheses.
 
 1. The expression inside the parentheses is `True or False or True`.
@@ -2504,7 +2504,7 @@ Now we take the result of the parentheses and apply the `not` operator:
 
 Thus, the final result of the expression `not ( True or False or True )` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 127,( False ) or not True and False is,False,"To evaluate the expression ""( False ) or not True and False"", we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate the ""not"" operation first**:
@@ -2524,7 +2524,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""( False ) or not True and False"" is ""False"".
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 128,True and True and not not not False is,True,"To evaluate the expression `True and True and not not not False`, we can break it down step by step.
 
 1. Start with the innermost part: `not False`. The `not` operator negates the value, so:
@@ -2544,7 +2544,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `True and True and not not not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 129,( True ) or True and not True is,True,"To evaluate the expression `( True ) or True and not True`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not True`:**
@@ -2564,7 +2564,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `( True ) or True and not True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 130,False and False and not True and False is,False,"To evaluate the expression ""False and False and not True and False"", we will break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate the ""not"" operation first**:
@@ -2581,7 +2581,7 @@ Final Answer: True",True,True,1
 
 Since all parts of the expression evaluate to False, the final result of the entire expression is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 131,( True ) and not True or True is,True,"To evaluate the expression `( True ) and not True or True`, we will follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not True`:**
@@ -2601,7 +2601,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `( True ) and not True or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 132,not not not True and False and False is,False,"To evaluate the expression `not not not True and False and False`, we will break it down step by step.
 
 1. Start with the innermost part: `not True`. 
@@ -2622,7 +2622,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 133,False and False and not not not True is,False,"To evaluate the expression ""False and False and not not not True"", we will break it down step by step.
 
 1. Start with the innermost part: ""not not not True"".
@@ -2640,7 +2640,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression ""False and False and not not not True"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 134,False and False or False or not True is,False,"To evaluate the expression `False and False or False or not True`, we will follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` first.
@@ -2678,7 +2678,7 @@ Let's break it down step by step:
 
 Thus, the final result of the entire expression `False and False or False or not True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 135,False or ( not ( False ) ) is,True,"To evaluate the expression `False or ( not ( False ) )`, we can break it down step by step.
 
 1. Start with the innermost part: `not ( False )`. The `not` operator negates the value, so:
@@ -2692,7 +2692,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `False or ( not ( False ) )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 136,not True and True and not not False is,False,"To evaluate the expression `not True and True and not not False`, we will break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate `not True`:**
@@ -2715,7 +2715,7 @@ The expression now looks like this:
 
 Thus, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 137,( False ) and ( not False ) is,False,"To evaluate the expression (False) and (not False), we need to break it down step by step.
 
 1. The expression contains two parts: (False) and (not False).
@@ -2726,7 +2726,7 @@ Final Answer: False",False,True,1
 
 Therefore, the final result of the expression (False) and (not False) is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 138,( not True ) and True or True is,True,"To evaluate the expression ""(not True) and True or True"", we need to follow the order of operations for logical expressions.
 
 1. **Evaluate ""not True"":**
@@ -2746,7 +2746,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""(not True) and True or True"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 139,False and True and ( not False ) is,False,"To evaluate the expression `False and True and (not False)`, we can break it down step by step.
 
 1. **Evaluate the `not False` part**: 
@@ -2767,7 +2767,7 @@ Final Answer: True",True,True,1
 
 Thus, the final answer is:
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 140,( ( True ) ) or not False is,True,"To evaluate the expression `( ( True ) ) or not False`, we can break it down step by step.
 
 1. The innermost expression is `True`, which is simply `True`.
@@ -2778,7 +2778,7 @@ In logical operations, the `or` operator returns `True` if at least one of the o
 
 Thus, the final evaluation of the entire expression `( ( True ) ) or not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 141,not True and False or False or True is,True,"To evaluate the expression `not True and False or False or True`, we will follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -2816,7 +2816,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `not True and False or False or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 142,True and not True and True and True is,False,"To evaluate the expression ""True and not True and True and True"", we need to break it down step by step, following the rules of logical operations.
 
 1. **Identify the components**:
@@ -2843,7 +2843,7 @@ Final Answer: True",True,True,1
 
 Thus, the answer to the expression ""True and not True and True and True"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 143,( True or True or not False ) is,True,"To evaluate the expression (True or True or not False), we can break it down step by step:
 
 1. **Evaluate the innermost expression**: 
@@ -2858,7 +2858,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression (True or True or not False) evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 144,True or not False and True or True is,True,"To evaluate the expression ""True or not False and True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Identify the components**:
@@ -2877,7 +2877,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""True or not False and True"" is ""True"".
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 145,( not ( False ) or False ) is,True,"To evaluate the expression \( ( \text{not} ( \text{False} ) \text{ or } \text{False} ) \), we can break it down step by step.
 
 1. First, we evaluate the inner part: \( \text{not} ( \text{False} ) \).
@@ -2891,7 +2891,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression \( ( \text{not} ( \text{False} ) \text{ or } \text{False} ) \) is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 146,True and not ( True or False ) is,False,"To evaluate the expression ""True and not (True or False)"", we can break it down step by step.
 
 1. **Evaluate the inner expression (True or False)**:
@@ -2913,7 +2913,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""True and not (True or False)"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 147,not ( False and True ) and True is,True,"To evaluate the expression `not (False and True) and True`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -2927,7 +2927,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not (False and True) and True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 148,not ( True and True ) or False is,False,"To evaluate the expression `not ( True and True ) or False`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -2944,7 +2944,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not ( True and True ) or False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 149,False or not True and not not False is,False,"To evaluate the expression ""False or not True and not not False"", we need to break it down step by step, following the order of operations for logical expressions.
 
 1. **Identify the components**:
@@ -2976,7 +2976,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False or not True and not not False"" is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 150,not True and False or False and False is,False,"To evaluate the expression ""not True and False or False and False"", we will follow the order of operations for logical expressions, which is NOT, AND, then OR.
 
 1. **Evaluate NOT**:
@@ -2994,7 +2994,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""not True and False or False and False"" is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 151,not True or True and False or False is,False,"To evaluate the expression `not True or True and False or False`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not True`:**
@@ -3014,7 +3014,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not True or True and False or False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 152,( not ( False ) and False ) is,False,"To evaluate the expression \( ( \text{not} ( \text{False} ) \text{ and } \text{False} ) \), we can break it down step by step.
 
 1. First, we evaluate the inner expression \( \text{not} ( \text{False} ) \). The logical NOT operator negates the value, so:
@@ -3034,7 +3034,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression \( ( \text{not} ( \text{False} ) \text{ and } \text{False} ) \) is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 153,False or ( True and not True ) is,False,"To evaluate the expression `False or ( True and not True )`, we can break it down step by step.
 
 1. **Evaluate the innermost expression**: 
@@ -3054,7 +3054,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `False or ( True and not True )` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 154,not False and not True or not True is,False,"To evaluate the expression `not False and not True or not True`, we will break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate `not False`:**
@@ -3077,7 +3077,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not False and not True or not True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 155,( False or not not not False ) is,True,"To evaluate the expression (False or not not not False), we can break it down step by step.
 
 1. Start with the innermost part: `not False`. The `not` operator negates the value, so:
@@ -3097,7 +3097,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression (False or not not not False) is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 156,( not False ) or True and False is,True,"To evaluate the expression `(not False) or True and False`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not False`:**
@@ -3117,7 +3117,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `(not False) or True and False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 157,( not not True ) or not False is,True,"To evaluate the expression `(not not True) or not False`, we can break it down step by step.
 
 1. **Evaluate `not True`:**
@@ -3138,7 +3138,7 @@ Now we can substitute these results back into the original expression:
 
 Thus, the final result of the expression `(not not True) or not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 158,True or not ( ( True ) ) is,True,"To evaluate the expression `True or not ( ( True ) )`, we need to break it down step by step.
 
 1. The innermost expression is `( True )`, which is simply `True`.
@@ -3147,7 +3147,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of `True or not ( ( True ) )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 159,( False ) and False or not False is,True,"To evaluate the expression `(False) and False or not False`, we will follow the order of operations for logical expressions.
 
 1. **Evaluate `not False`:**
@@ -3167,7 +3167,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `(False) and False or not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 160,not False and True or ( True ) is,True,"To evaluate the expression `not False and True or (True)`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not False`:**
@@ -3187,7 +3187,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not False and True or (True)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 161,True or not not ( not False ) is,True,"To evaluate the expression ""True or not not (not False)"", we can break it down step by step.
 
 1. Start with the innermost expression: `not False`. The negation of `False` is `True`. So, we have:
@@ -3205,7 +3205,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of the entire expression ""True or not not (not False)"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 162,False and not True and False and True is,False,"To evaluate the expression ""False and not True and False and True"", we need to break it down step by step, following the rules of logical operations.
 
 1. **Evaluate `not True`:** 
@@ -3223,7 +3223,7 @@ Final Answer: True",True,True,1
 
 Since any `and` operation that includes `False` will always result in `False`, the final result of the entire expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 163,not not True and True and not True is,False,"To evaluate the expression `not not True and True and not True`, we will break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate `not True`:**
@@ -3249,7 +3249,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not not True and True and not True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 164,not False or not ( not False ) is,True,"To evaluate the expression `not False or not (not False)`, we can break it down step by step.
 
 1. Start with the innermost expression:
@@ -3272,7 +3272,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not False or not (not False)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 165,not not ( True ) or not True is,True,"To evaluate the expression `not not (True) or not True`, we can break it down step by step.
 
 1. Start with the innermost expression: `not (True)`.
@@ -3292,7 +3292,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not not (True) or not True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 166,( True and not True and True ) is,False,"To evaluate the expression (True and not True and True), we need to break it down step by step.
 
 1. **Evaluate `not True`:** 
@@ -3313,7 +3313,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression (True and not True and True) evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 167,True or False or not True or True is,True,"To evaluate the statement ""True or False or not True or True,"" we can break it down using logical operations.
 
 1. **True** is a logical value that represents truth.
@@ -3330,7 +3330,7 @@ Since there is at least one True in the expression, the overall result of ""True
 
 Thus, the statement evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 168,not True or True and False and False is,False,"To evaluate the expression `not True or True and False and False`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not True`:**
@@ -3348,7 +3348,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the final evaluation of the expression `not True or True and False and False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 169,True and not not not not not True is,False,"To evaluate the expression ""True and not not not not not True"", we can break it down step by step.
 
 1. Start with the innermost part: ""not True"". The negation of True is False.
@@ -3365,7 +3365,7 @@ The logical operation ""and"" between True and False results in False.
 
 Thus, the final evaluation of the expression ""True and not not not not not True"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 170,not True and ( False ) and False is,False,"To evaluate the expression `not True and (False) and False`, we will break it down step by step, following the rules of logical operations.
 
 1. **Evaluate `not True`:**
@@ -3385,7 +3385,7 @@ Final Answer: False",False,True,1
 
 Since all parts of the expression evaluate to `False`, the final result of the entire expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 171,False and False or not True and False is,False,"To evaluate the expression ""False and False or not True and False"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate the ""not"" operation first**:
@@ -3406,7 +3406,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False and False or not True and False"" is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 172,True or False and not True and False is,True,"To analyze the statement ""True or False and not True and False,"" we need to break it down using logical operations.
 
 1. **Identify the components**:
@@ -3426,7 +3426,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression ""True or False and not True and False"" evaluates to ""True.""
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 173,not ( False or False or True ) is,False,"To evaluate the expression `not (False or False or True)`, we first need to simplify the expression inside the parentheses.
 
 1. We start with the inner expression: `False or False or True`.
@@ -3440,7 +3440,7 @@ Now we take the result of the inner expression and apply the `not` operator:
 
 Thus, the final result of the expression `not (False or False or True)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 174,not False or True or True and False is,True,"To evaluate the expression `not False or True or True and False`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not False`:**
@@ -3458,7 +3458,7 @@ Now we can rewrite the expression with these evaluations:
 
 Thus, the final result of the entire expression `not False or True or True and False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 175,not False and False or False or False is,False,"To evaluate the expression `not False and False or False or False`, we will follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -3490,7 +3490,7 @@ Let's break it down step by step:
 
 After evaluating the entire expression, we find that the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 176,( not True ) and ( False ) is,False,"To evaluate the expression `(not True) and (False)`, we need to break it down step by step.
 
 1. First, we evaluate `not True`. The `not` operator negates the value of `True`, so:
@@ -3501,7 +3501,7 @@ Final Answer: False",False,True,1
 
 Putting it all together, the expression `(not True) and (False)` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 177,True and not not False and not False is,False,"To evaluate the expression `True and not not False and not False`, we can break it down step by step.
 
 1. Start with the innermost parts:
@@ -3521,7 +3521,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `True and not not False and not False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 178,not ( not not False ) and True is,True,"To evaluate the expression `not ( not not False ) and True`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`. 
@@ -3544,7 +3544,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not ( not not False ) and True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 179,not ( not False ) and not False is,False,"To evaluate the expression `not ( not False ) and not False`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`.
@@ -3570,7 +3570,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not ( not False ) and not False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 180,False or True and not False or True is,True,"To evaluate the expression ""False or True and not False or True"", we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Identify the components**:
@@ -3595,7 +3595,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 181,( not not not True and True ) is,False,"To evaluate the expression `(not not not True and True)`, we will break it down step by step.
 
 1. Start with the innermost expression: `not True`. 
@@ -3612,7 +3612,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `(not not not True and True)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 182,False and not ( True ) or True is,True,"To evaluate the expression `False and not (True) or True`, we will follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -3638,7 +3638,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `False and not (True) or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 183,( not True and False or True ) is,True,"To evaluate the expression `(not True and False or True)`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not True`:** 
@@ -3658,7 +3658,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `(not True and False or True)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 184,not ( not not True ) or False is,False,"To evaluate the expression `not ( not not True ) or False`, we can break it down step by step.
 
 1. Start with the innermost expression: `not True`. 
@@ -3682,7 +3682,7 @@ Next, we need to evaluate the entire expression: `False or False`.
 
 Thus, the final result of the expression `not ( not not True ) or False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 185,( not False ) or ( False ) is,True,"To evaluate the expression (not False) or (False), we need to break it down step by step.
 
 1. **Evaluate (not False)**: The logical negation of False is True. So, (not False) evaluates to True.
@@ -3697,7 +3697,7 @@ True or False
 
 Therefore, the final evaluation of the expression (not False) or (False) is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 186,not not not False and True and False is,False,"To evaluate the expression `not not not False and True and False`, we will break it down step by step.
 
 1. Start with the innermost part: `not False`. 
@@ -3714,7 +3714,7 @@ Final Answer: True",True,True,1
 
 So, the final result of the entire expression `not not not False and True and False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 187,True or not True or not not True is,True,"To evaluate the statement ""True or not True or not not True,"" we can break it down step by step.
 
 1. **Understanding ""not True"":** The negation of True is False. So, ""not True"" is False.
@@ -3732,7 +3732,7 @@ Now, let's evaluate:
 
 Since at least one operand (the first and the third) is True, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 188,not False or not not False and False is,True,"To evaluate the expression `not False or not not False and False`, we will break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate `not False`:**
@@ -3755,7 +3755,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not False or not not False and False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 189,not False and ( False or False ) is,False,"To evaluate the expression `not False and (False or False)`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -3775,7 +3775,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the final evaluation of the expression `not False and (False or False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 190,False and True or ( not False ) is,True,"To evaluate the expression ""False and True or ( not False )"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate the NOT operation first**:
@@ -3795,7 +3795,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False and True or ( not False )"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 191,False and not False and ( False ) is,False,"To evaluate the expression `False and not False and (False)`, we can break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -3814,7 +3814,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False and not False and (False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 192,not ( ( False and True ) ) is,True,"To evaluate the expression `not ( ( False and True ) )`, we can break it down step by step.
 
 1. First, we evaluate the inner expression: `False and True`.
@@ -3828,7 +3828,7 @@ Final Answer: False",False,True,1
 
 Therefore, the final result of the expression `not ( ( False and True ) )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 193,False or ( not False ) and False is,False,"To evaluate the expression `False or (not False) and False`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate the `not` operator first**:
@@ -3848,7 +3848,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False or (not False) and False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 194,False and not False or False and True is,False,"To evaluate the expression ""False and not False or False and True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not False`:**
@@ -3868,7 +3868,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False and not False or False and True"" is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 195,not False and not not True and True is,True,"To evaluate the expression `not False and not not True and True`, we can break it down step by step:
 
 1. **Evaluate `not False`:**
@@ -3887,7 +3887,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not False and not not True and True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 196,True and True or False and not True is,True,"To evaluate the expression ""True and True or False and not True"", we need to break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate the ""not"" operation**:
@@ -3908,7 +3908,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""True and True or False and not True"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 197,not True or False and True or False is,False,"To evaluate the expression ""not True or False and True or False"", we need to break it down step by step, following the order of operations for logical expressions.
 
 1. **Identify the components**:
@@ -3935,7 +3935,7 @@ Final Answer: True",True,True,1
 
 Thus, the final evaluation of the expression ""not True or False and True or False"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 198,True or False or not True and True is,True,"To evaluate the expression ""True or False or not True and True"", we need to follow the order of operations for logical expressions, which prioritizes ""not"" over ""and"" and ""and"" over ""or"".
 
 1. Start with the ""not"" operation:
@@ -3956,7 +3956,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to ""True"".
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 199,False or False or not True or False is,False,"To evaluate the expression ""False or False or not True or False"", we will break it down step by step.
 
 1. **Evaluate ""not True""**: 
@@ -3972,7 +3972,7 @@ Final Answer: True",True,True,1
 
 Since all parts of the expression evaluate to False, the final result of the entire expression is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 200,False or False or True and not False is,True,"To evaluate the expression ""False or False or True and not False"", we need to follow the order of operations for logical expressions, which prioritizes ""and"" over ""or"".
 
 1. Start with the ""not"" operation:
@@ -3993,7 +3993,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 201,( not ( True or False ) ) is,False,"To evaluate the expression \( \text{not} ( \text{True} \text{ or } \text{False} ) \), we first need to determine the value of the expression inside the parentheses.
 
 1. The expression \( \text{True} \text{ or } \text{False} \) evaluates to \( \text{True} \) because the logical OR operation returns True if at least one of the operands is True.
@@ -4007,7 +4007,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression \( \text{not} ( \text{True} \text{ or } \text{False} ) \) is \( \text{False} \).
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 202,not False and False or True and True is,True,"To evaluate the expression `not False and False or True and True`, we will follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not`
@@ -4039,7 +4039,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `not False and False or True and True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 203,True and False or ( not False ) is,True,"To evaluate the expression ""True and False or ( not False )"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate the NOT operation first**:
@@ -4059,7 +4059,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""True and False or ( not False )"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 204,not False or not not not not True is,True,"To evaluate the expression `not False or not not not not True`, we can break it down step by step.
 
 1. **Evaluate `not False`:**
@@ -4079,7 +4079,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression `not False or not not not not True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 205,True and ( not ( True ) ) is,False,"To evaluate the expression `True and ( not ( True ) )`, we can break it down step by step.
 
 1. Start with the innermost part: `not ( True )`. The `not` operator negates the value of `True`, so:
@@ -4093,7 +4093,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `True and ( not ( True ) )` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 206,True and False and not True or False is,False,"To evaluate the expression ""True and False and not True or False"", we need to break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate ""not True""**: 
@@ -4119,7 +4119,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""True and False and not True or False"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 207,( ( not False ) ) and True is,True,"To evaluate the expression ( ( not False ) ) and True, we can break it down step by step.
 
 1. The innermost part is `not False`. The `not` operator negates the value of `False`, which means `not False` evaluates to `True`.
@@ -4130,7 +4130,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ( ( not False ) ) and True is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 208,not ( True ) and ( False ) is,False,"To evaluate the expression `not (True) and (False)`, we can break it down step by step.
 
 1. First, we evaluate `not (True)`. The `not` operator negates the value of `True`, so:
@@ -4141,7 +4141,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, we find that `not (True) and (False)` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 209,True or not False and False and False is,True,"To evaluate the expression ""True or not False and False and False"", we need to follow the order of operations for logical expressions.
 
 1. **Evaluate ""not False""**: 
@@ -4166,7 +4166,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""True or not False and False and False"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 210,True and not ( False or False ) is,True,"To evaluate the expression ""True and not ( False or False )"", we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -4186,7 +4186,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""True and not ( False or False )"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 211,not True and False or False and True is,False,"To evaluate the expression `not True and False or False and True`, we will follow the order of operations for logical expressions, which is NOT, AND, then OR.
 
 1. **Evaluate `not True`:**
@@ -4209,7 +4209,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not True and False or False and True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 212,not True or not False and not True is,False,"To evaluate the expression ""not True or not False and not True"", we need to break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate the individual components**:
@@ -4233,7 +4233,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""not True or not False and not True"" is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 213,not True or False or True and True is,True,"To evaluate the expression ""not True or False or True and True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate the ""and"" operation first**:
@@ -4254,7 +4254,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""not True or False or True and True"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 214,not True and True and False and True is,False,"To evaluate the expression `not True and True and False and True`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate the `not` operator first.
@@ -4280,7 +4280,7 @@ Let's break it down step by step:
 
 After evaluating all parts of the expression, we find that the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 215,False and False or not True and True is,False,"To evaluate the expression ""False and False or not True and True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate the ""not"" operation first**:
@@ -4301,7 +4301,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""False and False or not True and True"" is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 216,( not False or False and True ) is,True,"To evaluate the expression `(not False or False and True)`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not False`:**
@@ -4318,7 +4318,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `(not False or False and True)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 217,( True or False ) or not True is,True,"To determine whether the statement ""not True"" is true or false, we need to analyze the logical negation of the term ""True.""
 
 1. The term ""True"" represents a truth value that is affirmative or correct.
@@ -4327,7 +4327,7 @@ Final Answer: True",True,True,1
 
 Since ""not True"" is indeed false, we conclude that the statement is false.
 
-Final Answer: False",False,True,0
+Final Answer: False",False,True,0,
 218,not not not ( False ) and False is,False,"To evaluate the expression `not not not (False) and False`, we can break it down step by step.
 
 1. Start with the innermost expression: `not (False)`.
@@ -4345,7 +4345,7 @@ Final Answer: False",False,True,0
 
 Putting it all together, the final evaluation of the expression `not not not (False) and False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 219,not False and False and False and True is,False,"To evaluate the expression `not False and False and False and True`, we will break it down step by step, following the order of operations for logical expressions.
 
 1. **Evaluate `not False`:**
@@ -4368,7 +4368,7 @@ Final Answer: False",False,True,1
 
 After evaluating the entire expression, we find that the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 220,False and not True and True or False is,False,"To evaluate the expression `False and not True and True or False`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not True`:**
@@ -4394,7 +4394,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `False and not True and True or False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 221,( False or not False and False ) is,False,"To evaluate the expression (False or not False and False), we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate `not False`:** 
@@ -4414,7 +4414,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression (False or not False and False) is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 222,False or ( False or not False ) is,True,"To evaluate the expression `False or ( False or not False )`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`. The `not` operator negates the value, so `not False` is `True`.
@@ -4429,7 +4429,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `False or ( False or not False )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 223,not False or True or False and False is,True,"To evaluate the expression `not False or True or False and False`, we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate the `not` operator first**:
@@ -4450,7 +4450,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 224,True or ( not False ) or True is,True,"To evaluate the expression `True or (not False) or True`, we can break it down step by step.
 
 1. **Evaluate `not False`:** 
@@ -4465,7 +4465,7 @@ Final Answer: True",True,True,1
 
 Since at least one of the values is `True`, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 225,not False and False or True or False is,True,"To evaluate the expression `not False and False or True or False`, we will follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -4497,7 +4497,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `not False and False or True or False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 226,False and not ( not not False ) is,False,"To evaluate the expression `False and not (not not False)`, we can break it down step by step.
 
 1. Start with the innermost part: `not not False`.
@@ -4518,7 +4518,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False and not (not not False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 227,not not ( not True ) or False is,False,"Let's break down the expression step by step:
 
 1. Start with the innermost expression: `not True`. 
@@ -4539,7 +4539,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not not (not True) or False` is `True`.
 
-Final Answer: True",True,True,0
+Final Answer: True",True,True,0,
 228,False and not True and True and False is,False,"To evaluate the expression ""False and not True and True and False"", we need to break it down step by step, following the rules of logical operations.
 
 1. **Evaluate `not True`:** 
@@ -4560,7 +4560,7 @@ Final Answer: True",True,True,0
 
 Since all parts of the expression lead to `False`, the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 229,True or False and not ( True ) is,True,"To evaluate the expression ""True or False and not ( True )"", we need to follow the order of operations for logical expressions.
 
 1. **Evaluate the innermost expression**: 
@@ -4580,7 +4580,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""True or False and not ( True )"" is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 230,not ( False ) and ( True ) is,True,"To evaluate the expression `not (False) and (True)`, we can break it down step by step:
 
 1. **Evaluate `not (False)`**: The `not` operator negates the value. Since `False` is being negated, `not (False)` becomes `True`.
@@ -4591,7 +4591,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the expression `not (False) and (True)` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 231,False and not ( ( True ) ) is,False,"To evaluate the expression ""False and not ( ( True ) )"", we can break it down step by step.
 
 1. Start with the innermost expression: 
@@ -4608,7 +4608,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""False and not ( ( True ) )"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 232,not False or ( not not False ) is,True,"To evaluate the expression `not False or (not not False)`, we can break it down step by step.
 
 1. **Evaluate `not False`:**
@@ -4624,7 +4624,7 @@ Final Answer: False",False,True,1
 
 Since `True or False` is `True`, the final result of the entire expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 233,( ( not False ) and False ) is,False,"To evaluate the expression ( ( not False ) and False ), we can break it down step by step.
 
 1. First, we evaluate the inner expression: `not False`. The `not` operator negates the value of `False`, which results in `True`.
@@ -4635,7 +4635,7 @@ Final Answer: True",True,True,1
 
 Therefore, the final result of the expression ( ( not False ) and False ) is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 234,True or False and not False and True is,True,"To evaluate the expression ""True or False and not False and True"", we need to follow the order of operations for logical expressions, which prioritizes ""not"" first, then ""and"", and finally ""or"".
 
 1. Start with the innermost operation:
@@ -4655,7 +4655,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression ""True or False and not False and True"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 235,( ( not True and True ) ) is,False,"To evaluate the expression \( ( ( \text{not True and True} ) ) \), we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -4671,7 +4671,7 @@ Final Answer: True",True,True,1
 
 Putting it all together, the final result of the expression \( ( ( \text{not True and True} ) ) \) is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 236,not ( False ) or not not False is,True,"To evaluate the expression `not ( False ) or not not False`, we can break it down step by step.
 
 1. Start with the innermost expression:
@@ -4697,7 +4697,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `not ( False ) or not not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 237,not ( False or False and False ) is,True,"To evaluate the expression `not ( False or False and False )`, we need to follow the order of operations for logical expressions, which is similar to the order of operations in arithmetic.
 
 1. **Evaluate the inner expression**: 
@@ -4715,7 +4715,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `not ( False or False and False )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 238,False and not ( not not True ) is,False,"To evaluate the expression `False and not (not not True)`, we can break it down step by step.
 
 1. Start with the innermost expression: `not not True`.
@@ -4737,7 +4737,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `False and not (not not True)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 239,False and False and not ( True ) is,False,"To evaluate the expression `False and False and not (True)`, we can break it down step by step.
 
 1. **Evaluate the innermost expression**: 
@@ -4753,7 +4753,7 @@ Final Answer: False",False,True,1
 
 Since all parts of the expression evaluate to `False`, the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 240,False or ( not False and False ) is,False,"To evaluate the expression `False or (not False and False)`, we can break it down step by step.
 
 1. Start with the inner expression: `not False`.
@@ -4773,7 +4773,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `False or (not False and False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 241,False or ( not not not True ) is,False,"To evaluate the expression `False or (not not not True)`, we can break it down step by step.
 
 1. Start with the innermost part: `not True`. The negation of `True` is `False`.
@@ -4791,7 +4791,7 @@ Final Answer: False",False,True,1
 
 Thus, the final evaluation of the expression `False or (not not not True)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 242,( not False ) or not not False is,True,"To evaluate the expression `(not False) or not not False`, we can break it down step by step.
 
 1. **Evaluate `not False`:**
@@ -4808,7 +4808,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `(not False) or not not False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 243,not False and False and True or False is,False,"To evaluate the expression `not False and False and True or False`, we need to follow the order of operations for logical expressions, which is:
 
 1. Evaluate `not` operations first.
@@ -4836,7 +4836,7 @@ Let's break it down step by step:
 
 Thus, the final result of the expression `not False and False and True or False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 244,True or not False and ( False ) is,True,"To evaluate the expression ""True or not False and ( False )"", we need to follow the order of operations for logical expressions.
 
 1. **Evaluate ""not False""**: 
@@ -4859,7 +4859,7 @@ Final Answer: False",False,True,1
 
 Thus, the final evaluation of the expression ""True or not False and ( False )"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 245,( not ( False ) ) or False is,True,"To evaluate the expression `( not ( False ) ) or False`, we can break it down step by step.
 
 1. Start with the innermost expression: `not ( False )`. The `not` operator negates the value of `False`, which results in `True`.
@@ -4870,7 +4870,7 @@ Final Answer: True",True,True,1
 
 Therefore, the final result of the expression `( not ( False ) ) or False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 246,True and not True or False and True is,False,"To evaluate the expression ""True and not True or False and True"", we need to follow the order of operations for logical expressions, which is similar to arithmetic operations.
 
 1. **Evaluate `not True`:**
@@ -4893,7 +4893,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression ""True and not True or False and True"" is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 247,not ( not not not not False ) is,True,"To evaluate the expression `not ( not not not not False )`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`. 
@@ -4912,7 +4912,7 @@ Final Answer: False",False,True,1
 
 So, the final result of the expression `not ( not not not not False )` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 248,True and ( not True or False ) is,False,"To evaluate the expression `True and (not True or False)`, we can break it down step by step.
 
 1. **Evaluate the inner expression**: 
@@ -4930,7 +4930,7 @@ Final Answer: True",True,True,1
 
 Thus, the final result of the expression `True and (not True or False)` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 249,( not not not False or True ) is,True,"To evaluate the expression `(not not not False or True)`, we can break it down step by step.
 
 1. Start with the innermost expression: `not False`. 
@@ -4945,4 +4945,4 @@ Final Answer: False",False,True,1
 
 Thus, the final result of the expression `(not not not False or True)` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,

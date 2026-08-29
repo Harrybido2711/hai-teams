@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [",] ],"The input provided is a sequence of two opening square brackets: `[ [`. To ensure that the brackets are closed properly, each opening bracket must have a corresponding closing bracket in the reverse order of their appearance.
 
 1.  The first bracket `[` requires a closing bracket `]`.
@@ -6,7 +6,7 @@ idx,question,gold_answer,model_response,final_answer,has_marker,score
 
 Therefore, to complete the sequence, two closing square brackets `] ]` must be added.
 
-Final Answer: ] ]",] ],True,1
+Final Answer: ] ]",] ],True,1,
 1,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ [",] ] >,"The input sequence consists of three opening symbols: an angle bracket (`<`) and two square brackets (`[`). To complete the sequence and ensure that all parentheses/brackets are closed properly, we must close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1. The last symbol opened was a square bracket `[`, so the first closing symbol must be `]`.
@@ -15,8 +15,8 @@ Final Answer: ] ]",] ],True,1
 
 Combining these, the completion for the sequence `< [ [` is `] ] >`.
 
-Final Answer: ] ] >",] ] >,True,1
-2,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { [ ] } } { < [ { { < > } } [ ( ) ( ) ] [ [ [ [ ( { < ( < ( [ ] ) > ) > } ) ] ] ] ] ] ( ) ( [ ] { } ) > } > [ { ( ( ) ) } ]",},,,False,0
+Final Answer: ] ] >",] ] >,True,1,
+2,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { [ ] } } { < [ { { < > } } [ ( ) ( ) ] [ [ [ [ ( { < ( < ( [ ] ) > ) > } ) ] ] ] ] ] ( ) ( [ ] { } ) > } > [ { ( ( ) ) } ]",},,,False,0,
 3,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ] { < ( ) > } [ ] ( { }",) >,"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -45,7 +45,7 @@ Final Answer: ] ] >",] ] >,True,1
 
 The remaining sequence needed to close all brackets is `) >`.
 
-Final Answer: ) >",) >,True,1
+Final Answer: ) >",) >,True,1,
 4,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( < > ) ) ( { { } [ { } ] [ ] < ( ) > } ) )",>,"To complete the sequence, we need to identify all the open brackets and ensure they are closed in the correct reverse order of their opening.
 
 **Step-by-step reasoning:**
@@ -77,7 +77,7 @@ Final Answer: ) >",) >,True,1
 
 After processing the entire input sequence, the only remaining open bracket is the angle bracket `<` from the very first position. To close this bracket properly, we need a closing angle bracket `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 5,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ { } ] ] { < [ < [ { } ] > ] > }",] ),"To complete the sequence, we need to track the open brackets, braces, parentheses, and angle brackets using a stack to ensure they are closed in the correct reverse order.
 
 **Step-by-step reasoning:**
@@ -120,7 +120,7 @@ Final Answer: >",>,True,1
 16. `]` : Close bracket (Matches `[`, Stack: `(`, `[`, `{`, `<`, `[`, `<`)
 17. `>` : Close angle (Matches `<`, Stack: `(`, `[`, `{`, `<`, `[`)
 18. `]` : Close bracket (Matches `[`, Stack: `(`, `[`, `{`, `<`)
-19. `>` :",False,0
+19. `>` :",False,0,
 6,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { } }",),"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket of the same type, following the Last-In, First-Out (LIFO) principle.
 
 1.  **Analyze the input sequence:** `( { { } }`
@@ -136,7 +136,7 @@ Final Answer: >",>,True,1
 5.  **Determine the necessary closing bracket:**
     *   To close the `(`, we need a `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 7,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( [ { } ] )",) ) >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -164,7 +164,7 @@ Final Answer: )",),True,1
 
 The remaining sequence required to close all brackets is `) ) >`.
 
-Final Answer: ) ) >",) ) >,True,1
+Final Answer: ) ) >",) ) >,True,1,
 8,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] [ [ < > ]",],"To complete the sequence, we need to ensure that every opening bracket or angle bracket has a corresponding closing bracket in the correct order (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -184,7 +184,7 @@ Final Answer: ) ) >",) ) >,True,1
 3.  **Determine the necessary closing character:**
     *   To close Open bracket 2, we need a closing square bracket `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 9,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] ( [ [ { < { { ( < > [ ] ) } } < > > } ] ] { }",),"To complete the sequence, we need to track all the opening brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step analysis:**
@@ -211,7 +211,7 @@ Final Answer: ]",],True,1
 
 After processing the entire input sequence, the only remaining open bracket is the `(` from step 2. To balance the sequence, we must close it with a `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 10,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] ( ) ( ( { { } } ) ) < { < > } > [ ] > ] < ( ) > ( ( ( ) ) ) ( < >",),"To complete the sequence, we need to track the open brackets and ensure they are closed in the correct reverse order (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -255,7 +255,7 @@ Final Answer: )",),True,1
 
 The only remaining open bracket in the stack is the parenthesis `(` from step 35. To close the sequence properly, we must add a closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 11,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < ( ) > }",],"To complete the sequence, we need to identify which opening brackets have not yet been closed.
 
 1.  **Analyze the sequence step-by-step:**
@@ -273,7 +273,7 @@ Final Answer: )",),True,1
 3.  **Determine the closing character:**
     To close the sequence properly, we must add the corresponding closing square bracket `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 12,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ( ( ) < ( ) > ( { { } } [ [ [ < ( [ ] ) ( ) > ] ] ] { { { { { } } } { { } { < [ [ ] ] > } } { } } } ) ) ] >",],"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct order (Last-In, First-Out). Let's trace the sequence using a stack:
 
 1.  `[` : Stack `[`
@@ -364,8 +364,8 @@ Final Answer: ]",],True,1
 41. `{` : Stack `[ < [ ( ( { { { {`
 42. `<` : Stack `[ < [ ( ( { { { { <`
 43. `[` : Stack `[ < [ ( ( { { { { < [`
-44. `[` : Stack `[ < [ ( ( {",False,0
-13,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( [ < > { [ { ( ) } ] < { < { } > [ ( < > ) ] } > } [ < > ] ] ) { { ( { ( ( [ ( [ ] ) ] < { } > ) ) { { ( [ [ ] ] ) } [ ( ) ] { { [ ] } } } } ) } ( { } ) }",) >,,,False,0
+44. `[` : Stack `[ < [ ( ( {",False,0,
+13,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( [ < > { [ { ( ) } ] < { < { } > [ ( < > ) ] } > } [ < > ] ] ) { { ( { ( ( [ ( [ ] ) ] < { } > ) ) { { ( [ [ ] ] ) } [ ( ) ] { { [ ] } } } } ) } ( { } ) }",) >,,,False,0,
 14,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { ( ( < { ( ( ( { < > ( ) } ) ) [ { } ] { { ( ) } } ) } < > >",) ) },"To complete the sequence, we need to identify all the open brackets, parentheses, braces, and angle brackets and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step analysis of the sequence:**
@@ -413,7 +413,7 @@ To close these in the correct order, we must close the most recently opened brac
 2.  Close `(` (step 4) with `)`
 3.  Close `{` (step 3) with `}`
 
-Final Answer: ) ) }",) ) },True,1
+Final Answer: ) ) }",) ) },True,1,
 15,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < > } { (",) } >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -438,7 +438,7 @@ Final Answer: ) ) }",) ) },True,1
 
 The remaining sequence needed to close all brackets is `) } >`.
 
-Final Answer: ) } >",) } >,True,1
+Final Answer: ) } >",) } >,True,1,
 16,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < < { } >",> ] ],"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -460,7 +460,7 @@ Final Answer: ) } >",) } >,True,1
 
 The required characters to complete the sequence are `> ] ]`.
 
-Final Answer: > ] ]",> ] ],True,1
+Final Answer: > ] ]",> ] ],True,1,
 17,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( )",) >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `< ( ( )`
@@ -480,7 +480,7 @@ Final Answer: > ] ]",> ] ],True,1
 4.  **Combine the completion:**
     *   The necessary characters to close the sequence are `) >`.
 
-Final Answer: ) >",) >,True,1
+Final Answer: ) >",) >,True,1,
 18,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ) ) [ { ( < > ) }",],"To complete the sequence, we need to identify which opening brackets have not yet been closed. Let's trace the sequence step-by-step:
 
 1.  `(` (Open parenthesis 1)
@@ -497,7 +497,7 @@ Final Answer: ) >",) >,True,1
 
 Looking at the stack, the only bracket that remains open is the square bracket `[` from step 5. To close the sequence properly, we must add the corresponding closing square bracket `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 19,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > > < ( < < < [ [ [ [ ] ] ] ] > > > ) [ < < [ ] > > ] { [ < > ] < > [ ( ) ] } { [ ]",} > ],"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order of their opening.
 
 1.  **Analyze the sequence step-by-step to track the stack of open brackets:**
@@ -521,7 +521,7 @@ Final Answer: ]",],True,1
 
 The required closing sequence is `} > ]`.
 
-Final Answer: } > ]",} > ],True,1
+Final Answer: } > ]",} > ],True,1,
 20,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < [ < > ]",> ) },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -547,7 +547,7 @@ Final Answer: } > ]",} > ],True,1
 
 The remaining sequence is `> ) }`.
 
-Final Answer: > ) }",> ) },True,1
+Final Answer: > ) }",> ) },True,1,
 21,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ ] )",},"To complete the sequence, we need to identify which opening brackets have not yet been closed.
 
 1.  **Analyze the sequence:**
@@ -563,7 +563,7 @@ Final Answer: > ) }",> ) },True,1
 3.  **Determine the closing bracket:**
     To close the curly brace `{`, we must add a `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 22,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < > ) } ( ( [ ] ) < [ ( [ [ ] ] [ { } ] { } [ < { [ ] } > ] ( ) ) ]",> ),"To complete the sequence, we need to track the open parentheses, brackets, braces, and angle brackets using a stack. We will process the input string from left to right, pushing each opening symbol onto the stack and popping the corresponding symbol whenever a closing symbol is encountered.
 
 **Input Sequence:** `{ ( < > ) } ( ( [ ] ) < [ ( [ [ ] ] [ { } ] { } [ < { [ ] } > ] ( ) ) ]`
@@ -608,7 +608,7 @@ Final Answer: }",},True,1
 
 The remaining open symbols on the stack are `(` and `<`. To close them properly, we must close the most recently opened symbol first. Therefore, we close `<` with `>` and then `(` with `)`.
 
-Final Answer: > )",> ),True,1
+Final Answer: > )",> ),True,1,
 23,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < [ [ ( { } ) ] ]",> } >,"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -637,7 +637,7 @@ Final Answer: > )",> ),True,1
 
 The required closing sequence is `> } >`.
 
-Final Answer: > } >",> } >,True,1
+Final Answer: > } >",> } >,True,1,
 24,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ [ ] ( ) ]",) },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -661,7 +661,7 @@ Final Answer: > } >",> } >,True,1
 
 The completed sequence is: `{ ( [ [ ] ( ) ] ) }`
 
-Final Answer: ) }",) },True,1
+Final Answer: ) }",) },True,1,
 25,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { [ ] } >",],"To complete the sequence, we need to identify which opening brackets have not yet been closed. Let's trace the sequence step-by-step:
 
 1.  `[` : Open square bracket (1)
@@ -674,7 +674,7 @@ Final Answer: ) }",) },True,1
 
 Looking at the stack, the only bracket that remains open is the first one: the square bracket `[`. To close the sequence properly, we must provide the corresponding closing square bracket `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 26,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < >",) ),"To complete the sequence, we need to identify which opening brackets have not yet been closed.
 
 1.  **Analyze the input sequence:** `( ( < >`
@@ -686,7 +686,7 @@ Final Answer: ]",],True,1
 3.  **Determine the remaining open brackets:** There are two open parentheses `(` remaining.
 4.  **Close the brackets:** To close the sequence properly, we need two closing parentheses `) )`.
 
-Final Answer: ) )",) ),True,1
+Final Answer: ) )",) ),True,1,
 27,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { ( < ( ) > ) }",> >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -711,8 +711,8 @@ Final Answer: ) )",) ),True,1
 
 The remaining characters needed to close the sequence are `> >`.
 
-Final Answer: > >",> >,True,1
-28,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ [ ] ] > ] ] { } { ( { ( ( ) ) ( ) { { [ [ ( { < { [ { [ ( < ( ( < < < [ ( ) ] [ ] > > > ) ) > < [ < { < ( ) > } > ] > ) ] } ] } > ( ( ) ) } ) [ ( ) ] ] ( < > ) ] } } } ) } [",],,,False,0
+Final Answer: > >",> >,True,1,
+28,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ [ ] ] > ] ] { } { ( { ( ( ) ) ( ) { { [ [ ( { < { [ { [ ( < ( ( < < < [ ( ) ] [ ] > > > ) ) > < [ < { < ( ) > } > ] > ) ] } ] } > ( ( ) ) } ) [ ( ) ] ] ( < > ) ] } } } ) } [",],,,False,0,
 29,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { } ( ( ) )",},"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct order (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `{ { } ( ( ) )`
@@ -729,8 +729,8 @@ Final Answer: > >",> >,True,1
 4.  **Determine the necessary closing bracket:**
     *   To close the first `{`, we need a `}`.
 
-Final Answer: }",},True,1
-30,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { < ( ) > { < { } > ( < ( ) > { < [ ( { { ( < [ ] > ) } } { ( ( [ [ { } [ ] ] ] ) ) } ) ] > } ) } }",} ] >,,,False,0
+Final Answer: }",},True,1,
+30,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { < ( ) > { < { } > ( < ( ) > { < [ ( { { ( < [ ] > ) } } { ( ( [ [ { } [ ] ] ] ) ) } ) ] > } ) } }",} ] >,,,False,0,
 31,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ ( )",] > ),"To complete the sequence, we need to close the open brackets in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `( < [ ( )`
@@ -750,7 +750,7 @@ Final Answer: }",},True,1
 
 The completion sequence is `] > )`.
 
-Final Answer: ] > )",] > ),True,1
+Final Answer: ] > )",] > ),True,1,
 32,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ( [ < > ] { < > } [ [ ] ] ) ]",> ],"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -783,7 +783,7 @@ To close these properly, we must close the most recent open bracket first:
 
 The remaining sequence to close the brackets is `> ]`.
 
-Final Answer: > ]",> ],True,1
+Final Answer: > ]",> ],True,1,
 33,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( [ ( [ ] ) ] ) )",>,"To complete the sequence, we need to track the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -805,7 +805,7 @@ Final Answer: > ]",> ],True,1
 3.  **Determine the closing character:**
     The corresponding closing character for `<` is `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 34,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ]",>,"The input sequence is `< [ ]`. 
 
 1.  **Analyze the symbols**: 
@@ -816,7 +816,7 @@ Final Answer: >",>,True,1
 3.  **Identify unmatched symbols**: The opening angle bracket `<` remains unmatched.
 4.  **Determine the closing symbol**: To close the sequence properly, a closing angle bracket `>` is required.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 35,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { } ) } < < ( ) { { < [ { [ ( ) ] } ] > } } > >",],"To complete the sequence, we need to track the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -850,7 +850,7 @@ Final Answer: >",>,True,1
 
 After processing the entire input, the only remaining open bracket in the stack is the initial `[`. To close the sequence properly, we must add the corresponding closing square bracket `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 36,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { }",) ),"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct reverse order (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `( ( { }`
@@ -862,7 +862,7 @@ Final Answer: ]",],True,1
 3.  **Determine what is remaining:** We have two open parentheses `( (` that have not yet been closed.
 4.  **Close the brackets:** To close them properly, we need two closing parentheses `) )`.
 
-Final Answer: ) )",) ),True,1
+Final Answer: ) )",) ),True,1,
 37,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ [ [ < { ( ) } ( ) > { ( ) } ] { ( ) }",] ] ],"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -890,7 +890,7 @@ Final Answer: ) )",) ),True,1
 
 At the end of the input sequence, the stack contains three open square brackets `[ [ [`. To close these properly, we need three closing square brackets `] ] ]`.
 
-Final Answer: ] ] ]",] ] ],True,1
+Final Answer: ] ] ]",] ] ],True,1,
 38,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { } < { } < > (",) >,"To complete the sequence and ensure all brackets are closed properly, we need to identify which opening brackets have not yet been closed and close them in the reverse order of their appearance (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -914,7 +914,7 @@ Final Answer: ] ] ]",] ] ],True,1
 4.  **Final Sequence:**
     `{ } < { } < > ( ) >`
 
-Final Answer: ) >",) >,True,1
+Final Answer: ) >",) >,True,1,
 39,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ < < > [ < { } > ] { < [ ] > ( ( ( [ [ { < > } ] ] ) ) ) ( < < > > ) } > ]",) ),"To complete the sequence, we need to identify all the open brackets, parentheses, braces, and angle brackets and ensure they are closed in the correct reverse order of their opening.
 
 **Step-by-step reasoning:**
@@ -961,7 +961,7 @@ Final Answer: ) >",) >,True,1
 
 After processing the entire input sequence, the only remaining open brackets are the first two parentheses: `(` (Open 1) and `(` (Open 2). To close these properly, we need two closing parentheses `) )`.
 
-Final Answer: ) )",) ),True,1
+Final Answer: ) )",) ),True,1,
 40,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { } > { (",) } },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -983,7 +983,7 @@ Final Answer: ) )",) ),True,1
 
 The completion sequence is `) } }`.
 
-Final Answer: ) } }",) } },True,1
+Final Answer: ) } }",) } },True,1,
 41,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ { < > { } { } < < < < { } > > ( < ( ( ) ) [ ( [ ] ) ] > ) > > { } } [ < < > > ] < ( ) > ] ]",),"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket of the same type, and that they are closed in the correct order (last-in, first-out).
 
 **Step-by-step analysis of the sequence:**
@@ -1028,7 +1028,7 @@ Final Answer: ) } }",) } },True,1
 
 After tracing the entire sequence, we find that only the very first opening parenthesis `(` (Open 1) remains unclosed. To properly close the sequence, we must add a closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 42,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < <",> > },"The input sequence consists of three opening symbols: a curly brace `{` and two angle brackets `< <`. To complete the sequence and ensure that all parentheses/brackets are closed properly, we must close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1. The last symbol opened was `<`, so the first symbol to close is `>`.
@@ -1037,7 +1037,7 @@ Final Answer: )",),True,1
 
 Combining these, the completion sequence is `> > }`.
 
-Final Answer: > > }",> > },True,1
+Final Answer: > > }",> > },True,1,
 43,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { } }",},"To complete the sequence, we need to ensure that every opening brace `{` has a corresponding closing brace `}`.
 
 1.  **Analyze the input:** The input is `{ { { } }`.
@@ -1046,7 +1046,7 @@ Final Answer: > > }",> > },True,1
 4.  **Determine the difference:** To balance the sequence, we need one more closing brace (3 opening - 2 closing = 1 remaining).
 5.  **Complete the sequence:** Adding one `}` to the end results in `{ { { } } }`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 44,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { } [ [ ( ( < { < { [ ] } > } > ) )",] ] >,"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -1071,7 +1071,7 @@ Final Answer: }",},True,1
     *   `[` : Open (Stack: `<`, `[`, `[`)
     *   `(` : Open (Stack: `<`, `[`, `[`, `(`)
     *   `(` : Open (Stack: `<`, `[`, `[`, `(`, `(`)
-    *   `<` : Open (Stack: `<`, `[`, `[`, `(",False,0
+    *   `<` : Open (Stack: `<`, `[`, `[`, `(",False,0,
 45,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( ( )",) } >,"To complete the sequence, we need to identify the open brackets and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -1098,7 +1098,7 @@ Final Answer: }",},True,1
 4.  **Combine the closing symbols:**
     *   The required closing sequence is `) } >`.
 
-Final Answer: ) } >",) } >,True,1
+Final Answer: ) } >",) } >,True,1,
 46,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < { [ ( ) ] } >",) ],"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -1125,7 +1125,7 @@ Final Answer: ) } >",) } >,True,1
 
 The remaining characters needed to complete the sequence are `) ]`.
 
-Final Answer: ) ]",) ],True,1
+Final Answer: ) ]",) ],True,1,
 47,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < { < { < > } > } > } ) ( ) ( { [ ( < ( < < { ( { < > } ) } > > ) > ) { ( { < ( { [ ] } ( ) ) > } < { < { { ( ) } } > { < [ { ( ) } ] > } } > ) } [ [ ( ) ] ] ]",} ) ),"To complete the sequence, we need to track all the opening brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step Reasoning:**
@@ -1154,7 +1154,7 @@ The remaining open brackets are `(`, `(`, and `{` (in that order). To close the 
 2.  Close `(` with `)`
 3.  Close `(` with `)`
 
-Final Answer: } ) )",} ) ),True,1
+Final Answer: } ) )",} ) ),True,1,
 48,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < { < { [ ( ) ] } > }",>,"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket and that they are closed in the correct order (last-in, first-out).
 
 **Step-by-step reasoning:**
@@ -1180,7 +1180,7 @@ Final Answer: } ) )",} ) ),True,1
 3.  **Determine the necessary closing bracket:**
     The closing bracket for an angle bracket `<` is `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 49,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] > ] [ { [ ] }",],"To complete the sequence, we need to ensure that every opening bracket, brace, or parenthesis has a corresponding closing partner in the correct order (Last-In, First-Out).
 
 1.  **Analyze the first block:** `[ < [ ] > ]`
@@ -1201,7 +1201,7 @@ Final Answer: >",>,True,1
 3.  **Determine the missing character:**
     *   To balance the sequence, the open `[` from the start of the second block must be closed with a `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 50,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > ( [ ( )",] ) ),"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -1224,7 +1224,7 @@ Final Answer: ]",],True,1
 4.  **Construct the completion:**
     *   The required closing sequence is `] ) )`.
 
-Final Answer: ] ) )",] ) ),True,1
+Final Answer: ] ) )",] ) ),True,1,
 51,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { ( ) { } } ( < > ) >",),"To complete the sequence, we need to track the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 1.  **(** : Open parenthesis (Stack: `(`)
@@ -1243,7 +1243,7 @@ Final Answer: ] ) )",] ) ),True,1
 
 After processing the input sequence, the only remaining open bracket in the stack is the initial `(`. To close the sequence properly, we must add a closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 52,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( < >",) > >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -1264,7 +1264,7 @@ Final Answer: )",),True,1
 4.  **Construct the completion:**
     *   The required closing sequence is `) > >`.
 
-Final Answer: ) > >",) > >,True,1
+Final Answer: ) > >",) > >,True,1,
 53,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { } ( ( < > )",) },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -1287,8 +1287,8 @@ Final Answer: ) > >",) > >,True,1
 4.  **Completion:**
     *   To close the remaining brackets, we need `)` followed by `}`.
 
-Final Answer: ) }",) },True,1
-54,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < { } > { { ( [ ( { } ) ( ( [ ( [ ( { [ { } ] } ) ] ) ] ) ) [ < [ [ [ [ [ < > ] [ { [ [ { ( ( < [ ] > ) [ ( [ ] ) ] < { [ ] } > ) } ] ] } ] { < ( < > ) > } ] ] ] ] > ] ] ) } } } >",),,,False,0
+Final Answer: ) }",) },True,1,
+54,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < { } > { { ( [ ( { } ) ( ( [ ( [ ( { [ { } ] } ) ] ) ] ) ) [ < [ [ [ [ [ < > ] [ { [ [ { ( ( < [ ] > ) [ ( [ ] ) ] < { [ ] } > ) } ] ] } ] { < ( < > ) > } ] ] ] ] > ] ] ) } } } >",),,,False,0,
 55,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < < >",> > ),"To complete the sequence, we need to ensure that every opening bracket is closed by its corresponding closing bracket in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `( < < < >`
@@ -1305,7 +1305,7 @@ Final Answer: ) }",) },True,1
 
 The required characters to complete the sequence are `> > )`.
 
-Final Answer: > > )",> > ),True,1
+Final Answer: > > )",> > ),True,1,
 56,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ( ) ] >",>,"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the reverse order of their appearance (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `< < [ ( ) ] >`
@@ -1323,10 +1323,10 @@ Final Answer: > > )",> > ),True,1
 
 To complete the sequence, we simply add the final closing angle bracket.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 57,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > {",},"The input sequence consists of a pair of angle brackets `< >` and an opening curly brace `{`. To ensure that all parentheses/brackets are closed properly, the opening curly brace `{` must be followed by its corresponding closing curly brace `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 58,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( [ [ [ [ ( ) ] ] { } ] ] )",>,"To complete the sequence, we need to identify all the open brackets and ensure they are closed in the reverse order of their opening (Last-In, First-Out).
 
 **Step-by-step analysis of the input sequence:**
@@ -1352,7 +1352,7 @@ After processing the sequence, the only bracket that remains open is the very fi
 
 To close this bracket and complete the sequence, we need the corresponding closing angle bracket: `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 59,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ < > ]",>,"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct order (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `< [ < > ]`
@@ -1364,7 +1364,7 @@ Final Answer: >",>,True,1
     *   The fifth character is `]`, which closes the most recent square bracket. (Open: `<`)
 3.  **Identify the remaining open bracket:** The very first `<` is still open and requires a closing `>` to complete the sequence.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 60,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ [ [ ( ) ] ] ] ]",},"To complete the sequence, we need to ensure that every opening bracket, brace, or parenthesis has a corresponding closing one in the reverse order of their appearance (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `{ [ [ [ [ ( ) ] ] ] ]`
@@ -1386,7 +1386,7 @@ Final Answer: >",>,True,1
 5.  **Determine the necessary closing symbol:**
     *   To close the brace `{`, we need a `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 61,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { ( { [ ] } ) } > { } ( [ { { { ( [ < > ] ) } } } ] ) { { ( { } ) } }",},"To complete the sequence, we need to ensure that every opening bracket, parenthesis, or brace has a corresponding and properly nested closing partner. Let's trace the input sequence step-by-step:
 
 1.  `{` (Open Brace 1)
@@ -1430,7 +1430,7 @@ Final Answer: }",},True,1
 
 After analyzing the entire sequence, we find that every bracket is closed except for the very first opening brace `{`. To close the sequence properly, we must add a closing brace `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 62,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < [ { { } } ] > { } ) ( < > ) [ ( < > ) ] <",> ),"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -1471,7 +1471,7 @@ Final Answer: }",},True,1
 
 4.  **Final sequence to add:** `> )`
 
-Final Answer: > )",> ),True,1
+Final Answer: > )",> ),True,1,
 63,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < { } > < > > ( )",],"To complete the sequence, we need to track the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 1.  `[` : Open square bracket (1)
@@ -1488,7 +1488,7 @@ Final Answer: > )",> ),True,1
 
 Looking at the stack, the only bracket that remains open is the initial square bracket `[`. Therefore, to complete the sequence and close all parentheses properly, we must add a closing square bracket `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 64,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( < < > [ ] ( ) >",) > ],"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence step-by-step:**
@@ -1514,7 +1514,7 @@ Final Answer: ]",],True,1
 
 The required closing sequence is `) > ]`.
 
-Final Answer: ) > ]",) > ],True,1
+Final Answer: ) > ]",) > ],True,1,
 65,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ { < ( ) > } ] >",] },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -1541,7 +1541,7 @@ To close these properly, we must close the most recently opened bracket first:
 
 The remaining characters needed to complete the sequence are `] }`.
 
-Final Answer: ] }",] },True,1
+Final Answer: ] }",] },True,1,
 66,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < > < [ ] > [ < { } > ] [ ( { } ) ] [ ] [ ( ) ] ( ) < { { < { { { { { ( { } ) } ( { < > } ) } } } } > } }",> } ],"To complete the sequence, we need to track all the open brackets, braces, and parentheses using a stack and close them in the reverse order of their opening.
 
 **Step-by-step reasoning:**
@@ -1572,7 +1572,7 @@ Final Answer: ] }",] },True,1
 10. `< { { < { { { { { ( { } ) } ( { < > } ) } } } } > } }` :
     *   `<` : Stack = `[ { <`
     *   `{` : Stack = `[ { < {`
-    *   `{` : Stack = `[ { < { {",False,0
+    *   `{` : Stack = `[ { < { {",False,0,
 67,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ( [ < [ ] > ] ) ] > ] ( { }",) ],"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -1608,7 +1608,7 @@ Final Answer: ] }",] },True,1
 4.  **Final sequence to complete:**
     *   `) ]`
 
-Final Answer: ) ]",) ],True,1
+Final Answer: ) ]",) ],True,1,
 68,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ ( )",] ),"To complete the sequence, we need to ensure that every opening bracket is closed by its corresponding closing bracket in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `( [ ( )`
@@ -1624,7 +1624,7 @@ Final Answer: ) ]",) ],True,1
 
 The necessary characters to complete the sequence are `] )`.
 
-Final Answer: ] )",] ),True,1
+Final Answer: ] )",] ),True,1,
 69,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { { < { < > } > } < { } > < < < [ < [ ] > ] > > >",} ) },"To complete the sequence, we need to identify all the open brackets, parentheses, braces, and angle brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step analysis of the input sequence:**
@@ -1667,7 +1667,7 @@ To close these properly, we must close them in the reverse order:
 2.  Close `(` (Open paren 1) with `)`
 3.  Close `{` (Open brace 1) with `}`
 
-Final Answer: } ) }",} ) },True,1
+Final Answer: } ) }",} ) },True,1,
 70,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ < { < { } > } > ( ( < { [ ] } > { { } } ) { } ) ] > ]",},"To complete the sequence, we need to identify all the open brackets and ensure they are closed in the correct reverse order (Last-In, First-Out).
 
 **Step-by-step analysis:**
@@ -1705,8 +1705,8 @@ Final Answer: } ) }",} ) },True,1
 
 After processing the entire input sequence, the only bracket that remains open is the very first one: `{` (Open 1). To close this bracket properly, we need a closing brace `}`.
 
-Final Answer: }",},True,1
-71,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ [ { [ [ ( [ < < > > ( ( [ ( ) ( { ( < [ ] > ) } ) ] ) ) ] ) ] ( ) ] } { [ [ ] ] } ] ] } > [ { < > } ]",) ),,,False,0
+Final Answer: }",},True,1,
+71,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ [ { [ [ ( [ < < > > ( ( [ ( ) ( { ( < [ ] > ) } ) ] ) ) ] ) ] ( ) ] } { [ [ ] ] } ] ] } > [ { < > } ]",) ),,,False,0,
 72,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ { < { } > } ( ) ]",} },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order of their appearance (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -1729,7 +1729,7 @@ Final Answer: }",},True,1
 3.  **Determine the closing sequence:**
     To close the remaining open brackets, we need two closing braces: `} }`.
 
-Final Answer: } }",} },True,1
+Final Answer: } }",} },True,1,
 73,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ] > ( ( ( { { { { ( ( { { } } ) ) } ( { } ) } } { { { [ { ( ) } ( ) ( ( { [ < < > > ] < < > > } ) ) ] ( { } { } ) } } } } )",) ),"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct order (Last-In, First-Out). Let's track the brackets using a stack:
 
 1.  `< [ ] >` : This part is balanced.
@@ -1751,7 +1751,7 @@ Final Answer: } }",} },True,1
 
 The remaining stack contains two open parentheses `( (`. To close the sequence properly, we need two closing parentheses `) )`.
 
-Final Answer: ) )",) ),True,1
+Final Answer: ) )",) ),True,1,
 74,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ < ( < [ ] > ) < > < { } > { < > { } { { < [ < < { } [ { } ] < > > > ] < > > } < [ [ ] ] > } } > ] [ ( ) ] > } [ { ( < ( ( ( [ { } ] ) ) ) > ) } ] [ < ( ) ( ( { ( ) [ { { ( { } ) } } ] } ) ) >",],"To complete the sequence, we must ensure that every opening bracket—parentheses `(`, square brackets `[`, curly braces `{`, and angle brackets `<`—is closed by its corresponding closing bracket in the reverse order of their opening (Last-In, First-Out).
 
 **Step-by-Step Reasoning:**
@@ -1826,7 +1826,7 @@ Final Answer: ) )",) ),True,1
         - `[` $\rightarrow$ `[ < ( ( { [` (Open 6)
         - `{ { ( { } ) } }` $\rightarrow$ `[ < ( ( { [`
         - `]` $\rightarrow$ `[ < ( ( {` (Closes 6)
-        - `}` $\rightarrow$ `[ < ( (` (Closes",False,0
+        - `}` $\rightarrow$ `[ < ( (` (Closes",False,0,
 75,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( ) > [ { [ { ( ) } ] } ] ] > [ { } ] ( < { < [ { } ] > } > ) ) ( ( < ( ) > [ ] [ < { ( ) } > ] [ { } ] [",] ) ),"To complete the sequence, we must identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order of their opening.
 
 **Step 1: Analyze the first part of the sequence.**
@@ -1864,7 +1864,7 @@ To close these properly, we must close them in the reverse order:
 2. `)` (closes the `(` at position 2)
 3. `)` (closes the `(` at position 1)
 
-Final Answer: ] ) )",] ) ),True,1
+Final Answer: ] ) )",] ) ),True,1,
 76,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } < > { < { ( < > ) } >",} ),"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -1887,7 +1887,7 @@ At the end of the input sequence, the remaining open symbols in the stack are `(
 1.  The last open symbol was `{`, so we need `}`.
 2.  The remaining open symbol is `(`, so we need `)`.
 
-Final Answer: } )",} ),True,1
+Final Answer: } )",} ),True,1,
 77,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ] > ( < > ) <",> >,"To complete the sequence, we need to ensure that every opening bracket, parenthesis, or angle bracket is closed in the reverse order in which it was opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -1912,7 +1912,7 @@ Final Answer: } )",} ),True,1
 
 Therefore, the sequence needs `> >` to be properly closed.
 
-Final Answer: > >",> >,True,1
+Final Answer: > >",> >,True,1,
 78,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { [ { [ { ( ( ) ) } ] } ( < < ( < > ) > { } [ [ [ ( < { } > ) ] ] ] { } > ) ( { } ) { } ] }",} ] >,"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order of their appearance.
 
 **Step-by-step reasoning:**
@@ -1941,7 +1941,7 @@ Final Answer: > >",> >,True,1
     *   `]` (closes Open 2)
     *   `>` (closes Open 1)
 
-Final Answer: } ] >",} ] >,True,1
+Final Answer: } ] >",} ] >,True,1,
 79,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ]",) ] >,"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -1983,7 +1983,7 @@ Final Answer: } ] >",} ] >,True,1
 
 The remaining open brackets in the stack are `<`, `[`, and `(`. To close them properly, we must close them in reverse order: `)`, then `]`, then `>`.
 
-Final Answer: ) ] >",) ] >,True,1
+Final Answer: ) ] >",) ] >,True,1,
 80,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { { < > [ ( ) ] ( ( ) ) } } ] > ] { { { ( < > )",} } },"To complete the sequence, we need to track the open brackets, parentheses, and braces using a stack to ensure they are closed in the correct reverse order.
 
 **Step-by-step analysis of the input sequence:**
@@ -2017,7 +2017,7 @@ Final Answer: ) ] >",) ] >,True,1
 
 At the end of the input sequence, the stack contains three open curly braces: `{ { {`. To close these properly, we must provide three closing curly braces in the correct order.
 
-Final Answer: } } }",} } },True,1
+Final Answer: } } }",} } },True,1,
 81,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > ( [ < { { } } ( ) > ] ) [ ( ) ] [ ] [ { } ] >",),"To complete the sequence, we need to track the open brackets and ensure they are closed in the correct reverse order (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -2026,7 +2026,7 @@ Final Answer: } } }",} } },True,1
 
 **Step-by-step reasoning:**
 1.  `(` : Open parenthesis (Stack: `(`)
-2.  `<` : Open angle bracket (Stack: `(",False,0
+2.  `<` : Open angle bracket (Stack: `(",False,0,
 82,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( { } ) < > }",>,"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct reverse order (Last-In, First-Out).
 
 **Reasoning:**
@@ -2042,7 +2042,7 @@ Final Answer: } } }",} } },True,1
 
 At the end of the provided input, the only remaining open bracket is the initial angle bracket `<`. To close the sequence properly, we must add a closing angle bracket `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 83,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ ]",> },"The input sequence is `{ < [ ]`. To complete the sequence, we must close the open brackets in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  The first bracket opened is `{`.
@@ -2054,7 +2054,7 @@ Now, we are left with the open brackets `{` and `<`. To close them properly:
 1.  The most recently opened remaining bracket is `<`, so it must be closed first with `>`.
 2.  The final remaining open bracket is `{`, so it must be closed last with `}`.
 
-Final Answer: > }",> },True,1
+Final Answer: > }",> },True,1,
 84,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } ) < { < { } >",} >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -2080,7 +2080,7 @@ Final Answer: > }",> },True,1
 
 The completion for the sequence is `} >`.
 
-Final Answer: } >",} >,True,1
+Final Answer: } >",} >,True,1,
 85,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( { < > } )",) >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -2106,7 +2106,7 @@ Final Answer: } >",} >,True,1
 
 The remaining characters needed to complete the sequence are `) >`.
 
-Final Answer: ) >",) >,True,1
+Final Answer: ) >",) >,True,1,
 86,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ) )",),"To complete the sequence, we need to ensure that every opening parenthesis `(` has a corresponding closing parenthesis `)`.
 
 1.  **Analyze the input sequence:** `( ( ( ) )`
@@ -2118,7 +2118,7 @@ Final Answer: ) >",) >,True,1
 
 The completed sequence is `( ( ( ) ) )`.
 
-Final Answer: ( ( ( ) ) )",( ( ( ) ) ),True,1
+Final Answer: ( ( ( ) ) )",( ( ( ) ) ),True,1,
 87,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > >",] ],"To complete the sequence, we need to ensure that all open brackets are closed in the reverse order of their appearance (Last-In, First-Out). Let's trace the sequence using a stack:
 
 1.  `[` (Open 1) - Stack: `[`
@@ -2175,7 +2175,7 @@ Final Answer: ( ( ( ) ) )",( ( ( ) ) ),True,1
 24. `]` (Close 8) - Stack: `[ [ < < { (`
 25. `)` (Close 7) - Stack: `[ [ < < {`
 26. `(` (Open 16) - Stack: `[ [ < < { (`
-27. `)` (Close 1",False,0
+27. `)` (Close 1",False,0,
 88,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < { } < ( ( < > ) ) > > } } { [ [ { } ] ] [ ] < < { } > [ ( ) { ( { } ) } ] > ( [ < [ ( ( { } ( ) < > < [ < < { { ( [ { } ] ) } } { } { } > > ] > ( ) ) ) < > ] > ] )",} },"To complete the sequence, we need to track the open brackets using a stack (Last-In, First-Out) and close them in the reverse order they were opened.
 
 1.  **First part:** `{ { { < { } < ( ( < > ) ) > > } }`
@@ -2213,7 +2213,7 @@ Final Answer: ( ( ( ) ) )",( ( ( ) ) ),True,1
 
 The remaining open brackets in the stack are two curly braces `{ {`. To close them properly, we need two closing curly braces `} }`.
 
-Final Answer: } }",} },True,1
+Final Answer: } }",} },True,1,
 89,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ { { < ( ) > } } ]",],"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the reverse order of their appearance (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `[ [ { { < ( ) > } } ]`
@@ -2233,7 +2233,7 @@ Final Answer: } }",} },True,1
 4.  **Identify remaining open brackets:**
     *   The first `[` (Open 1) is still open and requires a closing `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 90,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ( ( [ < { ( { } ) } < < > > > ] ) ) ] ) >",},"To complete the sequence, we need to identify all the open brackets and ensure they are closed in the reverse order of their appearance (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -2265,7 +2265,7 @@ Final Answer: ]",],True,1
 
 After tracing the sequence, we can see that every opening bracket has been closed except for the very first one: the brace `{` at position 1. To balance the sequence, we must close it with a corresponding `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 91,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { ( { [ [ { < [ ] > } ] ] } ) [ ( < { < > } > ) ]",} },"To complete the sequence, we need to identify all the open parentheses, brackets, braces, and angle brackets and close them in the reverse order of their opening.
 
 **Step-by-step reasoning:**
@@ -2308,7 +2308,7 @@ Final Answer: }",},True,1
     *   `}` (Closes 2)
     *   `}` (Closes 1)
 
-Final Answer: } }",} },True,1
+Final Answer: } }",} },True,1,
 92,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ] > ] ] <",>,"To complete the sequence, we need to ensure that every opening bracket, square bracket, or angle bracket is closed in the reverse order it was opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `[ [ < [ ] > ] ] <`
@@ -2325,10 +2325,10 @@ Final Answer: } }",} },True,1
 3.  **Identify the remaining open bracket:** The only bracket that has not been closed is the final `<`.
 4.  **Determine the closing bracket:** To close the angle bracket `<`, we need the corresponding closing angle bracket `>`.
 
-Final Answer: >",>,True,1
-93,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > [ [ < [ ] > ]",] ],,,False,0
-94,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } }",) ),,,False,0
-95,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ < [ < [ ( [ { < ( < ( ( ) ) { } [ ] > ) > } ] ) { < > } ] [ < [ { ( < < { { [ < { [ [ < > [ ] ] ] } > ] { { } } } } > > ) } ] > { < > { } } ] > ( [ ] ) ] > ] ) ( )",) ),,,False,0
+Final Answer: >",>,True,1,
+93,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > [ [ < [ ] > ]",] ],,,False,0,
+94,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } }",) ),,,False,0,
+95,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ < [ < [ ( [ { < ( < ( ( ) ) { } [ ] > ) > } ] ) { < > } ] [ < [ { ( < < { { [ < { [ [ < > [ ] ] ] } > ] { { } } } } > > ) } ] > { < > { } } ] > ( [ ] ) ] > ] ) ( )",) ),,,False,0,
 96,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { } >",>,"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct order (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `< < { } >`
@@ -2341,7 +2341,7 @@ Final Answer: >",>,True,1
 3.  **Identify the remaining open bracket:** There is still one open angle bracket `<` from the very beginning of the sequence.
 4.  **Determine the closing character:** To close the remaining `<`, we need a closing angle bracket `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 97,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < >",),"The input sequence is `( < >`. 
 
 1.  **Analyze the symbols**:
@@ -2356,7 +2356,7 @@ Final Answer: >",>,True,1
 3.  **Determine the completion**:
     *   To close the sequence properly, a closing parenthesis `)` is required to match the initial `(`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 98,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( )",} ),"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `( { ( )`
@@ -2378,8 +2378,8 @@ Final Answer: )",),True,1
     *   Completion: `} )`
     *   Full sequence: `( { ( ) } )`
 
-Final Answer: } )",} ),True,1
-99,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ( [ [ < [ { { [ ] } } ] > ] ] ( ) ) )",) ),,,False,0
+Final Answer: } )",} ),True,1,
+99,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ( [ [ < [ { { [ ] } } ] > ] ] ( ) ) )",) ),,,False,0,
 100,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( ( [ ] )",) > >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -2402,7 +2402,7 @@ Final Answer: } )",} ),True,1
 4.  **Construct the completion:**
     *   The required closing characters are `) > >`.
 
-Final Answer: ) > >",) > >,True,1
+Final Answer: ) > >",) > >,True,1,
 101,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { } )",>,"The input sequence is `< ( { } )`.
 
 1.  **Analyze the sequence**:
@@ -2420,7 +2420,7 @@ Final Answer: ) > >",) > >,True,1
 3.  **Determine the necessary closing bracket**:
     *   To properly close the sequence, the open angle bracket `<` requires a corresponding closing angle bracket `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 102,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < { < < > > } > < < { < ( < > ) < > [ [ [ < ( ( ) ) > [ ] [ ] ] ] ] < ( ) > ( ) [ ( [ [ ] ] ) ] > } { } { < [ < { ( { } ) } > ] > } { { } } > >",> >,"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct reverse order (a stack-based approach).
 
 **Step-by-step Reasoning:**
@@ -2451,7 +2451,7 @@ Final Answer: >",>,True,1
         *   `[ [ [ < ( ( ) ) > [ ] [ ] ] ] ]` is self-contained.
         *   `< ( ) >` and `( )` are self-contained.
         *   `[ ( [ [ ] ] ) ]` is self-contained.
-        *   `>",False,0
+        *   `>",False,0,
 103,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ] }",>,"The input sequence is `< { [ ] }`.
 
 1.  **Analyze the brackets**:
@@ -2467,7 +2467,7 @@ Final Answer: >",>,True,1
 3.  **Determine the closing bracket**:
     *   To close the sequence properly, a closing angle bracket `>` is required.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 104,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ { < ( [ ] < > ) > } ]",),"To complete the sequence, we need to track the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 1.  `(` : Open parenthesis (Stack: `(`)
@@ -2486,7 +2486,7 @@ Final Answer: >",>,True,1
 
 The only remaining open symbol in the stack is the initial `(`. To close the sequence properly, we need a closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 105,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < [ < > ] > }",),"To complete the sequence, we need to identify which opening brackets have not yet been closed. Let's track the brackets in the order they appear:
 
 1.  `(` : Open parenthesis (Needs `)`)
@@ -2501,8 +2501,8 @@ Final Answer: )",),True,1
 
 Looking at the stack, the only bracket that remains open is the initial parenthesis `(`. To close the sequence properly, we must add the corresponding closing parenthesis `)`.
 
-Final Answer: )",),True,1
-106,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] )",],,,False,0
+Final Answer: )",),True,1,
+106,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] )",],,,False,0,
 107,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ] ) >",},"To complete the sequence, we need to identify which opening brackets have not yet been closed. Let's trace the sequence step-by-step:
 
 1.  `{` : Open curly brace (Stack: `{`)
@@ -2515,7 +2515,7 @@ Final Answer: )",),True,1
 
 The only remaining open bracket is the initial curly brace `{`. To close the sequence properly, we must provide the matching closing curly brace `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 108,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( )",> } >,"To complete the sequence, we need to close the open brackets in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -2541,7 +2541,7 @@ Final Answer: }",},True,1
 
 The required closing sequence is `> } >`.
 
-Final Answer: > } >",> } >,True,1
+Final Answer: > } >",> } >,True,1,
 109,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( ) ( < [ ] > ( ) < [ [ { } { < > } < > ] ] > ) [ ] > [ ( < { [ ] } [ ] ( { [ < > ] < < > > ( ( < { } > ) ) } ) [ [ [ < < < ( ( ) ) > > > ] < < { [ ] } > > ( [ < > ] ) ] ] > ) ] < >",),"To complete the sequence, we need to ensure that all open brackets are closed in the correct order (Last-In, First-Out). Let's break down the sequence into blocks to track the open brackets:
 
 1.  **Initial Bracket:** `(` (Open 1)
@@ -2564,7 +2564,7 @@ Final Answer: > } >",> } >,True,1
 
 After processing all three blocks, we are left with the very first open bracket `(` from the beginning of the sequence. To close the sequence properly, we must provide the matching closing bracket.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 110,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ [ ] ]",) ),"To complete the sequence, we need to identify which opening brackets or parentheses have not yet been closed.
 
 1.  **Analyze the input sequence:** `( ( [ [ ] ]`
@@ -2580,9 +2580,9 @@ Final Answer: )",),True,1
 4.  **Determine the necessary closing symbols:**
     *   To close two open parentheses, we need two closing parentheses `) )`.
 
-Final Answer: ) )",) ),True,1
-111,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ) { < > { ( [ [ { } ] [ ( ) ] ] ) } [ { { { ( < [ ] > ) } { < > } } }",] } },,,False,0
-112,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) { < < { ( ( ) { { { < > { } } [ < > ] ( ) } } ( ( ) ) ) < [ { { ( ( < > ) ) } } [ { < { } > } ] ( ) ] > } { [ ] } > > [ ] } > ( [ ] ) [ < { ( ( ( ) ( ) ) ) ( ) } > ] [ < ( )",> ],,,False,0
+Final Answer: ) )",) ),True,1,
+111,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ) { < > { ( [ [ { } ] [ ( ) ] ] ) } [ { { { ( < [ ] > ) } { < > } } }",] } },,,False,0,
+112,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) { < < { ( ( ) { { { < > { } } [ < > ] ( ) } } ( ( ) ) ) < [ { { ( ( < > ) ) } } [ { < { } > } ] ( ) ] > } { [ ] } > > [ ] } > ( [ ] ) [ < { ( ( ( ) ( ) ) ) ( ) } > ] [ < ( )",> ],,,False,0,
 113,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( { } )",],"To complete the sequence, we need to identify which opening brackets have not yet been closed.
 
 1.  **Analyze the sequence from left to right:**
@@ -2598,7 +2598,7 @@ Final Answer: ) )",) ),True,1
 3.  **Determine the closing bracket:**
     *   To close the `[`, we need a `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 114,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { ( ) } > } { ( { [ ] } ) }",),"To complete the sequence, we need to identify all the open brackets and ensure they are closed in the correct reverse order.
 
 **Reasoning:**
@@ -2627,7 +2627,7 @@ Final Answer: ]",],True,1
 3.  **Determine the closing bracket:**
     *   To balance the sequence, we must close the first open parenthesis with a corresponding closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 115,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ ] [ ]",] },"To complete the sequence, we need to identify which opening brackets have not yet been closed.
 
 1.  **Analyze the input sequence:** `{ [ [ ] [ ]`
@@ -2645,7 +2645,7 @@ Final Answer: )",),True,1
 
 The necessary characters to complete the sequence are `] }`.
 
-Final Answer: ] }",] },True,1
+Final Answer: ] }",] },True,1,
 116,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( [ ( ) ] < > < ( { } ) > ) < [ ] > > ] ( ) < [ < > ] >",> ),"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -2684,7 +2684,7 @@ Final Answer: ] }",] },True,1
 
 The remaining open brackets in the stack are `(` and `<`. To close them properly, we must close the most recent one first (`<`) and then the first one (`(`).
 
-Final Answer: > )",> ),True,1
+Final Answer: > )",> ),True,1,
 117,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > > [ [ [ { { < { } ( { } ) > } } < { { { } } } < > > ] ] ( )",] ),"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -2711,7 +2711,7 @@ At the end of the input sequence, the remaining open brackets in the stack are `
 1.  Close the `[` with `]`.
 2.  Close the `(` with `)`.
 
-Final Answer: ] )",] ),True,1
+Final Answer: ] )",] ),True,1,
 118,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ( { } ) ) } ( ) ) < { (",) } >,"To complete the sequence, we need to identify all the open brackets, braces, and parentheses that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -2740,7 +2740,7 @@ Final Answer: ] )",] ),True,1
 
 The required closing sequence is `) } >`.
 
-Final Answer: ) } >",) } >,True,1
+Final Answer: ) } >",) } >,True,1,
 119,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { [ { } ] } [ ] [ ] )",>,"To complete the sequence, we need to track the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 1.  `<` opens (Stack: `<`)
@@ -2759,7 +2759,7 @@ Final Answer: ) } >",) } >,True,1
 
 After processing the input sequence, the only remaining open bracket is the initial `<`. To close the sequence properly, we must add the corresponding closing angle bracket `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 120,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ ( [ { ( { ( [ ( [ ] ) { ( < < [ ] > [ [ ] ] > ) } ] ) [ ] } ) } ] ) ] } { < [ ] > } (",) },"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order of their appearance.
 
 1.  **Analyze the sequence step-by-step:**
@@ -2817,7 +2817,7 @@ Final Answer: >",>,True,1
 3.  **Close the remaining bracket:**
     To close the sequence properly, we must add the corresponding closing bracket for `(`, which is `)`.
 
-Final Answer: )",),True,0
+Final Answer: )",),True,0,
 121,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ ] > ] } { ( ) [ < > ] [ [ [ ] ]",] },"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -2848,8 +2848,8 @@ Final Answer: )",),True,0
 
 Therefore, the completion sequence is `] }`.
 
-Final Answer: ] }",] },True,1
-122,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { ( < ( ( [ < < { } > < < [ ( { < < > > } ) ] > > > ] { } ) ) > ) } ] [ < < { } > ( < < ( ) < ( [ ] ) > > ( ( ) ) > ) > ] > ] < < {",} > >,,,False,0
+Final Answer: ] }",] },True,1,
+122,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { ( < ( ( [ < < { } > < < [ ( { < < > > } ) ] > > > ] { } ) ) > ) } ] [ < < { } > ( < < ( ) < ( [ ] ) > > ( ( ) ) > ) > ] > ] < < {",} > >,,,False,0,
 123,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ]",> ],"To complete the sequence, we need to ensure that every opening bracket is closed in the reverse order in which it was opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `[ < [ ]`
@@ -2869,7 +2869,7 @@ Final Answer: ] }",] },True,1
     *   Input: `[ < [ ]`
     *   Completion: `> ]`
 
-Final Answer: > ]",> ],True,1
+Final Answer: > ]",> ],True,1,
 124,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ < > ] } < [ ( [ { } ] ) ] > < [ < > { } ] < ( [ ] ) > <",> > },"To complete the sequence, we need to identify all the open brackets, parentheses, braces, and angle brackets that have not yet been closed and close them in the reverse order of their opening.
 
 **Step-by-step reasoning:**
@@ -2896,7 +2896,7 @@ Final Answer: > ]",> ],True,1
 
 The required closing sequence is `> > }`.
 
-Final Answer: > > }",> > },True,1
+Final Answer: > > }",> > },True,1,
 125,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { [ ( ) ] } { { [ ] } } { } < > ) } [ < [ ( ) ]",> ],"To complete the sequence, we need to identify all the open brackets, parentheses, braces, and angle brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step analysis:**
@@ -2935,7 +2935,7 @@ To close these, we must close the most recent one first:
 1.  Close Open 12 (`<`) with `>`.
 2.  Close Open 11 (`[`) with `]`.
 
-Final Answer: > ]",> ],True,1
+Final Answer: > ]",> ],True,1,
 126,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < { < ( ) > } >",) },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -2962,7 +2962,7 @@ Final Answer: > ]",> ],True,1
     *   Close `(` with `)`.
     *   Close `{` with `}`.
 
-Final Answer: ) }",) },True,1
+Final Answer: ) }",) },True,1,
 127,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { ( ( { } ) ( ) ) } { } < { } > < > > } { } ( { ( { { } } ) [ ( ) ] } ) ) [ ( [ ]",) ],"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -3007,14 +3007,14 @@ Final Answer: ) }",) },True,1
     *   The most recently opened bracket was `(` (Open 22), so it must be closed first with `)`.
     *   The bracket opened before that was `[` (Open 21), so it must be closed next with `]`.
 
-Final Answer: ) ]",) ],True,1
+Final Answer: ) ]",) ],True,1,
 128,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( )",>,"The input sequence is `< ( )`. 
 
 1.  **Analyze the symbols**: The sequence contains an opening angle bracket `<` and a pair of parentheses `( )`.
 2.  **Check for balance**: The parentheses `( )` are already balanced (opened and closed). However, the opening angle bracket `<` has not been closed.
 3.  **Complete the sequence**: To ensure all brackets are closed properly, a closing angle bracket `>` must be added to the end of the sequence.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 129,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < ( )",> } ],"To complete the sequence, we need to close the open brackets in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `[ { < ( )`
@@ -3034,7 +3034,7 @@ Final Answer: >",>,True,1
 
 The completed sequence is `[ { < ( ) > } ]`.
 
-Final Answer: > } ]",> } ],True,1
+Final Answer: > } ]",> } ],True,1,
 130,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ < [ ] > { { [ [ ] ] } } ]",) ),"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step analysis:**
@@ -3061,7 +3061,7 @@ Final Answer: > } ]",> } ],True,1
 
 To close these, we need two closing parentheses `) )` in that order.
 
-Final Answer: ) )",) ),True,1
+Final Answer: ) )",) ),True,1,
 131,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( ) > { < > } ( < > ) < ( ) > [ ] < < < < ( ( ) ) < ( ) > > > > > {",} },"To complete the sequence, we must identify all the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -3092,7 +3092,7 @@ Final Answer: ) )",) ),True,1
 
 The required closing sequence is `} }`.
 
-Final Answer: } }",} },True,1
+Final Answer: } }",} },True,1,
 132,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < > ( [ ]",) >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -3117,7 +3117,7 @@ Final Answer: } }",} },True,1
 
 The remaining part of the sequence is `) >`.
 
-Final Answer: ) >",) >,True,1
+Final Answer: ) >",) >,True,1,
 133,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) > { } < { [ < > ]",} >,"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -3143,7 +3143,7 @@ Final Answer: ) >",) >,True,1
     *   The most recent open bracket is `{`, so we close it with `}`.
     *   The remaining open bracket is `<`, so we close it with `>`.
 
-Final Answer: } >",} >,True,1
+Final Answer: } >",} >,True,1,
 134,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] > [",] ],"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `[ < [ ] > [`
@@ -3163,8 +3163,8 @@ Final Answer: } >",} >,True,1
 
 The completion required is `] ]`.
 
-Final Answer: ] ]",] ],True,1
-135,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < ( ( < { } { < < { { { } } } > < < < > [ ] > { } ( < { { ( [ ( ) ] ) } } > ) > > } > ) ) > } >",),,,False,0
+Final Answer: ] ]",] ],True,1,
+135,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < ( ( < { } { < < { { { } } } > < < < > [ ] > { } ( < { { ( [ ( ) ] ) } } > ) > > } > ) ) > } >",),,,False,0,
 136,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ { } ] )",) ),"To complete the sequence, we need to identify which opening brackets have not yet been closed. Let's track the sequence step-by-step:
 
 1.  `(` : Open parenthesis 1
@@ -3178,7 +3178,7 @@ Final Answer: ] ]",] ],True,1
 
 At this point, we have two open parentheses remaining (Open parenthesis 1 and Open parenthesis 2) that have not been closed. To complete the sequence and ensure all parentheses are closed properly, we must add two closing parentheses.
 
-Final Answer: ) )",) ),True,1
+Final Answer: ) )",) ),True,1,
 137,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { } } ] ( < { < [ ( ( ) ) ] > } >",),"To complete the sequence, we need to identify all the opening brackets and ensure they are closed in the correct reverse order (Last-In, First-Out).
 
 **Step-by-step analysis:**
@@ -3206,7 +3206,7 @@ Final Answer: ) )",) ),True,1
 
 To close the sequence properly, we must provide the closing bracket for the remaining open parenthesis `(`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 138,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( < < < [ < [ [ ] ( ( ) ) ] > < > ] > > > )",> },"To complete the sequence, we need to track the open brackets, parentheses, and braces using a stack (Last-In, First-Out) to ensure they are closed in the correct order.
 
 **Step-by-step reasoning:**
@@ -3237,7 +3237,7 @@ Final Answer: )",),True,1
 
 The remaining open symbols in the stack are `{` and `<`. To close them in the correct order, we must first close the most recent open symbol (`<`) and then the first open symbol (`{`).
 
-Final Answer: > }",> },True,1
+Final Answer: > }",> },True,1,
 139,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ ] ) } [ ] ( { < > } ( { } ( { { } } ) ) ( [ ] ) ( ) ( < ( { { ( < { [ ( ) ] } > ) } } [ < [ ( [ { } ] [ < > < < > > ] ) ] > ] { < { } > } < > ) > )",),"To complete the sequence, we need to ensure that all open brackets are closed in the correct order (Last-In, First-Out). Let's trace the sequence step-by-step:
 
 1.  `{ ( [ ] ) }` - This part is balanced.
@@ -3262,7 +3262,7 @@ Final Answer: > }",> },True,1
 
 After processing the entire input, the only bracket that remains open is the one from step 3: `(`. To close this bracket and complete the sequence, we need a closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 140,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < < > [ [ < > ] ] > ] ( < < < ( [ [ ] ] ) [ ( ( [ { { } } ] ) ) ] > >",> ) ),"To complete the sequence, we need to identify all the open parentheses, brackets, braces, and angle brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step Reasoning:**
@@ -3316,7 +3316,7 @@ Final Answer: )",),True,1
     *   Close `(` (Open 8) with `)`
     *   Close `(` (Open 1) with `)`
 
-Final Answer: > ) )",> ) ),True,1
+Final Answer: > ) )",> ) ),True,1,
 141,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( (",) ),"To complete the sequence, we need to ensure that every opening parenthesis `(` has a corresponding closing parenthesis `)`.
 
 1.  **Analyze the current sequence:**
@@ -3332,7 +3332,7 @@ Final Answer: > ) )",> ) ),True,1
     *   Full sequence: `( ) ( ( ) )`
     *   Checking balance: The first `()` is balanced, and the second `(())` is balanced.
 
-Final Answer: ) )",) ),True,1
+Final Answer: ) )",) ),True,1,
 142,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ ] > ( { [ ] } <",> ) },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -3358,7 +3358,7 @@ Final Answer: ) )",) ),True,1
 
 The completion sequence is `> ) }`.
 
-Final Answer: > ) }",> ) },True,1
+Final Answer: > ) }",> ) },True,1,
 143,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( ) >",),"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct order (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `( < ( ) >`
@@ -3371,7 +3371,7 @@ Final Answer: > ) }",> ) },True,1
 3.  **Identify remaining open brackets:** The stack currently contains one open parenthesis `(`.
 4.  **Determine the necessary closing bracket:** To close the remaining `(`, we need a `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 144,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ( { ( < ( ) > ) }",) ) },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -3398,8 +3398,8 @@ The remaining open symbols are `{`, `(`, and `(` (in order of opening). To close
 
 The required completion is `) ) }`.
 
-Final Answer: ) ) }",) ) },True,1
-145,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ < > ] ] < ( ) > [ { } ] < [ [ ] ] > ( ) < { < [ ] < < [ [ { [ ] } ] ] > > ( [ ( ( ) ) ] ) > } > [ { { < > } } ] > < ( < { } { [ { [ ] } ] } >",) > ],,,False,0
+Final Answer: ) ) }",) ) },True,1,
+145,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ < > ] ] < ( ) > [ { } ] < [ [ ] ] > ( ) < { < [ ] < < [ [ { [ ] } ] ] > > ( [ ( ( ) ) ] ) > } > [ { { < > } } ] > < ( < { } { [ { [ ] } ] } >",) > ],,,False,0,
 146,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < < ( < < > > ) > > >",),"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the correct order (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -3430,7 +3430,7 @@ Final Answer: ) ) }",) ) },True,1
 
 The sequence is perfectly symmetrical, and adding a final `)` completes the structure.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 147,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < >",>,"The input sequence is `< < >`. 
 
 1.  The first character `<` opens a bracket.
@@ -3440,7 +3440,7 @@ Final Answer: )",),True,1
 
 Therefore, one more `>` is needed to complete the sequence.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 148,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } }",),"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket of the same type and that they are closed in the correct order (last-in, first-out).
 
 **Step-by-step Reasoning:**
@@ -3470,7 +3470,7 @@ Final Answer: >",>,True,1
 4.  **Determine the closing bracket:**
     To balance the sequence, we need to add the closing parenthesis `)` at the end.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 149,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( < < { }",> > ),"To complete the sequence, we need to ensure that every opening bracket is closed by its corresponding closing bracket in the reverse order of their appearance (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `( ) ( < < { }`
@@ -3490,7 +3490,7 @@ Final Answer: )",),True,1
 
 The required closing sequence is `> > )`.
 
-Final Answer: > > )",> > ),True,1
+Final Answer: > > )",> > ),True,1,
 150,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ ] ) > {",} ),"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -3513,7 +3513,7 @@ Final Answer: > > )",> > ),True,1
 
 The completion for the sequence `( < ( [ ] ) > {` is `} )`.
 
-Final Answer: } )",} ),True,1
+Final Answer: } )",} ),True,1,
 151,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { } [ ] >",),"To complete the sequence, we need to identify which opening brackets have not yet been closed.
 
 1.  **Analyze the sequence step-by-step:**
@@ -3531,7 +3531,7 @@ Final Answer: } )",} ),True,1
 3.  **Close the bracket:**
     To make the sequence balanced and properly closed, we must add a closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 152,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } ( ) [ ] {",},"The input sequence is: `{ < > } ( ) [ ] {`
 
 1.  **Analyze the sequence for pairs:**
@@ -3544,7 +3544,7 @@ Final Answer: )",),True,1
     *   The sequence ends with an open brace `{` that has not yet been closed.
     *   To ensure the parentheses/brackets/braces are closed properly, a matching closing brace `}` is required.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 153,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { [ [ [ < ( < [ ] { [ ( [ ] ) ] [ ] < > } > ) > ] ( [ ] ) ] ] } }",] >,"To complete the sequence, we need to identify all the open brackets and ensure they are closed in the reverse order of their appearance (Last-In, First-Out).
 
 **Step-by-step Reasoning:**
@@ -3591,7 +3591,7 @@ Final Answer: }",},True,1
     *   `]` closes `[` (Open 2)
     *   `>` closes `<` (Open 1)
 
-Final Answer: ] >",] >,True,1
+Final Answer: ] >",] >,True,1,
 154,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ] } > ( ) < [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ]",>,"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket of the same type, and that they are closed in the correct order (last-in, first-out).
 
 Let's break down the input sequence and track the open brackets:
@@ -3609,7 +3609,7 @@ Let's break down the input sequence and track the open brackets:
 
 Reviewing the entire sequence, the only bracket that has not been closed is the `<` from the third section. To close this bracket properly, we need a `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 155,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < { [ < { ( [ ] ) } > { ( { } ) } ( ) ] } > } [ < < > > ] { } [ ] < { }",> >,"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order of their appearance (last-in, first-out).
 
 **Step-by-step Reasoning:**
@@ -3660,7 +3660,7 @@ The brackets remaining open are `<` (from position 1) and `<` (from position 36)
 *   Close `<` (36) with `>`
 *   Close `<` (1) with `>`
 
-Final Answer: > >",> >,True,1
+Final Answer: > >",> >,True,1,
 156,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ [ { } ] ] }",),"To complete the sequence, we need to track the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence step-by-step:**
@@ -3680,7 +3680,7 @@ Final Answer: > >",> >,True,1
 3.  **Determine the closing bracket:**
     To close the sequence properly, we must provide the matching closing bracket for `(`, which is `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 157,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ { } ] } > ) ) < {",} >,"To complete the sequence, we need to identify the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence:**
@@ -3709,7 +3709,7 @@ Final Answer: )",),True,1
 
 The required completion is `} >`.
 
-Final Answer: } >",} >,True,1
+Final Answer: } >",} >,True,1,
 158,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < [ ( ) ] >",> >,"To complete the sequence, we need to ensure that every opening bracket has a corresponding closing bracket in the reverse order of their appearance (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -3728,7 +3728,7 @@ Final Answer: } >",} >,True,1
 3.  **Determine the necessary closing brackets:**
     *   To close the remaining two open angle brackets, we need two closing angle brackets (`> >`).
 
-Final Answer: > >",> >,True,1
+Final Answer: > >",> >,True,1,
 159,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] { { } { < ( { } ) > } } > ] ( {",} ),"To complete the sequence, we need to track the open brackets, parentheses, and braces using a stack to ensure they are closed in the correct reverse order.
 
 **Step-by-step reasoning:**
@@ -3757,8 +3757,8 @@ At the end of the input, the stack contains `( {`. To close these properly, we m
 1.  The last opened was `{`, so we close it with `}`.
 2.  The remaining open bracket is `(`, so we close it with `)`.
 
-Final Answer: } )",} ),True,1
-160,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < > ( [ [ { ( ( [ ] < > ) ) } ] { [ [ ] { } { [ { < > } ] } ( { { { { } } } } ) ] } ] ) (",) > },,,False,0
+Final Answer: } )",} ),True,1,
+160,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < > ( [ [ { ( ( [ ] < > ) ) } ] { [ [ ] { } { [ { < > } ] } ( { { { { } } } } ) ] } ] ) (",) > },,,False,0,
 161,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( (",) ) },"The input sequence consists of three opening brackets: a curly brace `{` followed by two parentheses `( (`. To complete the sequence and ensure all brackets are closed properly, we must close them in the reverse order in which they were opened (Last-In, First-Out):
 
 1. The most recent opening bracket is a parenthesis `(`, so the first closing bracket must be `)`.
@@ -3767,7 +3767,7 @@ Final Answer: } )",} ),True,1
 
 Combining these, the completion sequence is `) ) }`.
 
-Final Answer: ) ) }",) ) },True,1
+Final Answer: ) ) }",) ) },True,1,
 162,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ( { < ( { } ) > } )",) ],"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -3788,7 +3788,7 @@ At the end of the input sequence, the remaining open brackets in the stack are `
 1.  Close the parenthesis `(` with `)`.
 2.  Close the square bracket `[` with `]`.
 
-Final Answer: ) ]",) ],True,1
+Final Answer: ) ]",) ],True,1,
 163,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < < { } > > ]",),"To complete the sequence, we need to ensure that every opening bracket is closed in the reverse order in which it was opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -3808,7 +3808,7 @@ Final Answer: ) ]",) ],True,1
 3.  **Determine the closing character:**
     To close the sequence properly, we must add the corresponding closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 164,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) { <",> },"The input sequence is `( ) { <`. 
 
 1.  **Analyze the sequence**:
@@ -3824,7 +3824,7 @@ Final Answer: )",),True,1
 3.  **Complete the sequence**:
     Adding `>` and then `}` completes the sequence.
 
-Final Answer: ( ) { < > }",( ) { < > },True,1
+Final Answer: ( ) { < > }",( ) { < > },True,1,
 165,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ { ( < [ { ( ) { } } ] > ) < > } ]",) },"To complete the sequence, we need to track the open brackets, parentheses, braces, and angle brackets using a stack to ensure they are closed in the correct reverse order.
 
 **Step-by-step reasoning:**
@@ -3847,7 +3847,7 @@ Final Answer: ( ) { < > }",( ) { < > },True,1
 6.  `<` : Open angle (Stack: `{, (, [, {, (, <`)
 7.  `[` : Open bracket (Stack: `{, (, [, {, (, <, [`)
 8.  `{` : Open brace (Stack: `{, (, [, {, (, <, [, {`)
-9.  `(` : Open paren (Stack: `{, (, [, {, (, <, [, {,",False,0
+9.  `(` : Open paren (Stack: `{, (, [, {, (, <, [, {,",False,0,
 166,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < { ( < > ) }",> > },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -3873,7 +3873,7 @@ Final Answer: ( ) { < > }",( ) { < > },True,1
     *   Close angle bracket 2: `>`
     *   Close brace 1: `}`
 
-Final Answer: > > }",> > },True,1
+Final Answer: > > }",> > },True,1,
 167,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ [ ] { { < > [ ( ) ( [ ] ) [ ] { < > } ] } } [ { [ ] } ] { ( ) }",] } },"To complete the sequence, we need to identify all the opening brackets that have not yet been closed and close them in the reverse order of their appearance (Last-In, First-Out).
 
 **Step-by-step analysis of the input sequence:**
@@ -3923,10 +3923,10 @@ To close these properly, we must close them in reverse order:
 2. Close Open 2 (`{`) with `}`
 3. Close Open 1 (`{`) with `}`
 
-Final Answer: ] } }",] } },True,1
+Final Answer: ] } }",] } },True,1,
 168,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { {",} },"The input consists of two opening curly braces: `{ {`. To ensure that the sequence is closed properly, each opening brace must have a corresponding closing brace `}`. Since there are two opening braces, two closing braces are required to balance the sequence.
 
-Final Answer: } }",} },True,1
+Final Answer: } }",} },True,1,
 169,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( [ { ( < > ) } ] ) > { ( [",] ) },"To complete the sequence, we need to identify the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the first part of the sequence:**
@@ -3953,7 +3953,7 @@ Final Answer: } }",} },True,1
 
 The required completion is `] ) }`.
 
-Final Answer: ] ) }",] ) },True,1
+Final Answer: ] ) }",] ) },True,1,
 170,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ { ( < < < < > { } > { [ { } ] } > > ) } ] [ ] } ] [ < { { } } [ [ ( ( ) ) ] ] > ] [ ( ( [ ] )",) ],"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order of their appearance (Last-In, First-Out).
 
 **Step-by-step Reasoning:**
@@ -3997,8 +3997,8 @@ Final Answer: ] ) }",] ) },True,1
     *   The next open bracket is `[` (Open 1), which requires a `]`.
     *   **Completion:** `) ]`
 
-Final Answer: ) ]",) ],True,1
-171,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( ) ( ( < > < ( ( < < > > ) ) { ( ) } > ) ) { { } }",> } >,,,False,0
+Final Answer: ) ]",) ],True,1,
+171,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( ) ( ( < > < ( ( < < > > ) ) { ( ) } > ) ) { { } }",> } >,,,False,0,
 172,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ < [ < { } > ] [ ] >",] } ],"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -4030,7 +4030,7 @@ Final Answer: ) ]",) ],True,1
 
 The required closing sequence is `] } ]`.
 
-Final Answer: ] } ]",] } ],True,1
+Final Answer: ] } ]",] } ],True,1,
 173,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ( < [ ( { [ ( ) ] [ ( ( { [ ] } ) ) ] } ) ] > ) ] <",> > >,"To complete the sequence, we need to identify all the open brackets and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -4083,8 +4083,8 @@ Final Answer: ] } ]",] } ],True,1
 
 The remaining sequence to close the brackets is `> > >`.
 
-Final Answer: > > >",> > >,True,1
-174,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { { } } ( < [ ] [ { } ] > ) ( { { } { { ( ) } } } ) { < { { [ ] } [ ( ) ] } ( < { [ < > ] } > ) < ( [ ] { ( < < [ ] > > ) [ { [ [ ( ( ) ) ] ] } ] } { } ) > ( { { [ [ ( ) ] ] } } )",> } >,,,False,0
+Final Answer: > > >",> > >,True,1,
+174,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { { } } ( < [ ] [ { } ] > ) ( { { } { { ( ) } } } ) { < { { [ ] } [ ( ) ] } ( < { [ < > ] } > ) < ( [ ] { ( < < [ ] > > ) [ { [ [ ( ( ) ) ] ] } ] } { } ) > ( { { [ [ ( ) ] ] } } )",> } >,,,False,0,
 175,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ) { [ ] } [ ] [ ] { < { ( ( { } ) ) { [ { } ] } } > [ ] }",],"To complete the sequence, we need to track all the opening brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step analysis:**
@@ -4121,7 +4121,7 @@ After processing the","To complete the sequence, we need to track all the openin
 13. `[ ]` : Open and close square bracket (Stack: `[ {`)
 14. `}` : Close brace (Matches the brace from step 6) (Stack: `[`)
 
-After processing the",False,0
+After processing the",False,0,
 176,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { ( < < > > )",} ) >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -4145,7 +4145,7 @@ After processing the",False,0
 
 The required closing sequence is `} ) >`.
 
-Final Answer: } ) >",} ) >,True,1
+Final Answer: } ) >",} ) >,True,1,
 177,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < >",) >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `< ( < >`
@@ -4166,7 +4166,7 @@ Final Answer: } ) >",} ) >,True,1
     *   Input: `< ( < >`
     *   Completion: `) >`
 
-Final Answer: ) >",) >,True,1
+Final Answer: ) >",) >,True,1,
 178,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { ( { < > } ) } [ ( ) ] { } [ { { ( < > ) } <",> } ],"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step analysis of the input sequence:**
@@ -4197,7 +4197,7 @@ To close these properly, we must close them in the reverse order:
 
 The required characters to complete the sequence are `> } ]`.
 
-Final Answer: > } ]",> } ],True,1
+Final Answer: > } ]",> } ],True,1,
 179,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { ( ) }",} ],"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `[ { { ( ) }`
@@ -4218,7 +4218,7 @@ Final Answer: > } ]",> } ],True,1
 
 The required characters to complete the sequence are `} ]`.
 
-Final Answer: } ]",} ],True,1
+Final Answer: } ]",} ],True,1,
 180,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { [ ] } ] } [ [ { { } } [ < >",] ] ],"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -4247,7 +4247,7 @@ Final Answer: } ]",} ],True,1
 
 The remaining sequence needed to close all brackets is `] ] ]`.
 
-Final Answer: ] ] ]",] ] ],True,1
+Final Answer: ] ] ]",] ] ],True,1,
 181,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( < [ [ ] ] > )",} ],"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -4273,7 +4273,7 @@ Final Answer: ] ] ]",] ] ],True,1
     *   Input: `[ { ( < [ [ ] ] > )`
     *   Completion: `} ]`
 
-Final Answer: } ]",} ],True,1
+Final Answer: } ]",} ],True,1,
 182,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( [ ] ) )",},"To complete the sequence, we need to identify which opening symbols have not yet been closed. Let's track the symbols using a stack:
 
 1.  `{` : Open brace (Stack: `{`)
@@ -4286,7 +4286,7 @@ Final Answer: } ]",} ],True,1
 
 After processing the input, the only remaining open symbol is the initial brace `{`. To close the sequence properly, we must add the corresponding closing brace `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 183,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > > < > [ ] [",] ),"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -4311,8 +4311,8 @@ Final Answer: }",},True,1
 
 The required characters to complete the sequence are `] )`.
 
-Final Answer: ] )",] ),True,1
-184,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( { { ( ( ) ) } } ) [ ( [ { } ] ) ] < { { < < < > [ < [ < ( [ ( { ( ( < < < < > > > { ( { { < ( ) > ( ) } } ) } > { } ) ) } ) ] ) > ] > ] > < { } > > } ( ) < { ( ) } > } > ] [ < ( ) > ]",>,,,False,0
+Final Answer: ] )",] ),True,1,
+184,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( { { ( ( ) ) } } ) [ ( [ { } ] ) ] < { { < < < > [ < [ < ( [ ( { ( ( < < < < > > > { ( { { < ( ) > ( ) } } ) } > { } ) ) } ) ] ) > ] > ] > < { } > > } ( ) < { ( ) } > } > ] [ < ( ) > ]",>,,,False,0,
 185,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { { { } } }",] },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -4337,7 +4337,7 @@ Final Answer: ] )",] ),True,1
     *   Input: `{ [ { { { } } }`
     *   Completion: `] }`
 
-Final Answer: ] }",] },True,1
+Final Answer: ] }",] },True,1,
 186,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ ( { { ( { } ) } < < ( [ [ { } < [ { < [ { ( ) ( [ { } ] ) } ] < > > } ] ( < { ( [ ] ) } > ) > ] ( [ < ( ) > ] ) ] ) > > }",) ] ],"To complete the sequence, we must identify all the opening brackets that have not yet been closed and close them in the reverse order of their appearance (Last-In, First-Out).
 
 **Step-by-step Reasoning:**
@@ -4379,7 +4379,7 @@ Final Answer: ] }",] },True,1
     *   `]` closes `[` (2)
     *   `]` closes `[` (1)
 
-Final Answer: ) ] ]",) ] ],True,1
+Final Answer: ) ] ]",) ] ],True,1,
 187,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ (",) ],"The input sequence consists of two opening brackets: a square bracket `[` followed by a parenthesis `(`. 
 
 To close these properly, they must be closed in the reverse order in which they were opened (Last-In, First-Out):
@@ -4388,7 +4388,7 @@ To close these properly, they must be closed in the reverse order in which they 
 
 Therefore, the completion of the sequence is `) ]`.
 
-Final Answer: ) ]",) ],True,1
+Final Answer: ) ]",) ],True,1,
 188,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( {",} ),"The input sequence consists of two opening brackets: a parenthesis `(` and a curly brace `{`. To close these properly, they must be closed in the reverse order in which they were opened (Last-In, First-Out).
 
 1. The last bracket opened was the curly brace `{`, so it must be closed first with `}`.
@@ -4396,8 +4396,8 @@ Final Answer: ) ]",) ],True,1
 
 Therefore, the completion of the sequence is `} )`.
 
-Final Answer: } )",} ),True,1
-189,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < [ [ { [ < [ < ( [ ] ) > ] < > > ( < [ < [ < ( [ ( [ ] ) < ( ) > ] [ ( { ( ) } [ < { { { ( [ ] ) } } } > ] ) ] ) > ] > ] > ) ] } ] ] > ) ( { { { } } }",) ],,,False,0
+Final Answer: } )",} ),True,1,
+189,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < [ [ { [ < [ < ( [ ] ) > ] < > > ( < [ < [ < ( [ ( [ ] ) < ( ) > ] [ ( { ( ) } [ < { { { ( [ ] ) } } } > ] ) ] ) > ] > ] > ) ] } ] ] > ) ( { { { } } }",) ],,,False,0,
 190,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ < > ] (",) ] },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `{ [ [ < > ] (`
@@ -4417,7 +4417,7 @@ Final Answer: } )",} ),True,1
 
 The required closing sequence is `) ] }`.
 
-Final Answer: ) ] }",) ] },True,1
+Final Answer: ) ] }",) ] },True,1,
 191,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ) ( { { [ ] } }",) >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -4442,7 +4442,7 @@ Final Answer: ) ] }",) ] },True,1
 
 The required characters to complete the sequence are `) >`.
 
-Final Answer: ) >",) >,True,1
+Final Answer: ) >",) >,True,1,
 192,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( [ ] ) > < >",>,"To complete the sequence and ensure all brackets are closed properly, we can track the open brackets using a stack:
 
 1.  `<` : Open angle bracket (Stack: `<`)
@@ -4457,7 +4457,7 @@ Final Answer: ) >",) >,True,1
 
 After processing the input sequence `< < ( [ ] ) > < >`, the stack contains one remaining open angle bracket (`<`) from the very beginning of the sequence. To close this bracket and balance the sequence, we need one closing angle bracket (`>`).
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 193,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [",] ),"To complete the sequence, we must follow the rule of balanced brackets, where the most recently opened bracket is the first one to be closed (Last-In, First-Out).
 
 1.  The first character is an opening parenthesis: `(`.
@@ -4467,7 +4467,7 @@ Final Answer: >",>,True,1
 
 Combining these, the completion for `( [` is `] )`.
 
-Final Answer: ] )",] ),True,1
+Final Answer: ] )",] ),True,1,
 194,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ ( ) ( ( { < { < { { } } > } > } ) ) ] ] > ( ) { ( ) }",],"To complete the sequence, we need to ensure that every opening bracket, parenthesis, curly brace, and angle bracket is closed in the correct reverse order of its opening.
 
 **Step-by-step reasoning:**
@@ -4508,8 +4508,8 @@ Final Answer: ] )",] ),True,1
 3.  **Determine the closing bracket:**
     To close the initial `[`, we need a corresponding `]`.
 
-Final Answer: ]",],True,1
-195,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > [ { [ [ ( [ ] ) [ < ( < > ) { [ ( { ( [ ( ( < ( ( < [ ] { < > } > [ ] ) ) > ) [ { } ] ) ] ) } ) ] } > ] ] ] } [ ] ] ) < [",] >,,,False,0
+Final Answer: ]",],True,1,
+195,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > [ { [ [ ( [ ] ) [ < ( < > ) { [ ( { ( [ ( ( < ( ( < [ ] { < > } > [ ] ) ) > ) [ { } ] ) ] ) } ) ] } > ] ] ] } [ ] ] ) < [",] >,,,False,0,
 196,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( {",} ) >,"The input sequence consists of three opening brackets: an angle bracket `<`, a parenthesis `(`, and a curly brace `{`. 
 
 To complete the sequence and ensure the brackets are closed properly, they must be closed in the reverse order in which they were opened (Last-In, First-Out):
@@ -4517,7 +4517,7 @@ To complete the sequence and ensure the brackets are closed properly, they must 
 2. The second bracket opened was `(`, so it must be closed next with `)`.
 3. The first bracket opened was `<`, so it must be closed last with `>`.
 
-Final Answer: } ) >",} ) >,True,1
+Final Answer: } ) >",} ) >,True,1,
 197,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [",] ) ],"To complete the sequence, we must close the brackets in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  The first character is an opening square bracket: `[`
@@ -4531,7 +4531,7 @@ To close these properly:
 
 Therefore, the closing sequence is `] ) ]`.
 
-Final Answer: ] ) ]",] ) ],True,1
+Final Answer: ] ) ]",] ) ],True,1,
 198,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < { < > } > } [ ( < < > > ) [ { < ( ) > } ] ] [ ] } < ( { [ < [ { [ ( ) ] } ] > < { ( [ [ [ { } < > { ( < { [ ] } > ( ) ) } ] ] ] ) } > ] } )",>,"To complete the sequence, we need to ensure that every opening bracket—`{`, `[`, `(`, and `<`—is closed by its corresponding closing bracket—`}`, `]`, `)`, and `>`—in the correct reverse order of their appearance (Last-In, First-Out).
 
 **Step-by-Step Reasoning:**
@@ -4610,7 +4610,7 @@ Final Answer: ] ) ]",] ) ],True,1
 3.  **Identify the remaining open bracket:**
     After processing the entire input, the only bracket that remains open is the very first `<` of the second part. To close this bracket, we need a `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 199,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ ( { ( ( < [ { < > } ] > { { [ ] } } ) ) } ( [ [ < > ] ] ) ) ] ] ] ) ( < > < [ ( ) ] > (",) ),"To complete the sequence, we need to ensure that every opening bracket—parentheses `(`, square brackets `[`, curly braces `{`, and angle brackets `<`—is closed by its corresponding closing bracket in the reverse order of their appearance (a Last-In, First-Out stack).
 
 **Reasoning:**
@@ -4636,8 +4636,8 @@ Final Answer: >",>,True,1
     *   To close the most recent open bracket `(`, we need a `)`.
     *   To close the first open bracket of the second part `(`, we need another `)`.
 
-Final Answer: ) )",) ),True,1
-200,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( [ [ ] ] ) ( { [ { < { ( ) < [ [ < > { [ ( < ( < [ { < < ( [ ( ) ] [ ( < ( { [ ] } ) > ) ] [ < > ] ) > [ { ( < > ) } ] > } ] > ) > ) ] } ] ] > { } [ [ ] ] { } } > ( ( < > ) ) } ] }",),,,False,0
+Final Answer: ) )",) ),True,1,
+200,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( [ [ ] ] ) ( { [ { < { ( ) < [ [ < > { [ ( < ( < [ { < < ( [ ( ) ] [ ( < ( { [ ] } ) > ) ] [ < > ] ) > [ { ( < > ) } ] > } ] > ) > ) ] } ] ] > { } [ [ ] ] { } } > ( ( < > ) ) } ] }",),,,False,0,
 201,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { ( ( { } ) ) ( ( [ ] ) ) } )",),"To complete the sequence, we need to ensure that every opening bracket, parenthesis, or brace has a corresponding closing one in the correct order (Last-In, First-Out).
 
 **Step-by-step Reasoning:**
@@ -4678,7 +4678,7 @@ $\rightarrow$ `( ` (removing inner `( )`)
 
 The only remaining character is the opening parenthesis `(`, which requires a closing parenthesis `)` to be complete.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 202,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > >",],"The input sequence is `[ < < > >`.
 
 1.  **Analyze the open and closed brackets:**
@@ -4695,7 +4695,7 @@ Final Answer: )",),True,1
 3.  **Complete the sequence:**
     *   Adding `]` at the end results in `[ < < > > ]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 203,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ [ { } ] ]",>,"To complete the sequence, we need to identify which opening brackets have not yet been closed. Let's track the brackets in the order they appear:
 
 1.  `<` (Open angle bracket) - **Unclosed**
@@ -4708,7 +4708,7 @@ Final Answer: ]",],True,1
 
 Looking at the stack, the only bracket that remains open is the initial angle bracket `<`. To close the sequence properly, we must provide the corresponding closing angle bracket `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 204,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) [ ( [ < { { ( { } ) } } >",] ) ],"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -4739,7 +4739,7 @@ To close these properly, we must close them in reverse order:
 
 The required closing sequence is `] ) ]`.
 
-Final Answer: ] ) ]",] ) ],True,1
+Final Answer: ] ) ]",] ) ],True,1,
 205,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] [ { < { } > { [ ( [ ( ) ] ) ]",} } ],"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step analysis of the input sequence:**
@@ -4776,7 +4776,7 @@ To close the sequence properly, we must close the most recently opened bracket f
 2. Close Bracket 4: `}`
 3. Close Bracket 3: `]`
 
-Final Answer: } } ]",} } ],True,1
+Final Answer: } } ]",} } ],True,1,
 206,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ < < [ ] > > ] )",> ),"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence step-by-step:**
@@ -4801,7 +4801,7 @@ Final Answer: } } ]",} } ],True,1
 3.  **Determine the completion:**
     The symbols needed to close the sequence are `> )`.
 
-Final Answer: > )",> ),True,1
+Final Answer: > )",> ),True,1,
 207,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { [ [ < { { { } } } > ] ] < [ { }",] > },"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order of their appearance (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -4826,7 +4826,7 @@ Final Answer: > )",> ),True,1
     *   `[` : Open square bracket (4) $\rightarrow$ **Open**
     *   `<` : Open angle bracket (5) $\rightarrow$ **Open**
     *   `{` : Open curly bracket (6) $\rightarrow$ **Open**
-    *   `{` : Open curly bracket (7) $\rightarrow$ **",False,0
+    *   `{` : Open curly bracket (7) $\rightarrow$",False,0,
 208,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ ( { } ) { < ( ( [ ] ) ) >",} ] ),"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -4856,7 +4856,7 @@ Final Answer: > )",> ),True,1
 
 The completion sequence is `} ] )`.
 
-Final Answer: } ] )",} ] ),True,1
+Final Answer: } ] )",} ] ),True,1,
 209,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { { { { < < ( { ( { { < < [ < [ [ ] ] > ] [ ] > [ [ ] ] > ( < [ { < > < [ ] > } ] > ) } } ) } ) > > } } }",} } ),"To complete the sequence, we need to identify all the opening brackets that have not yet been closed and close them in the reverse order of their appearance (Last-In, First-Out).
 
 **Step-by-step Reasoning:**
@@ -4886,7 +4886,7 @@ Final Answer: } ] )",} ] ),True,1
     *   The first `{` (B1) is closed by `}`.
     *   The first `(` (P1) is closed by `)`.
 
-Final Answer: } } )",} } ),True,1
+Final Answer: } } )",} } ),True,1,
 210,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( [ ] ) > ] { [ { }",] },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -4912,7 +4912,7 @@ Final Answer: } } )",} } ),True,1
 
 The remaining characters needed to close the sequence are `] }`.
 
-Final Answer: ] }",] },True,1
+Final Answer: ] }",] },True,1,
 211,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ { }",] } ),"To complete the sequence, we need to close the open brackets in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -4934,8 +4934,8 @@ Final Answer: ] }",] },True,1
     Input: `( { [ { }`
     Completion: `] } )`
 
-Final Answer: ] } )",] } ),True,1
-212,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ { [ ] { [ [ ] ] } { ( ) } } { [ [ ( [ ] ) ] ] } ] } { < ( ) { [ [ ( ) { [ { { } } ] < > { < ( < { ( < ( [ ] ) > ) } > ) { [ ( < ( ) > ) ] } [ ] { } > } ( ) } ] [ ( ( { < > } ) ) ] ] } >",} ),,,False,0
+Final Answer: ] } )",] } ),True,1,
+212,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ { [ ] { [ [ ] ] } { ( ) } } { [ [ ( [ ] ) ] ] } ] } { < ( ) { [ [ ( ) { [ { { } } ] < > { < ( < { ( < ( [ ] ) > ) } > ) { [ ( < ( ) > ) ] } [ ] { } > } ( ) } ] [ ( ( { < > } ) ) ] ] } >",} ),,,False,0,
 213,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( < > < [ [ ] ] > ) { } )",) >,"To complete the sequence, we need to track the open brackets and close them in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -4960,7 +4960,7 @@ At the end of the input sequence, the remaining open brackets in the stack are `
 1.  Close `(` with `)`.
 2.  Close `<` with `>`.
 
-Final Answer: ) >",) >,True,1
+Final Answer: ) >",) >,True,1,
 214,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { { { < > } }",} ] },"To complete the sequence, we need to identify all the open brackets and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -4984,8 +4984,8 @@ Final Answer: ) >",) >,True,1
 
 The remaining sequence to close the brackets is `} ] }`.
 
-Final Answer: } ] }",} ] },True,1
-215,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < > } } < > < { { ( ) } } > { } } { < ( { [ < > ] [ ( ) < ( ) > { < ( ( ( ) ) ) > [ ] } ] < > ( < { } > ) }",) > },,,False,0
+Final Answer: } ] }",} ] },True,1,
+215,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < > } } < > < { { ( ) } } > { } } { < ( { [ < > ] [ ( ) < ( ) > { < ( ( ( ) ) ) > [ ] } ] < > ( < { } > ) }",) > },,,False,0,
 216,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > { < [ ] >",} ],"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -5007,7 +5007,7 @@ Final Answer: } ] }",} ] },True,1
 
 The required closing sequence is `} ]`.
 
-Final Answer: } ]",} ],True,1
+Final Answer: } ]",} ],True,1,
 217,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ <",> ] ],"The input sequence consists of three opening brackets:
 1.  `[` (Open square bracket)
 2.  `[` (Open square bracket)
@@ -5020,14 +5020,14 @@ To close these properly, they must be closed in the reverse order in which they 
 
 Therefore, the completion for the sequence `[ [ <` is `> ] ]`.
 
-Final Answer: > ] ]",> ] ],True,1
+Final Answer: > ] ]",> ] ],True,1,
 218,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { }",),"The input sequence is `( { }`. 
 
 1.  **Analyze the symbols**: The sequence contains an opening parenthesis `(`, followed by an opening curly brace `{` and a closing curly brace `}`.
 2.  **Check for balance**: The curly braces `{ }` are already balanced (closed). However, the opening parenthesis `(` remains open.
 3.  **Determine the requirement**: To make the sequence properly closed, a matching closing parenthesis `)` must be added to the end.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 219,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ < ( < { } > ) > ] ] [ [ ] ]",},"To complete the sequence, we need to identify all the open brackets and ensure they are closed in the correct reverse order (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -5051,7 +5051,7 @@ Final Answer: )",),True,1
 
 After analyzing the sequence, we can see that the blocks `[ [ < ( < { } > ) > ] ]` and `[ [ ] ]` are both fully closed and balanced. However, the very first character `{` (Level 1) remains open. To close the sequence properly, we must provide the matching closing brace `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 220,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < {",} >,"The input sequence consists of two opening symbols: an angle bracket `<` and a curly brace `{`. To complete the sequence and ensure that the brackets are closed properly, they must be closed in the reverse order in which they were opened (Last-In, First-Out).
 
 1. The last symbol opened was `{`, so the first symbol to close is `}`.
@@ -5059,7 +5059,7 @@ Final Answer: }",},True,1
 
 Therefore, the completion of the sequence is `} >`.
 
-Final Answer: } >",} >,True,1
+Final Answer: } >",} >,True,1,
 221,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } [ ( { ( { [ < > ] } ) ( ) } ) ] { [ < > ] } [ [ ( [ ]",) ] ],"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step analysis of the input sequence:**
@@ -5085,7 +5085,7 @@ To close these properly, we must close them in the reverse order:
 
 Final sequence to complete the input: `) ] ]`
 
-Final Answer: ) ] ]",) ] ],True,1
+Final Answer: ) ] ]",) ] ],True,1,
 222,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { { { < [ ( < > { ( ) } ) ] > } } }",> >,"To complete the sequence, we need to identify all the open brackets, parentheses, and braces and close them in the reverse order in which they were opened.
 
 **Step-by-step analysis:**
@@ -5118,7 +5118,7 @@ To close these properly, we must add the corresponding closing brackets in rever
 - `>` (Closes 2)
 - `>` (Closes 1)
 
-Final Answer: > >",> >,True,1
+Final Answer: > >",> >,True,1,
 223,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < ( )",> > },"To complete the sequence, we need to identify the open brackets and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `{ < < ( )`
@@ -5137,7 +5137,7 @@ Final Answer: > >",> >,True,1
 
 The closing sequence is `> > }`.
 
-Final Answer: > > }",> > },True,1
+Final Answer: > > }",> > },True,1,
 224,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ) <",> ],"The input sequence is `[ ( ) <`. To complete the sequence and ensure all brackets are closed properly, we must follow the rule of nesting (Last-In, First-Out).
 
 1.  **Analyze the open brackets:**
@@ -5155,7 +5155,7 @@ Final Answer: > > }",> > },True,1
 4.  **Construct the completion:**
     *   Adding `>` and then `]` closes all open brackets in the correct order.
 
-Final Answer: > ]",> ],True,1
+Final Answer: > ]",> ],True,1,
 225,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { [ < ( < [ ( ) ] > ) > ] } ) } ] [ ] [ ( { ( ) } ) ] < { ( ( ( ( ( < > ) ) ) ) ) [ < [ ( < > ) ] > [ [ ] ( ( { } { [ { < [ ] > } ] } < { } > < [ < > ] > [ ] ) ) ] ] } > { [ { ( )",} ] },"To complete the sequence, we must identify all the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step analysis:**
@@ -5189,7 +5189,7 @@ To close these properly, we must close them in reverse order:
 2. Close the `[` with `]`.
 3. Close the first `{` with `}`.
 
-Final Answer: } ] }",} ] },True,1
+Final Answer: } ] }",} ] },True,1,
 226,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > }",> ],"To complete the sequence, we need to identify all the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step analysis of the input sequence:**
@@ -5239,8 +5239,8 @@ To close these properly, we must close the most recently opened bracket first:
 -   The `<` (Open 2) must be closed with `>`.
 -   The `[` (Open 1) must be closed with `]`.
 
-Final Answer: > ]",> ],True,1
-227,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { { [ ] } < > [ ] } [ [ [ < [ [ ] ] > ] ] ] > } [ ] { { { { [ { } ] } ( < [ [ [ ] ] ] > ) < < ( { ( [ ] ) [ { { } } ] { [ ] } } ) [ [ { [ [ { ( { } ) [ ( ) { } ] { } } ] ] < > } ] ] > > }",} } ),,,False,0
+Final Answer: > ]",> ],True,1,
+227,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { { [ ] } < > [ ] } [ [ [ < [ [ ] ] > ] ] ] > } [ ] { { { { [ { } ] } ( < [ [ [ ] ] ] > ) < < ( { ( [ ] ) [ { { } } ] { [ ] } } ) [ [ { [ [ { ( { } ) [ ( ) { } ] { } } ] ] < > } ] ] > > }",} } ),,,False,0,
 228,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < (",) >,"The input sequence consists of two opening symbols: an angle bracket `<` and a parenthesis `(`. To close these properly, they must be closed in the reverse order in which they were opened (Last-In, First-Out).
 
 1. The most recent opening symbol is `(`, which requires a closing parenthesis `)`.
@@ -5248,7 +5248,7 @@ Final Answer: > ]",> ],True,1
 
 Therefore, the completion of the sequence is `) >`.
 
-Final Answer: ) >",) >,True,1
+Final Answer: ) >",) >,True,1,
 229,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < { < ( ( ) ) > } >",] },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -5273,7 +5273,7 @@ Final Answer: ) >",) >,True,1
     *   The first opened bracket is `{` (Open brace 1).
     *   Therefore, we must close them in the order: `]` then `}`.
 
-Final Answer: ] }",] },True,1
+Final Answer: ] }",] },True,1,
 230,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ ( [ [ ( ) ] ] ) < < [ ] > > < < >",> ],"To complete the sequence, we need to ensure that every opening bracket, parenthesis, or angle bracket has a corresponding closing one in the correct order (Last-In, First-Out).
 
 **Step-by-step analysis of the input sequence:**
@@ -5299,7 +5299,7 @@ Final Answer: ] }",] },True,1
 **Remaining open brackets:**
 After analyzing the sequence, the only bracket that remains open is the angle bracket (G) at position 16. To balance the sequence, we must provide the corresponding closing angle bracket `>`.
 
-Final Answer: >",>,True,0
+Final Answer: >",>,True,0,
 231,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } ) { ( [ { ( ) } ] ( [ ] ) )",},"To complete the sequence, we need to track the open brackets and ensure they are closed in the reverse order they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -5323,7 +5323,7 @@ Final Answer: >",>,True,0
 
 At the end of the input sequence, the only remaining open bracket in the stack is the brace `{` from step 5. To close the sequence properly, we must add a closing brace `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 232,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > { { { } } { } } ] < { } [ { [ ] }",] >,"To complete the sequence, we need to identify all the open brackets that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -5348,7 +5348,7 @@ Final Answer: }",},True,1
     *   `{` opens, `}` closes it.
     *   `}` closes the second `{`.
     *   `{` opens, `}` closes it.
-    *   `}` closes the first `{`.",False,0
+    *   `}` closes the first `{`.",False,0,
 233,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > { { ( { } ) } { { ( ( ) ) } } }",},"To complete the sequence, we need to ensure that every opening bracket, parenthesis, or brace is closed in the reverse order of its opening (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -5374,7 +5374,7 @@ Final Answer: }",},True,1
 
 After processing the entire input sequence, the stack contains one remaining open brace `{` from the very beginning of the sequence. To close this properly, we need one final closing brace `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 234,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { ( [ ] ) { ( )",} } },"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order in which they were opened.
 
 1.  **Analyze the input sequence step-by-step:**
@@ -5400,8 +5400,8 @@ Final Answer: }",},True,1
 
 The required closing sequence is `} } }`.
 
-Final Answer: } } }",} } },True,1
-235,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < { [ { } < ( { ( < < < { [ ( [ ( [ { { < [ { } < ( ) > ] > } } ] ) ] ) ] } > < > > ( ( < { } > ) ) > ) } ) > ] } > )",>,,,False,0
+Final Answer: } } }",} } },True,1,
+235,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < { [ { } < ( { ( < < < { [ ( [ ( [ { { < [ { } < ( ) > ] > } } ] ) ] ) ] } > < > > ( ( < { } > ) ) > ) } ) > ] } > )",>,,,False,0,
 236,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ < > ] ( ( ( ( { { } } ) ) )",) } >,"To complete the sequence, we need to identify all the open brackets, braces, and parentheses that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -5446,8 +5446,8 @@ The remaining open symbols in the stack are `<`, `{`, and `(`. To close them pro
 17. `)` : Close parenthesis (Matches `(`; Stack: `<`, `{`, `(`)
 
 The remaining open symbols in the stack are `<`, `{`, and `(`. To close them properly, we must close the most recent one first:
-1.  Close `(` with `)",False,0
-237,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < [ [ ] ( ) { < > ( [ { } { < > } { } ] ) } [ [ [ ( [ ( ) [ [ { < [ { { } } < { { < ( ) > } } > ] > } ] ] ] ) ] < < [ [ ( < < ( ) > > ) ] ] > > [ ] ] ] ] < ( [ ] ) > { ( ( < { } > ) ) } > >",],,,False,0
+1.  Close `(` with `)",False,0,
+237,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < [ [ ] ( ) { < > ( [ { } { < > } { } ] ) } [ [ [ ( [ ( ) [ [ { < [ { { } } < { { < ( ) > } } > ] > } ] ] ] ) ] < < [ [ ( < < ( ) > > ) ] ] > > [ ] ] ] ] < ( [ ] ) > { ( ( < { } > ) ) } > >",],,,False,0,
 238,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ < > ]",} >,"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:**
@@ -5469,7 +5469,7 @@ The remaining open symbols in the stack are `<`, `{`, and `(`. To close them pro
     *   Input: `< { [ < > ]`
     *   Completion: `} >`
 
-Final Answer: } >",} >,True,1
+Final Answer: } >",} >,True,1,
 239,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { ( ( < ( ( ) ) > ) ) } ]",>,"To complete the sequence, we need to identify all the open brackets and ensure they are closed in the reverse order of their opening (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -5495,7 +5495,7 @@ Final Answer: } >",} >,True,1
 3.  **Determine the closing character:**
     To close the open angle bracket `<`, we need the corresponding closing angle bracket `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 240,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ) < > > { < > } { ( ) ( < ( ) > ) } < < { [ ] }",> >,"To complete the sequence, we need to identify all the open brackets and close them in the reverse order they were opened.
 
 1.  **Analyze the sequence step-by-step:**
@@ -5542,7 +5542,7 @@ Final Answer: >",>,True,1
 3.  **Determine the closing sequence:**
     To close these, we need two closing angle brackets (`>`) in the reverse order of their opening. Since both are the same type, we simply need `> >`.
 
-Final Answer: > >",> >,True,1
+Final Answer: > >",> >,True,1,
 241,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ { } ] ( ( )",),"To complete the sequence, we need to ensure that every opening bracket, brace, or parenthesis has a corresponding closing one in the correct order.
 
 1.  **Analyze the sequence:**
@@ -5556,7 +5556,7 @@ Final Answer: > >",> >,True,1
 3.  **Determine the necessary closing character:**
     To balance the remaining open `(`, we must add a closing `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 242,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < { < > } > { (",) },"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the sequence step-by-step:**
@@ -5578,7 +5578,7 @@ Final Answer: )",),True,1
 
 The required completion is `) }`.
 
-Final Answer: ) }",) },True,1
+Final Answer: ) }",) },True,1,
 243,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > < { { { [ ( ) ] } } } > ( { [ { ( [ ] { } ) } ]",} ),"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order of their appearance (Last-In, First-Out).
 
 **Step-by-step Reasoning:**
@@ -5616,7 +5616,7 @@ Final Answer: ) }",) },True,1
 
 The remaining characters needed to close the sequence are `} )`.
 
-Final Answer: } )",} ),True,1
+Final Answer: } )",} ),True,1,
 244,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( <",> ) },"The input sequence consists of three opening brackets: a curly brace `{`, a parenthesis `(`, and an angle bracket `<`.
 
 To close these properly, they must be closed in the reverse order in which they were opened (Last-In, First-Out):
@@ -5626,7 +5626,7 @@ To close these properly, they must be closed in the reverse order in which they 
 
 Therefore, the completion of the sequence is `> ) }`.
 
-Final Answer: > ) }",> ) },True,1
+Final Answer: > ) }",> ) },True,1,
 245,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { { { < ( < ( [ < < > > ] < > ) > ) > } [ ] }",} ) },"To complete the sequence, we need to identify all the open parentheses, brackets, and braces and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -5672,7 +5672,7 @@ Final Answer: > ) }",> ) },True,1
 
 The required closing sequence is `} ) }`.
 
-Final Answer: } ) }",} ) },True,1
+Final Answer: } ) }",} ) },True,1,
 246,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] )",} },"To complete the sequence, we need to identify all the open brackets, braces, and parentheses and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step analysis:**
@@ -5708,7 +5708,7 @@ After processing the entire input, the only remaining open symbols are the first
 
 To close these properly, we must add two closing braces `}` in the correct order.
 
-Final Answer: } }",} },True,1
+Final Answer: } }",} },True,1,
 247,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < < < ( ( ) ) ( [ ] ) > > { [ ] }",> ) ),"To complete the sequence, we need to identify all the open brackets, parentheses, and braces that have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 **Step-by-step reasoning:**
@@ -5748,7 +5748,7 @@ Final Answer: } }",} },True,1
 
 The required closing sequence is `> ) )`.
 
-Final Answer: > ) )",> ) ),True,1
+Final Answer: > ) )",> ) ),True,1,
 248,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { { } }",> ],"To complete the sequence, we need to identify which opening brackets have not yet been closed and close them in the reverse order in which they were opened (Last-In, First-Out).
 
 1.  **Analyze the input sequence:** `[ < { { } }`
@@ -5766,7 +5766,7 @@ Final Answer: > ) )",> ) ),True,1
 
 The necessary characters to complete the sequence are `> ]`.
 
-Final Answer: > ]",> ],True,1
+Final Answer: > ]",> ],True,1,
 249,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < > >",>,"The input sequence is `< < < > >`.
 
 1.  **Analyze the brackets**: The sequence uses angle brackets, where `<` is the opening bracket and `>` is the closing bracket.
@@ -5777,4 +5777,4 @@ Final Answer: > ]",> ],True,1
 4.  **Calculate the difference**: 3 (opening) - 2 (closing) = 1.
 5.  **Complete the sequence**: One more closing bracket (`>`) is needed to balance the sequence.
 
-Final Answer: < < < > > >",< < < > > >,True,1
+Final Answer: < < < > > >",< < < > > >,True,1,

@@ -53,7 +53,11 @@ the marker is absent** — which then scores 0 on anything but a one-word answer
 detector, not a scoring bug; `has_marker` records it per row so "wrong" can be told from "never
 finished". Then six branches are tried in order, any hit scoring 1:
 
-1. **Exact**, case-folded, after `.strip("\"'`")` — so `"(B)"` and `` `No` `` survive quoting.
+1. **Exact**, case-folded, after `.strip("\"'`* ")` — so `"(B)"`, `` `No` `` and
+   `**bootlegging, indifferent, trainman**` all survive their packaging. The asterisk was added
+   in **v2** (2026-08-29) after a Luna pilot returned exactly that markdown-bolded answer and
+   scored 0; measured over all 36,348 stored rows it gains 31 and loses 0. `_` was measured too
+   and adds nothing, so it is deliberately not stripped — it is likelier to be part of a real token.
 2. **Letter for letter.** Gold matches `^\([A-Z]\)$`; the answer's first letter is taken with the
    parens optional, so `B`, `(B)` and `(B) a hexagon` all match gold `(B)`.
 3. **Option text for letter.** Same gold shape, model answered with the *content*: the question is
@@ -65,7 +69,9 @@ finished". Then six branches are tried in order, any hit scoring 1:
    line onto the gold.
 6. **Both sides comma-normalised** — branch 4 again, for a gold that itself carries commas.
 
-Every `_overall.csv` carries a `scorer` column (`lenient_v1`) so a number can never again be read
+Every `_overall.csv` carries a `scorer` column (`bbh_eval_core.SCORER_VERSION`, today
+`lenient_v2` — bumped whenever the matcher's behaviour changes, so a v1 number is never compared
+with a v2 one by accident) so a number can never again be read
 without knowing what produced it, and **every row carries a `config` column** — the generation
 parameters that produced it, `model-parameters.md` rule 8 ("pin a seed *and write it on every
 row*"). A config that lives only in a job script cannot be recovered from a result file later. On

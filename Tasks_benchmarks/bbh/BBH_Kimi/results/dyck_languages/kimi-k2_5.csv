@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [",] ],"**Reasoning:**
 The input `[ [` consists of two opening square brackets. To properly close a bracket sequence, each opening bracket must be matched with a corresponding closing bracket in the reverse order of opening (LIFO - Last In, First Out).
 
@@ -9,7 +9,7 @@ The input `[ [` consists of two opening square brackets. To properly close a bra
 
 This requires adding two closing square brackets: `] ]`
 
-Final Answer: ] ]",] ],True,1
+Final Answer: ] ]",] ],True,1,
 1,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ [",] ] >,"To properly close the brackets, I need to follow the Last-In-First-Out (LIFO) principle, where the most recently opened bracket must be closed first.
 
 **Step-by-step analysis:**
@@ -20,7 +20,7 @@ Final Answer: ] ]",] ],True,1
 
 **Closing sequence needed:** `]` then `]` then `>`
 
-Final Answer: ] ] >",] ] >,True,1
+Final Answer: ] ] >",] ] >,True,1,
 2,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { [ ] } } { < [ { { < > } } [ ( ) ( ) ] [ [ [ [ ( { < ( < ( [ ] ) > ) > } ) ] ] ] ] ] ( ) ( [ ] { } ) > } > [ { ( ( ) ) } ]",},"To solve this, I parse the sequence using a stack to track opening brackets and ensure proper nesting:
 
 **Parsing the input:**
@@ -44,7 +44,7 @@ Final Answer: ] ] >",] ] >,True,1
 
 Therefore, we need one closing brace to complete the sequence.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 3,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ] { < ( ) > } [ ] ( { }",) >,"Reasoning:
 I need to track the opening brackets using a stack (last-in-first-out) and determine what remains unclosed.
 
@@ -70,7 +70,7 @@ To close properly, I must close in reverse order:
 - First close `(` with `)`
 - Then close `<` with `>`
 
-Final Answer: `)> `",)> ,True,0
+Final Answer: `)> `",)>,True,0,
 4,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( < > ) ) ( { { } [ { } ] [ ] < ( ) > } ) )",>,"Looking at this problem, I need to determine what closing brackets are needed to properly close all the opening brackets in the sequence.
 
 Let me trace through the sequence using a stack, processing each bracket:
@@ -113,7 +113,7 @@ Verification:
 - Total `>` symbols: 2 (positions 6 and 22)
 - Missing: 1 `>`
 
-Final Answer: `>`",>,True,1
+Final Answer: `>`",>,True,1,
 5,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ { } ] ] { < [ < [ { } ] > ] > }",] ),"Here is the step-by-step reasoning:
 
 1.  **Parse the input using a stack** to track opening brackets:
@@ -144,7 +144,7 @@ Final Answer: `>`",>,True,1
 
 4.  **Construct final sequence**: Append `]` and `)` to the end of the input.
 
-Final Answer: `( [ [ [ { } ] ] { < [ < [ { } ] > ] > } ] )`",( [ [ [ { } ] ] { < [ < [ { } ] > ] > } ] ),True,1
+Final Answer: `( [ [ [ { } ] ] { < [ < [ { } ] > ] > } ] )`",( [ [ [ { } ] ] { < [ < [ { } ] > ] > } ] ),True,1,
 6,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { } }",),"**Reasoning:**
 
 To determine what is needed to close the sequence properly, I track the opening brackets using a stack:
@@ -157,7 +157,7 @@ To determine what is needed to close the sequence properly, I track the opening 
 
 At the end of the input, the stack contains one remaining opening parenthesis `(`, which needs to be closed with a corresponding `)`.
 
-**Final Answer: ( { { } } )**",( { { } } )**,True,0
+**Final Answer: ( { { } } )**",( { { } } ),True,1,
 7,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( [ { } ] )",) ) >,"Let me trace through the brackets to see what remains unclosed:
 
 Current sequence: `< ( ( ( [ { } ] )`
@@ -175,7 +175,7 @@ Stack trace:
 
 Remaining to close (in reverse order): `)`, `)`, `>`
 
-Final Answer: `))>`",))>,True,0
+Final Answer: `))>`",))>,True,0,
 8,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] [ [ < > ]",],"The input sequence is: `[ < > ] [ [ < > ]`
 
 Let me trace through the brackets using a stack to see what's still open:
@@ -192,7 +192,7 @@ Let me trace through the brackets using a stack to see what's still open:
 
 One square bracket `[` remains unclosed at the end. To properly close it, we need one `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 9,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] ( [ [ { < { { ( < > [ ] ) } } < > > } ] ] { }",),"Reasoning:
 I analyzed the sequence using a stack-based approach to track opening brackets that need to be closed:
 
@@ -215,7 +215,7 @@ I analyzed the sequence using a stack-based approach to track opening brackets t
 
 Only the initial `(` remains unclosed at the end.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 10,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] ( ) ( ( { { } } ) ) < { < > } > [ ] > ] < ( ) > ( ( ( ) ) ) ( < >",),"To solve this, I'll track the bracket pairs using a stack. Opening brackets (`[`, `(`, `{`, `<`) are pushed onto the stack, and closing brackets pop the matching opening bracket from the stack.
 
 **Step-by-step parsing:**
@@ -262,7 +262,7 @@ Final Answer: )",),True,1
 
 **Conclusion:** We need to add `)` to close the remaining open parenthesis.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 11,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < ( ) > }",],"To solve this, I'll use a stack-based approach to track the opening brackets and ensure they're closed in the correct order (LIFO - Last In, First Out).
 
 **Step-by-step analysis:**
@@ -284,7 +284,7 @@ Final Answer: )",),True,1
 - `<` opens, `>` closes ✓
 - `(` opens, `)` closes ✓
 
-Final Answer: `[ { < ( ) > } ]`",[ { < ( ) > } ],True,1
+Final Answer: `[ { < ( ) > } ]`",[ { < ( ) > } ],True,1,
 12,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ( ( ) < ( ) > ( { { } } [ [ [ < ( [ ] ) ( ) > ] ] ] { { { { { } } } { { } { < [ [ ] ] > } } { } } } ) ) ] >",],"Looking at this problem, I need to track the opening and closing of brackets using a stack. I'll parse through the input character by character, pushing opening brackets onto the stack and popping when I encounter closing brackets.
 
 **Tracing through the sequence:**
@@ -365,8 +365,8 @@ To balance the sequence, I need to close this remaining bracket with `]`.
 - The `<` (2nd character) is closed by the final `>`
 - The outer `[` (1st character) remains unclosed
 
-Final Answer: ]",],True,1
-13,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( [ < > { [ { ( ) } ] < { < { } > [ ( < > ) ] } > } [ < > ] ] ) { { ( { ( ( [ ( [ ] ) ] < { } > ) ) { { ( [ [ ] ] ) } [ ( ) ] { { [ ] } } } } ) } ( { } ) }",) >,,,False,0
+Final Answer: ]",],True,1,
+13,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( [ < > { [ { ( ) } ] < { < { } > [ ( < > ) ] } > } [ < > ] ] ) { { ( { ( ( [ ( [ ] ) ] < { } > ) ) { { ( [ [ ] ] ) } [ ( ) ] { { [ ] } } } } ) } ( { } ) }",) >,,,False,0,
 14,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { ( ( < { ( ( ( { < > ( ) } ) ) [ { } ] { { ( ) } } ) } < > >",) ) },"To solve this, I'll track the opening brackets using a stack and process each character in the input sequence:
 
 **Input:** `[ ] { ( ( < { ( ( ( { < > ( ) } ) ) [ { } ] { { ( ) } } ) } < > >`
@@ -442,7 +442,7 @@ Step 34 `>`: closes 6 → `{` (3), `(` (4), `(` (5)
 
 To close properly, we need: `)` (for step 5), `)` (for step 4), `}` (for step 3).
 
-Final Answer: `))}`",))},True,0
+Final Answer: `))}`",))},True,0,
 15,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < > } { (",) } >,"Looking at the sequence `< { < > } { (`, I'll track the opening and closing of brackets using a stack:
 
 1. `<` - opens (stack: `<`)
@@ -460,7 +460,7 @@ To close properly, I must close in reverse order:
 - Second: `}` to close `{`
 - Third: `>` to close `<`
 
-Final Answer: `) } >`",) } >,True,1
+Final Answer: `) } >`",) } >,True,1,
 16,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < < { } >",> ] ],"Looking at the input sequence: `[ [ < < { } >`
 
 I'll trace through the brackets using a stack (LIFO - Last In, First Out):
@@ -480,7 +480,7 @@ To close properly, I must close in reverse order:
 - Then close `[` with `]`
 - Finally close `[` with `]`
 
-Final Answer: `> ] ]`",> ] ],True,1
+Final Answer: `> ] ]`",> ] ],True,1,
 17,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( )",) >,"To solve this, I'll track the opening brackets using a stack:
 
 1. **`<`** - Opening angle bracket, push to stack.
@@ -496,7 +496,7 @@ To properly close the sequence:
 
 Therefore, the sequence `< ( ( )` requires `)>` to be properly closed as `< ( ( ) ) >` (or `<(())>`).
 
-Final Answer: `)>`",)>,True,0
+Final Answer: `)>`",)>,True,0,
 18,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ) ) [ { ( < > ) }",],"Looking at the sequence: `( ( ) ) [ { ( < > ) }`
 
 Let me track the opening and closing of each bracket using a stack:
@@ -515,7 +515,7 @@ Let me track the opening and closing of each bracket using a stack:
 
 Currently, only `[` remains unclosed. To properly close the sequence, I need to add `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 19,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > > < ( < < < [ [ [ [ ] ] ] ] > > > ) [ < < [ ] > > ] { [ < > ] < > [ ( ) ] } { [ ]",} > ],"Reasoning:  
 I processed the input sequence using a stack to track open brackets. Each opening bracket `[`, `<`, `(`, or `{` was pushed onto the stack, and each closing bracket `]`, `>`, `)`, or `}` popped the matching opening bracket from the stack.
 
@@ -526,7 +526,7 @@ To properly close the sequence, I need to close the brackets in reverse order of
 2. Close `<` with `>`
 3. Close `[` with `]`
 
-Final Answer: `} > ]`",} > ],True,1
+Final Answer: `} > ]`",} > ],True,1,
 20,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < [ < > ]",> ) },"To solve this, I use a stack-based approach (Last-In-First-Out) to track the opening brackets:
 
 1. **Parse the input** `{ ( < [ < > ]` left to right:
@@ -547,7 +547,7 @@ Final Answer: `} > ]`",} > ],True,1
 
 Therefore, the sequence needs `> ) }` appended to close properly.
 
-Final Answer: `> ) }`",> ) },True,1
+Final Answer: `> ) }`",> ) },True,1,
 21,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ ] )",},"Reasoning:
 I need to track the opening brackets using a stack to determine what remains unclosed.
 
@@ -559,7 +559,7 @@ I need to track the opening brackets using a stack to determine what remains unc
 
 The stack now contains only `{`, which means one closing curly brace `}` is needed to properly close the sequence.
 
-Final Answer: `}`",},True,1
+Final Answer: `}`",},True,1,
 22,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < > ) } ( ( [ ] ) < [ ( [ [ ] ] [ { } ] { } [ < { [ ] } > ] ( ) ) ]",> ),"To solve this, I'll trace through the bracket sequence using a stack to track which opening brackets are still waiting to be closed.
 
 **Stack trace:**
@@ -607,7 +607,7 @@ To close properly, we must close the innermost first:
 - `>` closes the `<`
 - `)` closes the outer `(`
 
-Final Answer: > )",> ),True,1
+Final Answer: > )",> ),True,1,
 23,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < [ [ ( { } ) ] ]",> } >,"To solve this, I'll use a stack to track the opening brackets. When I encounter a closing bracket, it must match the most recent opening bracket (LIFO - Last In, First Out).
 
 **Stack trace:**
@@ -630,7 +630,7 @@ To close properly, I must close from the top of the stack down:
 - Close `{` with `}`
 - Close `<` with `>`
 
-**Final Answer:** `>}>`",** `>}>,True,0
+**Final Answer:** `>}>`",>}>,True,0,
 24,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ [ ] ( ) ]",) },"To solve this, I'll track the opening brackets using a stack (last-in, first-out):
 
 1. `{` → push `{` → Stack: `{`
@@ -648,7 +648,7 @@ To close properly, I must close them in reverse order (last opened, first closed
 - First: `)` to close the `(`
 - Then: `}` to close the `{`
 
-Final Answer: `)}`",)},True,0
+Final Answer: `)}`",)},True,0,
 25,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { [ ] } >",],"To solve this, I'll use a stack-based approach to track opening brackets and ensure proper nesting:
 
 1. `[` → push to stack (stack: `[`)
@@ -661,7 +661,7 @@ Final Answer: `)}`",)},True,0
 
 At the end, the stack contains one unmatched opening bracket `[`, which needs to be closed with `]`.
 
-Final Answer: `[ < { [ ] } > ]`",[ < { [ ] } > ],True,1
+Final Answer: `[ < { [ ] } > ]`",[ < { [ ] } > ],True,1,
 26,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < >",) ),"Reasoning:  
 To determine what is needed to close the sequence properly, I track the opening brackets using a stack (LIFO - Last In First Out):
 
@@ -676,7 +676,7 @@ At the end of the input, the stack still contains two opening parentheses that n
 
 Therefore, two closing parentheses '))' are needed to complete the sequence.
 
-Final Answer: ))",)),True,0
+Final Answer: ))",)),True,0,
 27,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { ( < ( ) > ) }",> >,"**Reasoning:**
 
 I need to determine which opening brackets remain unclosed and then add the appropriate closing brackets in the correct order (LIFO - Last In, First Out).
@@ -699,7 +699,7 @@ The remaining open brackets are two angle brackets `<`. To close them properly, 
 - Close second `<` with `>`
 - Close first `<` with `>`
 
-Final Answer: > >",> >,True,1
+Final Answer: > >",> >,True,1,
 28,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ [ ] ] > ] ] { } { ( { ( ( ) ) ( ) { { [ [ ( { < { [ { [ ( < ( ( < < < [ ( ) ] [ ] > > > ) ) > < [ < { < ( ) > } > ] > ) ] } ] } > ( ( ) ) } ) [ ( ) ] ] ( < > ) ] } } } ) } [",],"To determine the correct completion, I parsed the input using a stack:
 
 1. **Pushed** every opening bracket (`[`, `{`, `(`, `<`) onto the stack.
@@ -709,7 +709,7 @@ After processing the entire input, the stack contained exactly one unmatched ope
 
 To properly close all brackets, the remaining open brackets must be closed in reverse order (LIFO). Since only `[` remains, we need to add its matching closing bracket `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 29,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { } ( ( ) )",},"To solve this, I use a stack-based approach to track the opening brackets that need to be closed:
 
 1.  `{` → Push to stack. Stack: `[{]`
@@ -724,7 +724,7 @@ At the end of the input, the stack contains one remaining `{` that needs to be c
 
 The completed sequence is: `{ { } ( ( ) ) }`
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 30,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { < ( ) > { < { } > ( < ( ) > { < [ ( { { ( < [ ] > ) } } { ( ( [ [ { } [ ] ] ] ) ) } ) ] > } ) } }",} ] >,"To solve this, I'll track the opening brackets using a stack and identify which ones remain unclosed at the end of the input sequence.
 
 **Parsing the input:**
@@ -785,7 +785,7 @@ To close properly in LIFO order (last opened, first closed):
 2. Close `[` with `]`
 3. Close `<` with `>`
 
-Final Answer: `}]>`",}]>,True,0
+Final Answer: `}]>`",}]>,True,0,
 31,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ ( )",] > ),"To solve this, I'll track the opening brackets using a stack (Last-In-First-Out) and determine what needs to be closed.
 
 **Step-by-step analysis:**
@@ -804,7 +804,7 @@ Final Answer: `}]>`",}]>,True,0
 
 Full corrected sequence: `( < [ ( ) ] > )`
 
-Final Answer: ] > )",] > ),True,1
+Final Answer: ] > )",] > ),True,1,
 32,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ( [ < > ] { < > } [ [ ] ] ) ]",> ],"To solve this, I'll track the opening brackets using a stack (Last-In-First-Out) and identify what remains unclosed.
 
 **Step-by-step parsing:**
@@ -839,7 +839,7 @@ Final Answer: ] > )",] > ),True,1
 
 **Completed sequence:** `[ < [ ( [ < > ] { < > } [ [ ] ] ) ] > ]`
 
-Final Answer: `[ < [ ( [ < > ] { < > } [ [ ] ] ) ] > ]`",[ < [ ( [ < > ] { < > } [ [ ] ] ) ] > ],True,1
+Final Answer: `[ < [ ( [ < > ] { < > } [ [ ] ] ) ] > ]`",[ < [ ( [ < > ] { < > } [ [ ] ] ) ] > ],True,1,
 33,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( [ ( [ ] ) ] ) )",>,"To complete the sequence, I need to track the opening and closing brackets using a stack:
 
 1. `<` - opening angle bracket (push to stack)
@@ -856,7 +856,7 @@ Final Answer: `[ < [ ( [ < > ] { < > } [ [ ] ] ) ] > ]`",[ < [ ( [ < > ] { < > }
 
 After processing the input, the stack contains only `<` from step 1. To properly close this remaining opening bracket, we need to add `>`.
 
-Final Answer: `< ( ( [ ( [ ] ) ] ) ) >`",< ( ( [ ( [ ] ) ] ) ) >,True,1
+Final Answer: `< ( ( [ ( [ ] ) ] ) ) >`",< ( ( [ ( [ ] ) ] ) ) >,True,1,
 34,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ]",>,"Looking at the sequence `< [ ]`, I need to track the opening and closing of brackets using a stack-based approach:
 
 1. **`<`** - Opening angle bracket pushed onto stack
@@ -869,7 +869,7 @@ Since the `<` was opened first but hasn't been closed yet, I need to add its mat
 
 The nesting order requires closing brackets in the reverse order of opening (Last-In-First-Out), so after the `]` comes `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 35,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { } ) } < < ( ) { { < [ { [ ( ) ] } ] > } } > >",],"To solve this, I'll track the open brackets using a stack (LIFO - Last In First Out). Each opening bracket pushes onto the stack, and each closing bracket must match the most recent opening bracket (the top of the stack).
 
 **Parsing the input:**
@@ -905,7 +905,7 @@ Final Answer: >",>,True,1
 
 To properly close the sequence, we need to close the remaining `[` with `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 36,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { }",) ),"To solve this, I'll track the opening brackets that need to be closed using the LIFO (Last In, First Out) principle:
 
 1. **Analyze the input:** `( ( { }`
@@ -920,7 +920,7 @@ Final Answer: ]",],True,1
    - Add `)` to close the second `(`
    - Add `)` to close the first `(`
 
-Final Answer: `( ( { } ) )`",( ( { } ) ),True,1
+Final Answer: `( ( { } ) )`",( ( { } ) ),True,1,
 37,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ [ [ < { ( ) } ( ) > { ( ) } ] { ( ) }",] ] ],"To solve this, I track the opening brackets in a stack (last-in-first-out) and identify what remains unclosed:
 
 **Opening sequence:**
@@ -950,7 +950,7 @@ Final Answer: `( ( { } ) )`",( ( { } ) ),True,1
 3. Close `[` (pos 2) with `]`
 4. Close `[` (pos 1, outermost) with `]`
 
-Final Answer: `} ] ] ]`",} ] ] ],True,0
+Final Answer: `} ] ] ]`",} ] ] ],True,0,
 38,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { } < { } < > (",) >,"Looking at the input sequence: `{ } < { } < > (`
 
 I'll trace through the opening and closing of brackets using a stack:
@@ -974,7 +974,7 @@ So the completion needed is: `)>`
 
 Full sequence would be: `{ } < { } < > ( ) >`
 
-Final Answer: `)>`",)>,True,0
+Final Answer: `)>`",)>,True,0,
 39,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ < < > [ < { } > ] { < [ ] > ( ( ( [ [ { < > } ] ] ) ) ) ( < < > > ) } > ]",) ),"To solve this, I'll trace through the sequence using a stack to track which opening brackets need to be closed.
 
 **Step-by-step trace:**
@@ -1024,7 +1024,7 @@ Final Answer: `)>`",)>,True,0
 
 Therefore, we need to close them with two closing parentheses: `))`
 
-Final Answer: `))`",)),True,0
+Final Answer: `))`",)),True,0,
 40,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { } > { (",) } },"To solve this, I'll track the opening brackets using a stack (LIFO - Last In, First Out):
 
 1. `{` - opening brace (stack: `{`)
@@ -1040,7 +1040,7 @@ Now I need to close the remaining open brackets in reverse order:
 - Then, close the second `{` with `}` (stack: `{`)
 - Finally, close the first `{` with `}` (stack: empty)
 
-Final Answer: `)}}`",)}},True,0
+Final Answer: `)}}`",)}},True,0,
 41,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ { < > { } { } < < < < { } > > ( < ( ( ) ) [ ( [ ] ) ] > ) > > { } } [ < < > > ] < ( ) > ] ]",),"To solve this, I tracked the bracket matching using a stack, processing each character in the input sequence:
 
 1.  **`(`** - Push to stack: `[ ( ]`
@@ -1095,7 +1095,7 @@ Final Answer: `)}}`",)}},True,0
 
 At the end of the input, only the very first opening parenthesis `(` remains on the stack. Therefore, we need one closing parenthesis to complete the sequence.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 42,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < <",> > },"**Reasoning:**
 
 To properly close a sequence of brackets, we use the **LIFO (Last In, First Out)** principle - the most recently opened bracket must be closed first.
@@ -1112,10 +1112,10 @@ To properly close a sequence of brackets, we use the **LIFO (Last In, First Out)
 
 3. **Required completion:** `> > }` (or `>>}` if omitting spaces)
 
-**Final Answer:** `> > }`",** `> > },True,0
+**Final Answer:** `> > }`",> > },True,1,
 43,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { } }",},"Reasoning: The input sequence `{ { { } }` contains 3 opening braces `{` and 2 closing braces `}`. To properly balance the sequence, we need to close the remaining unclosed opening brace. Since the braces are already properly nested (each closing brace matches the most recent opening brace), we simply need to append one more closing brace `}`. Maintaining the spacing pattern from the input, the completed sequence has a space followed by the final closing brace.
 
-Final Answer: `{ { { } } }`",{ { { } } },True,1
+Final Answer: `{ { { } } }`",{ { { } } },True,1,
 44,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { } [ [ ( ( < { < { [ ] } > } > ) )",] ] >,"To solve this, I'll track the opening and closing brackets using a stack. Each opening bracket (`<`, `{`, `[`, `(`) gets pushed onto the stack, and each closing bracket pops the matching opening bracket from the top of the stack.
 
 Input sequence: `< { } [ [ ( ( < { < { [ ] } > } > ) )`
@@ -1148,7 +1148,7 @@ To close properly, I must close in reverse order (last opened, first closed):
 - Close the first `[` with `]`
 - Close the first `<` with `>`
 
-Final Answer: ]]>",]]>,True,0
+Final Answer: ]]>",]]>,True,0,
 45,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( ( )",) } >,"To solve this, I'll track the opening and closing brackets using a stack (Last-In-First-Out) approach:
 
 **Step-by-step analysis:**
@@ -1169,7 +1169,7 @@ Final Answer: ]]>",]]>,True,0
 
 The complete properly closed sequence would be: `<{(())}>` (or with spaces: `< { ( ( ) ) } >`)
 
-Final Answer: `)}>`",)}>,True,0
+Final Answer: `)}>`",)}>,True,0,
 46,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < { [ ( ) ] } >",) ],"Reasoning: To solve this, I use a stack-based approach to track open brackets:
 - Start with empty stack
 - `[` → stack: `[`
@@ -1185,7 +1185,7 @@ Final Answer: `)}>`",)}>,True,0
 
 Remaining open brackets (from top to bottom): `(` then `[`. To close properly, I must close in reverse order of opening (LIFO): first `)` to close `(`, then `]` to close `[`.
 
-Final Answer: `)]`",)],True,0
+Final Answer: `)]`",)],True,0,
 47,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < { < { < > } > } > } ) ( ) ( { [ ( < ( < < { ( { < > } ) } > > ) > ) { ( { < ( { [ ] } ( ) ) > } < { < { { ( ) } } > { < [ { ( ) } ] > } } > ) } [ [ ( ) ] ] ]",} ) ),"To complete the sequence, I need to track the stack of open brackets throughout the input string. Parsing the sequence from left to right:
 
 1. The first part `( ( { < { < { < > } > } > } )` opens and closes properly, leaving one `(` on the stack.
@@ -1201,7 +1201,7 @@ At the point where the valid prefix ends (after `]]`), the stack contains:
 
 To close these properly in reverse order (LIFO), we need: `}` to close the `{`, then `)` to close the second `(`, then `)` to close the first `(`.
 
-Final Answer: `} ) )`",} ) ),True,1
+Final Answer: `} ) )`",} ) ),True,1,
 48,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < { < { [ ( ) ] } > }",>,"Reasoning:
 To determine what is needed to complete the sequence, I will track the opening and closing brackets using a stack (last-in, first-out):
 
@@ -1222,7 +1222,7 @@ To determine what is needed to complete the sequence, I will track the opening a
 
 All opening brackets have been properly closed. The sequence is already complete and balanced; no additional characters are needed.
 
-Final Answer: (no additional characters needed)",(no additional characters needed),True,0
+Final Answer: (no additional characters needed)",(no additional characters needed),True,0,
 49,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] > ] [ { [ ] }",],"**Reasoning:**
 
 I need to track the opening and closing brackets using a stack approach:
@@ -1241,7 +1241,7 @@ I need to track the opening and closing brackets using a stack approach:
 
 At the end, there is still one opening square bracket `[` remaining in the stack that needs to be closed.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 50,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > ( [ ( )",] ) ),"Reasoning:
 1.  **Parse the sequence**: I will scan the input from left to right, using a stack to keep track of unclosed opening brackets.
     *   `(` : Push to stack. Stack: [`(`]
@@ -1261,7 +1261,7 @@ Final Answer: ]",],True,1
 
 4.  **Result**: The required sequence to close all brackets is `] ) )` (or `]))`.
 
-Final Answer: ] ) )",] ) ),True,1
+Final Answer: ] ) )",] ) ),True,1,
 51,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { ( ) { } } ( < > ) >",),"To complete the sequence properly, I need to ensure every opening bracket has a matching closing bracket in the correct order (LIFO - Last In, First Out).
 
 Using a stack to track the open brackets:
@@ -1281,7 +1281,7 @@ Using a stack to track the open brackets:
 
 After processing the entire input, only one opening parenthesis `(` remains on the stack. To close it properly, we need one closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 52,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( < >",) > >,"Reasoning:
 1.  **Analyze the Input:** The sequence provided is `< < ( < >`.
 2.  **Track Opening Brackets:** I will use a stack to keep track of the unclosed opening brackets.
@@ -1296,7 +1296,7 @@ Final Answer: )",),True,1
     *   Close the first `<` with `>`
 4.  **Construct the Result:** The characters needed to complete the sequence are `) > >`.
 
-Final Answer: `< < ( < > ) > >`",< < ( < > ) > >,True,1
+Final Answer: `< < ( < > ) > >`",< < ( < > ) > >,True,1,
 53,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { } ( ( < > )",) },"Looking at the sequence `{ { } ( ( < > )`, I need to track which brackets are opened and closed:
 
 1. `{` - opens first brace → stack: [`{`]
@@ -1314,7 +1314,7 @@ Currently remaining open:
 
 To close properly, I must close the most recently opened bracket first (the `(`), then the `{`.
 
-Final Answer: )}",)},True,0
+Final Answer: )}",)},True,0,
 54,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < { } > { { ( [ ( { } ) ( ( [ ( [ ( { [ { } ] } ) ] ) ] ) ) [ < [ [ [ [ [ < > ] [ { [ [ { ( ( < [ ] > ) [ ( [ ] ) ] < { [ ] } > ) } ] ] } ] { < ( < > ) > } ] ] ] ] > ] ] ) } } } >",),"To solve this, I use a stack-based approach to track opening brackets. I process each character in the input string:
 
 - When I encounter an opening bracket (`(`, `<`, `{`, `[`), I push it onto the stack.
@@ -1332,7 +1332,7 @@ All other brackets have been properly closed:
 
 Since the stack ends with `['(']`, I need to close this remaining parenthesis.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 55,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < < >",> > ),"Looking at the input sequence `( < < < >`, I'll track the opening and closing of brackets using a stack-based approach:
 
 **Current state:**
@@ -1354,7 +1354,7 @@ Final Answer: )",),True,1
 
 Therefore, the sequence needs: `> > )`
 
-Final Answer: `> > )`",> > ),True,1
+Final Answer: `> > )`",> > ),True,1,
 56,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ( ) ] >",>,"Looking at the sequence `< < [ ( ) ] >`, I'll track the opening and closing brackets using a stack (LIFO - Last In First Out):
 
 1. `<` - push to stack → Stack: [`<`]
@@ -1367,7 +1367,7 @@ Final Answer: `> > )`",> > ),True,1
 
 The stack still contains one unclosed `<` (the first one), so we need one more closing angle bracket to complete the sequence properly.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 57,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > {",},"To solve this, I analyze the sequence using a stack-based approach for bracket matching:
 
 1.  **Identify the pairs**: `<` matches with `>`, and `{` matches with `}`.
@@ -1379,7 +1379,7 @@ Final Answer: >",>,True,1
 
 Therefore, the sequence is completed by adding `}` (or ` }` to maintain spacing).
 
-Final Answer: `< > { }`",< > { },True,1
+Final Answer: `< > { }`",< > { },True,1,
 58,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( [ [ [ [ ( ) ] ] { } ] ] )",>,"To solve this, I track the opening brackets using a stack and match them with closing brackets as I parse the sequence from left to right.
 
 **Parsing the input:**
@@ -1403,7 +1403,7 @@ Final Answer: `< > { }`",< > { },True,1
 
 To properly close the sequence, I need to add the closing angle bracket `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 59,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ < > ]",>,"To solve this, I'll use a stack-based approach to track the opening brackets that need to be closed:
 
 1. **`<`** - Opening angle bracket, push to stack: `[<]`
@@ -1414,7 +1414,7 @@ Final Answer: >",>,True,1
 
 The stack now contains one unmatched `<` from the beginning. To properly close the sequence, I need to add a closing angle bracket `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 60,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ [ [ ( ) ] ] ] ]",},"To solve this, I'll track the opening brackets using a stack (Last-In-First-Out) and match them with the closing brackets:
 
 1. **Opening brackets encountered (left to right):**
@@ -1440,7 +1440,7 @@ Final Answer: >",>,True,1
 
 The sequence is properly balanced by adding a closing curly brace at the end.
 
-Final Answer: { [ [ [ [ ( ) ] ] ] ] }",{ [ [ [ [ ( ) ] ] ] ] },True,1
+Final Answer: { [ [ [ [ ( ) ] ] ] ] }",{ [ [ [ [ ( ) ] ] ] ] },True,1,
 61,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { ( { [ ] } ) } > { } ( [ { { { ( [ < > ] ) } } } ] ) { { ( { } ) } }",},"To solve this, I need to check which brackets remain unclosed by tracking the stack of opening brackets or by counting each bracket type.
 
 **Bracket counting:**
@@ -1465,7 +1465,7 @@ The sequence structure is:
 
 Only the very first `{` at the beginning of the sequence remains open at the end.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 62,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < [ { { } } ] > { } ) ( < > ) [ ( < > ) ] <",> ),"To solve this, I'll track the bracket stack as I parse the input sequence:
 
 **Input:** `( ( < [ { { } } ] > { } ) ( < > ) [ ( < > ) ] <`
@@ -1502,7 +1502,7 @@ To close properly, I must close in reverse order (LIFO):
 - First close `<` with `>`
 - Then close `(` with `)`
 
-Final Answer: > )",> ),True,1
+Final Answer: > )",> ),True,1,
 63,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < { } > < > > ( )",],"Looking at the input sequence: `[ < < { } > < > > ( )`
 
 I'll trace through the opening and closing of brackets using a stack:
@@ -1521,7 +1521,7 @@ I'll trace through the opening and closing of brackets using a stack:
 Only one bracket remains open: `[`
 To properly close the sequence, we need to add `]`.
 
-Final Answer: [ < < { } > < > > ( ) ]",[ < < { } > < > > ( ) ],True,1
+Final Answer: [ < < { } > < > > ( ) ]",[ < < { } > < > > ( ) ],True,1,
 64,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( < < > [ ] ( ) >",) > ],"To solve this, I'll track the opening brackets using a stack and determine what needs to be closed.
 
 **Parsing the input:** `[ < ( < < > [ ] ( ) >`
@@ -1549,7 +1549,7 @@ To close properly, I must close in reverse order (last opened, first closed):
 
 **Completion needed:** `) > ]`
 
-Final Answer: `) > ]`",) > ],True,1
+Final Answer: `) > ]`",) > ],True,1,
 65,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ { < ( ) > } ] >",] },"To solve this, I'll track the opening brackets using a stack (LIFO - Last In, First Out) and identify which ones remain unclosed.
 
 **Parsing the sequence:**
@@ -1572,7 +1572,7 @@ Final Answer: `) > ]`",) > ],True,1
 
 To close properly, we need: `]` followed by `}`
 
-Final Answer: `]}`",]},True,0
+Final Answer: `]}`",]},True,0,
 66,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < > < [ ] > [ < { } > ] [ ( { } ) ] [ ] [ ( ) ] ( ) < { { < { { { { { ( { } ) } ( { < > } ) } } } } > } }",> } ],"Reasoning:
 
 I processed the sequence from left to right using a stack to track opening brackets. When encountering a closing bracket, I popped the corresponding opening bracket from the stack.
@@ -1604,7 +1604,7 @@ To close properly, I must close in reverse order (LIFO):
 2. Close `{` with `}`
 3. Close `[` with `]`
 
-Final Answer: `>}]`",>}],True,0
+Final Answer: `>}]`",>}],True,0,
 67,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ( [ < [ ] > ] ) ] > ] ( { }",) ],"To solve this, I'll track the opening brackets using a stack and match them with closing brackets:
 
 1. `[` - push (stack: `[`)
@@ -1629,7 +1629,7 @@ Final Answer: `>}]`",>}],True,0
 
 At the end, only `(` remains open, so we need one closing parenthesis `)`.
 
-Final Answer: )",),True,0
+Final Answer: )",),True,0,
 68,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ ( )",] ),"To solve this, I'll use a stack-based approach to track the opening brackets that need to be closed:
 
 1. Start with empty stack
@@ -1644,7 +1644,7 @@ The remaining stack contains `[` and `(` (with `[` on top). To close properly, I
 
 The full balanced sequence is: `( [ ( ) ] )`
 
-Final Answer: `])`",]),True,0
+Final Answer: `])`",]),True,0,
 69,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { { < { < > } > } < { } > < < < [ < [ ] > ] > > >",} ) },"To solve this, I track the opening brackets using a stack (last-in, first-out). When a closing bracket appears, it must match the most recent unmatched opening bracket.
 
 **Parsing the sequence:**
@@ -1684,7 +1684,7 @@ To close properly, we must close in reverse order:
 2. `)` to close the `(`
 3. `}` to close the first `{`
 
-Final Answer: `})}`",})},True,0
+Final Answer: `})}`",})},True,0,
 70,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ < { < { } > } > ( ( < { [ ] } > { { } } ) { } ) ] > ]",},"To solve this, I need to track the opening and closing brackets using a stack structure, ensuring each closing bracket matches the most recent unmatched opening bracket.
 
 **Step-by-step parsing:**
@@ -1723,7 +1723,7 @@ Final Answer: `})}`",})},True,0
 
 **Result:** Only the outermost `{` remains on the stack. It needs to be closed with `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 71,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ [ { [ [ ( [ < < > > ( ( [ ( ) ( { ( < [ ] > ) } ) ] ) ) ] ) ] ( ) ] } { [ [ ] ] } ] ] } > [ { < > } ]",) ),"To solve this, I need to track the opening brackets using a stack and match them with closing brackets as I parse through the sequence.
 
 **Parsing the input:**
@@ -1757,7 +1757,7 @@ Final Answer: }",},True,1
 
 To close these properly, I need to add two closing parentheses: `))`
 
-Final Answer: ))",)),True,0
+Final Answer: ))",)),True,0,
 72,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ { < { } > } ( ) ]",} },"To solve this, I'll track the opening brackets using a stack and identify which ones remain unclosed:
 
 **Stack trace:**
@@ -1778,7 +1778,7 @@ Final Answer: ))",)),True,0
 
 To close them properly (in reverse order of opening), we need: `}` `}`
 
-Final Answer: }}",}},True,0
+Final Answer: }}",}},True,0,
 73,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ] > ( ( ( { { { { ( ( { { } } ) ) } ( { } ) } } { { { [ { ( ) } ( ) ( ( { [ < < > > ] < < > > } ) ) ] ( { } { } ) } } } } )",) ),"To determine the missing closing characters, I processed the sequence using a stack:
 
 1. **Scan each character** (ignoring spaces) and push opening brackets onto the stack.
@@ -1795,7 +1795,7 @@ Processing the given string:
 
 Therefore, two closing parentheses are required to balance the sequence.
 
-Final Answer: ))",)),True,0
+Final Answer: ))",)),True,0,
 74,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ < ( < [ ] > ) < > < { } > { < > { } { { < [ < < { } [ { } ] < > > > ] < > > } < [ [ ] ] > } } > ] [ ( ) ] > } [ { ( < ( ( ( [ { } ] ) ) ) > ) } ] [ < ( ) ( ( { ( ) [ { { ( { } ) } } ] } ) ) >",],"To solve this, I need to check if all opening brackets have matching closing brackets. I'll use a stack to track the open brackets:
 
 1. `{` → push `{`
@@ -1902,7 +1902,7 @@ At the end of the input, the stack contains: `[`
 
 The only unclosed bracket is the `[` opened at step 77. Therefore, we need to close it with `]`.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 75,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( ) > [ { [ { ( ) } ] } ] ] > [ { } ] ( < { < [ { } ] > } > ) ) ( ( < ( ) > [ ] [ < { ( ) } > ] [ { } ] [",] ) ),"Looking at this problem, I need to track the stack of open brackets to see which ones remain unclosed at the end.
 
 Let me trace through the sequence (ignoring spaces):
@@ -1930,7 +1930,7 @@ To close them properly (LIFO order), I need:
 2. `)` to close the second `(`
 3. `)` to close the first `(`
 
-Final Answer: `]))`",])),True,0
+Final Answer: `]))`",])),True,0,
 76,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } < > { < { ( < > ) } >",} ),"To solve this, I'll track the opening brackets using a stack and match them with closing brackets as they appear.
 
 Input sequence: `( { } < > { < { ( < > ) } >`
@@ -1957,7 +1957,7 @@ To close properly, we must close the most recent unmatched bracket first:
 - Close `{` with `}`
 - Close `(` with `)`
 
-Final Answer: `})`",}),True,0
+Final Answer: `})`",}),True,0,
 77,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ] > ( < > ) <",> >,"To solve this, I track the opening and closing brackets using a stack (LIFO - Last In, First Out):
 
 1. `<` → open (stack: `<`)
@@ -1973,7 +1973,7 @@ Final Answer: `})`",}),True,0
 
 At the end, there are **two unclosed `<` brackets** remaining (the first one from the start and the last one just added). To properly close the sequence, we need to add two closing angle brackets `>`.
 
-Final Answer: `< < [ ] > ( < > ) < > >`",< < [ ] > ( < > ) < > >,True,1
+Final Answer: `< < [ ] > ( < > ) < > >`",< < [ ] > ( < > ) < > >,True,1,
 78,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { [ { [ { ( ( ) ) } ] } ( < < ( < > ) > { } [ [ [ ( < { } > ) ] ] ] { } > ) ( { } ) { } ] }",} ] >,"To solve this, I track the stack of opening brackets as I parse through the sequence:
 
 1. **Parse the input left-to-right**, pushing opening brackets (`<`, `[`, `{`, `(`) onto a stack and popping when encountering matching closing brackets.
@@ -1992,7 +1992,7 @@ Final Answer: `< < [ ] > ( < > ) < > >`",< < [ ] > ( < > ) < > >,True,1
 
 Therefore, the sequence needs `}]>` appended to close all brackets properly.
 
-Final Answer: `}]>`",}]>,True,0
+Final Answer: `}]>`",}]>,True,0,
 79,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ]",) ] >,"To solve this, I'll use a stack to track the opening brackets and determine what needs to be closed.
 
 **Step-by-step parsing:**
@@ -2018,7 +2018,7 @@ Final Answer: `}]>`",}]>,True,0
 **Completed sequence:**
 `< [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ] ) ] >`
 
-Final Answer: `< [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ] ) ] >`",< [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ] ) ] >,True,1
+Final Answer: `< [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ] ) ] >`",< [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ] ) ] >,True,1,
 80,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { { < > [ ( ) ] ( ( ) ) } } ] > ] { { { ( < > )",} } },"To solve this, I'll track the opening and closing brackets using a stack:
 
 **Stack trace:**
@@ -2054,7 +2054,7 @@ Final Answer: `< [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < >
 
 To close these properly (last opened, first closed), we need: `}` `}` `}`
 
-Final Answer: }}}",}}},True,0
+Final Answer: }}}",}}},True,0,
 81,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > ( [ < { { } } ( ) > ] ) [ ( ) ] [ ] [ { } ] >",),"Looking at the sequence, I need to track which opening brackets remain unmatched. I'll process the input left-to-right using a stack:
 
 1. `(` → stack: `(`
@@ -2087,7 +2087,7 @@ Final Answer: }}}",}}},True,0
 
 Only the initial `(` remains on the stack, so we need one closing parenthesis to complete the sequence.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 82,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( { } ) < > }",>,"To determine what needs to be added, I'll use a stack-based approach to track the opening brackets that haven't been closed yet:
 
 1. **Process each character:**
@@ -2105,7 +2105,7 @@ Final Answer: )",),True,1
 
 3. **To close properly:** We need to add `>` to match the remaining `<`.
 
-Final Answer: `>`",>,True,1
+Final Answer: `>`",>,True,1,
 83,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ ]",> },"Looking at the sequence `{ < [ ]`, I need to track which brackets are opened and which are closed:
 
 **Current state:**
@@ -2128,7 +2128,7 @@ To properly close nested brackets, I must close them in reverse order (Last-In-F
 
 All brackets are now properly matched and closed.
 
-Final Answer: >}",>},True,0
+Final Answer: >}",>},True,0,
 84,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } ) < { < { } >",} >,"To solve this, I'll track the opening and closing of brackets using a stack:
 
 1. `(` - push to stack → Stack: `(`
@@ -2146,7 +2146,7 @@ Currently, there are two unclosed brackets on the stack: `{` (opened at position
 - First close `{` with `}`
 - Then close `<` with `>`
 
-Final Answer: `} >`",} >,True,1
+Final Answer: `} >`",} >,True,1,
 85,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( { < > } )",) >,"To solve this, I'll use a stack-based approach to track the opening brackets that need to be closed:
 
 1. **Scanning the input `< ( ( { < > } )`:**
@@ -2163,7 +2163,7 @@ Final Answer: `} >`",} >,True,1
 
 3. **To close properly:** I need to close the `(` first, then the `<`, which requires `)` followed by `>`.
 
-Final Answer: `) >`",) >,True,1
+Final Answer: `) >`",) >,True,1,
 86,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ) )",),"To determine what is needed to complete the sequence, I will track the balance of opening and closing parentheses using a stack-based approach:
 
 1.  **Analyze the input:** `( ( ( ) )`
@@ -2181,7 +2181,7 @@ Final Answer: `) >`",) >,True,1
 
 The rest of the sequence consists of a single closing parenthesis.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 87,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > >",] ],"**Reasoning**
 
 I scanned the input from left to right, using a stack to keep track of opening brackets.  
@@ -2195,7 +2195,7 @@ Therefore we need to append two closing square brackets `]` `]`.
 
 `[ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > > ] ]`
 
-Final Answer: `[ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > > ] ]`",[ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > > ] ],True,1
+Final Answer: `[ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > > ] ]`",[ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > > ] ],True,1,
 88,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < { } < ( ( < > ) ) > > } } { [ [ { } ] ] [ ] < < { } > [ ( ) { ( { } ) } ] > ( [ < [ ( ( { } ( ) < > < [ < < { { ( [ { } ] ) } } { } { } > > ] > ( ) ) ) < > ] > ] )",} },"To solve this, I tracked the bracket matching using a stack, processing each opening and closing bracket in the input sequence:
 
 1.  **`{ { {`** - Push three opening curly braces: `[{, {, {}]`
@@ -2213,7 +2213,7 @@ Final Answer: `[ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( (
 
 At the end of the input, the stack contains two unmatched opening curly braces `[{`, {]`` from the very beginning of the sequence. These need to be closed in reverse order (LIFO).
 
-Final Answer: `}}`",}},True,0
+Final Answer: `}}`",}},True,0,
 89,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ { { < ( ) > } } ]",],"Looking at the sequence from left to right, I'll track the opening brackets using a stack (last-in, first-out):
 
 1. `[` → stack: `[`
@@ -2230,7 +2230,7 @@ Final Answer: `}}`",}},True,0
 
 One opening bracket `[` remains unclosed at the bottom of the stack. To properly close the sequence, we need one more `]`.
 
-Final Answer: ] ]",] ],True,0
+Final Answer: ] ]",] ],True,0,
 90,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ( ( [ < { ( { } ) } < < > > > ] ) ) ] ) >",},"To solve this, I'll track the opening brackets using a stack and match them with closing brackets:
 
 **Input:** `{ < ( [ ( ( [ < { ( { } ) } < < > > > ] ) ) ] ) >`
@@ -2264,7 +2264,7 @@ Final Answer: ] ]",] ],True,0
 
 **Remaining:** Only `{` is left open, so we need `}` to close it.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 91,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { ( { [ [ { < [ ] > } ] ] } ) [ ( < { < > } > ) ]",} },"To solve this, I'll use a stack to track the opening brackets. Each time I encounter a closing bracket, I check if it matches the most recent opening bracket (top of stack). At the end, any remaining opening brackets in the stack need to be closed in reverse order (last-in, first-out).
 
 Parsing the input from left to right:
@@ -2299,7 +2299,7 @@ Stack remaining: `{`, `{` (the first two characters)
 
 To close these properly, I need to add two closing curly braces: `}` then `}`.
 
-Final Answer: }}",}},True,0
+Final Answer: }}",}},True,0,
 92,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ] > ] ] <",>,"To solve this, I'll track the opening and closing of each bracket using a stack approach:
 
 1. `[` → open (stack: `[`)
@@ -2314,7 +2314,7 @@ Final Answer: }}",}},True,0
 
 At the end, there is one unclosed `<` that needs to be closed with `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 93,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > [ [ < [ ] > ]",] ],"Reasoning: To solve this, I track the opening brackets using a stack (LIFO):
 - `[` pushes to the stack
 - `<` pushes to the stack  
@@ -2335,7 +2335,7 @@ Processing the input `[ < > [ [ < [ ] > ]`:
 
 Two `[` brackets remain open. They must be closed in reverse order (last opened, first closed), requiring two `]` brackets.
 
-Final Answer: ] ]",] ],True,1
+Final Answer: ] ]",] ],True,1,
 94,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } }",) ),"Reasoning: I analyzed the sequence by tracking each opening bracket on a stack and popping when a corresponding closing bracket is encountered.
 
 - **Round brackets `(` `)`**: 8 opening, 6 closing → need 2 more `)`
@@ -2345,7 +2345,7 @@ Final Answer: ] ]",] ],True,1
 
 The stack ends with two unmatched opening parentheses `[(, (]`, so two closing parentheses `))` are required to properly close the sequence.
 
-Final Answer: `( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } } ))`",( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } } )),True,0
+Final Answer: `( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } } ))`",( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } } )),True,0,
 95,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ < [ < [ ( [ { < ( < ( ( ) ) { } [ ] > ) > } ] ) { < > } ] [ < [ { ( < < { { [ < { [ [ < > [ ] ] ] } > ] { { } } } } > > ) } ] > { < > { } } ] > ( [ ] ) ] > ] ) ( )",) ),"Looking at this problem, I need to track the bracket matching using a stack. I'll go through the sequence character by character, pushing opening brackets onto the stack and popping when I encounter a matching closing bracket.
 
 Let me trace through the input (ignoring spaces):
@@ -2365,7 +2365,7 @@ Current stack: `(`, `(`
 
 To properly close the sequence, I need to add two closing parentheses.
 
-Final Answer: ))",)),True,0
+Final Answer: ))",)),True,0,
 96,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { } >",>,"To determine what needs to be added, I'll track the opening brackets using a stack (LIFO - Last In, First Out):
 
 1. `<` → Push to stack. Stack: [`<`]
@@ -2378,7 +2378,7 @@ After processing the input, the stack still contains one unclosed `<` (the first
 
 The completed sequence is: `< < { } > >`
 
-Final Answer: < < { } > >",< < { } > >,True,1
+Final Answer: < < { } > >",< < { } > >,True,1,
 97,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < >",),"Looking at the input sequence `( < >`, I need to check which brackets/parentheses are still open:
 
 1. `(` - opening parenthesis (needs a closing `)`)
@@ -2391,7 +2391,7 @@ After processing these characters:
 
 To properly close the sequence, I need to add a closing parenthesis `)`.
 
-Final Answer: ( < > )",( < > ),True,1
+Final Answer: ( < > )",( < > ),True,1,
 98,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( )",} ),"The sequence uses a stack-based (LIFO) structure where the most recently opened bracket must be closed first.
 
 **Current state:** `( { ( )`
@@ -2408,7 +2408,7 @@ Final Answer: ( < > )",( < > ),True,1
 
 This results in the complete balanced sequence: `({()})`
 
-Final Answer: `})`",}),True,0
+Final Answer: `})`",}),True,0,
 99,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ( [ [ < [ { { [ ] } } ] > ] ] ( ) ) )",) ),"Looking at the input sequence, I need to track all the opening brackets and ensure each one is properly closed.
 
 **Step-by-step parsing:**
@@ -2442,7 +2442,7 @@ Final Answer: `})`",}),True,0
 
 All interior brackets (`[]`, `{}`, `<>`) are properly matched. The parentheses stack still has 2 opening parentheses that need to be closed.
 
-Final Answer: `))`",)),True,0
+Final Answer: `))`",)),True,0,
 100,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( ( [ ] )",) > >,"Here is my reasoning:
 
 I need to track the stack of open brackets that haven't been closed yet:
@@ -2462,7 +2462,7 @@ To close properly, I must close in reverse order (last opened, first closed):
 - Close second `<` with `>`
 - Close first `<` with `>`
 
-Final Answer: `) > >`",) > >,True,1
+Final Answer: `) > >`",) > >,True,1,
 101,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { } )",>,"Reasoning:
 1.  **Analyze the input sequence:** `< ( { } )`
 2.  **Track the opening brackets (stack):**
@@ -2477,7 +2477,7 @@ Final Answer: `) > >`",) > >,True,1
 
 Therefore, to properly close the sequence, a `>` must be added at the end.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 102,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < { < < > > } > < < { < ( < > ) < > [ [ [ < ( ( ) ) > [ ] [ ] ] ] ] < ( ) > ( ) [ ( [ [ ] ] ) ] > } { } { < [ < { ( { } ) } > ] > } { { } } > >",> >,"To determine what is missing, we treat each bracket as a token and use a stack:
 
 1. Push every opening bracket (`<`, `{`, `(`, `[`) onto the stack.
@@ -2494,7 +2494,7 @@ After the last token, the stack still contains the very first two `<` (opened at
 
 Therefore the missing suffix is two closing angle brackets.
 
-**Final Answer: >>**",>>**,True,0
+**Final Answer: >>**",>>,True,0,
 103,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ] }",>,"**Reasoning:**
 
 To solve this, I'll track the opening brackets using a stack (LIFO - Last In, First Out):
@@ -2507,7 +2507,7 @@ To solve this, I'll track the opening brackets using a stack (LIFO - Last In, Fi
 
 At the end of the input, the stack contains only `<`, meaning the angle bracket was opened but never closed. To properly close the sequence, we need the closing angle bracket `>`.
 
-Final Answer: `>`",>,True,1
+Final Answer: `>`",>,True,1,
 104,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ { < ( [ ] < > ) > } ]",),"To determine what is needed to complete the sequence, I'll track the opening and closing brackets using a stack (LIFO structure):
 
 **Input:** `( [ { < ( [ ] < > ) > } ]`
@@ -2530,7 +2530,7 @@ Final Answer: `>`",>,True,1
 
 After processing the entire input, the stack contains one remaining opening parenthesis `(`, which was the very first character. To properly close the sequence, we need to add a closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 105,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < [ < > ] > }",),"To solve this, I'll track the opening brackets using a stack and match them with closing brackets:
 
 **Input:** `( { < [ < > ] > }`
@@ -2550,7 +2550,7 @@ Final Answer: )",),True,1
 
 **Completed sequence:** `( { < [ < > ] > } )`
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 106,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] )",],"**Reasoning**
 
 To find the missing closing brackets, simulate a stack while scanning the input (ignoring spaces):
@@ -2603,7 +2603,7 @@ The full, properly closed sequence is:
 
 `[ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] ) ]`
 
-Final Answer: [ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] ) ]",[ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] ) ],True,1
+Final Answer: [ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] ) ]",[ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] ) ],True,1,
 107,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ] ) >",},"Looking at the sequence `{ < ( [ ] ) >`, I need to track the opening and closing of each bracket type using a stack approach:
 
 1. `{` - push (stack: `{`)
@@ -2616,7 +2616,7 @@ Final Answer: [ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] 
 
 The stack now contains only `{`, which needs to be closed.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 108,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( )",> } >,"Reasoning: The input sequence contains opening brackets that need to be closed in the reverse order they were opened (LIFO - Last In First Out).
 
 Current stack of open brackets:
@@ -2630,7 +2630,7 @@ Remaining brackets to close (from innermost to outermost):
 - Then, close the `{` with `}`
 - Finally, close the outer `<` with `>`
 
-Final Answer: `> } >`",> } >,True,1
+Final Answer: `> } >`",> } >,True,1,
 109,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( ) ( < [ ] > ( ) < [ [ { } { < > } < > ] ] > ) [ ] > [ ( < { [ ] } [ ] ( { [ < > ] < < > > ( ( < { } > ) ) } ) [ [ [ < < < ( ( ) ) > > > ] < < { [ ] } > > ( [ < > ] ) ] ] > ) ] < >",),"Looking at this problem, I need to track the bracket matching using a stack. I'll parse the input character by character, pushing opening brackets onto the stack and popping when I encounter closing brackets that match.
 
 **Input string:** `( < ( ) ( < [ ] > ( ) < [ [ { } { < > } < > ] ] > ) [ ] > [ ( < { [ ] } [ ] ( { [ < > ] < < > > ( ( < { } > ) ) } ) [ [ [ < < < ( ( ) ) > > > ] < < { [ ] } > > ( [ < > ] ) ] ] > ) ] < >`
@@ -2683,7 +2683,7 @@ Final Answer: `> } >`",> } >,True,1
 
 Therefore, we need to add one closing parenthesis to complete the sequence properly.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 110,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ [ ] ]",) ),"To solve this, I need to track the opening and closing of brackets and parentheses using a stack (Last-In-First-Out):
 
 1. `(` → open parenthesis (stack: `(`)
@@ -2701,7 +2701,7 @@ Therefore, I need to add:
 
 The missing part is `))`.
 
-Final Answer: `))` (or the full sequence: `( ( [ [ ] ] ))`)",))` (or the full sequence: `( ( [ [ ] ] ))`),True,0
+Final Answer: `))` (or the full sequence: `( ( [ [ ] ] ))`)",))` (or the full sequence: `( ( [ [ ] ] ))`),True,0,
 111,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ) { < > { ( [ [ { } ] [ ( ) ] ] ) } [ { { { ( < [ ] > ) } { < > } } }",] } },"To solve this, I'll track the stack of open brackets as I parse through the sequence:
 
 1. `{` - push `{`
@@ -2766,7 +2766,7 @@ So the remaining open brackets are:
 
 We need to close them in reverse order: `]`, `}`, `}`
 
-Final Answer: ]}}",]}},True,0
+Final Answer: ]}}",]}},True,0,
 112,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) { < < { ( ( ) { { { < > { } } [ < > ] ( ) } } ( ( ) ) ) < [ { { ( ( < > ) ) } } [ { < { } > } ] ( ) ] > } { [ ] } > > [ ] } > ( [ ] ) [ < { ( ( ( ) ( ) ) ) ( ) } > ] [ < ( )",> ],"To solve this, I need to track the stack of opening brackets as I parse through the sequence. When I encounter a closing bracket, it must match the most recent opening bracket (LIFO order).
 
 **Parsing the sequence:**
@@ -2785,7 +2785,7 @@ Final Answer: ]}}",]}},True,0
 1. First close the `<` with `>`
 2. Then close the `[` with `]`
 
-Final Answer: `> ]`",> ],True,1
+Final Answer: `> ]`",> ],True,1,
 113,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( { } )",],"Looking at the sequence `[ ( { } )`, I need to track which opening brackets have been properly closed using a stack-based approach:
 
 1. `[` → **pushed** (stack: `[`)
@@ -2796,7 +2796,7 @@ Final Answer: `> ]`",> ],True,1
 
 At the end, the stack still contains `[`, which means we need one closing square bracket to complete the sequence properly.
 
-Final Answer: `]`",],True,1
+Final Answer: `]`",],True,1,
 114,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { ( ) } > } { ( { [ ] } ) }",),"To solve this, I'll track the opening brackets using a stack and check which ones remain unclosed at the end.
 
 Processing the input `( { < { ( ) } > } { ( { [ ] } ) }` character by character:
@@ -2823,7 +2823,7 @@ At the end of the input, the stack contains only one item: `(`. This is the open
 
 Therefore, we need to add one closing parenthesis to complete the sequence.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 115,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ ] [ ]",] },"To solve this, I track the stack of open brackets:
 
 1. `{` → push `{` (stack: `{`)
@@ -2839,7 +2839,7 @@ Since brackets must be closed in LIFO (last-in-first-out) order:
 - Close `[` with `]`
 - Close `{` with `}`
 
-Final Answer: `] }`",] },True,1
+Final Answer: `] }`",] },True,1,
 116,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( [ ( ) ] < > < ( { } ) > ) < [ ] > > ] ( ) < [ < > ] >",> ),"To solve this, I need to track the opening brackets using a stack and see what's left unclosed at the end.
 
 Processing the sequence step by step:
@@ -2887,7 +2887,7 @@ Since the `<` was opened after the `(`, it must be closed first (LIFO order).
 
 Therefore, we need to add: `>` then `)`
 
-Final Answer: `> )`",> ),True,1
+Final Answer: `> )`",> ),True,1,
 117,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > > [ [ [ { { < { } ( { } ) > } } < { { { } } } < > > ] ] ( )",] ),"To solve this, I need to track the stack of open brackets as I parse through the sequence.
 
 **Parsing the sequence:**
@@ -2930,7 +2930,7 @@ Final Answer: `> )`",> ),True,1
 
 To close properly, I need to close the `[` first, then the `(`.
 
-Final Answer: ])",]),True,0
+Final Answer: ])",]),True,0,
 118,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ( { } ) ) } ( ) ) < { (",) } >,"To solve this, I'll track the opening brackets using a stack (LIFO - Last In, First Out) and determine what needs to be closed.
 
 **Parsing the sequence:**
@@ -2960,7 +2960,7 @@ Final Answer: ])",]),True,0
 2. `}` to match the `{`
 3. `>` to match the `<`
 
-Final Answer: )}>",)}>,True,0
+Final Answer: )}>",)}>,True,0,
 119,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { [ { } ] } [ ] [ ] )",>,"To solve this, I'll track the opening brackets using a stack and process the sequence from left to right:
 
 1. `<` - push `<` (stack: `<`)
@@ -2979,7 +2979,7 @@ Final Answer: )}>",)}>,True,0
 
 After processing all characters, the stack contains only `<`, which means we need to add its corresponding closing bracket `>` to complete the sequence properly.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 120,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ ( [ { ( { ( [ ( [ ] ) { ( < < [ ] > [ [ ] ] > ) } ] ) [ ] } ) } ] ) ] } { < [ ] > } (",) },"The sequence contains nested brackets that must be closed in LIFO (last-in-first-out) order. Tracing through the input:
 
 1.  **Opening brackets are pushed** onto a stack: `{`, `{`, `[`, `(`, `[`, `{`, `(`, `{`, `(`, `[`, `(`, `[`...
@@ -2990,7 +2990,7 @@ Final Answer: >",>,True,1
 
 To properly close the sequence, we must close the most recent opening bracket first (`(`), then the remaining one (`{`).
 
-Final Answer: )}",)},True,0
+Final Answer: )}",)},True,0,
 121,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ ] > ] } { ( ) [ < > ] [ [ [ ] ]",] },"To solve this, I'll track the bracket stack as I parse through the sequence:
 
 1. `{` - push `{`
@@ -3021,7 +3021,7 @@ To close properly:
 - First need `]` to close the remaining `[`
 - Then need `}` to close the remaining `{`
 
-Final Answer: ]}",]},True,0
+Final Answer: ]}",]},True,0,
 122,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { ( < ( ( [ < < { } > < < [ ( { < < > > } ) ] > > > ] { } ) ) > ) } ] [ < < { } > ( < < ( ) < ( [ ] ) > > ( ( ) ) > ) > ] > ] < < {",} > >,"To solve this, I'll trace through the sequence using a stack to track unclosed opening brackets. When I encounter an opening bracket (`[`, `{`, `(`, `<`), I push it onto the stack. When I encounter a closing bracket (`]`, `}`, `)`, `>`), I pop the matching opening bracket from the stack.
 
 Parsing the input:
@@ -3038,7 +3038,7 @@ To close them properly (in LIFO order - last opened, first closed):
 2. Close the second `<` with `>`
 3. Close the first `<` with `>`
 
-Final Answer: `} > >`",} > >,True,1
+Final Answer: `} > >`",} > >,True,1,
 123,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ]",> ],"Looking at the input `[ < [ ]`, I need to track which brackets are still open (not yet closed):
 
 **Current state:**
@@ -3066,7 +3066,7 @@ Using the Last-In-First-Out (LIFO) principle for properly nested brackets:
 
 All brackets are properly balanced and closed.
 
-Final Answer: `>]`",>],True,0
+Final Answer: `>]`",>],True,0,
 124,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ < > ] } < [ ( [ { } ] ) ] > < [ < > { } ] < ( [ ] ) > <",> > },"To complete the sequence, I need to ensure all opening brackets have matching closing brackets in the correct order (last opened, first closed).
 
 Let me trace through the input using a stack:
@@ -3111,7 +3111,7 @@ Verification of counts:
 - `<`: 6 opening, 4 closing → needs 2 `>`
 - All other brackets are balanced.
 
-Final Answer: >>}",>>},True,0
+Final Answer: >>}",>>},True,0,
 125,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { [ ( ) ] } { { [ ] } } { } < > ) } [ < [ ( ) ]",> ],"Here is the step-by-step parsing of the sequence using a stack to track open brackets:
 
 1.  **Initial segment:** `{ ( { [ ( ) ] } { { [ ] } } { } < > ) }`
@@ -3134,7 +3134,7 @@ Final Answer: >>}",>>},True,0
 
 Therefore, the sequence must be completed with `>]`.
 
-Final Answer: `>]`",>],True,0
+Final Answer: `>]`",>],True,0,
 126,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < { < ( ) > } >",) },"Looking at the input sequence: `{ ( < { < ( ) > } >`
 
 I'll trace through the brackets using a stack to track what needs to be closed:
@@ -3156,7 +3156,7 @@ To close properly (LIFO order):
 - First close `(` with `)`
 - Then close `{` with `}`
 
-Final Answer: )}",)},True,0
+Final Answer: )}",)},True,0,
 127,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { ( ( { } ) ( ) ) } { } < { } > < > > } { } ( { ( { { } } ) [ ( ) ] } ) ) [ ( [ ]",) ],"Reasoning:  
 To solve this, I track the stack of opening brackets as I parse the sequence from left to right:
 
@@ -3170,7 +3170,7 @@ To solve this, I track the stack of opening brackets as I parse the sequence fro
 4. The remaining open brackets are `(` (opened second-to-last) and `[` (opened first).
 5. To close properly, we must close in reverse order: first `)` for the `(`, then `]` for the `[`.
 
-Final Answer: `) ]`",) ],True,1
+Final Answer: `) ]`",) ],True,1,
 128,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( )",>,"**Reasoning:**
 
 To solve this, I need to check which opening brackets/braces/parentheses remain unclosed in the input string `< ( )`.
@@ -3187,7 +3187,7 @@ To solve this, I need to check which opening brackets/braces/parentheses remain 
 3. **Determine what's needed:**
    - To properly close the sequence, I need to add `>` to match the opening `<`
 
-**Final Answer: `>`**",>`**,True,0
+**Final Answer: `>`**",>,True,1,
 129,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < ( )",> } ],"To solve this, I need to match the opening brackets with their corresponding closing brackets in the correct order.
 
 **Analysis of the current sequence:**
@@ -3209,7 +3209,7 @@ Using the LIFO (Last In, First Out) principle for proper nesting:
 2. Close `{` with `}`
 3. Close `[` with `]`
 
-Final Answer: `> } ]`",> } ],True,1
+Final Answer: `> } ]`",> } ],True,1,
 130,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ < [ ] > { { [ [ ] ] } } ]",) ),"To solve this, I'll trace through the brackets using a stack approach, tracking which opening brackets still need to be closed:
 
 **Input:** `( ( [ < [ ] > { { [ [ ] ] } } ]`
@@ -3235,7 +3235,7 @@ Final Answer: `> } ]`",> } ],True,1
 
 To properly close the sequence, I need to add two closing parentheses: `))`
 
-Final Answer: `))`",)),True,0
+Final Answer: `))`",)),True,0,
 131,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( ) > { < > } ( < > ) < ( ) > [ ] < < < < ( ( ) ) < ( ) > > > > > {",} },"To solve this, I track the opening and closing brackets using a stack-based approach (LIFO - Last In, First Out).
 
 **Analysis of the input:**
@@ -3273,7 +3273,7 @@ Final Answer: `))`",)),True,0
 
 **Required closing:** `} }`
 
-Final Answer: }}",}},True,0
+Final Answer: }}",}},True,0,
 132,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < > ( [ ]",) >,"Looking at the input sequence `< < > ( [ ]`, I need to track which brackets are still open using a stack (LIFO - Last In, First Out):
 
 1. `<` → Stack: [`<`]
@@ -3287,7 +3287,7 @@ The stack currently contains `<` and `(`, with `(` being the most recent (innerm
 - First need `)` to close the `(`
 - Then need `>` to close the `<`
 
-Final Answer: `)>`",)>,True,0
+Final Answer: `)>`",)>,True,0,
 133,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) > { } < { [ < > ]",} >,"Looking at this step-by-step, I'll track the opening and closing brackets using a stack (last-in, first-out):
 
 **Input:** `< ( < > ) > { } < { [ < > ]`
@@ -3315,7 +3315,7 @@ To close properly, I must close in reverse order (last opened, first closed):
 
 **Missing part:** `}>`
 
-Final Answer: `}>`",}>,True,0
+Final Answer: `}>`",}>,True,0,
 134,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] > [",] ],"To solve this, I'll track the opening brackets using a stack and determine what needs to be closed:
 
 1. `[` → Stack: `[`
@@ -3343,7 +3343,7 @@ Verification of the full sequence `[ < [ ] > [ ] ]`:
 
 All brackets are now properly matched.
 
-Final Answer: ]]",]],True,0
+Final Answer: ]]",]],True,0,
 135,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < ( ( < { } { < < { { { } } } > < < < > [ ] > { } ( < { { ( [ ( ) ] ) } } > ) > > } > ) ) > } >",),"I need to track the bracket matching using a stack to determine what's left open at the end.
 
 Going through the sequence token by token:
@@ -3402,7 +3402,7 @@ Going through the sequence token by token:
 
 At the end, only the very first `(` remains unclosed. We need one `)` to close it.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 136,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ { } ] )",) ),"To solve this, I'll track the opening brackets using a stack approach:
 
 1. `(` → Stack: `(`
@@ -3418,7 +3418,7 @@ After processing the input, there are **2 opening parentheses** remaining on the
 
 Therefore, we need to add **2 closing parentheses**: `))`
 
-Final Answer: ))",)),True,0
+Final Answer: ))",)),True,0,
 137,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { } } ] ( < { < [ ( ( ) ) ] > } >",),"To determine the proper completion, I'll track the opening and closing brackets using a stack:
 
 1. `[` → push `[`
@@ -3445,7 +3445,7 @@ Final Answer: ))",)),True,0
 
 The only remaining unclosed bracket is the opening parenthesis `(` from step 7. To balance it, we need one closing parenthesis `)`.
 
-Final Answer: `[ { { } } ] ( < { < [ ( ( ) ) ] > } > )`",[ { { } } ] ( < { < [ ( ( ) ) ] > } > ),True,1
+Final Answer: `[ { { } } ] ( < { < [ ( ( ) ) ] > } > )`",[ { { } } ] ( < { < [ ( ( ) ) ] > } > ),True,1,
 138,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( < < < [ < [ [ ] ( ( ) ) ] > < > ] > > > )",> },"To solve this, I'll use a stack-based approach to track the opening brackets that need to be closed.
 
 **Step-by-step processing:**
@@ -3528,7 +3528,7 @@ To close properly, we must close the most recent opening first:
 - Close `<` with `>`
 - Close `{` with `}`
 
-Final Answer: `> }`",> },True,1
+Final Answer: `> }`",> },True,1,
 139,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ ] ) } [ ] ( { < > } ( { } ( { { } } ) ) ( [ ] ) ( ) ( < ( { { ( < { [ ( ) ] } > ) } } [ < [ ( [ { } ] [ < > < < > > ] ) ] > ] { < { } > } < > ) > )",),"To determine what is needed to complete the sequence, I tracked all opening brackets (`{`, `(`, `[`, `<`) and their corresponding closing brackets using a stack data structure.
 
 Going through the input character by character:
@@ -3543,7 +3543,7 @@ After processing the entire input string:
 
 The stack is empty at the end of the sequence, meaning all opened brackets have been properly closed.
 
-Final Answer: No additional characters are needed; the sequence is already properly balanced.",No additional characters are needed; the sequence is already properly balanced.,True,0
+Final Answer: No additional characters are needed; the sequence is already properly balanced.",No additional characters are needed; the sequence is already properly balanced.,True,0,
 140,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < < > [ [ < > ] ] > ] ( < < < ( [ [ ] ] ) [ ( ( [ { { } } ] ) ) ] > >",> ) ),"To solve this, I track the opening brackets using a stack (LIFO - last in, first out):
 
 1.  **Parse the sequence:**
@@ -3565,7 +3565,7 @@ Final Answer: No additional characters are needed; the sequence is already prope
 
 Therefore, the sequence needs `> ) )` to be properly closed.
 
-Final Answer: > ) )",> ) ),True,1
+Final Answer: > ) )",> ) ),True,1,
 141,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( (",) ),"Looking at the input sequence: `( ) ( (`
 
 **Step-by-step analysis:**
@@ -3583,7 +3583,7 @@ Currently, we have **2 unclosed opening parentheses** at the end. To properly cl
 
 The sequence is now fully balanced with all parentheses properly nested.
 
-Final Answer: ( ) ( ( ) )",( ) ( ( ) ),True,1
+Final Answer: ( ) ( ( ) )",( ) ( ( ) ),True,1,
 142,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ ] > ( { [ ] } <",> ) },"Reasoning:
 
 I analyzed the sequence using a stack-based approach to track unclosed brackets:
@@ -3604,7 +3604,7 @@ The remaining open brackets (from bottom to top) are: `{`, `(`, `<`
 
 To close them properly, I must close in reverse order (LIFO): first `>` for `<`, then `)` for `(`, then `}` for `{`.
 
-Final Answer: `> ) }`",> ) },True,1
+Final Answer: `> ) }`",> ) },True,1,
 143,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( ) >",),"To solve this, I need to track the opening brackets that haven't been closed yet using a stack-based approach:
 
 1. **`(`** - Open parenthesis (push to stack: `[(`])
@@ -3615,7 +3615,7 @@ Final Answer: `> ) }`",> ) },True,1
 
 At the end, the stack contains one remaining open parenthesis `(` that needs to be closed. Therefore, we need to add a closing parenthesis `)`.
 
-Final Answer: ( < ( ) > )",( < ( ) > ),True,1
+Final Answer: ( < ( ) > )",( < ( ) > ),True,1,
 144,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ( { ( < ( ) > ) }",) ) },"Reasoning:
 To solve this, I use a stack to track opening brackets. Processing the input from left to right:
 
@@ -3635,7 +3635,7 @@ To solve this, I use a stack to track opening brackets. Processing the input fro
 
 The stack now contains three unmatched opening brackets (from bottom to top): `{`, `(`, `(`. To close them properly, I must close in reverse order (Last-In-First-Out): first `)`, then `)`, then `}`.
 
-Final Answer: `))}`",))},True,0
+Final Answer: `))}`",))},True,0,
 145,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ < > ] ] < ( ) > [ { } ] < [ [ ] ] > ( ) < { < [ ] < < [ [ { [ ] } ] ] > > ( [ ( ( ) ) ] ) > } > [ { { < > } } ] > < ( < { } { [ { [ ] } ] } >",) > ],"To solve this, I need to track the opening and closing of each bracket type using a stack. I'll process the sequence character by character, pushing opening brackets onto the stack and popping when closing brackets are encountered.
 
 **Parsing the input:**
@@ -3668,7 +3668,7 @@ Since the stack is LIFO (Last In, First Out), I need to close them in reverse or
 
 All opened brackets must be closed: `)` then `>` then `]`.
 
-Final Answer: `)>]`",)>],True,0
+Final Answer: `)>]`",)>],True,0,
 146,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < < ( < < > > ) > > >",),"Reasoning:
 I analyzed the sequence using a stack-based approach to track open brackets:
 
@@ -3688,7 +3688,7 @@ I analyzed the sequence using a stack-based approach to track open brackets:
 
 After processing the entire input, one opening parenthesis `(` remains on the stack. To close it properly, we need to add one closing parenthesis `)`.
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 147,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < >",>,"To determine what is needed to complete the sequence, I count the brackets:
 
 - **Opening brackets (`<`)**: 2
@@ -3702,7 +3702,7 @@ The stack progression would be:
 3. `>` → stack: [`<`] (closes one)
 4. `>` → stack: [] (closes the remaining one, sequence is balanced)
 
-Final Answer: `< < > >`",< < > >,True,1
+Final Answer: `< < > >`",< < > >,True,1,
 148,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } }",),"To solve this, I parse the sequence using a stack to track opening brackets. For each closing bracket encountered, I verify it matches the most recent opening bracket. If it does, I pop the opening bracket from the stack. If it doesn't, the sequence is invalid. At the end, any remaining items in the stack represent unclosed opening brackets that need to be closed.
 
 **Parsing the input:**
@@ -3721,7 +3721,7 @@ To properly close the sequence, we need to add one closing round bracket `)` at 
 The full completed sequence is:
 `( { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } } )`
 
-Final Answer: `( { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } } )`",( { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } } ),True,1
+Final Answer: `( { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } } )`",( { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } } ),True,1,
 149,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( < < { }",> > ),"To solve this, I'll track the opening brackets using a stack (last-in, first-out):
 
 1. `(` → push to stack: [`(`]
@@ -3739,7 +3739,7 @@ To close properly, I must close in reverse order (last opened, first closed):
 - Close the first `<` with `>`
 - Close the `(` with `)`
 
-Final Answer: > > )",> > ),True,1
+Final Answer: > > )",> > ),True,1,
 150,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ ] ) > {",} ),"Looking at the input sequence: `( < ( [ ] ) > {`
 
 I'll track the opening brackets using a stack approach:
@@ -3757,7 +3757,7 @@ Now I need to close the remaining open brackets in reverse order (last opened, f
 - Close `{` with `}`
 - Close `(` with `)`
 
-Final Answer: `})`",}),True,0
+Final Answer: `})`",}),True,0,
 151,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { } [ ] >",),"I need to analyze the bracket sequence to determine what remains unclosed.
 
 **Step-by-step stack analysis:**
@@ -3777,7 +3777,7 @@ Final Answer: `})`",}),True,0
 - `<` is closed by `>` ✓
 - `(` is closed by `)` ✓
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 152,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } ( ) [ ] {",},"To solve this, I track the opening brackets using a stack (last-in, first-out):
 
 1. `{` → push to stack: [`{`]
@@ -3792,7 +3792,7 @@ Final Answer: )",),True,1
 
 At the end, the stack contains one unmatched opening brace `{`. To close it properly, I need to add the corresponding closing brace `}`.
 
-Final Answer: `{ < > } ( ) [ ] { }`",{ < > } ( ) [ ] { },True,1
+Final Answer: `{ < > } ( ) [ ] { }`",{ < > } ( ) [ ] { },True,1,
 153,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { [ [ [ < ( < [ ] { [ ( [ ] ) ] [ ] < > } > ) > ] ( [ ] ) ] ] } }",] >,"To solve this, I need to track the opening brackets using a stack and determine what remains unclosed at the end.
 
 Processing the sequence character by character (ignoring spaces):
@@ -3840,7 +3840,7 @@ To close these properly, I must close the most recent opening bracket first:
 1. Close `[` with `]`
 2. Close `<` with `>`
 
-Final Answer: `]>`",]>,True,0
+Final Answer: `]>`",]>,True,0,
 154,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ] } > ( ) < [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ]",>,"To solve this, I'll track the opening brackets using a stack and check which ones remain unclosed at the end.
 
 Parsing the input:
@@ -3888,7 +3888,7 @@ Parsing the input:
 
 At the end, only the `<` from step 9 remains unclosed. We need to add `>` to close it.
 
-Final Answer: `< { [ ] } > ( ) < [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ] >`",< { [ ] } > ( ) < [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ] >,True,1
+Final Answer: `< { [ ] } > ( ) < [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ] >`",< { [ ] } > ( ) < [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ] >,True,1,
 155,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < { [ < { ( [ ] ) } > { ( { } ) } ( ) ] } > } [ < < > > ] { } [ ] < { }",> >,"Here is my step-by-step analysis:
 
 I will parse the sequence left-to-right using a stack to track unclosed opening brackets. When I encounter a closing bracket, I check that it matches the type of the most recent unmatched opening bracket (the top of the stack).
@@ -3939,7 +3939,7 @@ The stack contains two unclosed `<` brackets: `[<, <]`
 
 To close these properly in the correct order (last opened, first closed), I need two closing angle brackets: `>>`.
 
-Final Answer: >>",>>,True,0
+Final Answer: >>",>>,True,0,
 156,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ [ { } ] ] }",),"To determine what is needed to complete the sequence, I'll track the opening and closing brackets using a stack approach:
 
 1. `(` → push (stack: `(`)
@@ -3954,7 +3954,7 @@ Final Answer: >>",>>,True,0
 
 After processing the entire input, the stack contains only `(`, which means we need to close this remaining opening parenthesis.
 
-Final Answer: `( { [ [ { } ] ] } )` (or simply add `)` at the end)",( { [ [ { } ] ] } )` (or simply add `)` at the end),True,0
+Final Answer: `( { [ [ { } ] ] } )` (or simply add `)` at the end)",( { [ [ { } ] ] } )` (or simply add `)` at the end),True,0,
 157,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ { } ] } > ) ) < {",} >,"Looking at the input sequence: `( ( < { [ { } ] } > ) ) < {`
 
 I'll track the opening brackets using a stack (Last-In-First-Out):
@@ -3978,7 +3978,7 @@ At the end, the stack contains `<` and `{` (with `{` on top). To close properly,
 - Close `{` with `}`
 - Then close `<` with `>`
 
-Final Answer: `}>`",}>,True,0
+Final Answer: `}>`",}>,True,0,
 158,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < [ ( ) ] >",> >,"To solve this, I track the opening brackets using a stack (Last-In-First-Out):
 
 1. `<` → stack: [`<`]
@@ -3992,7 +3992,7 @@ Final Answer: `}>`",}>,True,0
 
 Two opening angle brackets remain on the stack. They must be closed in reverse order (most recent first) using two closing angle brackets.
 
-Final Answer: > >",> >,True,1
+Final Answer: > >",> >,True,1,
 159,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] { { } { < ( { } ) > } } > ] ( {",} ),"To solve this, I track the opening brackets using a stack and match them with closing brackets as I parse through the sequence:
 
 1. `[` → push `[`
@@ -4020,7 +4020,7 @@ At the end, the stack contains: `(` (from step 19) and `{` (from step 20).
 
 To close them properly, I must close in reverse order (LIFO): first `}` to close `{`, then `)` to close `(`.
 
-Final Answer: `})`",}),True,0
+Final Answer: `})`",}),True,0,
 160,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < > ( [ [ { ( ( [ ] < > ) ) } ] { [ [ ] { } { [ { < > } ] } ( { { { { } } } } ) ] } ] ) (",) > },"To complete the sequence, I need to track the stack of open brackets. Parsing the input from left to right:
 
 1. Push: `{`, `<`, `<` 
@@ -4053,7 +4053,7 @@ To close properly, I must close in reverse order (LIFO):
 - Then close `<` with `>`
 - Finally close `{` with `}`
 
-Final Answer: )>}",)>},True,0
+Final Answer: )>}",)>},True,0,
 161,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( (",) ) },"Reasoning: The input sequence contains three opening brackets that need to be closed in reverse order (last opened, first closed) to maintain proper nesting:
 1. The sequence starts with `{` (curly brace), then two `(` (parentheses)
 2. The last opened bracket is `(`, so it must be closed first with `)`
@@ -4062,7 +4062,7 @@ Final Answer: )>}",)>},True,0
 
 Therefore, the completion requires two closing parentheses followed by one closing curly brace.
 
-Final Answer: `) ) }`",) ) },True,1
+Final Answer: `) ) }`",) ) },True,1,
 162,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ( { < ( { } ) > } )",) ],"To solve this, I'll track the stack of opening brackets that need to be closed:
 
 **Current input:** `[ ( ( { < ( { } ) > } )`
@@ -4087,7 +4087,7 @@ Final Answer: `) ) }`",) ) },True,1
 - First close `(` with `)`
 - Then close `[` with `]`
 
-Final Answer: )]",)],True,0
+Final Answer: )]",)],True,0,
 163,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < < { } > > ]",),"To solve this, I'll track the opening and closing brackets using a stack (Last-In-First-Out) approach:
 
 **Input analysis:** `( [ < < { } > > ]`
@@ -4112,7 +4112,7 @@ Final Answer: )]",)],True,0
 - `[` closes with `]`
 - `(` closes with `)`
 
-Final Answer: `( [ < < { } > > ] )`",( [ < < { } > > ] ),True,1
+Final Answer: `( [ < < { } > > ] )`",( [ < < { } > > ] ),True,1,
 164,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) { <",> },"To solve this, I'll track the opening and closing of brackets using a stack approach:
 
 1. `(` - Opening bracket pushed to stack
@@ -4128,7 +4128,7 @@ To close properly, I must close brackets in reverse order (Last-In-First-Out):
 
 So the sequence needs `> }` appended to become properly balanced.
 
-Final Answer: `( ) { < > }`",( ) { < > },True,1
+Final Answer: `( ) { < > }`",( ) { < > },True,1,
 165,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ { ( < [ { ( ) { } } ] > ) < > } ]",) },"To solve this, I'll track the opening brackets using a stack (LIFO - Last In, First Out) and match them with closing brackets as I parse the sequence from left to right.
 
 **Parsing the input:** `{ ( [ { ( < [ { ( ) { } } ] > ) < > } ]`
@@ -4163,7 +4163,7 @@ To close properly, we must close the most recent open bracket first:
 1. Close `(` with `)`
 2. Close `{` with `}`
 
-Final Answer: )}",)},True,0
+Final Answer: )}",)},True,0,
 166,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < { ( < > ) }",> > },"To solve this, I need to track the stack of open brackets that haven't been closed yet.
 
 Parsing the input `{ < < { ( < > ) }` from left to right:
@@ -4185,7 +4185,7 @@ To close properly, I must close in reverse order (LIFO):
 - Second: `>` to close the first `<`
 - Third: `}` to close the `{`
 
-Final Answer: > > }",> > },True,1
+Final Answer: > > }",> > },True,1,
 167,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ [ ] { { < > [ ( ) ( [ ] ) [ ] { < > } ] } } [ { [ ] } ] { ( ) }",] } },"Reasoning:
 I analyzed the sequence using a stack-based approach to track opening brackets that need to be closed:
 
@@ -4206,10 +4206,10 @@ I analyzed the sequence using a stack-based approach to track opening brackets t
 
 Therefore, the sequence must be completed with `] } }` (or `]}}` without spaces).
 
-Final Answer: `] } }`",] } },True,1
+Final Answer: `] } }`",] } },True,1,
 168,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { {",} },"Reasoning: The input consists of two opening curly braces `{ {`. To properly close a sequence of brackets, each opening brace must have a corresponding closing brace, and they should follow the LIFO (Last In, First Out) order. Since there are two opening braces, we need two closing braces `}` to balance them. The first closing brace matches the second opening brace, and the second closing brace matches the first opening brace.
 
-Final Answer: } }",} },True,1
+Final Answer: } }",} },True,1,
 169,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( [ { ( < > ) } ] ) > { ( [",] ) },"To solve this, I'll track the opening brackets using a stack (Last-In-First-Out) approach:
 
 **Input analysis:**
@@ -4234,7 +4234,7 @@ Complete sequence: `< ( [ { ( < > ) } ] ) > { ( [ ] ) }`
 - All brackets match correctly
 - No unclosed or mismatched pairs remain
 
-Final Answer: ] ) }",] ) },True,1
+Final Answer: ] ) }",] ) },True,1,
 170,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ { ( < < < < > { } > { [ { } ] } > > ) } ] [ ] } ] [ < { { } } [ [ ( ( ) ) ] ] > ] [ ( ( [ ] )",) ],"To solve this, I will trace through the sequence using a stack to track opening brackets and ensure they are properly closed.
 
 **Parsing the sequence:**
@@ -4265,7 +4265,7 @@ Therefore, the missing suffix is `)]`.
 The full completed sequence is:
 `[ { [ { ( < < < < > { } > { [ { } ] } > > ) } ] [ ] } ] [ < { { } } [ [ ( ( ) ) ] ] > ] [ ( ( [ ] ) ) ]`
 
-Final Answer: `)]`",)],True,0
+Final Answer: `)]`",)],True,0,
 171,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( ) ( ( < > < ( ( < < > > ) ) { ( ) } > ) ) { { } }",> } >,"To solve this, I need to track the stack of open brackets as I parse through the sequence:
 
 1. `<` - push `<`
@@ -4305,7 +4305,7 @@ To close properly, I must close in LIFO order (last opened, first closed):
 - Close the `{` with `}`
 - Close the outer `<` with `>`
 
-Final Answer: `}>`",}>,True,0
+Final Answer: `}>`",}>,True,0,
 172,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ < [ < { } > ] [ ] >",] } ],"To solve this, I'll trace through the sequence using a stack to track which brackets are still open (LIFO - Last In, First Out).
 
 Input sequence: `[ { [ < [ < { } > ] [ ] >`
@@ -4336,7 +4336,7 @@ The required completion is: `]}]`
 
 Full balanced sequence: `[ { [ < [ < { } > ] [ ] > ] } ]`
 
-Final Answer: `]}]`",]}],True,0
+Final Answer: `]}]`",]}],True,0,
 173,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ( < [ ( { [ ( ) ] [ ( ( { [ ] } ) ) ] } ) ] > ) ] <",> > >,"To solve this, I need to track the opening brackets using a stack and see which ones remain unclosed at the end.
 
 Let me process the sequence character by character:
@@ -4373,7 +4373,7 @@ Let me process the sequence character by character:
 
 At the end, the stack contains three `<` characters. To close them in the correct order (last opened, first closed), I need to add three `>` characters.
 
-Final Answer: >>>",>>>,True,0
+Final Answer: >>>",>>>,True,0,
 174,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { { } } ( < [ ] [ { } ] > ) ( { { } { { ( ) } } } ) { < { { [ ] } [ ( ) ] } ( < { [ < > ] } > ) < ( [ ] { ( < < [ ] > > ) [ { [ [ ( ( ) ) ] ] } ] } { } ) > ( { { [ [ ( ) ] ] } } )",> } >,"To solve this, I need to trace through the sequence using a stack to track the opening brackets and ensure each closing bracket matches the most recent unmatched opening bracket. At the end, whatever remains on the stack needs to be closed in reverse order (LIFO).
 
 **Stack trace:**
@@ -4393,7 +4393,7 @@ Final Answer: >>>",>>>,True,0
 2. Close the `{` with `}`
 3. Close the outer `<` with `>`
 
-Final Answer: `}>`",}>,True,0
+Final Answer: `}>`",}>,True,0,
 175,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ) { [ ] } [ ] [ ] { < { ( ( { } ) ) { [ { } ] } } > [ ] }",],"Looking at the input sequence, I need to track the opening and closing brackets using a stack approach:
 
 1. `[` - opens (stack: `[`)
@@ -4430,7 +4430,7 @@ Final Answer: `}>`",}>,True,0
 
 At the end, only the very first `[` remains unclosed on the stack.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 176,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { ( < < > > )",} ) >,"To solve this, I'll use a stack-based approach to track the open brackets that need to be closed:
 
 1.  **Parse the input sequentially**:
@@ -4453,7 +4453,7 @@ Final Answer: ]",],True,1
 
 Therefore, the sequence needed to close all brackets properly is `})>`.
 
-Final Answer: `})>`",})>,True,0
+Final Answer: `})>`",})>,True,0,
 177,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < >",) >,"To solve this, I'll use a stack-based approach to track the opening brackets that need to be closed:
 
 1. **Parse the input left to right**:
@@ -4470,7 +4470,7 @@ Final Answer: `})>`",})>,True,0
 
 Therefore, you need to add `)` followed by `>`.
 
-Final Answer: `)>`",)>,True,0
+Final Answer: `)>`",)>,True,0,
 178,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { ( { < > } ) } [ ( ) ] { } [ { { ( < > ) } <",> } ],"Looking at the input sequence, I need to track the opening brackets that haven't been closed yet using a stack-based approach.
 
 Parsing the input from left to right:
@@ -4490,7 +4490,7 @@ To close the sequence properly, I need to close these in reverse order (LIFO):
 2. Close `{` with `}`
 3. Close `[` with `]`
 
-Final Answer: `> } ]`",> } ],True,1
+Final Answer: `> } ]`",> } ],True,1,
 179,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { ( ) }",} ],"Looking at the sequence: `[ { { ( ) }`
 
 Let me track the opening/closing using a stack approach:
@@ -4508,7 +4508,7 @@ Remaining unclosed brackets (from most recent to oldest):
 
 To close properly (LIFO order), we need to add `}` then `]`.
 
-Final Answer: `} ]`",} ],True,1
+Final Answer: `} ]`",} ],True,1,
 180,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { [ ] } ] } [ [ { { } } [ < >",] ] ],"To solve this, I'll track the opening brackets using a stack and determine what needs to be closed at the end.
 
 Processing the input left-to-right:
@@ -4532,7 +4532,7 @@ Processing the input left-to-right:
 
 At the end, the stack contains three opening square brackets: `[[[`. To close these properly in order (last opened, first closed), we need three closing square brackets.
 
-Final Answer: ]]]",]]],True,0
+Final Answer: ]]]",]]],True,0,
 181,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( < [ [ ] ] > )",} ],"To solve this, I'll track the opening brackets using a stack (last-in, first-out):
 
 **Current sequence:** `[ { ( < [ [ ] ] > )`
@@ -4556,7 +4556,7 @@ To close properly, I must close the most recent one first:
 
 **Full completed sequence:** `[ { ( < [ [ ] ] > ) } ]`
 
-Final Answer: `} ]`",} ],True,1
+Final Answer: `} ]`",} ],True,1,
 182,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( [ ] ) )",},"Looking at the sequence character by character using a stack approach:
 
 1. `{` → push (stack: `{`)
@@ -4569,7 +4569,7 @@ Final Answer: `} ]`",} ],True,1
 
 At the end, only the opening curly brace `{` remains unclosed. To properly close the sequence, we need a closing curly brace `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 183,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > > < > [ ] [",] ),"Reasoning:
 
 To solve this, I track the opening brackets using a stack (last-in-first-out):
@@ -4591,7 +4591,7 @@ At the end, the stack contains `[` (on top) and `(` (below it). To close properl
 
 Thus, the needed completion is `])`.
 
-Final Answer: `])`",]),True,0
+Final Answer: `])`",]),True,0,
 184,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( { { ( ( ) ) } } ) [ ( [ { } ] ) ] < { { < < < > [ < [ < ( [ ( { ( ( < < < < > > > { ( { { < ( ) > ( ) } } ) } > { } ) ) } ) ] ) > ] > ] > < { } > > } ( ) < { ( ) } > } > ] [ < ( ) > ]",>,"To determine the missing closing symbols, we parse the input character by character using a stack:
 
 1. **Opening symbols** (`<`, `[`, `(`, `{`) are pushed onto the stack.
@@ -4607,7 +4607,7 @@ The stack at the end contains only that initial `<`, which requires a correspond
 
 No other symbols remain unmatched.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 185,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { { { } } }",] },"To solve this, I'll track the opening and closing of brackets using a stack (Last-In-First-Out):
 
 1.  `{` → push (stack: `{`)
@@ -4626,7 +4626,7 @@ To close properly, I must close the most recent bracket first (`[`), then the ou
 -   Add `]` to close `[`
 -   Add `}` to close `{`
 
-Final Answer: `{ [ { { { } } } ] }`",{ [ { { { } } } ] },True,1
+Final Answer: `{ [ { { { } } } ] }`",{ [ { { { } } } ] },True,1,
 186,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ ( { { ( { } ) } < < ( [ [ { } < [ { < [ { ( ) ( [ { } ] ) } ] < > > } ] ( < { ( [ ] ) } > ) > ] ( [ < ( ) > ] ) ] ) > > }",) ] ],"**Reasoning**
 
 I parsed the input left‑to‑right using a stack.  
@@ -4646,7 +4646,7 @@ To close them properly they must be popped in reverse order (last‑opened first
 
 Therefore the required closing suffix is `)]]`.
 
-**Final Answer: )]]**",)]]**,True,0
+**Final Answer: )]]**",)]],True,0,
 187,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ (",) ],"To complete the sequence properly, I need to follow the Last-In-First-Out (LIFO) principle for closing delimiters:
 
 1. The first character `[` is an opening square bracket that needs a closing `]`
@@ -4655,7 +4655,7 @@ Therefore the required closing suffix is `)]]`.
 
 Therefore, I need to add `)` followed by `]`.
 
-Final Answer: )]",)],True,0
+Final Answer: )]",)],True,0,
 188,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( {",} ),"**Reasoning:**
 
 The input sequence contains two opening brackets:
@@ -4669,7 +4669,7 @@ To properly close nested brackets, we follow the **LIFO** (Last In, First Out) p
 
 Thus, the closing sequence is `}` followed by `)`.
 
-Final Answer: })",}),True,0
+Final Answer: })",}),True,0,
 189,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < [ [ { [ < [ < ( [ ] ) > ] < > > ( < [ < [ < ( [ ( [ ] ) < ( ) > ] [ ( { ( ) } [ < { { { ( [ ] ) } } } > ] ) ] ) > ] > ] > ) ] } ] ] > ) ( { { { } } }",) ],"To solve this, I need to track the stack of opening brackets as I parse through the sequence. When I encounter a closing bracket, I pop from the stack. At the end, whatever remains in the stack needs to be closed in reverse order (last opened, first closed).
 
 **Parsing the sequence:**
@@ -4759,7 +4759,7 @@ Final Answer: })",}),True,0
 
 To close properly, I need to close `)` then `]`.
 
-Final Answer: `)]`",)],True,0
+Final Answer: `)]`",)],True,0,
 190,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ < > ] (",) ] },"Looking at the sequence `{ [ [ < > ] (`, I need to track the opening brackets using a stack to determine what needs to be closed:
 
 1. **`{`** - push to stack: [`{`]
@@ -4777,7 +4777,7 @@ To close properly, I must close in reverse order (LIFO):
 - Second: `]` to close `[`  
 - Third: `}` to close `{`
 
-Final Answer: `)]}`",)]},True,0
+Final Answer: `)]}`",)]},True,0,
 191,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ) ( { { [ ] } }",) >,"Reasoning:
 
 I'll track the opening and closing of brackets using a stack (LIFO - Last In First Out):
@@ -4799,7 +4799,7 @@ To close properly, I must close brackets in reverse order (last opened, first cl
 - First close `(` with **`)`**
 - Then close `<` with **`>`**
 
-Final Answer: `)>`",)>,True,0
+Final Answer: `)>`",)>,True,0,
 192,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( [ ] ) > < >",>,"To solve this, I'll trace through the bracket sequence using a stack to track which opening brackets need to be closed:
 
 **Stack trace:**
@@ -4817,7 +4817,7 @@ Final Answer: `)>`",)>,True,0
 
 **Solution:** Add one closing angle bracket `>` at the end.
 
-Final Answer: `< < ( [ ] ) > < > >`",< < ( [ ] ) > < > >,True,1
+Final Answer: `< < ( [ ] ) > < > >`",< < ( [ ] ) > < > >,True,1,
 193,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [",] ),"**Reasoning:**
 
 The input contains two opening brackets: `(` and `[`. According to the LIFO (Last In, First Out) principle for properly nested brackets, I must close the most recently opened bracket first.
@@ -4827,7 +4827,7 @@ The input contains two opening brackets: `(` and `[`. According to the LIFO (Las
 
 Thus, the proper completion closes the square bracket before the parenthesis.
 
-Final Answer: ] )",] ),True,1
+Final Answer: ] )",] ),True,1,
 194,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ ( ) ( ( { < { < { { } } > } > } ) ) ] ] > ( ) { ( ) }",],"To solve this, I track the opening brackets using a stack (LIFO structure) and match them with closing brackets as I parse the sequence from left to right:
 
 **Parsing the input:**
@@ -4862,7 +4862,7 @@ Final Answer: ] )",] ),True,1
 
 The only unclosed bracket is the very first `[`, which requires a `]` to close it.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 195,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > [ { [ [ ( [ ] ) [ < ( < > ) { [ ( { ( [ ( ( < ( ( < [ ] { < > } > [ ] ) ) > ) [ { } ] ) ] ) } ) ] } > ] ] ] } [ ] ] ) < [",] >,"To solve this, I need to track the stack of open brackets as I parse through the sequence:
 
 1. Starting from the left, I push opening brackets `(`, `<`, `[`, `{` onto a stack.
@@ -4879,7 +4879,7 @@ To close these properly, I need to close `[` first with `]`, then close `<` with
 
 Since the input format uses spaces between characters, the completion should be: ` ] >`
 
-Final Answer: ` ] >`", ] >,True,1
+Final Answer: ` ] >`",] >,True,1,
 196,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( {",} ) >,"**Reasoning:**
 
 The input sequence contains three opening brackets in this order:
@@ -4893,7 +4893,7 @@ To properly close nested brackets, we must follow the Last-In-First-Out (LIFO) p
 - The `(` was opened second, so it must be closed next with `)`
 - The `<` was opened first, so it must be closed last with `>`
 
-**Final Answer:** `} ) >`",** `} ) >,True,0
+**Final Answer:** `} ) >`",} ) >,True,1,
 197,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [",] ) ],"To properly close the sequence, we need to follow the ""last opened, first closed"" principle (stack behavior).
 
 The input `[ ( [` contains three opening brackets in this order:
@@ -4908,7 +4908,7 @@ To close them properly, we must close them in reverse order:
 
 This gives us the closing sequence: `] ) ]`
 
-Final Answer: ] ) ]",] ) ],True,1
+Final Answer: ] ) ]",] ) ],True,1,
 198,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < { < > } > } [ ( < < > > ) [ { < ( ) > } ] ] [ ] } < ( { [ < [ { [ ( ) ] } ] > < { ( [ [ [ { } < > { ( < { [ ] } > ( ) ) } ] ] ] ) } > ] } )",>,"To solve this, I track the bracket nesting using a stack (LIFO structure), pushing opening brackets and popping when encountering closing brackets that match the top of the stack.
 
 **Parsing the sequence:**
@@ -4925,7 +4925,7 @@ After processing all characters, only one opening bracket remains in the stack: 
 **Required closing:**
 To properly close this remaining `<`, we need to append `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 199,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ ( { ( ( < [ { < > } ] > { { [ ] } } ) ) } ( [ [ < > ] ] ) ) ] ] ] ) ( < > < [ ( ) ] > (",) ),"Looking at this problem, I need to track the stack of opening brackets to see which ones remain unclosed at the end.
 
 Parsing the sequence (ignoring spaces):
@@ -4980,7 +4980,7 @@ Parsing the sequence (ignoring spaces):
 
 At the end, the stack contains two opening parentheses: `( (` which need to be closed.
 
-Final Answer: ))",)),True,0
+Final Answer: ))",)),True,0,
 200,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( [ [ ] ] ) ( { [ { < { ( ) < [ [ < > { [ ( < ( < [ { < < ( [ ( ) ] [ ( < ( { [ ] } ) > ) ] [ < > ] ) > [ { ( < > ) } ] > } ] > ) > ) ] } ] ] > { } [ [ ] ] { } } > ( ( < > ) ) } ] }",),"To determine the missing closing brackets, I analyzed the input string by counting all opening and closing brackets of each type:
 
 **Bracket Counts:**
@@ -4997,7 +4997,7 @@ Therefore, they must be closed in this order:
 2. `>` (closes the next `<`)  
 3. `)` (closes the `(`)
 
-Final Answer: >>)",>>),True,0
+Final Answer: >>)",>>),True,0,
 201,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { ( ( { } ) ) ( ( [ ] ) ) } )",),"To solve this, I'll track the opening and closing brackets using a stack:
 
 1. `(` - push to stack: [(]
@@ -5020,7 +5020,7 @@ Final Answer: >>)",>>),True,0
 
 After processing the entire input, the stack contains one remaining `(`. We need one `)` to close it properly.
 
-Final Answer: ( ( { ( ( { } ) ) ( ( [ ] ) ) } ) )",( ( { ( ( { } ) ) ( ( [ ] ) ) } ) ),True,1
+Final Answer: ( ( { ( ( { } ) ) ( ( [ ] ) ) } ) )",( ( { ( ( { } ) ) ( ( [ ] ) ) } ) ),True,1,
 202,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > >",],"The input sequence is: `[ < < > >`
 
 Let me trace through the bracket matching using a stack:
@@ -5035,7 +5035,7 @@ At the end, the stack still contains `[`, which needs to be closed by `]`.
 
 Therefore, to properly close all parentheses/brackets, we need to add `]` at the end.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 203,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ [ { } ] ]",>,"To solve this, I'll track the opening and closing of brackets using a stack (Last-In-First-Out) approach:
 
 1. `<` - Opening angle bracket (pushed to stack)
@@ -5050,7 +5050,7 @@ After processing the input, the stack still contains one unclosed bracket: `<`. 
 
 The completed sequence is: `<[[{}]]>` (or with spaces to match the input style: `< [ [ { } ] ] >`)
 
-Final Answer: `<[[{}]]>`",<[[{}]]>,True,0
+Final Answer: `<[[{}]]>`",<[[{}]]>,True,0,
 204,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) [ ( [ < { { ( { } ) } } >",] ) ],"To solve this, I'll track the stack of open brackets that need to be closed:
 
 Input breakdown: `( ) [ ( [ < { { ( { } ) } } >`
@@ -5074,7 +5074,7 @@ Remaining open brackets (from bottom to top): `[`, `(`, `[`
 
 To close properly, work from top to bottom: `]` then `)` then `]`
 
-Final Answer: ] ) ]",] ) ],True,1
+Final Answer: ] ) ]",] ) ],True,1,
 205,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] [ { < { } > { [ ( [ ( ) ] ) ]",} } ],"To solve this, I'll track the opening brackets using a stack (LIFO - last in, first out) and determine what needs to be closed.
 
 **Input analysis:**
@@ -5111,7 +5111,7 @@ Final Answer: ] ) ]",] ) ],True,1
 2. `}` (closes step 6)
 3. `]` (closes step 5)
 
-Final Answer: `}}]`",}}],True,0
+Final Answer: `}}]`",}}],True,0,
 206,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ < < [ ] > > ] )",> ),"Looking at the input sequence: `( < ( [ < < [ ] > > ] )`
 
 I'll track the opening brackets using a stack (LIFO - last in, first out):
@@ -5135,7 +5135,7 @@ Remaining unclosed brackets (from most recent to oldest):
 
 Therefore, I need to close them in order: first `>`, then `)`.
 
-Final Answer: `> )`",> ),True,1
+Final Answer: `> )`",> ),True,1,
 207,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { [ [ < { { { } } } > ] ] < [ { }",] > },"**Reasoning:**
 
 To solve this, I track the opening brackets using a stack (LIFO - Last In, First Out):
@@ -5167,7 +5167,7 @@ To close properly, I must close in reverse order of opening:
 - Then close `<` with `>`
 - Finally close `{` with `}`
 
-**Final Answer: ] > }**",] > }**,True,0
+**Final Answer: ] > }**",] > },True,1,
 208,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ ( { } ) { < ( ( [ ] ) ) >",} ] ),"To solve this, I'll track the opening brackets using a stack (Last-In-First-Out) and determine what needs to be closed.
 
 **Input:** `( [ ( { } ) { < ( ( [ ] ) ) >`
@@ -5198,7 +5198,7 @@ To close properly, we must close in reverse order (LIFO):
 
 **Missing sequence:** `} ] )`
 
-Final Answer: `} ] )`",} ] ),True,1
+Final Answer: `} ] )`",} ] ),True,1,
 209,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { { { { < < ( { ( { { < < [ < [ [ ] ] > ] [ ] > [ [ ] ] > ( < [ { < > < [ ] > } ] > ) } } ) } ) > > } } }",} } ),"To determine what needs to be added to complete the sequence, I'll track the opening and closing brackets using a stack-based approach. The bracket types are: `()`, `{}`, `[]`, and `<>`.
 
 Going through the input character by character:
@@ -5237,7 +5237,7 @@ To properly close the sequence, we need to close these remaining items in revers
 - Close the first `{` with `}`
 - Close the `(` with `)`
 
-Final Answer: } } )",} } ),True,1
+Final Answer: } } )",} } ),True,1,
 210,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( [ ] ) > ] { [ { }",] },"Looking at this step-by-step using a stack-based approach (last opened, first closed):
 
 **Current sequence:** `[ < ( [ ] ) > ] { [ { }`
@@ -5262,7 +5262,7 @@ Final Answer: } } )",} } ),True,1
 
 Following LIFO order (last in, first out), I must close the `[` first, then the `{`.
 
-Final Answer: `]}`",]},True,0
+Final Answer: `]}`",]},True,0,
 211,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ { }",] } ),"To solve this, I'll use a stack-based approach to track the opening brackets that need to be closed.
 
 **Step-by-step analysis:**
@@ -5286,7 +5286,7 @@ Full sequence: `( { [ { } ] } )`
 - `[` opens, `]` closes ✓
 - `{` opens, `}` closes ✓
 
-Final Answer: ]})",]}),True,0
+Final Answer: ]})",]}),True,0,
 212,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ { [ ] { [ [ ] ] } { ( ) } } { [ [ ( [ ] ) ] ] } ] } { < ( ) { [ [ ( ) { [ { { } } ] < > { < ( < { ( < ( [ ] ) > ) } > ) { [ ( < ( ) > ) ] } [ ] { } > } ( ) } ] [ ( ( { < > } ) ) ] ] } >",} ),"To solve this, I will trace through the sequence using a stack to track the opening brackets. When I encounter a closing bracket, I pop from the stack if it matches; otherwise, the sequence is invalid. At the end, whatever remains in the stack needs to be closed in reverse order (LIFO).
 
 **Tracing the sequence:**
@@ -5458,7 +5458,7 @@ Given the complexity, the consistent result from my detailed trace is that the f
 
 Final check: The sequence starts with `({` and the trace shows these are never closed at the end. All other brackets appear to be balanced internally.
 
-Final Answer: })",}),True,0
+Final Answer: })",}),True,0,
 213,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( < > < [ [ ] ] > ) { } )",) >,"To solve this, I'll track the opening brackets using a stack (LIFO - last in, first out) and see what remains unclosed at the end.
 
 **Input analysis:**
@@ -5487,7 +5487,7 @@ Since we must close brackets in reverse order of opening (last opened, first clo
 
 **Missing closing brackets:** `)>`
 
-Final Answer: `)>`",)>,True,0
+Final Answer: `)>`",)>,True,0,
 214,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { { { < > } }",} ] },"Looking at the sequence character by character and tracking the stack of open brackets:
 
 1. `{` → open (stack: `{`)
@@ -5507,7 +5507,7 @@ To close properly (LIFO order), I need:
 - `]` to close the `[`
 - `}` to close the first `{`
 
-Final Answer: }]}",}]},True,0
+Final Answer: }]}",}]},True,0,
 215,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < > } } < > < { { ( ) } } > { } } { < ( { [ < > ] [ ( ) < ( ) > { < ( ( ( ) ) ) > [ ] } ] < > ( < { } > ) }",) > },"To solve this, I'll track the stack of open brackets as I parse through the sequence. The brackets are: `{`, `}`, `<`, `>`, `(`, `)`, `[`, `]`.
 
 Parsing the input (ignoring spaces):
@@ -5576,7 +5576,7 @@ To close the sequence properly, I must close the brackets in reverse order (Last
 2. Close `<` with `>`
 3. Close `{` with `}`
 
-Final Answer: )>}",)>},True,0
+Final Answer: )>}",)>},True,0,
 216,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > { < [ ] >",} ],"To solve this, I'll track the opening brackets using a stack (LIFO - Last In First Out):
 
 Input sequence: `[ < > { < [ ] >`
@@ -5600,7 +5600,7 @@ The completion needed is: `} ]`
 
 Full completed sequence: `[ < > { < [ ] > } ]`
 
-Final Answer: `} ]`",} ],True,1
+Final Answer: `} ]`",} ],True,1,
 217,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ <",> ] ],"**Reasoning:**
 
 The input `[ [ <` contains three opening brackets that need to be closed:
@@ -5617,7 +5617,7 @@ Closing order:
 
 Therefore, the sequence needed to complete the pattern is `> ] ]` (or `>]]`).
 
-Final Answer: `> ] ]`",> ] ],True,1
+Final Answer: `> ] ]`",> ] ],True,1,
 218,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { }",),"Looking at the input sequence: `( { }`
 
 Let me trace through the bracket matching:
@@ -5629,7 +5629,7 @@ Current state: The `{` has been closed by `}`, but the `(` is still open and nee
 
 To properly close the sequence, I need to add `)` at the end.
 
-Final Answer: ( { } )",( { } ),True,1
+Final Answer: ( { } )",( { } ),True,1,
 219,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ < ( < { } > ) > ] ] [ [ ] ]",},"To solve this, I'll trace through the bracket sequence using a stack to track which brackets are open and need to be closed.
 
 Input sequence: `{ [ [ < ( < { } > ) > ] ] [ [ ] ]`
@@ -5655,7 +5655,7 @@ Step-by-step analysis:
 
 After processing all characters, the stack contains only `{`, which means we need one closing curly brace to complete the sequence properly.
 
-Final Answer: `{ [ [ < ( < { } > ) > ] ] [ [ ] ] }`",{ [ [ < ( < { } > ) > ] ] [ [ ] ] },True,1
+Final Answer: `{ [ [ < ( < { } > ) > ] ] [ [ ] ] }`",{ [ [ < ( < { } > ) > ] ] [ [ ] ] },True,1,
 220,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < {",} >,"To properly close the sequence, we need to follow the **LIFO (Last In, First Out)** principle, where the most recently opened bracket must be closed first.
 
 1.  **Analyze the input:** `< {`
@@ -5668,7 +5668,7 @@ Final Answer: `{ [ [ < ( < { } > ) > ] ] [ [ ] ] }`",{ [ [ < ( < { } > ) > ] ] [
 
 3.  **Result:** The closing sequence is `}>`
 
-Final Answer: `}>`",}>,True,0
+Final Answer: `}>`",}>,True,0,
 221,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } [ ( { ( { [ < > ] } ) ( ) } ) ] { [ < > ] } [ [ ( [ ]",) ] ],"Reasoning:
 I need to track the opening brackets using a stack and determine what closing brackets are needed to balance the sequence.
 
@@ -5692,7 +5692,7 @@ To close properly, I need to pop in reverse order (LIFO):
 - Second: `]` to close the second `[`
 - Third: `]` to close the first `[`
 
-Final Answer: `) ] ]`",) ] ],True,1
+Final Answer: `) ] ]`",) ] ],True,1,
 222,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { { { < [ ( < > { ( ) } ) ] > } } }",> >,"To solve this, I'll track the stack of open brackets as I parse the sequence from left to right:
 
 1. `<` → Stack: [`<`]
@@ -5718,7 +5718,7 @@ Final Answer: `) ] ]`",) ] ],True,1
 
 The stack still contains two `<` brackets that need to be closed. Therefore, we need two closing angle brackets `>`.
 
-Final Answer: > >",> >,True,1
+Final Answer: > >",> >,True,1,
 223,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < ( )",> > },"To solve this, I treat the brackets as a stack (Last-In-First-Out):
 
 1.  `{` — opening curly brace (pushed to stack)
@@ -5734,7 +5734,7 @@ To close properly, I must pop from the stack in reverse order:
 - Pop `<` → needs `>`
 - Pop `{` → needs `}`
 
-Final Answer: `> > }`",> > },True,1
+Final Answer: `> > }`",> > },True,1,
 224,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ) <",> ],"Looking at the input sequence `[ ( ) <`, I need to track the opening and closing of each bracket type using a stack-based approach:
 
 1. `[` - opens a square bracket (stack: `[`)
@@ -5746,7 +5746,7 @@ To properly close the sequence, I need to close the remaining open brackets in r
 - First close `<` with `>`
 - Then close `[` with `]`
 
-Final Answer: > ]",> ],True,1
+Final Answer: > ]",> ],True,1,
 225,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { [ < ( < [ ( ) ] > ) > ] } ) } ] [ ] [ ( { ( ) } ) ] < { ( ( ( ( ( < > ) ) ) ) ) [ < [ ( < > ) ] > [ [ ] ( ( { } { [ { < [ ] > } ] } < { } > < [ < > ] > [ ] ) ) ] ] } > { [ { ( )",} ] },"To solve this, I need to track the stack of opening brackets and identify what remains unclosed at the end.
 
 Processing the sequence bracket by bracket:
@@ -5767,7 +5767,7 @@ The remaining stack is `{ [ {` (bottom to top). To close properly in LIFO order:
 2.  Close the `[` with `]`
 3.  Close the outer `{` with `}`
 
-Final Answer: } ] }",} ] },True,1
+Final Answer: } ] }",} ] },True,1,
 226,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > }",> ],"To solve this, I'll track the opening brackets using a stack (LIFO - Last In, First Out) to see which ones remain unclosed at the end.
 
 Parsing the input sequence:
@@ -5798,7 +5798,7 @@ So we need to append: `> ]`
 
 Final sequence: `[ < { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > } > ]`
 
-Final Answer: `[ < { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > } > ]`",[ < { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > } > ],True,1
+Final Answer: `[ < { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > } > ]`",[ < { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > } > ],True,1,
 227,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { { [ ] } < > [ ] } [ [ [ < [ [ ] ] > ] ] ] > } [ ] { { { { [ { } ] } ( < [ [ [ ] ] ] > ) < < ( { ( [ ] ) [ { { } } ] { [ ] } } ) [ [ { [ [ { ( { } ) [ ( ) { } ] { } } ] ] < > } ] ] > > }",} } ),"To solve this, I use a stack-based approach to track the opening brackets. Each closing bracket must match the most recent unmatched opening bracket (LIFO - Last In, First Out).
 
 **Parsing the sequence:**
@@ -5818,7 +5818,7 @@ To properly close the sequence, I must close the remaining brackets in reverse o
 2.  Close the `{` from step 30: `}`
 3.  Close the `(` from step 1: `)`
 
-Final Answer: `}})`",}}),True,0
+Final Answer: `}})`",}}),True,0,
 228,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < (",) >,"Looking at the input sequence `< (`, I need to identify the opening brackets and close them in the correct order (last opened, first closed).
 
 1. `<` is an opening angle bracket that needs to be closed with `>`
@@ -5828,7 +5828,7 @@ Since the parenthesis `(` was opened after the angle bracket `<`, it must be clo
 - First: `)` to close the parenthesis
 - Second: `>` to close the angle bracket
 
-Final Answer: )>",)>,True,0
+Final Answer: )>",)>,True,0,
 229,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < { < ( ( ) ) > } >",] },"To solve this, I'll track the opening and closing of each bracket using a stack (LIFO - Last In, First Out) approach:
 
 **Input analysis:**
@@ -5856,7 +5856,7 @@ To close properly, I must close in reverse order:
 **Verification:** `{ [ < { < ( ( ) ) > } > ] }`
 - All brackets match and are properly nested.
 
-Final Answer: `]}`",]},True,0
+Final Answer: `]}`",]},True,0,
 230,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ ( [ [ ( ) ] ] ) < < [ ] > > < < >",> ],"To solve this, I need to track the opening and closing of each bracket type using a stack approach, ensuring proper nesting (last opened, first closed).
 
 **Input sequence:** `[ ] [ ( [ [ ( ) ] ] ) < < [ ] > > < < >`
@@ -5895,7 +5895,7 @@ To close properly, I must close the most recently opened bracket first:
 - Angle brackets `< >`: 4 opened, 3 closed → needs 1 `>`
 - Nesting order confirms `>` must come before `]`
 
-Final Answer: >]",>],True,0
+Final Answer: >]",>],True,0,
 231,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } ) { ( [ { ( ) } ] ( [ ] ) )",},"Looking at the sequence, I'll track the opening brackets using a stack to see which ones remain unclosed:
 
 1. `(` → stack: `(`
@@ -5918,7 +5918,7 @@ Final Answer: >]",>],True,0
 
 After processing all characters, the stack contains `{`, meaning one opening brace remains unclosed.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 232,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > { { { } } { } } ] < { } [ { [ ] }",] >,"I need to analyze the bracket sequence to determine what closing brackets are needed to make it valid.
 
 Let me trace through the input using a stack:
@@ -5951,7 +5951,7 @@ To properly close the remaining brackets, I need to close `[` first, then `<`:
 - Need `]` to close `[`
 - Need `>` to close `<`
 
-Final Answer: `]>`",]>,True,0
+Final Answer: `]>`",]>,True,0,
 233,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > { { ( { } ) } { { ( ( ) ) } } }",},"To solve this, I'll use a stack-based approach to track the opening brackets and ensure they are properly closed. The brackets involved are `{`, `}`, `(`, `)`, `<`, and `>`.
 
 Processing the input from left to right:
@@ -5977,7 +5977,7 @@ Processing the input from left to right:
 
 At the end of the input, the stack contains one remaining `{`, which means we need to close it with a corresponding `}`.
 
-Final Answer: }",},True,1
+Final Answer: }",},True,1,
 234,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { ( [ ] ) { ( )",} } },"Looking at the sequence character by character (ignoring spaces), I need to track which brackets are still open:
 
 1. `{` → opens curly brace (stack: `{`)
@@ -5992,7 +5992,7 @@ Final Answer: }",},True,1
 
 At the end, I have three open curly braces remaining in the stack. To close them properly in LIFO (last-in-first-out) order, I need three closing curly braces: `}`, `}`, `}`.
 
-Final Answer: } } } (or }}})",} } } (or }}}),True,0
+Final Answer: } } } (or }}})",} } } (or }}}),True,0,
 235,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < { [ { } < ( { ( < < < { [ ( [ ( [ { { < [ { } < ( ) > ] > } } ] ) ] ) ] } > < > > ( ( < { } > ) ) > ) } ) > ] } > )",>,"To determine what is needed to close the sequence, I simulated a stack that tracks opening brackets. When a closing bracket is encountered, it must match the most recent unmatched opening bracket; otherwise it is pushed onto the stack.
 
 Parsing the input from left to right:
@@ -6008,7 +6008,7 @@ Stack bottom → top: [ '<' ]
 
 All other opening brackets have been matched by closing ones. Therefore, the only missing piece is a closing angle bracket to match the initial `<`.
 
-**Final Answer: >**",>**,True,0
+**Final Answer: >**",>,True,1,
 236,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ < > ] ( ( ( ( { { } } ) ) )",) } >,"Looking at the sequence, I need to track which opening brackets are still open using a stack approach (Last-In-First-Out):
 
 **Step-by-step analysis:**
@@ -6039,7 +6039,7 @@ To close properly, I must close in reverse order (last opened, first closed):
 
 **Verification:** `< { [ < > ] ( ( ( ( { { } } ) ) ) ) } >` ✓
 
-Final Answer: `)}>`",)}>,True,0
+Final Answer: `)}>`",)}>,True,0,
 237,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < [ [ ] ( ) { < > ( [ { } { < > } { } ] ) } [ [ [ ( [ ( ) [ [ { < [ { { } } < { { < ( ) > } } > ] > } ] ] ] ) ] < < [ [ ( < < ( ) > > ) ] ] > > [ ] ] ] ] < ( [ ] ) > { ( ( < { } > ) ) } > >",],"To determine the missing closing brackets, I traced the stack of open brackets through the entire sequence:
 
 1.  The first bracket is `[` (index 0) and it is never closed by any `]` in the input.
@@ -6049,7 +6049,7 @@ Final Answer: `)}>`",)}>,True,0
 
 After processing the final `>` characters, the only remaining open bracket is the very first `[` from index 0. Therefore, we need to add one closing square bracket `]` to complete the sequence.
 
-Final Answer: ]",],True,1
+Final Answer: ]",],True,1,
 238,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ < > ]",} >,"To solve this, I'll track the opening brackets using a stack (Last-In-First-Out) and match them with closing brackets:
 
 **Step-by-step processing:**
@@ -6067,7 +6067,7 @@ Final Answer: ]",],True,1
 **Verification of complete sequence:** `< { [ < > ] } >`
 - All opening brackets are properly matched and closed in the correct nested order.
 
-Final Answer: `}>`",}>,True,0
+Final Answer: `}>`",}>,True,0,
 239,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { ( ( < ( ( ) ) > ) ) } ]",>,"Looking at the sequence `< [ { ( ( < ( ( ) ) > ) ) } ]`, I need to track which opening brackets still need to be closed.
 
 Let me trace through the stack:
@@ -6092,7 +6092,7 @@ At the end of the input, the stack contains only the very first `<` (from step 1
 
 To complete the sequence, I need to close this remaining `<` with `>`.
 
-Final Answer: >",>,True,1
+Final Answer: >",>,True,1,
 240,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ) < > > { < > } { ( ) ( < ( ) > ) } < < { [ ] }",> >,"To solve this, I'll track the opening brackets using a stack and ensure each closing bracket matches the most recent unmatched opening bracket.
 
 **Step-by-step trace:**
@@ -6130,7 +6130,7 @@ Final Answer: >",>,True,1
 
 These need to be closed in reverse order (last-in, first-out), requiring two closing angle brackets: `>>`
 
-Final Answer: >>",>>,True,0
+Final Answer: >>",>>,True,0,
 241,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ { } ] ( ( )",),"To determine what is needed to complete the sequence, I track the opening and closing brackets using a stack:
 
 1. `[` → opened
@@ -6147,7 +6147,7 @@ After processing the entire input, one `(` remains open (the one from step 7). T
 
 The completed sequence is: `[ ] [ { } ] ( ( ) )`
 
-Final Answer: )",),True,1
+Final Answer: )",),True,1,
 242,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < { < > } > { (",) },"To solve this, I'll track the opening brackets using a stack (LIFO - Last In First Out) approach:
 
 1. `[` → push to stack
@@ -6167,7 +6167,7 @@ To close properly, I must close in reverse order of opening:
 - First close `(` with `)`
 - Then close `{` with `}`
 
-Final Answer: )}",)},True,0
+Final Answer: )}",)},True,0,
 243,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > < { { { [ ( ) ] } } } > ( { [ { ( [ ] { } ) } ]",} ),"To solve this, I'll track the opening brackets using a stack and identify what remains unclosed at the end.
 
 Processing the sequence:
@@ -6204,7 +6204,7 @@ The remaining unclosed brackets are `{` (opened at step 16) and `(` (opened at s
 
 Therefore, we need: `}` then `)`
 
-Final Answer: `})`",}),True,0
+Final Answer: `})`",}),True,0,
 244,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( <",> ) },"The input sequence contains three opening brackets: `{`, `(`, and `<`.
 
 To properly close nested brackets, we must follow the **LIFO** (Last-In-First-Out) principle:
@@ -6214,7 +6214,7 @@ To properly close nested brackets, we must follow the **LIFO** (Last-In-First-Ou
 
 Therefore, the closing sequence is `> ) }`.
 
-Final Answer: { ( < > ) }",{ ( < > ) },True,1
+Final Answer: { ( < > ) }",{ ( < > ) },True,1,
 245,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { { { < ( < ( [ < < > > ] < > ) > ) > } [ ] }",} ) },"Reasoning:
 
 I processed the sequence using a stack to track unclosed opening brackets:
@@ -6248,7 +6248,7 @@ To close the sequence properly, I must close these in reverse order (LIFO):
 
 Thus, the required closing sequence is `})}`.
 
-Final Answer: `})}`",})},True,0
+Final Answer: `})}`",})},True,0,
 246,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] )",} },"**Reasoning**
 
 I processed the input from left to right, using a stack to keep track of the opening brackets that have not yet been closed.
@@ -6313,7 +6313,7 @@ Appending the two missing closing braces gives:
 { < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] ) } }
 ```
 
-Final Answer: `{ < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] ) } }`",{ < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] ) } },True,1
+Final Answer: `{ < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] ) } }`",{ < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] ) } },True,1,
 247,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < < < ( ( ) ) ( [ ] ) > > { [ ] }",> ) ),"To solve this, I track the opening brackets using a stack and identify what remains unclosed:
 
 **Parsing the sequence:**
@@ -6338,7 +6338,7 @@ Appending `>))` gives: `( ( < < < ( ( ) ) ( [ ] ) > > { [ ] } > ) )`
 - All `(` are matched  
 - All other brackets were already closed in the original sequence
 
-Final Answer: `>))`",>)),True,0
+Final Answer: `>))`",>)),True,0,
 248,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { { } }",> ],"Reasoning:
 I need to track the open brackets using a stack (LIFO - Last In, First Out) structure:
 
@@ -6355,8 +6355,8 @@ The remaining open brackets are `<` (opened second) and `[` (opened first). To c
 
 Therefore, the sequence needs `>]` to be properly closed.
 
-Final Answer: `>]`",>],True,0
+Final Answer: `>]`",>],True,0,
 249,"Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < > >",>,"Reasoning:
 The input sequence contains three opening brackets `<` and two closing brackets `>`. For the brackets to be properly closed and balanced, every opening bracket must have a corresponding closing bracket. Since there is one extra opening bracket, we need to add one closing bracket `>` at the end to properly close the outermost opening bracket.
 
-Final Answer: `< < < > > >`",< < < > > >,True,1
+Final Answer: `< < < > > >`",< < < > > >,True,1,

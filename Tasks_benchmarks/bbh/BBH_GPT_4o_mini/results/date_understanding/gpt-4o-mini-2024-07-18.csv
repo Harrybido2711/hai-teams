@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,"Today is Christmas Eve of 1937. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 12/11/1937
@@ -21,7 +21,7 @@ Now, let's look at the options provided:
 
 The only option that matches the date of December 25, 1937, is (B).
 
-Final Answer: 12/25/1937",12/25/1937,True,1
+Final Answer: 12/25/1937",12/25/1937,True,1,
 1,"In the UK, people usually put the day before the month when formatting the date. Therefore, today is 02/01/1987 to them. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 12/02/1986
@@ -57,7 +57,7 @@ Now, let's check the options provided:
 
 The only correct option is (A) 12/02/1986.
 
-Final Answer: A",A,True,1
+Final Answer: A",A,True,1,
 2,"Jane and John married on Jan 2, 1958. It is their 5-year anniversary today. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 01/16/1961
@@ -90,7 +90,7 @@ Now, we need to find this date in the options provided:
 
 The correct option that matches January 9, 1963, is (C) 01/09/1963.
 
-Final Answer: 01/09/1963",01/09/1963,True,0
+Final Answer: 01/09/1963",01/09/1963,True,0,
 3,"Jane scheduled 3 apointments with 5 poeple for tomorrow (Tue, 7/9/1972). What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 07/09/1972
@@ -115,7 +115,7 @@ Now, we need to check the options provided to see which one matches 7/1/1972:
 
 The only option that matches the date one week ago from today is (E) 07/01/1972.
 
-Final Answer: 07/01/1972",07/01/1972,True,1
+Final Answer: 07/01/1972",07/01/1972,True,1,
 4,"Today's meeting is rescheduled to 11 am tomorrow, 10/16/1924. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 10/22/1944
@@ -144,7 +144,7 @@ None of the options match 10/23/1924. However, we can see that option (D) is 10/
 
 Since none of the options match exactly, it seems there might be a misunderstanding in the question or the options provided. However, based on the calculation, the date one week from 10/16/1924 is indeed 10/23/1924.
 
-Final Answer: None of the options match the calculated date of 10/23/1924.",None of the options match the calculated date of 10/23/1924.,True,0
+Final Answer: None of the options match the calculated date of 10/23/1924.",None of the options match the calculated date of 10/23/1924.,True,0,
 5,"Jane visits the bookstore on the 16th of each month starting from the October of 2009. It is her 5th visit to the bookstore today. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 08/16/2009
@@ -177,7 +177,7 @@ Now, we check the options provided to find the correct date:
 
 The only option that matches February 16, 2009 is (B).
 
-Final Answer: 02/16/2009",02/16/2009,True,1
+Final Answer: 02/16/2009",02/16/2009,True,1,
 6,"On May 9th, 2017 Jane bought 40 eggs. She ate one per day. Today she ran out of eggs. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 06/19/2017
@@ -202,7 +202,7 @@ So, Jane ran out of eggs on June 19th, 2017. The question asks for the date 24 h
 
 Thus, the final answer is:
 
-Final Answer: 06/20/2017",06/20/2017,True,0
+Final Answer: 06/20/2017",06/20/2017,True,0,
 7,"Tomorrow is 11/12/2019. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 11/10/2076
@@ -228,7 +228,7 @@ Looking at the options:
 
 The only option that matches the date we calculated (11/11/2019) is option (E).
 
-Final Answer: E",E,True,0
+Final Answer: E",E,True,0,
 8,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. Jane is correct. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 06/17/2063
@@ -251,7 +251,7 @@ Now, let's look at the options provided:
 
 The only option that matches the date of yesterday, which is 6/17/2019, is option (D).
 
-Final Answer: 06/17/2019",06/17/2019,True,1
+Final Answer: 06/17/2019",06/17/2019,True,1,
 9,"The first day of 2019 is a Tuesday, and today is the first Monday of 2019. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 01/08/2018
@@ -276,7 +276,7 @@ Now, we can check the options provided to see which one corresponds to January 7
 
 The correct option that matches January 7, 2018 is (B) 01/07/2018.
 
-Final Answer: 01/07/2018",01/07/2018,True,1
+Final Answer: 01/07/2018",01/07/2018,True,1,
 10,"Yesterday was 12/31/1929. Today could not be 12/32/1929 because December has only 31 days. What is the date today in MM/DD/YYYY?
 Options:
 (A) 01/08/1930
@@ -299,7 +299,7 @@ Now, let's analyze the options provided:
 
 The only option that correctly represents the day after 12/31/1929 is (C) 01/01/1930.
 
-Final Answer: 01/01/1930",01/01/1930,True,1
+Final Answer: 01/01/1930",01/01/1930,True,1,
 11,"Today is Apr 10, 1985. Jane's appointment will be 3 days later. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 05/13/1985
@@ -322,7 +322,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculated date of April 3, 1985 is (B).
 
-Final Answer: 04/03/1985",04/03/1985,True,1
+Final Answer: 04/03/1985",04/03/1985,True,1,
 12,"Jane quited her job on Mar 20, 2020. 176 days have passed since then. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 09/20/2019
@@ -361,7 +361,7 @@ Now we can check the options provided:
 
 The correct answer is (E) 09/12/2019.
 
-Final Answer: 09/12/2019",09/12/2019,True,1
+Final Answer: 09/12/2019",09/12/2019,True,1,
 13,"Today is the palindrome day of 2020, because the MMDDYYYY format of the date is the same backwards as forwards. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 01/01/2020
@@ -390,7 +390,7 @@ Now, let's check the options provided:
 
 The correct answer is (B) 01/02/2020.
 
-Final Answer: 01/02/2020",01/02/2020,True,1
+Final Answer: 01/02/2020",01/02/2020,True,1,
 14,"Tomorrow is 11/12/2019. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 08/21/2019
@@ -417,7 +417,7 @@ Now, we check the options provided:
 
 The only correct option is (B) 11/18/2019.
 
-Final Answer: 11/18/2019",11/18/2019,True,1
+Final Answer: 11/18/2019",11/18/2019,True,1,
 15,"Jane scheduled 3 apointments with 5 poeple for tomorrow (Tue, 7/9/1972). What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 07/09/1923
@@ -443,7 +443,7 @@ However, this specific date is not listed in the options provided. The closest o
 
 Since none of the options provided correspond to the correct date of tomorrow (07/10/1972), we conclude that the question may have an error in the options.
 
-Final Answer: 07/10/1972 (not listed in options)",07/10/1972 (not listed in options),True,0
+Final Answer: 07/10/1972 (not listed in options)",07/10/1972 (not listed in options),True,0,
 16,"May 6, 1992 is like yesterday to Jane, but that is actually ten years ago. What is the date today in MM/DD/YYYY?
 Options:
 (A) 05/06/2095
@@ -468,7 +468,7 @@ Now, we need to check the options provided to see which one matches this date:
 
 The only option that matches our calculated date of May 6, 2002, is option (E).
 
-Final Answer: 05/06/2002",05/06/2002,True,1
+Final Answer: 05/06/2002",05/06/2002,True,1,
 17,"Jane quited her job on Mar 20, 2020. 176 days have passed since then. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 09/13/2020
@@ -525,7 +525,7 @@ Now, we can check the options provided:
 
 The correct date is indeed September 13, 2020.
 
-Final Answer: 09/13/2020",09/13/2020,True,1
+Final Answer: 09/13/2020",09/13/2020,True,1,
 18,"Today is Sep 9, 1909. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 08/29/1909
@@ -551,7 +551,7 @@ Now, let's check the options provided:
 
 The correct date we calculated is August 30, 1909, which matches option (C).
 
-Final Answer: C",C,True,1
+Final Answer: C",C,True,1,
 19,"The current local time is 3:02 pm of 5/4/2004. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 06/14/2003
@@ -578,7 +578,7 @@ The options are:
 The correct option that matches our calculated date of 5/4/2003 is:
 (E) 05/04/2003
 
-Final Answer: E",E,True,1
+Final Answer: E",E,True,1,
 20,"Yesterday, Jan 21, 2011, Jane ate 2 pizzas and 5 wings. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 12/06/2010
@@ -601,7 +601,7 @@ Now, we need to check which option corresponds to January 15, 2011:
 
 The correct option is (B) 01/15/2011.
 
-Final Answer: 01/15/2011",01/15/2011,True,1
+Final Answer: 01/15/2011",01/15/2011,True,1,
 21,"Yesterday, Jan 21, 2011, Jane ate 2 pizzas and 5 wings. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 01/18/2011
@@ -641,7 +641,7 @@ However, if we consider the closest option to the calculated date, we can see th
 
 Since the question asks for the date 10 days ago, and the closest option is 01/12/2011, we can select that.
 
-Final Answer: 01/12/2011",01/12/2011,True,1
+Final Answer: 01/12/2011",01/12/2011,True,1,
 22,"Jane is celebrating the last day of Jan 2012. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 01/29/2012
@@ -662,7 +662,7 @@ Now, let's look at the options provided:
 
 The only option that correctly represents the date yesterday (January 30, 2012) is option (D).
 
-Final Answer: 01/30/2012",01/30/2012,True,1
+Final Answer: 01/30/2012",01/30/2012,True,1,
 23,"2015 is coming in 36 hours. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 12/22/2040
@@ -693,7 +693,7 @@ None of the options match 12/24/2014. However, we need to ensure we are looking 
 
 Since none of the options match, it seems there may be an error in the options provided. However, based on the calculation, the date one week ago from today (December 31, 2014) is December 24, 2014.
 
-Final Answer: 12/24/2014",12/24/2014,True,0
+Final Answer: 12/24/2014",12/24/2014,True,0,
 24,"In the UK, people usually put the day before the month when formatting the date. Therefore, today is 02/01/1987 to them. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 01/01/1987
@@ -718,7 +718,7 @@ Now, let's check the options provided:
 
 The only option that matches the date we calculated for yesterday is (A) 01/01/1987.
 
-Final Answer: A",A,True,1
+Final Answer: A",A,True,1,
 25,"Jane booked a flight for tomorrow, Jul 29, 2002. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 08/03/2002
@@ -749,7 +749,7 @@ None of the options match 08/05/2002. However, the closest option is (D) 08/04/2
 
 Since the question specifically asks for the date one week from today, and we have calculated it correctly as 08/05/2002, we conclude that none of the options are correct.
 
-Final Answer: 08/05/2002 (not listed in options)",08/05/2002 (not listed in options),True,0
+Final Answer: 08/05/2002 (not listed in options)",08/05/2002 (not listed in options),True,0,
 26,"The deadline is Jun 1, 2021, which is 2 days away from now. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 05/23/2020
@@ -774,7 +774,7 @@ Now, we can look at the options provided to find the correct date:
 
 The correct date, which is one week ago from today (May 30, 2021), is May 23, 2021.
 
-Final Answer: F",F,True,1
+Final Answer: F",F,True,1,
 27,"Jane quited her job on Mar 20, 2020. 176 days have passed since then. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 02/05/2021
@@ -819,7 +819,7 @@ None of the options match August 25, 2020.
 
 However, since the question asks for the date one week ago from today, and we have calculated that to be August 25, 2020, it seems there may be an error in the options provided.
 
-Final Answer: 08/25/2020 (not listed in options)",08/25/2020 (not listed in options),True,0
+Final Answer: 08/25/2020 (not listed in options)",08/25/2020 (not listed in options),True,0,
 28,"Yesterday was April 30, 2021. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 05/15/2021
@@ -844,7 +844,7 @@ Now, we can look at the options provided to find the correct date:
 
 The correct date one week ago from today is April 24, 2021.
 
-Final Answer: 04/24/2021",04/24/2021,True,1
+Final Answer: 04/24/2021",04/24/2021,True,1,
 29,"Jane visits the bookstore on the 16th of each month starting from the October of 2009. It is her 5th visit to the bookstore today. What is the date today in MM/DD/YYYY?
 Options:
 (A) 02/06/2010
@@ -872,7 +872,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculated date is (D) 02/16/2010.
 
-Final Answer: 02/16/2010",02/16/2010,True,1
+Final Answer: 02/16/2010",02/16/2010,True,1,
 30,"On May 9th, 2017 Jane bought 40 eggs. She ate one per day. Today she ran out of eggs. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 06/25/1964
@@ -907,7 +907,7 @@ Now we can look at the options provided:
 
 The correct date one week from today (June 18, 2017) is June 25, 2017.
 
-Final Answer: 06/25/2017",06/25/2017,True,1
+Final Answer: 06/25/2017",06/25/2017,True,1,
 31,"Jane scheduled 3 apointments with 5 poeple for tomorrow (Tue, 7/9/1972). What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 07/03/1972
@@ -943,7 +943,7 @@ After reviewing the options again, I see that none of them match June 30, 1972.
 
 Since the question asks for the date 10 days ago from July 9, 1972, and the options do not include the correct date, I will conclude that the answer is not present in the options.
 
-Final Answer: None of the options match.",None of the options match.,True,0
+Final Answer: None of the options match.",None of the options match.,True,0,
 32,"In the UK, people usually put the day before the month when formatting the date. Therefore, today is 02/01/1987 to them. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 12/06/1986
@@ -977,7 +977,7 @@ Now, let's check the options provided:
 
 The correct answer is (B) 01/03/1987.
 
-Final Answer: 01/03/1987",01/03/1987,True,1
+Final Answer: 01/03/1987",01/03/1987,True,1,
 33,"Today is the second day of the third month of 1966. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 02/26/1966
@@ -1000,7 +1000,7 @@ Now, let's check the options provided:
 
 Thus, the date one week ago from today is February 23, 1966.
 
-Final Answer: 02/23/1966",02/23/1966,True,1
+Final Answer: 02/23/1966",02/23/1966,True,1,
 34,"The first day of 2019 is a Tuesday, and today is the first Monday of 2019. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 01/08/1960
@@ -1025,7 +1025,7 @@ Now, we can look at the options provided:
 
 The correct date we calculated is January 8, 2019, which corresponds to option (D).
 
-Final Answer: 01/08/2019",01/08/2019,True,1
+Final Answer: 01/08/2019",01/08/2019,True,1,
 35,"This is the last day of 1899. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 02/07/1900
@@ -1058,7 +1058,7 @@ Now, we can check the options provided:
 
 The correct option that matches our calculated date is (D) 01/07/1900.
 
-Final Answer: 01/07/1900",01/07/1900,True,1
+Final Answer: 01/07/1900",01/07/1900,True,1,
 36,"Jane quited her job on Mar 20, 2020. 176 days have passed since then. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 09/19/2020
@@ -1089,7 +1089,7 @@ Now, we need to find the date 24 hours later, which is still September 1, 2020.
 
 Thus, the final date is:
 
-Final Answer: 09/01/2020",09/01/2020,True,0
+Final Answer: 09/01/2020",09/01/2020,True,0,
 37,"In the UK, people usually put the day before the month when formatting the date. Therefore, today is 02/01/1987 to them. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 01/09/1986
@@ -1114,7 +1114,7 @@ Now, we can check the options provided to see which one matches our calculated d
 
 The correct option that matches our calculated date of January 2, 1986, is (B) 01/02/1986.
 
-Final Answer: 01/02/1986",01/02/1986,True,1
+Final Answer: 01/02/1986",01/02/1986,True,1,
 38,"Yesterday was 12/31/1929. Today could not be 12/32/1929 because December has only 31 days. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 04/01/1930
@@ -1143,7 +1143,7 @@ None of the options provided match 11/30/1929. However, if we consider the quest
 
 Since none of the options are correct, we conclude that the question may have an error in the options provided.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 39,"It is 4/19/1969 today. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 04/26/1969
@@ -1168,7 +1168,7 @@ Now, let's check the options provided:
 
 The only correct option is (A) 04/26/1969.
 
-Final Answer: 04/26/1969",04/26/1969,True,1
+Final Answer: 04/26/1969",04/26/1969,True,1,
 40,"Jane was born on the last day of Feburary in 2001. Today is her 16-year-old birthday. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 03/25/2017
@@ -1195,7 +1195,7 @@ Looking at the options provided:
 
 The correct date for tomorrow, March 1, 2017, is option (B).
 
-Final Answer: 03/01/2017",03/01/2017,True,1
+Final Answer: 03/01/2017",03/01/2017,True,1,
 41,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. John is correct. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 06/19/2019
@@ -1220,7 +1220,7 @@ Now, let's check the options provided:
 
 The correct date one week from today is 06/26/2019.
 
-Final Answer: 06/26/2019",06/26/2019,True,1
+Final Answer: 06/26/2019",06/26/2019,True,1,
 42,"May 6, 1992 is like yesterday to Jane, but that is actually ten years ago. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 04/16/2002
@@ -1246,7 +1246,7 @@ Now, we can check the options provided:
 
 The correct date we calculated is May 7, 2002, which corresponds to option (E).
 
-Final Answer: 05/07/2002",05/07/2002,True,1
+Final Answer: 05/07/2002",05/07/2002,True,1,
 43,"Jane quited her job on Mar 20, 2020. 176 days have passed since then. What is the date today in MM/DD/YYYY?
 Options:
 (A) 09/12/2020
@@ -1298,7 +1298,7 @@ September 1 + 12 days = September 12.
 
 Therefore, the date today is September 12, 2020.
 
-Final Answer: 09/12/2020",09/12/2020,True,1
+Final Answer: 09/12/2020",09/12/2020,True,1,
 44,"Today, 8/3/1997, is a day that we will never forget. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 10/07/1996
@@ -1324,7 +1324,7 @@ Looking at the options:
 
 The correct answer is option (D) 08/03/1996.
 
-Final Answer: 08/03/1996",08/03/1996,True,1
+Final Answer: 08/03/1996",08/03/1996,True,1,
 45,"The concert was scheduled to be on 06/01/1943, but was delayed by one day to today. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 05/27/1943
@@ -1351,7 +1351,7 @@ Now, let's check the options provided:
 
 The only option that matches the date we calculated (yesterday) is (F) 06/01/1943.
 
-Final Answer: 06/01/1943",06/01/1943,True,1
+Final Answer: 06/01/1943",06/01/1943,True,1,
 46,"Jane was born on the last day of Feburary in 2001. Today is her 16-year-old birthday. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 05/04/2017
@@ -1376,7 +1376,7 @@ Now we can express this date in the MM/DD/YYYY format:
 Looking at the options provided, the correct answer is:
 (C) 03/01/2017.
 
-Final Answer: 03/01/2017",03/01/2017,True,1
+Final Answer: 03/01/2017",03/01/2017,True,1,
 47,"Jane and John married on Jan 2, 1958. Today is their golden wedding anniversary. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 03/29/2008
@@ -1408,7 +1408,7 @@ Now we can check the options provided:
 
 The date we calculated, December 23, 2007, matches option (E).
 
-Final Answer: 12/23/2007",12/23/2007,True,1
+Final Answer: 12/23/2007",12/23/2007,True,1,
 48,"Today is the palindrome day of 2020, because the MMDDYYYY format of the date is the same backwards as forwards. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 01/03/2020
@@ -1433,7 +1433,7 @@ Now, let's check the options provided to see if 02/03/2020 is listed:
 
 The correct date tomorrow, 02/03/2020, matches option (F).
 
-Final Answer: 02/03/2020",02/03/2020,True,1
+Final Answer: 02/03/2020",02/03/2020,True,1,
 49,"Jane and John married on Jan 2, 1958. Today is their golden wedding anniversary. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 12/31/2007
@@ -1461,7 +1461,7 @@ Looking at the options provided, the correct answer is:
 
 (B) 01/01/2008
 
-Final Answer: 01/01/2008",01/01/2008,True,1
+Final Answer: 01/01/2008",01/01/2008,True,1,
 50,"Jane scheduled 3 apointments with 5 poeple for tomorrow (Tue, 7/9/1972). What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 06/08/2059
@@ -1493,7 +1493,7 @@ Since the question asks for the date a month ago, and we calculated it to be Jun
 
 However, if we are to select the closest date, we would choose June 8, 1972 (option E).
 
-Final Answer: 06/08/1972",06/08/1972,True,1
+Final Answer: 06/08/1972",06/08/1972,True,1,
 51,"Today is 9/7. Jane is watching NFL 2003. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 09/08/1916
@@ -1514,7 +1514,7 @@ Now, let's look at the options provided:
 
 The only option that matches the date tomorrow is (D) 09/08/2003.
 
-Final Answer: 09/08/2003",09/08/2003,True,1
+Final Answer: 09/08/2003",09/08/2003,True,1,
 52,"Jane got her job in 2016. Today is her 3-year work anniversary. She still remember that on Dec 2, her second day at work, she spilled coffee on her laptop. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 08/02/2020
@@ -1541,7 +1541,7 @@ Now, we can look at the options provided to find the correct date:
 
 The correct date for tomorrow, December 2, 2019, is option (D).
 
-Final Answer: 12/02/2019",12/02/2019,True,1
+Final Answer: 12/02/2019",12/02/2019,True,1,
 53,"Yesterday was April 30, 2021. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 05/15/2020
@@ -1562,7 +1562,7 @@ Now, let's look at the options provided:
 
 The correct date, May 1, 2020, corresponds to option (B).
 
-Final Answer: 05/01/2020",05/01/2020,True,1
+Final Answer: 05/01/2020",05/01/2020,True,1,
 54,"Today is Christmas Eve of 1937. What is the date today in MM/DD/YYYY?
 Options:
 (A) 12/24/1937
@@ -1591,7 +1591,7 @@ Now, let's check the options provided:
 
 The only option that matches our reasoning is (A) 12/24/1937.
 
-Final Answer: 12/24/1937",12/24/1937,True,1
+Final Answer: 12/24/1937",12/24/1937,True,1,
 55,"The first day of 2019 is a Tuesday, and today is the first Monday of 2019. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 01/06/1960
@@ -1616,7 +1616,7 @@ Now we can look at the options provided:
 
 The correct date for yesterday, which is January 6, 2019, corresponds to option (C).
 
-Final Answer: 01/06/2019",01/06/2019,True,1
+Final Answer: 01/06/2019",01/06/2019,True,1,
 56,"This is the last day of 1899. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 01/01/1900
@@ -1637,7 +1637,7 @@ Now, let's look at the options provided:
 
 The only option that correctly represents the date of tomorrow after December 31, 1899, is option (A).
 
-Final Answer: 01/01/1900",01/01/1900,True,1
+Final Answer: 01/01/1900",01/01/1900,True,1,
 57,"Jane was born on the last day of Feburary in 2000. Today is her 16-year-old birthday. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 02/28/2015
@@ -1661,7 +1661,7 @@ Now, let's look at the options provided:
 
 The correct date one year ago from today (February 29, 2016) is indeed February 28, 2015.
 
-Final Answer: 02/28/2015",02/28/2015,True,1
+Final Answer: 02/28/2015",02/28/2015,True,1,
 58,"Jane thought today is 3/11/2002, but today is in fact Mar 12, which is 1 day later. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 03/16/2002
@@ -1684,7 +1684,7 @@ Now, let's check the options provided:
 
 The correct date 10 days ago from March 12, 2002, is March 2, 2002.
 
-Final Answer: 03/02/2002",03/02/2002,True,1
+Final Answer: 03/02/2002",03/02/2002,True,1,
 59,"Today is Christmas Eve of 1937. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 12/24/1862
@@ -1707,7 +1707,7 @@ Now, let's look at the options provided:
 
 The only option that matches our calculation of December 24, 1936, is option (D).
 
-Final Answer: 12/24/1936",12/24/1936,True,1
+Final Answer: 12/24/1936",12/24/1936,True,1,
 60,"It is 4/19/1969 today. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 06/21/1969
@@ -1736,7 +1736,7 @@ The options are:
 The correct option that matches our calculated date is:
 (E) 04/20/1969
 
-Final Answer: 04/20/1969",04/20/1969,True,1
+Final Answer: 04/20/1969",04/20/1969,True,1,
 61,"The day before yesterday was 11/23/1933. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 11/25/1933
@@ -1763,7 +1763,7 @@ Now, we can look at the options provided to find the correct date:
 
 The correct date, which is 24 hours after today (11/25/1933), is 11/26/1933.
 
-Final Answer: 11/26/1933",11/26/1933,True,1
+Final Answer: 11/26/1933",11/26/1933,True,1,
 62,"The day before yesterday was 11/23/1933. What is the date today in MM/DD/YYYY?
 Options:
 (A) 08/29/1933
@@ -1787,7 +1787,7 @@ Now, we can check the options provided to see which one matches our calculated d
 
 The only option that matches our calculated date of 11/25/1933 is option (D).
 
-Final Answer: 11/25/1933",11/25/1933,True,1
+Final Answer: 11/25/1933",11/25/1933,True,1,
 63,"Jane booked a flight for tomorrow, Jul 29, 2002. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 07/29/2001
@@ -1820,7 +1820,7 @@ Now, let's check the options provided:
 
 The correct answer is option (C).
 
-Final Answer: 07/30/2002",07/30/2002,True,0
+Final Answer: 07/30/2002",07/30/2002,True,0,
 64,"Jane was born on the last day of Feburary in 2000. Today is her 16-year-old birthday. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 03/02/2016
@@ -1843,7 +1843,7 @@ Now, let's look at the options provided:
 
 The correct date for tomorrow, March 1, 2016, is option (D).
 
-Final Answer: 03/01/2016",03/01/2016,True,1
+Final Answer: 03/01/2016",03/01/2016,True,1,
 65,"It is 4/19/1969 today. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 03/28/1969
@@ -1867,7 +1867,7 @@ Now, let's check the options provided:
 
 The date we calculated, 04/12/1969, matches option (B).
 
-Final Answer: 04/12/1969",04/12/1969,True,1
+Final Answer: 04/12/1969",04/12/1969,True,1,
 66,"Today is 3/5, and it is Jane's second time in the year 1973 to see a meteor shower. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 02/05/1973
@@ -1895,7 +1895,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculated date is (A) 02/05/1973.
 
-Final Answer: 02/05/1973",02/05/1973,True,1
+Final Answer: 02/05/1973",02/05/1973,True,1,
 67,"It was Sept. 1st, 2021 a week ago. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 09/02/2021
@@ -1918,7 +1918,7 @@ Now, let's look at the options provided:
 
 The only correct option is (C) 09/01/2021.
 
-Final Answer: 09/01/2021",09/01/2021,True,1
+Final Answer: 09/01/2021",09/01/2021,True,1,
 68,"The deadline is Jun 1, 2021, which is 2 days away from now. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 04/29/2021
@@ -1956,7 +1956,7 @@ None of the options match May 22, 2021. However, the closest date in the options
 
 Since the question asks for the date 10 days ago from June 1, 2021, and the options do not include May 22, 2021, we can conclude that the answer is not directly available in the options.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 69,"Jane was born on the last day of Feburary in 2001. Today is her 16-year-old birthday. What is the date today in MM/DD/YYYY?
 Options:
 (A) 08/28/2017
@@ -1976,7 +1976,7 @@ Now, we need to find the date today, which is her 16th birthday. The date is:
 
 Looking at the options provided, the correct date matches option (F).
 
-Final Answer: 02/28/2017",02/28/2017,True,1
+Final Answer: 02/28/2017",02/28/2017,True,1,
 70,"Today, 8/3/1997, is a day that we will never forget. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 08/04/1997
@@ -1999,7 +1999,7 @@ Now, let's look at the options provided:
 
 The correct date, 8/4/1997, matches option (A).
 
-Final Answer: A",A,True,1
+Final Answer: A",A,True,1,
 71,"May 6, 1992 is like yesterday to Jane, but that is actually ten years ago. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 05/26/2002
@@ -2030,7 +2030,7 @@ Options:
 
 Thus, the date yesterday in MM/DD/YYYY format is:
 
-Final Answer: 05/05/2002",05/05/2002,True,1
+Final Answer: 05/05/2002",05/05/2002,True,1,
 72,"In the US, Thanksgiving is on the fourth Thursday of November. Today is the US Thanksgiving of 2001. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 11/22/2001
@@ -2057,7 +2057,7 @@ None of the options provided match the date we calculated (10/22/2001). However,
 
 Since the question asks for the date a month ago from Thanksgiving in 2001, the correct answer should be 10/22/2001, but since that option is not available, we cannot select any of the provided options as correct.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 73,"Jane is celebrating the last day of Jan 2012. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 03/16/2012
@@ -2088,7 +2088,7 @@ Now, let's check the options:
 
 The correct answer is option (F) 02/07/2012.
 
-Final Answer: 02/07/2012",02/07/2012,True,0
+Final Answer: 02/07/2012",02/07/2012,True,0,
 74,"Today is 9/7. Jane is watching NFL 2003. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 12/07/2002
@@ -2123,7 +2123,7 @@ However, if we consider the options given, the closest match to the date one yea
 (C) 09/07/2002, which is the only option that has the same month and day.
 
 Thus, the answer to the question, based on the options provided, is:
-Final Answer: (C) 09/07/2002",(C) 09/07/2002,True,1
+Final Answer: (C) 09/07/2002",(C) 09/07/2002,True,1,
 75,"Today is the last day of the first quarter of 2008. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 04/15/2008
@@ -2154,7 +2154,7 @@ Now, we can check the options provided:
 
 The correct date, April 7, 2008, matches option (E).
 
-Final Answer: 04/07/2008",04/07/2008,True,1
+Final Answer: 04/07/2008",04/07/2008,True,1,
 76,"Jane got her job in 2016. Today is her 3-year work anniversary. She still remember that on Dec 2, her second day at work, she spilled coffee on her laptop. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 11/01/2019
@@ -2181,7 +2181,7 @@ Now, we can check the options provided to see which one matches November 1, 2019
 
 The only option that matches November 1, 2019, is (A) 11/01/2019.
 
-Final Answer: 11/01/2019",11/01/2019,True,1
+Final Answer: 11/01/2019",11/01/2019,True,1,
 77,"Jane booked a flight for tomorrow, Jul 29, 2002. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 06/27/2002
@@ -2211,7 +2211,7 @@ None of the options provided match June 29, 2002. However, the closest date in J
 
 Since the question asks for the date a month ago, and the closest option is June 28, 2002, we will select that.
 
-Final Answer: 06/28/2002",06/28/2002,True,1
+Final Answer: 06/28/2002",06/28/2002,True,1,
 78,"Jane is celebrating the last day of Jan 2012. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 01/31/2012
@@ -2239,7 +2239,7 @@ Looking at the options provided:
 
 The correct answer is (F) 02/01/2012.
 
-Final Answer: 02/01/2012",02/01/2012,True,1
+Final Answer: 02/01/2012",02/01/2012,True,1,
 79,"Jane booked a flight for tomorrow, Jul 29, 2002. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 07/27/2002
@@ -2267,7 +2267,7 @@ Now, let's check the options provided:
 
 The correct answer is option (B).
 
-Final Answer: 07/28/2002",07/28/2002,True,0
+Final Answer: 07/28/2002",07/28/2002,True,0,
 80,"In the US, Thanksgiving is on the fourth Thursday of November. Today is the US Thanksgiving of 2001. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 12/01/2002
@@ -2292,7 +2292,7 @@ Now, let's check the options provided:
 
 Thus, the date 24 hours after Thanksgiving in 2001 is November 23, 2002.
 
-Final Answer: 11/23/2002",11/23/2002,True,1
+Final Answer: 11/23/2002",11/23/2002,True,1,
 81,"Today is Sep 9, 1909. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 08/11/1909
@@ -2322,7 +2322,7 @@ Now, let's check the options provided:
 
 The correct option that matches our calculated date of 09/08/1909 is (E).
 
-Final Answer: E",E,True,1
+Final Answer: E",E,True,1,
 82,"Today is Sep 9, 1909. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 09/09/1920
@@ -2349,7 +2349,7 @@ Now, we need to check the options provided to see which one matches this date:
 
 The only option that matches the date one year ago from September 9, 1909, is option (B) 09/09/1908.
 
-Final Answer: 09/09/1908",09/09/1908,True,1
+Final Answer: 09/09/1908",09/09/1908,True,1,
 83,"On May 9th, 2017 Jane bought 40 eggs. She ate one per day. Today she ran out of eggs. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 07/18/2017
@@ -2379,7 +2379,7 @@ Now, we can check the options provided:
 
 The correct answer is (B) 06/17/2017.
 
-Final Answer: 06/17/2017",06/17/2017,True,1
+Final Answer: 06/17/2017",06/17/2017,True,1,
 84,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. John is correct. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 06/20/2019
@@ -2401,7 +2401,7 @@ Now, let's look at the options provided:
 
 The correct date, 6/20/2019, matches option (A).
 
-Final Answer: 06/20/2019",06/20/2019,True,1
+Final Answer: 06/20/2019",06/20/2019,True,1,
 85,"Yesterday, Jan 21, 2011, Jane ate 2 pizzas and 5 wings. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 01/30/2011
@@ -2424,7 +2424,7 @@ Now, we can look at the options provided:
 
 The correct date, January 29, 2011, corresponds to option (C).
 
-Final Answer: C",C,True,1
+Final Answer: C",C,True,1,
 86,"Today is Apr 10, 1985. Jane's appointment will be 3 days later. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 04/13/1985
@@ -2447,7 +2447,7 @@ Now, let's look at the options provided:
 
 The correct date for tomorrow, April 11, 1985, matches option (E).
 
-Final Answer: 04/11/1985",04/11/1985,True,1
+Final Answer: 04/11/1985",04/11/1985,True,1,
 87,"Today is 3/5, and it is Jane's second time in the year 1973 to see a meteor shower. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 03/06/1973
@@ -2474,7 +2474,7 @@ Now, we need to check the options provided to find the correct date:
 
 The only option that matches our calculated date of 3/6/1973 is option (A).
 
-Final Answer: 03/06/1973",03/06/1973,True,1
+Final Answer: 03/06/1973",03/06/1973,True,1,
 88,"On May 9th, 2017 Jane bought 40 eggs. She ate one per day. Today she ran out of eggs. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 08/05/2017
@@ -2495,7 +2495,7 @@ Counting 18 days into June:
 
 Since she ran out of eggs on June 18th, the date tomorrow would be June 19th, 2017.
 
-Final Answer: 06/19/2017",06/19/2017,True,1
+Final Answer: 06/19/2017",06/19/2017,True,1,
 89,"The concert was scheduled to be on 06/01/1943, but was delayed by one day to today. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 06/03/1943
@@ -2520,7 +2520,7 @@ Now, let's look at the options provided:
 
 The correct answer, which is tomorrow's date, is (A) 06/03/1943.
 
-Final Answer: 06/03/1943",06/03/1943,True,1
+Final Answer: 06/03/1943",06/03/1943,True,1,
 90,"Today is 9/7. Jane is watching NFL 2003. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 08/28/1959
@@ -2547,7 +2547,7 @@ Now, we can check the options provided:
 
 The correct answer is (C) 08/28/2003.
 
-Final Answer: 08/28/2003",08/28/2003,True,1
+Final Answer: 08/28/2003",08/28/2003,True,1,
 91,"Today is Apr 10, 1985. Jane's appointment will be 3 days later. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 03/10/1986
@@ -2578,7 +2578,7 @@ Now, let's check the options provided:
 The correct option that matches our calculated date of 04/10/1984 is:
 (D) 04/10/1984.
 
-Final Answer: 04/10/1984",04/10/1984,True,1
+Final Answer: 04/10/1984",04/10/1984,True,1,
 92,"Today is Sep 9, 1909. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 09/02/1832
@@ -2603,7 +2603,7 @@ Looking at the options:
 
 The correct date one week ago from September 9, 1909, is September 2, 1909.
 
-Final Answer: 09/02/1909",09/02/1909,True,1
+Final Answer: 09/02/1909",09/02/1909,True,1,
 93,"Today, 8/3/1997, is a day that we will never forget. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 03/27/1998
@@ -2626,7 +2626,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculated date of July 27, 1997, is option (C).
 
-Final Answer: 07/27/1997",07/27/1997,True,1
+Final Answer: 07/27/1997",07/27/1997,True,1,
 94,"Today is the second day of the third month of 1966. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 03/04/1966
@@ -2651,7 +2651,7 @@ Now, let's look at the options provided:
 
 The correct answer is (F) 03/03/1966.
 
-Final Answer: 03/03/1966",03/03/1966,True,1
+Final Answer: 03/03/1966",03/03/1966,True,1,
 95,"Today is 3/5, and it is Jane's second time in the year 1973 to see a meteor shower. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 03/05/1972
@@ -2674,7 +2674,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculation of one week ago from 3/5/1973 is (E) 02/26/1973.
 
-Final Answer: 02/26/1973",02/26/1973,True,1
+Final Answer: 02/26/1973",02/26/1973,True,1,
 96,"On May 9th, 2017 Jane bought 40 eggs. She ate one per day. Today she ran out of eggs. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 06/08/1933
@@ -2711,7 +2711,7 @@ Now we can check the options provided:
 
 The correct date, which is 10 days before June 18, 2017, is June 8, 2017.
 
-Final Answer: 06/08/2017",06/08/2017,True,1
+Final Answer: 06/08/2017",06/08/2017,True,1,
 97,"Tomorrow is 11/12/2019. What is the date today in MM/DD/YYYY?
 Options:
 (A) 11/12/2019
@@ -2734,7 +2734,7 @@ Now, let's look at the options provided:
 
 The only option that matches our calculation of today being 11/11/2019 is option (E).
 
-Final Answer: E",E,True,1
+Final Answer: E",E,True,1,
 98,"Jane was born on the last day of Feburary in 2001. Today is her 16-year-old birthday. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 02/28/2017
@@ -2763,7 +2763,7 @@ Now, let's check the options provided:
 
 The only correct option is (B) 02/18/2017.
 
-Final Answer: 02/18/2017",02/18/2017,True,1
+Final Answer: 02/18/2017",02/18/2017,True,1,
 99,"Yesterday was April 30, 2021. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 05/10/2021
@@ -2788,7 +2788,7 @@ Now, we need to find the date in the format MM/DD/YYYY from the options provided
 
 The date we calculated, May 8, 2021, corresponds to option (F).
 
-Final Answer: F",F,True,1
+Final Answer: F",F,True,1,
 100,"Jane was born on the last day of Feburary in 2001. Today is her 16-year-old birthday. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 03/08/2017
@@ -2814,7 +2814,7 @@ Now, we can look at the options provided:
 
 The correct date one week from today (March 7, 2017) is option (C) 03/07/2017.
 
-Final Answer: 03/07/2017",03/07/2017,True,1
+Final Answer: 03/07/2017",03/07/2017,True,1,
 101,"Jane thought today is 3/11/2002, but today is in fact Mar 12, which is 1 day later. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 03/14/2002
@@ -2843,7 +2843,7 @@ Now, let's check the options provided:
 
 The correct option is (D) 03/13/2002.
 
-Final Answer: 03/13/2002",03/13/2002,True,1
+Final Answer: 03/13/2002",03/13/2002,True,1,
 102,"In the US, Thanksgiving is on the fourth Thursday of November. Today is the US Thanksgiving of 2001. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 11/09/2002
@@ -2882,7 +2882,7 @@ Now, let's check the options:
 
 The correct option that matches our calculated date is (C) 11/23/2002.
 
-Final Answer: 11/23/2002",11/23/2002,True,1
+Final Answer: 11/23/2002",11/23/2002,True,1,
 103,"Jane and John married on Jan 2, 1958. Today is their golden wedding anniversary. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 12/26/2007
@@ -2911,7 +2911,7 @@ Now we can check the options provided to find the correct date:
 
 The only option that matches our calculated date of December 26, 2007 is option (A).
 
-Final Answer: 12/26/2007",12/26/2007,True,1
+Final Answer: 12/26/2007",12/26/2007,True,1,
 104,"Today is Apr 10, 1985. Jane's appointment will be 3 days later. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 04/13/1985
@@ -2937,7 +2937,7 @@ None of the options directly match April 1, 1985. However, since we are looking 
 
 Since the question asks for the date 10 days ago and none of the options are correct, we can conclude that the answer is not present in the options.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 105,"On May 9th, 2017 Jane bought 40 eggs. She ate one per day. Today she ran out of eggs. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 06/18/2030
@@ -2975,7 +2975,7 @@ Now we can check the options provided to find the correct date:
 
 The only option that matches June 18th, 2016 is (C).
 
-Final Answer: 06/18/2016",06/18/2016,True,1
+Final Answer: 06/18/2016",06/18/2016,True,1,
 106,"The first day of 2019 is a Tuesday, and today is the first Monday of 2019. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 01/13/2019
@@ -3002,7 +3002,7 @@ Now we can check the options provided:
 
 The correct date, January 14, 2019, corresponds to option (D).
 
-Final Answer: 01/14/2019",01/14/2019,True,1
+Final Answer: 01/14/2019",01/14/2019,True,1,
 107,"Today is Sep 9, 1909. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 09/16/1952
@@ -3027,7 +3027,7 @@ Next, we will check the options provided:
 
 The only option that matches our calculated date is (B) 09/16/1909.
 
-Final Answer: 09/16/1909",09/16/1909,True,1
+Final Answer: 09/16/1909",09/16/1909,True,1,
 108,"Today is 9/7. Jane is watching NFL 2003. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 08/14/2003
@@ -3050,7 +3050,7 @@ Now, let's look at the options provided:
 
 The only option that matches our calculation of one month ago is (F) 08/07/2003.
 
-Final Answer: 08/07/2003",08/07/2003,True,1
+Final Answer: 08/07/2003",08/07/2003,True,1,
 109,"The current local time is 3:02 pm of 5/4/2004. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 05/05/1915
@@ -3079,7 +3079,7 @@ Now, let's look at the options provided:
 
 The correct answer is (C) 05/05/2004.
 
-Final Answer: 05/05/2004",05/05/2004,True,1
+Final Answer: 05/05/2004",05/05/2004,True,1,
 110,"Today is the palindrome day of 2020, because the MMDDYYYY format of the date is the same backwards as forwards. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 01/22/2020
@@ -3104,7 +3104,7 @@ Now, we can check the options provided:
 
 The date we calculated, 01/23/2020, matches option (B).
 
-Final Answer: 01/23/2020",01/23/2020,True,1
+Final Answer: 01/23/2020",01/23/2020,True,1,
 111,"Today is Christmas Eve of 1937. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 08/17/1937
@@ -3129,7 +3129,7 @@ Now, we can check the options provided:
 
 The only option that matches our calculation is (D) 12/17/1937.
 
-Final Answer: 12/17/1937",12/17/1937,True,1
+Final Answer: 12/17/1937",12/17/1937,True,1,
 112,"The current local time is 3:02 pm of 5/4/2004. What is the date today in MM/DD/YYYY?
 Options:
 (A) 05/05/2004
@@ -3156,7 +3156,7 @@ Now, let's look at the options provided:
 
 The only option that matches the current date of 05/04/2004 is option (D).
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 113,"It was Sept. 1st, 2021 a week ago. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 09/07/2020
@@ -3179,7 +3179,7 @@ Next, we will check the options provided to see if any match September 8th, 2020
 
 The correct answer is option (F) 09/08/2020.
 
-Final Answer: 09/08/2020",09/08/2020,True,1
+Final Answer: 09/08/2020",09/08/2020,True,1,
 114,"Yesterday was April 30, 2021. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 04/01/2094
@@ -3207,7 +3207,7 @@ None of the options list March 30, 2021. However, the closest date in March is M
 
 Since we are looking for the date exactly one month ago, the correct answer is not present in the options. However, if we consider the last day of March, it is March 31, 2021.
 
-Final Answer: 03/31/2021",03/31/2021,True,0
+Final Answer: 03/31/2021",03/31/2021,True,0,
 115,"Today is 3/5, and it is Jane's second time in the year 1973 to see a meteor shower. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 03/08/1983
@@ -3233,7 +3233,7 @@ The only option that matches March 6, 1973 is:
 
 Thus, the date tomorrow in MM/DD/YYYY format is 03/06/1973.
 
-Final Answer: 03/06/1973",03/06/1973,True,1
+Final Answer: 03/06/1973",03/06/1973,True,1,
 116,"Jane booked a flight for tomorrow, Jul 29, 2002. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 07/24/2001
@@ -3258,7 +3258,7 @@ None of the options provided match July 29, 2001. However, the closest date to J
 
 Thus, the answer is:
 
-Final Answer: 07/28/2001",07/28/2001,True,1
+Final Answer: 07/28/2001",07/28/2001,True,1,
 117,"In the US, Thanksgiving is on the fourth Thursday of November. Today is the US Thanksgiving of 2001. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 09/12/2002
@@ -3296,7 +3296,7 @@ None of the options match 11/21/2001, but option (C) 11/21/2002 is the closest m
 
 However, since the question specifically asks for the date yesterday in 2001, the correct answer is not listed among the options. 
 
-Final Answer: 11/21/2001 (not listed in options)",11/21/2001 (not listed in options),True,0
+Final Answer: 11/21/2001 (not listed in options)",11/21/2001 (not listed in options),True,0,
 118,"Jane got her job in 2016. Today is her 3-year work anniversary. She still remember that on Dec 2, her second day at work, she spilled coffee on her laptop. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 02/29/2020
@@ -3326,7 +3326,7 @@ Looking at the options provided:
 
 The correct answer is (F) 11/30/2019, as that is the date yesterday.
 
-Final Answer: 11/30/2019",11/30/2019,True,1
+Final Answer: 11/30/2019",11/30/2019,True,1,
 119,"Today is 3/5, and it is Jane's second time in the year 1973 to see a meteor shower. What is the date today in MM/DD/YYYY?
 Options:
 (A) 04/05/1973
@@ -3351,7 +3351,7 @@ Now, let's check the options provided:
 
 The only option that matches our determined date of March 5, 1973, is option (E).
 
-Final Answer: 03/05/1973",03/05/1973,True,1
+Final Answer: 03/05/1973",03/05/1973,True,1,
 120,"Today's meeting is rescheduled to 11 am tomorrow, 10/16/1924. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 10/16/1924
@@ -3373,7 +3373,7 @@ Now, let's look at the options provided:
 
 The only option that correctly represents tomorrow's date is (C) 10/17/1924.
 
-Final Answer: 10/17/1924",10/17/1924,True,0
+Final Answer: 10/17/1924",10/17/1924,True,0,
 121,"Jane visits the bookstore on the 16th of each month starting from the October of 2009. It is her 5th visit to the bookstore today. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 02/22/2010
@@ -3410,7 +3410,7 @@ Now, we can check the options provided:
 
 The correct date one week from February 16, 2010, is February 23, 2010.
 
-Final Answer: 02/23/2010",02/23/2010,True,1
+Final Answer: 02/23/2010",02/23/2010,True,1,
 122,"Jane and John married on Jan 2, 1958. It is their 5-year anniversary today. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 01/01/2003
@@ -3443,7 +3443,7 @@ Now, we check the options provided:
 
 None of the options match 01/01/1963. However, since the question asks for the date yesterday in MM/DD/YYYY format, and we have calculated it correctly, we can conclude that the answer is not present in the options.
 
-Final Answer: 01/01/1963",01/01/1963,True,0
+Final Answer: 01/01/1963",01/01/1963,True,0,
 123,"Jane was born on the last day of Feburary in 2001. Today is her 16-year-old birthday. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 03/03/2017
@@ -3470,7 +3470,7 @@ Now, we can check the options provided:
 
 The correct date one week ago from her 16th birthday is February 21, 2017.
 
-Final Answer: 02/21/2017",02/21/2017,True,1
+Final Answer: 02/21/2017",02/21/2017,True,1,
 124,"Today is the first day of 2007. What is the date today in MM/DD/YYYY?
 Options:
 (A) 05/01/2007
@@ -3499,7 +3499,7 @@ Now, let's look at the options provided:
 
 The only option that matches the date of today, January 1, 2007, is option (B).
 
-Final Answer: 01/01/2007",01/01/2007,True,1
+Final Answer: 01/01/2007",01/01/2007,True,1,
 125,"It was Sept. 1st, 2021 a week ago. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 09/05/2021
@@ -3524,7 +3524,7 @@ None of the options provided correspond to August 1st, 2021. However, if we cons
 
 Since none of the options match August 1st, we can conclude that the question may have been misinterpreted or that the options do not include the correct answer.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 126,"Today is Apr 10, 1985. Jane's appointment will be 3 days later. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 03/10/1986
@@ -3547,7 +3547,7 @@ Now, let's check the options provided:
 
 The only option that matches the date of yesterday, April 9, 1985, is option (C).
 
-Final Answer: 04/09/1985",04/09/1985,True,1
+Final Answer: 04/09/1985",04/09/1985,True,1,
 127,"Today is the second day of the third month of 1966. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 02/01/1966
@@ -3568,7 +3568,7 @@ Now, let's check the options provided:
 
 The only option that matches the date one month ago is (C) 02/02/1966.
 
-Final Answer: 02/02/1966",02/02/1966,True,1
+Final Answer: 02/02/1966",02/02/1966,True,1,
 128,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. John is correct. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 02/18/2019
@@ -3593,7 +3593,7 @@ Now, we need to check the options provided to see which one matches 6/18/2019:
 
 The only option that matches the date of yesterday, which is 6/18/2019, is option (C).
 
-Final Answer: 06/18/2019",06/18/2019,True,1
+Final Answer: 06/18/2019",06/18/2019,True,1,
 129,"The deadline is Jun 1, 2021, which is 2 days away from now. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 05/31/1966
@@ -3616,7 +3616,7 @@ Now, let's check the options provided:
 
 Thus, the date 24 hours later from May 30, 2021, is May 31, 2021.
 
-Final Answer: 05/31/2021",05/31/2021,True,1
+Final Answer: 05/31/2021",05/31/2021,True,1,
 130,"Today, 8/3/1997, is a day that we will never forget. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 06/12/1997
@@ -3642,7 +3642,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculation of one month ago is (B) 07/03/1997.
 
-Final Answer: 07/03/1997",07/03/1997,True,1
+Final Answer: 07/03/1997",07/03/1997,True,1,
 131,"Today is the second day of the third month of 1966. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 12/09/1965
@@ -3673,7 +3673,7 @@ Now, let's check the options:
 
 The correct answer is option (E) 03/09/1966.
 
-Final Answer: 03/09/1966",03/09/1966,True,1
+Final Answer: 03/09/1966",03/09/1966,True,1,
 132,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. John is correct. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 06/12/2022
@@ -3698,7 +3698,7 @@ Now, we can check the options provided:
 
 The only option that matches our calculation of one week ago is (B) 06/12/2019.
 
-Final Answer: 06/12/2019",06/12/2019,True,1
+Final Answer: 06/12/2019",06/12/2019,True,1,
 133,"The day before yesterday was 11/23/1933. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 11/25/1933
@@ -3728,7 +3728,7 @@ Now, we can check the options provided to see which one matches our calculated d
 
 Thus, the date one week from today is 12/02/1933.
 
-Final Answer: 12/02/1933",12/02/1933,True,1
+Final Answer: 12/02/1933",12/02/1933,True,1,
 134,"Jane was born on the last day of Feburary in 2001. Today is her 16-year-old birthday. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 02/28/2015
@@ -3753,7 +3753,7 @@ Now, we need to check the options provided to see which one corresponds to Febru
 
 The only option that matches the date one year ago from today is (C) 02/28/2016.
 
-Final Answer: 02/28/2016",02/28/2016,True,1
+Final Answer: 02/28/2016",02/28/2016,True,1,
 135,"Jane was born on the last day of Feburary in 2000. Today is her 16-year-old birthday. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 02/21/2016
@@ -3777,7 +3777,7 @@ Looking at the options provided:
 
 The correct date for yesterday, February 28, 2016, is option (B).
 
-Final Answer: 02/28/2016",02/28/2016,True,1
+Final Answer: 02/28/2016",02/28/2016,True,1,
 136,"Jane and John married on Jan 2, 1958. Today is their golden wedding anniversary. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 01/06/2008
@@ -3803,7 +3803,7 @@ Looking at the options provided:
 
 The correct answer is (F) 01/03/2008.
 
-Final Answer: 01/03/2008",01/03/2008,True,1
+Final Answer: 01/03/2008",01/03/2008,True,1,
 137,"Today's meeting is rescheduled to 11 am tomorrow, 10/16/1924. What is the date today in MM/DD/YYYY?
 Options:
 (A) 10/15/1924
@@ -3824,7 +3824,7 @@ Now, let's check the options provided:
 
 The only option that matches our reasoning is (A) 10/15/1924.
 
-Final Answer: 10/15/1924",10/15/1924,True,1
+Final Answer: 10/15/1924",10/15/1924,True,1,
 138,"2015 is coming in 36 hours. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 03/07/2015
@@ -3855,7 +3855,7 @@ None of the options directly match November 30, 2014. However, the closest date 
 
 Since the question asks for the date a month ago from the time when ""2015 is coming in 36 hours,"" and we calculated that to be November 30, 2014, the best option available is (F) 11/29/2014.
 
-Final Answer: 11/29/2014",11/29/2014,True,1
+Final Answer: 11/29/2014",11/29/2014,True,1,
 139,"The deadline is Jun 1, 2021, which is 2 days away from now. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 05/09/2021
@@ -3880,7 +3880,7 @@ Now, let's check the options provided:
 
 The only option that matches May 1, 2021, is (B) 05/01/2021.
 
-Final Answer: 05/01/2021",05/01/2021,True,0
+Final Answer: 05/01/2021",05/01/2021,True,0,
 140,"Jane is celebrating the last day of Jan 2012. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 02/06/2012
@@ -3905,7 +3905,7 @@ Now, we can look at the options provided to find the correct date:
 
 The only option that matches our calculated date of January 24, 2012 is option (D).
 
-Final Answer: 01/24/2012",01/24/2012,True,1
+Final Answer: 01/24/2012",01/24/2012,True,1,
 141,"Jane is celebrating the last day of Jan 2012. What is the date today in MM/DD/YYYY?
 Options:
 (A) 01/31/2012
@@ -3929,7 +3929,7 @@ Now, let's review the options:
 
 The only option that correctly represents the last day of January 2012 is (A) 01/31/2012.
 
-Final Answer: 01/31/2012",01/31/2012,True,1
+Final Answer: 01/31/2012",01/31/2012,True,1,
 142,"It was Sept. 1st, 2021 a week ago. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 10/15/2020
@@ -3954,7 +3954,7 @@ Now we can look at the options provided:
 
 The correct date, September 15, 2021, corresponds to option (E).
 
-Final Answer: 09/15/2021",09/15/2021,True,1
+Final Answer: 09/15/2021",09/15/2021,True,1,
 143,"Yesterday was April 30, 2021. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 04/29/2021
@@ -3980,7 +3980,7 @@ Now, we need to check the options provided to find the correct date:
 
 The only option that matches tomorrow's date, May 2, 2021, is option (B).
 
-Final Answer: 05/02/2021",05/02/2021,True,1
+Final Answer: 05/02/2021",05/02/2021,True,1,
 144,"It is 4/19/1969 today. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 03/19/1969
@@ -4003,7 +4003,7 @@ Now, let's check the options provided:
 
 Thus, the date 10 days before April 19, 1969, is April 9, 1969.
 
-Final Answer: 04/09/1969",04/09/1969,True,1
+Final Answer: 04/09/1969",04/09/1969,True,1,
 145,"Jane and John married on Jan 2, 1958. It is their 5-year anniversary today. What is the date today in MM/DD/YYYY?
 Options:
 (A) 01/02/1894
@@ -4031,7 +4031,7 @@ None of the options provided match the correct date of January 2, 1963, which is
 
 Since the question asks for the date today in MM/DD/YYYY format, and none of the options are correct, we conclude that the correct date is not listed.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 146,"2015 is coming in 36 hours. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 01/30/2014
@@ -4055,7 +4055,7 @@ Looking at the options provided:
 
 The correct answer that corresponds to tomorrow's date, December 31, 2014, is option (D).
 
-Final Answer: D",D,True,0
+Final Answer: D",D,True,0,
 147,"The day before yesterday was 11/23/1933. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 10/25/1921
@@ -4086,7 +4086,7 @@ Now, we can check the options provided:
 
 The only option that matches our calculation is (C) 10/26/1933.
 
-Final Answer: 10/26/1933",10/26/1933,True,0
+Final Answer: 10/26/1933",10/26/1933,True,0,
 148,"Jane got her job in 2016. Today is her 3-year work anniversary. She still remember that on Dec 2, her second day at work, she spilled coffee on her laptop. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 11/23/2019
@@ -4117,7 +4117,7 @@ Now, we can check the options provided:
 
 The correct date one week ago from December 1, 2019, is November 24, 2019.
 
-Final Answer: D) 11/24/2019",D) 11/24/2019,True,1
+Final Answer: D) 11/24/2019",D) 11/24/2019,True,1,
 149,"This is the last day of 1899. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 12/11/1899
@@ -4153,7 +4153,7 @@ Now, we check the options provided:
 
 The correct answer is (D) 12/21/1899.
 
-Final Answer: 12/21/1899",12/21/1899,True,1
+Final Answer: 12/21/1899",12/21/1899,True,1,
 150,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. John is correct. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 06/19/2018
@@ -4178,7 +4178,7 @@ Now, we can check the options provided to see which one matches our calculated d
 
 The only option that matches the date one year ago from today is (A) 06/19/2018.
 
-Final Answer: 06/19/2018",06/19/2018,True,1
+Final Answer: 06/19/2018",06/19/2018,True,1,
 151,"Jane quited her job on Mar 20, 2020. 176 days have passed since then. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 09/11/2094
@@ -4228,7 +4228,7 @@ Now we can check the options provided:
 
 The correct answer is (B) 09/11/2020.
 
-Final Answer: 09/11/2020",09/11/2020,True,1
+Final Answer: 09/11/2020",09/11/2020,True,1,
 152,"Today is 9/7. Jane is watching NFL 2003. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 09/06/2003
@@ -4252,7 +4252,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculation is (A) 09/06/2003.
 
-Final Answer: 09/06/2003",09/06/2003,True,1
+Final Answer: 09/06/2003",09/06/2003,True,1,
 153,"Today is the last day of the first quarter of 2008. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 02/29/2008
@@ -4275,7 +4275,7 @@ Now, let's look at the options provided:
 
 The only option that matches our calculation is (A) 02/29/2008.
 
-Final Answer: 02/29/2008",02/29/2008,True,1
+Final Answer: 02/29/2008",02/29/2008,True,1,
 154,"Jane scheduled 3 apointments with 5 poeple for tomorrow (Tue, 7/9/1972). What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 06/24/1972
@@ -4300,7 +4300,7 @@ The options are:
 
 The correct option that matches our calculated date of 7/16/1972 is (B) 07/16/1972.
 
-Final Answer: 07/16/1972",07/16/1972,True,0
+Final Answer: 07/16/1972",07/16/1972,True,0,
 155,"Today is Apr 10, 1985. Jane's appointment will be 3 days later. What is the date today in MM/DD/YYYY?
 Options:
 (A) 04/12/1986
@@ -4327,7 +4327,7 @@ Looking at the options:
 
 The correct date for Jane's appointment, which is 3 days after April 10, 1985, is April 13, 1985.
 
-Final Answer: 04/13/1985",04/13/1985,True,0
+Final Answer: 04/13/1985",04/13/1985,True,0,
 156,"The current local time is 3:02 pm of 5/4/2004. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 04/27/2004
@@ -4353,7 +4353,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculation is (A) 04/27/2004.
 
-Final Answer: 04/27/2004",04/27/2004,True,1
+Final Answer: 04/27/2004",04/27/2004,True,1,
 157,"In the US, Thanksgiving is on the fourth Thursday of November. Today is the US Thanksgiving of 2001. What is the date today in MM/DD/YYYY?
 Options:
 (A) 01/16/2003
@@ -4391,7 +4391,7 @@ Now, we need to check the options provided to find the correct date:
 
 None of the options provided match the date of Thanksgiving in 2001, which is November 22, 2001. However, since the question asks for the date of Thanksgiving in 2001, we can conclude that the correct date is:
 
-Final Answer: 11/22/2001",11/22/2001,True,0
+Final Answer: 11/22/2001",11/22/2001,True,0,
 158,"Jane thought today is 3/11/2002, but today is in fact Mar 12, which is 1 day later. What is the date today in MM/DD/YYYY?
 Options:
 (A) 05/12/2001
@@ -4412,7 +4412,7 @@ Now, let's look at the options provided:
 
 The only option that matches the date we determined is (B) 03/12/2002.
 
-Final Answer: 03/12/2002",03/12/2002,True,1
+Final Answer: 03/12/2002",03/12/2002,True,1,
 159,"Yesterday was 12/31/1929. Today could not be 12/32/1929 because December has only 31 days. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 12/22/1929
@@ -4446,7 +4446,7 @@ None of the options match 12/21/1929. However, since the question asks for the d
 
 Since the question specifically asks for the date 10 days ago, the correct answer based on our calculation is 12/21/1929, which is not listed. However, if we were to select the closest option, it would be (A) 12/22/1929, but it is not the correct answer.
 
-Final Answer: 12/21/1929 (not listed in options)",12/21/1929 (not listed in options),True,0
+Final Answer: 12/21/1929 (not listed in options)",12/21/1929 (not listed in options),True,0,
 160,"Jane booked a flight for tomorrow, Jul 29, 2002. What is the date today in MM/DD/YYYY?
 Options:
 (A) 10/09/2002
@@ -4469,7 +4469,7 @@ Now, let's look at the options provided:
 
 The only option that matches our reasoning is (D) 07/28/2002.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 161,"Jane got her job in 2016. Today is her 3-year work anniversary. She still remember that on Dec 2, her second day at work, she spilled coffee on her laptop. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 11/21/2019
@@ -4497,7 +4497,7 @@ Now, we can check the options provided:
 
 The correct date, November 21, 2019, matches option (A).
 
-Final Answer: (A) 11/21/2019",(A) 11/21/2019,True,1
+Final Answer: (A) 11/21/2019",(A) 11/21/2019,True,1,
 162,"Today is Apr 10, 1985. Jane's appointment will be 3 days later. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 04/11/1985
@@ -4520,7 +4520,7 @@ Now, let's look at the options provided:
 
 The only option that matches our calculation of 24 hours later is (A) 04/11/1985.
 
-Final Answer: 04/11/1985",04/11/1985,True,1
+Final Answer: 04/11/1985",04/11/1985,True,1,
 163,"2015 is coming in 36 hours. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 01/09/2015
@@ -4553,7 +4553,7 @@ Now we can look at the options provided to find the correct date:
 
 The date we calculated, December 31, 2014, corresponds to option (F).
 
-Final Answer: 12/31/2014",12/31/2014,True,0
+Final Answer: 12/31/2014",12/31/2014,True,0,
 164,"2015 is coming in 36 hours. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 01/02/2015
@@ -4588,7 +4588,7 @@ Let's recalculate:
 
 Since none of the options match, I will check the closest date to December 21, 2014, which is December 20, 2014 (option F).
 
-Final Answer: 12/20/2014",12/20/2014,True,0
+Final Answer: 12/20/2014",12/20/2014,True,0,
 165,"Yesterday was 12/31/1929. Today could not be 12/32/1929 because December has only 31 days. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 01/02/1930
@@ -4617,7 +4617,7 @@ However, since the question specifically asks for the date 24 hours later from 1
 
 Since the question asks for the date 24 hours later and the closest option is January 2, 1930, we will select that as the best available answer.
 
-Final Answer: 01/02/1930",01/02/1930,True,1
+Final Answer: 01/02/1930",01/02/1930,True,1,
 166,"Yesterday was 12/31/1929. Today could not be 12/32/1929 because December has only 31 days. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 01/01/1898
@@ -4640,7 +4640,7 @@ Now, let's look at the options provided:
 
 The correct date one year ago from today (01/01/1930) is indeed 01/01/1929, which matches option (F).
 
-Final Answer: F",F,True,1
+Final Answer: F",F,True,1,
 167,"Today is 9/7. Jane is watching NFL 2003. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 09/05/2003
@@ -4673,7 +4673,7 @@ Now, we check the options:
 
 The correct answer is (D) 08/31/2003.
 
-Final Answer: 08/31/2003",08/31/2003,True,1
+Final Answer: 08/31/2003",08/31/2003,True,1,
 168,"Jane is celebrating the last day of Jan 2012. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 02/02/2012
@@ -4694,7 +4694,7 @@ Now, let's look at the options provided:
 
 The only option that matches February 1, 2012, is (E) 02/01/2012.
 
-Final Answer: 02/01/2012",02/01/2012,True,1
+Final Answer: 02/01/2012",02/01/2012,True,1,
 169,"May 6, 1992 is like yesterday to Jane, but that is actually ten years ago. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 04/29/2002
@@ -4724,7 +4724,7 @@ Now we can check the options provided:
 
 The only option that matches our calculation of one week ago from May 6, 2002, is (A) 04/29/2002.
 
-Final Answer: 04/29/2002",04/29/2002,True,1
+Final Answer: 04/29/2002",04/29/2002,True,1,
 170,"Jane thought today is 3/11/2002, but today is in fact Mar 12, which is 1 day later. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 05/13/2002
@@ -4745,7 +4745,7 @@ Now, let's check the options provided:
 
 The correct date one week from March 12, 2002, is March 19, 2002.
 
-Final Answer: 03/19/2002",03/19/2002,True,1
+Final Answer: 03/19/2002",03/19/2002,True,1,
 171,"Today is the second day of the third month of 1966. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 03/01/1966
@@ -4771,7 +4771,7 @@ Now, let's check the options:
 
 The only correct option is (A) 03/01/1966.
 
-Final Answer: 03/01/1966",03/01/1966,True,1
+Final Answer: 03/01/1966",03/01/1966,True,1,
 172,"On May 9th, 2017 Jane bought 40 eggs. She ate one per day. Today she ran out of eggs. What is the date today in MM/DD/YYYY?
 Options:
 (A) 06/17/2017
@@ -4792,7 +4792,7 @@ Now, we need to count 18 more days into June:
 
 Thus, the date today, when she ran out of eggs, is June 18th, 2017.
 
-Final Answer: 06/18/2017",06/18/2017,True,1
+Final Answer: 06/18/2017",06/18/2017,True,1,
 173,"Jane visits the bookstore on the 16th of each month starting from the October of 2009. It is her 5th visit to the bookstore today. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 01/16/2010
@@ -4825,7 +4825,7 @@ Now, we check the options provided to find the correct date:
 
 The only option that matches January 16, 2010, is (A).
 
-Final Answer: 01/16/2010",01/16/2010,True,1
+Final Answer: 01/16/2010",01/16/2010,True,1,
 174,"Today is Sep 9, 1909. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 09/10/1909
@@ -4859,7 +4859,7 @@ Now, let's check the options provided:
 
 The only correct option is (A) 09/10/1909.
 
-Final Answer: 09/10/1909",09/10/1909,True,1
+Final Answer: 09/10/1909",09/10/1909,True,1,
 175,"Jane and John married on Jan 2, 1958. Today is their golden wedding anniversary. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 03/24/2007
@@ -4885,7 +4885,7 @@ Looking at the options provided:
 
 The correct option that matches our calculated date is (B) 01/02/2007.
 
-Final Answer: 01/02/2007",01/02/2007,True,1
+Final Answer: 01/02/2007",01/02/2007,True,1,
 176,"The current local time is 3:02 pm of 5/4/2004. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 05/10/2004
@@ -4911,7 +4911,7 @@ Now, let's check the options provided:
 
 The correct date one week from 5/4/2004 is 5/11/2004, which corresponds to option (B).
 
-Final Answer: B",B,True,1
+Final Answer: B",B,True,1,
 177,"Today is 3/5, and it is Jane's second time in the year 1973 to see a meteor shower. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 02/23/1973
@@ -4941,7 +4941,7 @@ Now, let's check the options:
 
 The correct date is (C) 02/24/1973.
 
-Final Answer: 02/24/1973",02/24/1973,True,0
+Final Answer: 02/24/1973",02/24/1973,True,0,
 178,"Today is Sep 9, 1909. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 12/10/1908
@@ -4971,7 +4971,7 @@ Now, let's check the options provided:
 
 The correct answer is option (E) 09/10/1909.
 
-Final Answer: 09/10/1909",09/10/1909,True,1
+Final Answer: 09/10/1909",09/10/1909,True,1,
 179,"Today is the last day of the first quarter of 2008. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 04/01/2008
@@ -4997,7 +4997,7 @@ Now, let's look at the options provided:
 
 The only correct option is (A) 04/01/2008.
 
-Final Answer: 04/01/2008",04/01/2008,True,1
+Final Answer: 04/01/2008",04/01/2008,True,1,
 180,"Jane and John married on Jan 2, 1958. It is their 5-year anniversary today. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 12/02/2000
@@ -5020,7 +5020,7 @@ Now, let's look at the options provided:
 
 None of the options match the date we calculated (12/02/1962). However, since the question asks for the date a month ago from their 5-year anniversary, we can conclude that the correct date is indeed December 2, 1962, but it is not listed among the options.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 181,"Jane is celebrating the last day of Jan 2012. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 10/31/2011
@@ -5046,7 +5046,7 @@ The only option that matches our calculated date of January 31, 2011 is:
 
 Thus, the date one year ago from January 31, 2012 is January 31, 2011.
 
-Final Answer: 01/31/2011",01/31/2011,True,1
+Final Answer: 01/31/2011",01/31/2011,True,1,
 182,"Today is Christmas Eve of 1937. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 09/23/1938
@@ -5071,7 +5071,7 @@ Looking at the options provided:
 
 The correct answer is option (F).
 
-Final Answer: 12/23/1937",12/23/1937,True,1
+Final Answer: 12/23/1937",12/23/1937,True,1,
 183,"Today is 3/5, and it is Jane's second time in the year 1973 to see a meteor shower. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 04/05/1973
@@ -5097,7 +5097,7 @@ Now, let's check the options provided:
 
 The correct date, 03/12/1973, matches option (F).
 
-Final Answer: F",F,True,1
+Final Answer: F",F,True,1,
 184,"Jane and John married on Jan 2, 1958. It is their 5-year anniversary today. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 01/09/1961
@@ -5119,7 +5119,7 @@ Now, we need to check the options provided to see if any match December 26, 1962
 
 Since we are looking for the date one week ago from January 2, 1963, and the closest date in the options is December 26, 1960, we can conclude that the answer must be December 26, 1960, as it is the only date provided that is in December and is a week before the anniversary date.
 
-Final Answer: 12/26/1960",12/26/1960,True,1
+Final Answer: 12/26/1960",12/26/1960,True,1,
 185,"2015 is coming in 36 hours. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 02/13/2015
@@ -5150,7 +5150,7 @@ Now, we can check the options provided:
 
 The only option that matches our calculated date of December 29, 2014, is option (B).
 
-Final Answer: 12/29/2014",12/29/2014,True,0
+Final Answer: 12/29/2014",12/29/2014,True,0,
 186,"Jane was born on the last day of Feburary in 2001. Today is her 16-year-old birthday. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 11/12/2016
@@ -5173,7 +5173,7 @@ Now, let's check the options provided to see if any match January 28, 2017:
 
 The only option that matches January 28, 2017, is option (D).
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 187,"Jane booked a flight for tomorrow, Jul 29, 2002. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 09/06/2002
@@ -5201,7 +5201,7 @@ None of the options match 07/19/2002. However, the closest option is (E) 07/18/2
 
 Since the question specifically asks for the date 10 days ago from July 29, 2002, the correct answer is not listed among the options. 
 
-Final Answer: 07/19/2002 (not listed in options)",07/19/2002 (not listed in options),True,0
+Final Answer: 07/19/2002 (not listed in options)",07/19/2002 (not listed in options),True,0,
 188,"The deadline is Jun 1, 2021, which is 2 days away from now. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 06/12/2021
@@ -5228,7 +5228,7 @@ Now, we need to check the options provided to see which one corresponds to May 2
 
 Thus, the date yesterday is May 29, 2021.
 
-Final Answer: 05/29/2021",05/29/2021,True,1
+Final Answer: 05/29/2021",05/29/2021,True,1,
 189,"The concert was scheduled to be on 06/01/1943, but was delayed by one day to today. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 05/21/1943
@@ -5251,7 +5251,7 @@ Now, let's check the options provided:
 
 The correct answer is (E) 05/23/1943.
 
-Final Answer: 05/23/1943",05/23/1943,True,1
+Final Answer: 05/23/1943",05/23/1943,True,1,
 190,"Tomorrow is 11/12/2019. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 02/12/2020
@@ -5275,7 +5275,7 @@ Now, let's check the options provided:
 
 None of the options provided match the correct date of 11/13/2019. However, since the question asks for the date tomorrow based on the given date, we can conclude that the correct answer is not listed among the options.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 191,"Jane visits the bookstore on the 16th of each month starting from the October of 2009. It is her 5th visit to the bookstore today. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 02/14/2010
@@ -5301,7 +5301,7 @@ Looking at the options provided, the correct date tomorrow is:
 
 (C) 02/17/2010
 
-Final Answer: 02/17/2010",02/17/2010,True,1
+Final Answer: 02/17/2010",02/17/2010,True,1,
 192,"Yesterday, Jan 21, 2011, Jane ate 2 pizzas and 5 wings. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 02/08/2011
@@ -5326,7 +5326,7 @@ Now, let's check the options provided to see which one matches December 21, 2010
 
 Thus, the date a month ago from January 21, 2011, is December 21, 2010.
 
-Final Answer: F) 12/21/2010",F) 12/21/2010,True,0
+Final Answer: F) 12/21/2010",F) 12/21/2010,True,0,
 193,"Yesterday was April 30, 2021. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 05/02/2020
@@ -5351,7 +5351,7 @@ None of the options directly match May 1, 2021. However, if we consider the next
 
 Thus, the date 24 hours later is May 1, 2021, but since the closest option is May 2, 2021, we will select that.
 
-Final Answer: C",C,True,1
+Final Answer: C",C,True,1,
 194,"Jane thought today is 3/11/2002, but today is in fact Mar 12, which is 1 day later. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 04/12/2001
@@ -5374,7 +5374,7 @@ Now, let's check the options provided to see which one matches this date:
 
 The only option that matches the date a month ago from March 12, 2002, is (C) 02/12/2002.
 
-Final Answer: 02/12/2002",02/12/2002,True,1
+Final Answer: 02/12/2002",02/12/2002,True,1,
 195,"Yesterday, Jan 21, 2011, Jane ate 2 pizzas and 5 wings. What is the date today in MM/DD/YYYY?
 Options:
 (A) 01/12/2011
@@ -5398,7 +5398,7 @@ Now, we can look at the options provided to find the correct date:
 
 The only option that matches our calculated date of January 22, 2011, is option (D).
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 196,"Today is the last day of the first quarter of 2008. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 12/23/2007
@@ -5423,7 +5423,7 @@ Now, we need to check the options provided to find the correct date:
 
 Thus, the date one week ago from today, March 31, 2008, is March 24, 2008.
 
-Final Answer: 03/24/2008",03/24/2008,True,1
+Final Answer: 03/24/2008",03/24/2008,True,1,
 197,"Today is 3/5, and it is Jane's second time in the year 1973 to see a meteor shower. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 04/05/1973
@@ -5452,7 +5452,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculated date of yesterday is (B) 03/04/1973.
 
-Final Answer: 03/04/1973",03/04/1973,True,1
+Final Answer: 03/04/1973",03/04/1973,True,1,
 198,"Today is Sep 9, 1909. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 08/09/1909
@@ -5479,7 +5479,7 @@ Now, let's check the options provided:
 
 The correct answer is (A) 08/09/1909.
 
-Final Answer: 08/09/1909",08/09/1909,True,1
+Final Answer: 08/09/1909",08/09/1909,True,1,
 199,"Today is 9/7. Jane is watching NFL 2003. What is the date today in MM/DD/YYYY?
 Options:
 (A) 12/05/2003
@@ -5504,7 +5504,7 @@ Now, let's look at the options provided:
 
 The only option that matches the date we determined is (D) 09/07/2003.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 200,"Yesterday, Jan 21, 2011, Jane ate 2 pizzas and 5 wings. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 01/21/2070
@@ -5527,7 +5527,7 @@ Now, let's look at the options provided:
 
 The only option that correctly represents the date yesterday (January 20, 2011) is option (B).
 
-Final Answer: 01/20/2011",01/20/2011,True,0
+Final Answer: 01/20/2011",01/20/2011,True,0,
 201,"Today is 9/7. Jane is watching NFL 2003. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 09/08/2003
@@ -5551,7 +5551,7 @@ Now, we can look at the options provided:
 
 The correct date, 9/8/2003, matches option (A).
 
-Final Answer: 09/08/2003",09/08/2003,True,1
+Final Answer: 09/08/2003",09/08/2003,True,1,
 202,"In the US, Thanksgiving is on the fourth Thursday of November. Today is the US Thanksgiving of 2001. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 11/29/2002
@@ -5584,7 +5584,7 @@ However, the only option that is a week after Thanksgiving 2001 is:
 
 Thus, the answer is:
 
-Final Answer: 11/29/2002",11/29/2002,True,1
+Final Answer: 11/29/2002",11/29/2002,True,1,
 203,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. John is correct. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 06/08/2019
@@ -5610,7 +5610,7 @@ The options are:
 
 The correct date, 6/9/2019, corresponds to option (C).
 
-Final Answer: 06/09/2019",06/09/2019,True,1
+Final Answer: 06/09/2019",06/09/2019,True,1,
 204,"Today is Sep 9, 1909. What is the date today in MM/DD/YYYY?
 Options:
 (A) 09/09/1909
@@ -5637,7 +5637,7 @@ Now, let's check the options provided:
 
 The only option that matches the date we determined is (A) 09/09/1909.
 
-Final Answer: A",A,True,1
+Final Answer: A",A,True,1,
 205,"Jane quited her job on Mar 20, 2020. 176 days have passed since then. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 08/12/2020
@@ -5668,7 +5668,7 @@ However, since the question asks for the date a month ago from the calculated da
 
 Since the question asks for the date a month ago from the date calculated, and the closest option that is a valid date is July 29, 2020, we can select that as the best available option.
 
-Final Answer: 07/29/2020",07/29/2020,True,0
+Final Answer: 07/29/2020",07/29/2020,True,0,
 206,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. John is correct. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 02/20/2019
@@ -5691,7 +5691,7 @@ Now, let's look at the options provided:
 
 The correct date for tomorrow, which is 6/20/2019, matches option (C).
 
-Final Answer: 06/20/2019",06/20/2019,True,1
+Final Answer: 06/20/2019",06/20/2019,True,1,
 207,"Today, 8/3/1997, is a day that we will never forget. What is the date today in MM/DD/YYYY?
 Options:
 (A) 08/04/1997
@@ -5712,7 +5712,7 @@ Now, let's analyze the options provided:
 
 Since the question asks for the date today, the correct answer is option (E) 08/03/1997.
 
-Final Answer: 08/03/1997",08/03/1997,True,1
+Final Answer: 08/03/1997",08/03/1997,True,1,
 208,"It was Sept. 1st, 2021 a week ago. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 09/09/2021
@@ -5738,7 +5738,7 @@ Looking at the options provided:
 
 The correct answer is (A) 09/09/2021.
 
-Final Answer: 09/09/2021",09/09/2021,True,1
+Final Answer: 09/09/2021",09/09/2021,True,1,
 209,"It was Sept. 1st, 2021 a week ago. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 03/09/2022
@@ -5764,7 +5764,7 @@ Now, let's check the options provided:
 
 The correct date we calculated, 09/02/2021, matches option (E).
 
-Final Answer: E",E,True,0
+Final Answer: E",E,True,0,
 210,"The deadline is Jun 1, 2021, which is 2 days away from now. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 05/09/2020
@@ -5787,7 +5787,7 @@ Now, we can look at the options provided to see if any match May 30, 2020:
 
 The only option that matches May 30, 2020, is (B) 05/30/2020.
 
-Final Answer: 05/30/2020",05/30/2020,True,1
+Final Answer: 05/30/2020",05/30/2020,True,1,
 211,"2015 is coming in 36 hours. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 12/09/2013
@@ -5814,7 +5814,7 @@ None of the options provided match December 30, 2013. However, if we consider th
 
 Since the question asks for the date one year ago from today, and the closest option is December 29, 2013, we will select that.
 
-Final Answer: 12/29/2013",12/29/2013,True,1
+Final Answer: 12/29/2013",12/29/2013,True,1,
 212,"On May 9th, 2017 Jane bought 40 eggs. She ate one per day. Today she ran out of eggs. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 05/04/2017
@@ -5846,7 +5846,7 @@ Now, let's check the options provided:
 
 The correct date one month ago from June 18th, 2017, is May 18th, 2017, which corresponds to option (F).
 
-Final Answer: 05/18/2017",05/18/2017,True,1
+Final Answer: 05/18/2017",05/18/2017,True,1,
 213,"The concert was scheduled to be on 06/01/1943, but was delayed by one day to today. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 06/04/1943
@@ -5868,7 +5868,7 @@ Now, let's look at the options provided:
 
 The correct date, 06/03/1943, matches option (C).
 
-Final Answer: C",C,True,1
+Final Answer: C",C,True,1,
 214,"Jane scheduled 3 apointments with 5 poeple for tomorrow (Tue, 7/9/1972). What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 07/08/1910
@@ -5901,7 +5901,7 @@ Now, we can check the options provided:
 
 The correct answer is (C) 07/09/1971.
 
-Final Answer: 07/09/1971",07/09/1971,True,0
+Final Answer: 07/09/1971",07/09/1971,True,0,
 215,"May 6, 1992 is like yesterday to Jane, but that is actually ten years ago. What is the date 24 hours later in MM/DD/YYYY?
 Options:
 (A) 05/15/2002
@@ -5930,7 +5930,7 @@ Now we can look at the options provided to find the correct date:
 
 The correct date, May 7, 2002, corresponds to option (F).
 
-Final Answer: F",F,True,1
+Final Answer: F",F,True,1,
 216,"It was Sept. 1st, 2021 a week ago. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 05/25/2021
@@ -5964,7 +5964,7 @@ Now, let's check the options provided:
 
 None of the options match August 22, 2021. However, since the question asks for the date 10 days ago from September 1st, 2021, the correct date is indeed August 22, 2021, but it is not listed among the options.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 217,"The first day of 2019 is a Tuesday, and today is the first Monday of 2019. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 10/28/2019
@@ -6003,7 +6003,7 @@ Now, we check the options provided:
 
 The correct date, December 28, 2018, corresponds to option (D).
 
-Final Answer: 12/28/2018",12/28/2018,True,1
+Final Answer: 12/28/2018",12/28/2018,True,1,
 218,"Today is the palindrome day of 2020, because the MMDDYYYY format of the date is the same backwards as forwards. What is the date today in MM/DD/YYYY?
 Options:
 (A) 05/02/2019
@@ -6039,7 +6039,7 @@ Options:
 
 Among the options, the only date that is a palindrome is **02/02/2020**.
 
-Final Answer: 02/02/2020",02/02/2020,True,1
+Final Answer: 02/02/2020",02/02/2020,True,1,
 219,"The deadline is Jun 1, 2021, which is 2 days away from now. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 05/31/1993
@@ -6062,7 +6062,7 @@ Now, let's look at the options provided:
 
 The only option that matches tomorrow's date is (D) 05/31/2021.
 
-Final Answer: 05/31/2021",05/31/2021,True,1
+Final Answer: 05/31/2021",05/31/2021,True,1,
 220,"Jane booked a flight for tomorrow, Jul 29, 2002. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 08/18/2002
@@ -6087,7 +6087,7 @@ Now we need to check the options provided to see which one matches July 21, 2002
 
 The correct date one week ago from today, July 28, 2002, is July 21, 2002.
 
-Final Answer: 07/21/2002",07/21/2002,True,1
+Final Answer: 07/21/2002",07/21/2002,True,1,
 221,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. Jane is correct. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 05/18/2019
@@ -6113,7 +6113,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculation is (A) 05/18/2019.
 
-Final Answer: 05/18/2019",05/18/2019,True,1
+Final Answer: 05/18/2019",05/18/2019,True,1,
 222,"Jane and John married on Jan 2, 1958. Today is their golden wedding anniversary. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 12/02/2007
@@ -6138,7 +6138,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculated date of December 2, 2007, is option (A).
 
-Final Answer: 12/02/2007",12/02/2007,True,1
+Final Answer: 12/02/2007",12/02/2007,True,1,
 223,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. Jane is correct. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 07/08/2019
@@ -6165,7 +6165,7 @@ Now, we need to check the options provided to see which one matches 6/8/2019:
 
 Thus, the date 10 days ago from 6/18/2019 is 6/08/2019.
 
-Final Answer: 06/08/2019",06/08/2019,True,1
+Final Answer: 06/08/2019",06/08/2019,True,1,
 224,"Today is the last day of the first quarter of 2008. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 04/09/2008
@@ -6186,7 +6186,7 @@ Now, looking at the options provided, we need to find the date that corresponds 
 
 Thus, the correct answer is option (F).
 
-Final Answer: 04/01/2008",04/01/2008,True,1
+Final Answer: 04/01/2008",04/01/2008,True,1,
 225,"Today's meeting is rescheduled to 11 am tomorrow, 10/16/1924. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 08/08/1925
@@ -6211,7 +6211,7 @@ Now, we can check the options provided to see which one matches our calculated d
 
 The correct answer is option (E) 10/08/1924.
 
-Final Answer: 10/08/1924",10/08/1924,True,1
+Final Answer: 10/08/1924",10/08/1924,True,1,
 226,"Tomorrow is 11/12/2019. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 11/01/2048
@@ -6232,7 +6232,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculation is (C) 11/02/2019.
 
-Final Answer: 11/02/2019",11/02/2019,True,0
+Final Answer: 11/02/2019",11/02/2019,True,0,
 227,"In the UK, people usually put the day before the month when formatting the date. Therefore, today is 02/01/1987 to them. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 01/23/1987
@@ -6260,7 +6260,7 @@ Now, we can look at the options provided to find the correct answer:
 
 The correct date we calculated is 01/09/1987, which matches option (F).
 
-Final Answer: F",F,True,1
+Final Answer: F",F,True,1,
 228,"Today is Apr 10, 1985. Jane's appointment will be 3 days later. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 04/10/1985
@@ -6287,7 +6287,7 @@ The options are:
 The correct option that matches April 17, 1985, is:
 (D) 04/17/1985.
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 229,"Jane was born on the last day of Feburary in 2000. Today is her 16-year-old birthday. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 03/07/2016
@@ -6314,7 +6314,7 @@ Now, we can check the options provided:
 
 The correct answer is (A) 03/07/2016.
 
-Final Answer: 03/07/2016",03/07/2016,True,1
+Final Answer: 03/07/2016",03/07/2016,True,1,
 230,"May 6, 1992 is like yesterday to Jane, but that is actually ten years ago. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 07/07/2001
@@ -6340,7 +6340,7 @@ Now we can look at the options provided to find the correct date:
 
 The date we calculated, May 6, 2001, corresponds to option (D).
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 231,"Tomorrow is 11/12/2019. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 10/11/2019
@@ -6369,7 +6369,7 @@ Now, let's check the options provided:
 
 The correct answer is option (D) 10/12/2019.
 
-Final Answer: 10/12/2019",10/12/2019,True,0
+Final Answer: 10/12/2019",10/12/2019,True,0,
 232,"Jane is celebrating the last day of Jan 2012. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 12/21/2011
@@ -6392,7 +6392,7 @@ Now, let's check the options provided:
 
 The only option that matches our calculation is (B) 12/31/2011.
 
-Final Answer: 12/31/2011",12/31/2011,True,1
+Final Answer: 12/31/2011",12/31/2011,True,1,
 233,"Today is the first day of 2007. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 12/23/2006
@@ -6426,7 +6426,7 @@ Now, looking at the options provided:
 
 The correct date, December 22, 2006, is listed in option (F).
 
-Final Answer: 12/22/2006",12/22/2006,True,1
+Final Answer: 12/22/2006",12/22/2006,True,1,
 234,"Today is the palindrome day of 2020, because the MMDDYYYY format of the date is the same backwards as forwards. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 02/23/2020
@@ -6453,7 +6453,7 @@ The options are:
 
 The correct date one week from today, 02/09/2020, is option (E).
 
-Final Answer: 02/09/2020",02/09/2020,True,1
+Final Answer: 02/09/2020",02/09/2020,True,1,
 235,"It is 4/19/1969 today. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 04/06/1969
@@ -6482,7 +6482,7 @@ The options are:
 The correct option that matches our calculated date is:
 (C) 04/20/1969.
 
-Final Answer: 04/20/1969",04/20/1969,True,1
+Final Answer: 04/20/1969",04/20/1969,True,1,
 236,"Today is the first day of 2007. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 12/24/2006
@@ -6513,7 +6513,7 @@ Now, we can check the options provided:
 
 The correct answer is option (E) 12/25/2006.
 
-Final Answer: 12/25/2006",12/25/2006,True,1
+Final Answer: 12/25/2006",12/25/2006,True,1,
 237,"Jane thinks today is 6/18/2019, but John thinks today is 6/19/2019. Jane is correct. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 06/11/2019
@@ -6541,7 +6541,7 @@ The options are:
 
 The correct option that matches our calculated date is (A) 06/11/2019.
 
-Final Answer: 06/11/2019",06/11/2019,True,1
+Final Answer: 06/11/2019",06/11/2019,True,1,
 238,"Jane was born on the last day of Feburary in 2001. Today is her 16-year-old birthday. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 02/27/1955
@@ -6568,7 +6568,7 @@ Looking at the options provided, we see:
 
 The correct date for yesterday, February 27, 2017, is option (C).
 
-Final Answer: 02/27/2017",02/27/2017,True,1
+Final Answer: 02/27/2017",02/27/2017,True,1,
 239,"Yesterday was 12/31/1929. Today could not be 12/32/1929 because December has only 31 days. What is the date one week ago from today in MM/DD/YYYY?
 Options:
 (A) 12/25/1929
@@ -6593,7 +6593,7 @@ Now, we can check the options provided to see which one matches our calculated d
 
 The only option that corresponds to the date one week ago from today is (A) 12/25/1929.
 
-Final Answer: 12/25/1929",12/25/1929,True,1
+Final Answer: 12/25/1929",12/25/1929,True,1,
 240,"Jane and John married on Jan 2, 1958. Today is their golden wedding anniversary. What is the date today in MM/DD/YYYY?
 Options:
 (A) 01/30/2008
@@ -6626,7 +6626,7 @@ Now, let's check the options provided:
 
 The correct answer is option (C).
 
-Final Answer: 01/02/2008",01/02/2008,True,1
+Final Answer: 01/02/2008",01/02/2008,True,1,
 241,"It is 4/19/1969 today. What is the date yesterday in MM/DD/YYYY?
 Options:
 (A) 04/18/1969
@@ -6647,7 +6647,7 @@ Now, let's check the options provided:
 
 The only correct option is (A) 04/18/1969.
 
-Final Answer: 04/18/1969",04/18/1969,True,1
+Final Answer: 04/18/1969",04/18/1969,True,1,
 242,"Today is the second day of the third month of 1966. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 03/03/1966
@@ -6669,7 +6669,7 @@ Looking at the options provided:
 
 The correct answer is option (A) 03/03/1966.
 
-Final Answer: 03/03/1966",03/03/1966,True,1
+Final Answer: 03/03/1966",03/03/1966,True,1,
 243,"Yesterday, Jan 21, 2011, Jane ate 2 pizzas and 5 wings. What is the date tomorrow in MM/DD/YYYY?
 Options:
 (A) 02/13/2011
@@ -6691,7 +6691,7 @@ Now, let's look at the options provided:
 
 The correct date for tomorrow, January 23, 2011, corresponds to option (D).
 
-Final Answer: D",D,True,1
+Final Answer: D",D,True,1,
 244,"Jane and John married on Jan 2, 1958. It is their 5-year anniversary today. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 06/02/1960
@@ -6725,7 +6725,7 @@ None of the options match January 2, 1962. However, we can see that option (B) i
 
 Since none of the options match the exact date we calculated, we can conclude that the question may have intended to ask for a different date or that the options provided do not include the correct answer.
 
-Final Answer: None of the options are correct.",None of the options are correct.,True,0
+Final Answer: None of the options are correct.",None of the options are correct.,True,0,
 245,"Today is the last day of the first quarter of 2008. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 03/21/2104
@@ -6752,7 +6752,7 @@ Now we need to check the options provided to see which one matches March 21, 200
 
 The correct answer is option (D) 03/21/2008.
 
-Final Answer: 03/21/2008",03/21/2008,True,1
+Final Answer: 03/21/2008",03/21/2008,True,1,
 246,"Today, 8/3/1997, is a day that we will never forget. What is the date 10 days ago in MM/DD/YYYY?
 Options:
 (A) 08/21/1997
@@ -6787,7 +6787,7 @@ Now, let's check the options:
 
 The correct answer is (D) 07/24/1997.
 
-Final Answer: 07/24/1997",07/24/1997,True,1
+Final Answer: 07/24/1997",07/24/1997,True,1,
 247,"Today is Christmas Eve of 1937. What is the date one week from today in MM/DD/YYYY?
 Options:
 (A) 12/28/1937
@@ -6808,7 +6808,7 @@ Now, let's check the options provided:
 
 The only correct option is (B) 12/31/1937.
 
-Final Answer: 12/31/1937",12/31/1937,True,1
+Final Answer: 12/31/1937",12/31/1937,True,1,
 248,"Yesterday, Jan 21, 2011, Jane ate 2 pizzas and 5 wings. What is the date one year ago from today in MM/DD/YYYY?
 Options:
 (A) 01/21/2010
@@ -6831,7 +6831,7 @@ Now, we can look at the options provided to see if any match January 22, 2010. T
 
 The correct date, January 22, 2010, corresponds to option (F).
 
-Final Answer: F",F,True,1
+Final Answer: F",F,True,1,
 249,"Jane was born on the last day of Feburary in 2000. Today is her 16-year-old birthday. What is the date a month ago in MM/DD/YYYY?
 Options:
 (A) 05/04/2016
@@ -6859,4 +6859,4 @@ Now, we can look at the options provided:
 
 The correct date, January 29, 2016, matches option (F).
 
-Final Answer: 01/29/2016",01/29/2016,True,1
+Final Answer: 01/29/2016",01/29/2016,True,1,

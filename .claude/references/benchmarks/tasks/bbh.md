@@ -45,8 +45,14 @@ rule 7): until 2026-08-29 five runners compared with `==` and three used the len
 rescoring the identical stored responses moved deepseek 0.448 → 0.961, kimi 0.243 → 0.884,
 gpt-4o-mini 0.308 → 0.834, xai 0.509 → 0.940, llama 0.726 → 0.910. Gemma and Qwen did not move.
 
-Every `_overall.csv` now carries a `scorer` column and every row a `config` column (rule 8), so a
-number cannot be read without knowing what produced it.
+Every `_overall.csv` carries a `scorer` column — `SCORER_VERSION`, today **`lenient_v2`** — and
+every row a `config` column (rule 8), so a number cannot be read without knowing what produced it.
+
+**v2, 2026-08-29:** the matcher also strips markdown emphasis. A Luna pilot answered
+`**bootlegging, indifferent, trainman**` to gold `bootlegging indifferent trainman` and scored 0.
+Across all 36,348 stored rows the fix gains 31 and loses 0. It moved two reported cells, both now
+updated in `Final_Result.xlsx`: XAI `dyck_languages` 0.752 → 0.756, Qwen `formal_fallacies`
+0.952 → 0.968.
 
 **The prompt had the same problem as the scorer.** Six of the eight old runners sent a four-space
 indented prompt; gemma and qwen sent the same text indented eight, through the `_finish` twins their

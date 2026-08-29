@@ -101,7 +101,13 @@ def extract_final_answer(model_output):
         return ""
     match = re.search(r"Final Answer:\s*(.*)", model_output, re.IGNORECASE)
     result = match.group(1).strip() if match else model_output.strip()
-    return result.strip("\"'`")
+    # Quotes, backticks and markdown emphasis are packaging, not answer. The asterisk was added
+    # 2026-08-29 after a Luna pilot returned "**bootlegging, indifferent, trainman**" for gold
+    # "bootlegging indifferent trainman" and scored 0: `**bootlegging` no longer matches a word.
+    # Measured over all 36,348 stored rows it gains 31 and loses 0 — it can only remove a
+    # formatting penalty, never credit a wrong answer. `_` was measured too and adds nothing, so
+    # it is left out: it is likelier to be part of a real token.
+    return result.strip("\"'`* ")
 
 
 def has_marker(model_output):
@@ -162,6 +168,11 @@ def score_response(model_response, gold_answer, question=""):
 # ---------------------------------------------------------------- output
 
 
+# Bumped whenever score_response changes behaviour, and written onto every result file. v2
+# added markdown-emphasis stripping (2026-08-29). A number tagged v1 cannot be compared with one
+# tagged v2 without rescoring.
+SCORER_VERSION = "lenient_v2"
+
 FIELDS = ["idx", "question", "gold_answer", "model_response", "final_answer", "has_marker",
           "score", "config"]
 
@@ -209,7 +220,7 @@ def write_task_results(model_dir, task, model_id, records, config=None):
         w.writerow(["model", "task", "n", "score_sum", "average_score", "no_marker",
                     "empty_response", "scorer", "config"])
         w.writerow([model_id, task, n, scored, round(scored / n, 4) if n else "", missing, blank,
-                    "lenient_v1", config_string(config)])
+                    SCORER_VERSION, config_string(config)])
 
     return {
         "model": model_id, "task": task, "n": n,
@@ -229,11 +240,11 @@ def write_overall(model_dir, model_id, summaries):
         w.writerow(["model", "task", "n", "average_score", "no_marker", "empty_response", "scorer"])
         for s in summaries:
             w.writerow([s["model"], s["task"], s["n"], s["average_score"],
-                        s["no_marker"], s["empty_response"], "lenient_v1"])
+                        s["no_marker"], s["empty_response"], SCORER_VERSION])
         if summaries:
             means = [s["average_score"] for s in summaries if s["average_score"] != ""]
             w.writerow([model_id, "MACRO_AVG_over_%d_tasks" % len(means), "",
-                        round(sum(means) / len(means), 4) if means else "", "", "", "lenient_v1"])
+                        round(sum(means) / len(means), 4) if means else "", "", "", SCORER_VERSION])
     return path
 
 

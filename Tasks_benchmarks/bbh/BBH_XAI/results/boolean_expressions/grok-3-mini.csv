@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,not ( True ) and ( True ) is,False,"To evaluate the logical expression `not (True) and (True)`, let's break it down step by step based on the rules of logical operators. In logic, the `not` operator has higher precedence than `and`, so we evaluate it first.
 
 1. Start with the expression: `not (True) and (True)`.
@@ -11,7 +11,7 @@ idx,question,gold_answer,model_response,final_answer,has_marker,score
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 1,True and not not ( not False ) is,True,"To evaluate the expression ""True and not not ( not False )"", let's break it down step by step:
 
 1. Start with the innermost part: not False.  
@@ -28,7 +28,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""True and not not ( not False )"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 2,not True or False or ( False ) is,False,"The given expression is a logical statement: ""not True or False or ( False )"".
 
 To evaluate it step by step:
@@ -43,7 +43,7 @@ To evaluate it step by step:
 
 3. Therefore, the entire expression ""not True or False or ( False )"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 3,False or not ( True ) and False is,False,"It appears the query is asking to evaluate the logical expression ""False or not (True) and False"". I'll interpret this as a Boolean expression using standard logical operators: OR, NOT, and AND.
 
 ### Reasoning:
@@ -62,7 +62,7 @@ Final Answer: False",False,True,1
 
 5. The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 4,True or not False and True and False is,True,"The query appears to be asking for the evaluation of the logical expression: ""True or not False and True and False"".
 
 To evaluate this expression, we need to follow the standard order of operations for logical operators: NOT has the highest precedence, followed by AND, and then OR.
@@ -84,7 +84,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 5,False or not not not False and True is,True,"To evaluate the logical expression ""False or not not not False and True"", I'll break it down step by step based on standard logical operator precedence: NOT has the highest precedence, followed by AND, and then OR.
 
 ### Step-by-Step Reasoning:
@@ -107,7 +107,7 @@ Final Answer: True",True,True,1
 4. **Final result:**
    - The entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 6,not True and ( False or True ) is,False,"To evaluate the logical expression ""not True and ( False or True )"", I'll break it down step by step based on the rules of Boolean logic.
 
 1. Start with the innermost parentheses:  
@@ -123,7 +123,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 7,True and not False or ( True ) is,True,"To evaluate the logical expression ""True and not False or ( True )"", I'll break it down step by step using standard logical operator precedence (in languages like Python, where NOT is evaluated first, followed by AND, then OR, and parentheses are handled immediately).
 
 ### Step-by-Step Reasoning:
@@ -144,7 +144,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""True and not False or ( True )"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 8,not True or ( False and True ) is,False,"Let me evaluate the logical expression step by step: ""not True or (False and True)"".
 
 1. First, evaluate the innermost parentheses: (False and True).  
@@ -158,7 +158,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 9,not True or ( True or False ) is,True,"To evaluate the logical expression ""not True or ( True or False )"", I'll break it down step by step based on standard logical operator precedence (parentheses first, then NOT, then OR).
 
 1. Start with the expression: not True or ( True or False )
@@ -176,7 +176,7 @@ Final Answer: False",False,True,1
 
 Thus, the expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 10,False or ( False ) and not False is,False,"To evaluate the logical expression ""False or (False) and not False"", follow the order of operations for logical operators: NOT has the highest precedence, followed by AND, then OR.
 
 1. Start with ""not False"":  
@@ -191,7 +191,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 11,not False or True and False and False is,True,"To evaluate the expression ""not False or True and False and False"", we need to follow the rules of logical operators in Python (or similar languages). The operator precedence is:
 
 1. **NOT** (highest precedence)
@@ -210,7 +210,7 @@ We'll evaluate the expression step by step:
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 12,not True or False or not not True is,True,"To answer the query ""not True or False or not not True is"", I'll evaluate the logical expression step by step. This is a Boolean expression using logical operators: ""not"" for negation and ""or"" for logical OR.
 
 ### Step-by-Step Reasoning:
@@ -237,7 +237,7 @@ Final Answer: True",True,True,1
 4. **Final evaluation**:  
    The entire expression ""not True or False or not not True"" simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 13,True and True and False and not True is,False,"To evaluate the logical expression ""True and True and False and not True"", let's break it down step by step:
 
 1. First, resolve the ""not"" operator:  
@@ -251,7 +251,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 14,not not True and not True or True is,True,"To evaluate the logical expression ""not not True and not True or True"", I'll break it down step by step based on Python's operator precedence (where ""not"" has the highest precedence, followed by ""and"", then ""or"").
 
 ### Step-by-Step Reasoning:
@@ -277,7 +277,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 15,not not not ( True and False ) is,True,"To evaluate the expression ""not not not (True and False)"", let's break it down step by step:
 
 1. Start with the innermost expression: True and False.  
@@ -291,7 +291,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 16,not not False and not not not False is,False,"To evaluate the expression ""not not False and not not not False"", I'll break it down step by step using logical operators. In logic, ""not"" is a negation operator that flips the truth value (True becomes False, and False becomes True). ""And"" requires both sides of the expression to be True for the overall result to be True.
 
 ### Step-by-Step Reasoning:
@@ -315,7 +315,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 17,( True and not True and False ) is,False,"To evaluate the logical expression `( True and not True and False )`, let's break it down step by step:
 
 1. Start with the innermost operation: `not True`.  
@@ -328,7 +328,7 @@ Final Answer: False",False,True,1
 
 3. Therefore, the entire expression `( True and not True and False )` simplifies to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 18,False and False and False or not False is,True,"To evaluate the logical expression ""False and False and False or not False"", I'll break it down step by step using Boolean algebra rules. Remember, the order of operations is:
 
 - NOT has the highest precedence.
@@ -354,7 +354,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""False and False and False or not False"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 19,False or ( False and not False ) is,False,"To evaluate the logical expression ""False or (False and not False)"", let's break it down step by step:
 
 1. Start with the innermost operation: ""not False"".  
@@ -368,7 +368,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""False or (False and not False)"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 20,True and False or ( not True ) is,False,"To evaluate the logical expression ""True and False or (not True)"", I'll break it down step by step using standard boolean logic rules.
 
 ### Step-by-Step Reasoning:
@@ -393,7 +393,7 @@ Final Answer: False",False,True,1
 5. **Final result**:  
    - The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 21,not not ( True ) and not False is,True,"To evaluate the logical expression ""not not (True) and not False"", let's break it down step by step:
 
 1. Start with the innermost part: (True) evaluates to True.
@@ -403,7 +403,7 @@ Final Answer: False",False,True,1
 4. Now evaluate the next part: not False evaluates to True.
 5. Combine the results: True and True evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 22,not False or ( True ) and True is,True,"To evaluate the logical expression ""not False or (True) and True"", I'll break it down step by step based on the order of operations for logical operators in Python (or similar languages). The precedence is: parentheses first, then ""not"", then ""and"", and finally ""or"".
 
 ### Step-by-Step Reasoning:
@@ -421,7 +421,7 @@ Final Answer: True",True,True,1
 
 The entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 23,not ( True ) or False or True is,True,"To evaluate the expression `not (True) or False or True`, I'll break it down step by step using boolean logic, as this appears to be a Python-style expression.
 
 ### Step-by-Step Reasoning:
@@ -444,7 +444,7 @@ Final Answer: True",True,True,1
 
 This follows the standard order of operations for boolean expressions in Python, where `not` has higher precedence than `or`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 24,( True and not not not True ) is,False,"To evaluate the expression ""( True and not not not True )"", I'll break it down step by step using logical operations.
 
 1. Start with the innermost part: `not True`.  
@@ -462,7 +462,7 @@ Final Answer: True",True,True,1
 
 Therefore, the expression ""( True and not not not True )"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 25,( False or not False or False ) is,True,"To answer the query, I need to evaluate the logical expression: (False or not False or False).
 
 First, let's break down the expression step by step:
@@ -476,7 +476,7 @@ First, let's break down the expression step by step:
 
 Therefore, the entire expression (False or not False or False) evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 26,False and False or True and not False is,True,"To evaluate the logical expression ""False and False or True and not False"", I'll break it down step by step based on Python's operator precedence (not > and > or).
 
 1. Start with the innermost operation: ""not False"".  
@@ -493,7 +493,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 27,not not False or not False or True is,True,"To answer the query, we need to evaluate the logical expression: ""not not False or not False or True"". This is a Boolean expression, and I'll break it down step by step using standard logical operator precedence (in languages like Python, 'not' has higher precedence than 'or').
 
 ### Step-by-Step Reasoning:
@@ -521,7 +521,7 @@ Final Answer: True",True,True,1
 4. **Final result of the expression:**  
    The entire expression evaluates to True.
 
-### Final Answer: True",True,True,1
+### Final Answer: True",True,True,1,
 28,True and not True or False or True is,True,"To evaluate the logical expression ""True and not True or False or True"", I'll break it down step by step using standard logical operator precedence: NOT is evaluated first, followed by AND, then OR.
 
 1. Start with the expression: True and not True or False or True  
@@ -535,7 +535,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 29,not False or True and False or False is,True,"To evaluate the expression ""not False or True and False or False"", we need to follow the order of operations for logical operators in Python (or similar languages), which is:
 
 1. **NOT** (highest precedence)
@@ -555,7 +555,7 @@ Let's break it down step by step:
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 30,False and ( not False ) or False is,False,"To evaluate the logical expression ""False and (not False) or False"", I'll break it down step by step based on standard logical operator precedence (not first, then and, then or).
 
 1. Start with the expression: False and (not False) or False  
@@ -570,7 +570,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 31,not not not not ( not False ) is,True,"To evaluate the expression ""not not not not (not False)"", I'll break it down step by step, starting from the innermost parentheses and working outward.
 
 1. Start with the innermost expression:  
@@ -590,7 +590,7 @@ Final Answer: False",False,True,1
 
 So, after evaluating all the operators, the entire expression simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 32,( True ) and True or not True is,True,"To evaluate the expression ""( True ) and True or not True"", I'll break it down step by step based on standard boolean operator precedence (as in most programming languages like Python). The precedence order is: parentheses, then 'not', then 'and', then 'or'.
 
 1. Start with the expression: ( True ) and True or not True  
@@ -610,7 +610,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 33,not True or False and False and False is,False,"To evaluate the expression ""not True or False and False and False"", we need to follow the order of operations for logical operators in Python (or similar languages). The precedence is: NOT first, then AND, and finally OR.
 
 Step-by-step reasoning:
@@ -630,7 +630,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression ""not True or False and False and False"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 34,not not not not not not not False is,True,"The query appears to be asking for the evaluation of the logical expression ""not not not not not not not False"", which involves applying the logical NOT operator seven times to the boolean value False.
 
 ### Reasoning:
@@ -647,7 +647,7 @@ Final Answer: False",False,True,1
 - An even number of ""not"" operators would result in the original value, but seven is an odd number, so the final result is the inversion of the original value (False inverted is True).
 - Therefore, the expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 35,not True or not False and not False is,True,"To evaluate the logical expression ""not True or not False and not False"", we need to follow the standard operator precedence in logic: 'not' is evaluated first, followed by 'and', and then 'or'. Let's break it down step by step.
 
 1. Evaluate the 'not' operators:
@@ -665,7 +665,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 36,False or True or False and not False is,True,"To evaluate the logical expression ""False or True or False and not False"", follow the standard order of operations for logical operators: NOT has the highest precedence, followed by AND, and then OR.
 
 1. Start with the innermost operation:  
@@ -686,7 +686,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 37,not ( True or True ) and False is,False,"To evaluate the logical expression `not (True or True) and False`, let's break it down step by step:
 
 1. Start with the innermost part: `True or True`.  
@@ -703,7 +703,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression `not (True or True) and False` evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 38,not not not not True and not True is,False,"To evaluate the logical expression ""not not not not True and not True"", I'll break it down step by step as it's likely based on Python's boolean logic.
 
 ### Step-by-Step Reasoning:
@@ -724,7 +724,7 @@ Final Answer: False",False,True,1
 
 The entire expression simplifies to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 39,( False ) or False and not True is,False,"To evaluate the expression ""( False ) or False and not True"", we need to follow the order of operations for logical operators in Python (or similar languages), which is: parentheses first, then ""not"", then ""and"", and finally ""or"".
 
 ### Step-by-Step Reasoning:
@@ -738,7 +738,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 40,( False and True or not False ) is,True,"To evaluate the logical expression `(False and True or not False)`, follow these steps based on standard operator precedence (NOT first, then AND, then OR):
 
 1. Evaluate `not False`: This is True, because the negation of False is True.
@@ -748,7 +748,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 41,not not not ( False and True ) is,True,"To evaluate the expression ""not not not (False and True)"", I'll break it down step by step.
 
 1. Start with the innermost expression: (False and True).  
@@ -764,7 +764,7 @@ Final Answer: True",True,True,1
 
 Alternatively, three ""not"" operators are equivalent to a single ""not"" (since an odd number of negations flips the value). So, not not not False is the same as not False, which is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 42,not not True and not False or True is,True,"To evaluate the logical expression ""not not True and not False or True"" in Python, I'll break it down step by step based on operator precedence. In Python, the 'not' operator has the highest precedence, followed by 'and', and then 'or'. The expression is evaluated from left to right.
 
 1. Start with the expression: `not not True and not False or True`
@@ -787,7 +787,7 @@ Final Answer: True",True,True,1
 
 The entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 43,not False or True and not not True is,True,"To evaluate the logical expression ""not False or True and not not True"", I'll break it down step by step based on standard operator precedence in logic (where 'not' has the highest precedence, followed by 'and', then 'or').
 
 ### Step-by-Step Reasoning:
@@ -812,7 +812,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression ""not False or True and not not True"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 44,True or True or not False or False is,True,"The query appears to be asking about the evaluation of a logical expression: ""True or True or not False or False"".
 
 To evaluate this, I'll break it down step by step using standard boolean logic:
@@ -833,7 +833,7 @@ To evaluate this, I'll break it down step by step using standard boolean logic:
 
 4. **Final result:** The entire expression evaluates to True, because in boolean logic, an OR operation results in True if any of the operands is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 45,( not False and False and False ) is,False,"To evaluate the expression `(not False and False and False)`, let's break it down step by step using standard logical operations:
 
 1. Start with the innermost part: `not False`.  
@@ -849,7 +849,7 @@ Final Answer: True",True,True,1
 
 3. Therefore, the entire expression `(not False and False and False)` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 46,( ( not True ) or True ) is,True,"To evaluate the logical expression `( ( not True ) or True )`, let's break it down step by step:
 
 1. Start with the innermost part: `not True`.  
@@ -862,7 +862,7 @@ Final Answer: False",False,True,1
 
 3. Therefore, the entire expression `( ( not True ) or True )` simplifies to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 47,not not ( not False or True ) is,True,"To evaluate the logical expression ""not not (not False or True)"", let's break it down step by step:
 
 1. Start with the innermost expression:  
@@ -878,7 +878,7 @@ Final Answer: True",True,True,1
 
 4. Therefore, the entire expression simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 48,not True or False or ( True ) is,True,"The query appears to be asking for the evaluation of the logical expression: ""not True or False or (True)"".
 
 To evaluate this step by step:
@@ -893,7 +893,7 @@ To evaluate this step by step:
    - False or True = True.
 7. Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 49,False or ( not False ) and True is,True,"To evaluate the logical expression ""False or (not False) and True"", I'll break it down step by step based on standard logical operator precedence (NOT first, then AND, then OR). The parentheses around ""not False"" mean we evaluate that first.
 
 ### Step-by-Step Reasoning:
@@ -915,7 +915,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 50,not False or False or ( False ) is,True,"To evaluate the logical expression ""not False or False or (False)"", I'll break it down step by step using boolean logic (as in Python or standard programming logic).
 
 1. Start with the first part: ""not False"".  
@@ -932,7 +932,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 51,not not False or False and not True is,False,"To evaluate the logical expression ""not not False or False and not True"", I'll break it down step by step based on standard operator precedence in logic and programming (where 'not' has the highest precedence, followed by 'and', then 'or').
 
 1. Start with the innermost 'not' operations:
@@ -956,7 +956,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 52,True or ( ( not True ) ) is,True,"Let me reason through the given logical expression step by step.
 
 The expression is: ""True or ( ( not True ) )""
@@ -971,7 +971,7 @@ The expression is: ""True or ( ( not True ) )""
 
 3. Therefore, the entire expression ""True or ( ( not True ) )"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 53,not False and not False and not False is,True,"To evaluate the expression ""not False and not False and not False"", I'll break it down step by step using standard Boolean logic (as in Python or similar programming languages).
 
 1. Start with the individual parts:
@@ -985,7 +985,7 @@ Final Answer: True",True,True,1
 
 3. Therefore, the entire expression ""not False and not False and not False"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 54,( False ) and not False and True is,False,"To evaluate the logical expression ""( False ) and not False and True"", I'll break it down step by step based on standard boolean logic (as used in programming languages like Python).
 
 1. The expression is: (False) and not False and True  
@@ -999,7 +999,7 @@ Final Answer: True",True,True,1
 
 3. Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 55,( True ) and False or not False is,True,"To evaluate the expression ""( True ) and False or not False"", I'll break it down step by step based on Python's operator precedence rules (since this appears to be a logical expression in a programming context). The operators follow this order: 'not' > 'and' > 'or'.
 
 ### Step-by-Step Reasoning:
@@ -1020,7 +1020,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 56,( not False and ( True ) ) is,True,"To evaluate the expression `( not False and ( True ) )`, let's break it down step by step using Boolean logic:
 
 1. Start with the innermost parts:
@@ -1035,7 +1035,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression `( not False and ( True ) )` evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 57,False or not ( False ) or True is,True,"The query appears to be asking about the truth value of the logical expression: ""False or not (False) or True"".
 
 To evaluate this:
@@ -1048,7 +1048,7 @@ To evaluate this:
    - True or True = True.
 5. Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 58,True and not False and not not True is,True,"To evaluate the logical expression ""True and not False and not not True"", let's break it down step by step using standard logical operators:
 
 1. **Identify the components:**
@@ -1066,7 +1066,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 59,not True and True and True or False is,False,"To evaluate the expression ""not True and True and True or False"", I'll break it down step by step based on Python's logical operator precedence (not > and > or). This means we evaluate ""not"" first, then ""and"" operations, and finally ""or"".
 
 1. Start with the expression: not True and True and True or False  
@@ -1084,7 +1084,7 @@ Final Answer: True",True,True,1
 
 The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 60,not not ( False and not True ) is,False,"To evaluate the expression ""not not (False and not True)"", I'll break it down step by step based on the rules of logical operations.
 
 1. Start with the innermost expression:  
@@ -1101,7 +1101,7 @@ Final Answer: False",False,True,1
 
 4. Therefore, the entire expression ""not not (False and not True)"" simplifies to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 61,True or not ( ( False ) ) is,True,"The query appears to ask about the truth value of the expression ""( ( False ) )"".
 
 To evaluate this:
@@ -1113,7 +1113,7 @@ To evaluate this:
 
 The expression ""( ( False ) )"" is not true; it is false.
 
-Final Answer: False",False,True,0
+Final Answer: False",False,True,0,
 62,False or not True or False or False is,False,"The query appears to be asking for the evaluation of a logical expression: ""False or not True or False or False"". I'll interpret this as a Boolean expression using logical operators, specifically:
 
 - ""or"" as the logical OR operator (which returns True if at least one operand is True).
@@ -1137,7 +1137,7 @@ The expression can be broken down as: False OR (NOT True) OR False OR False.
 4. **Final result:**
    - The entire expression evaluates to False, as all operands are False and the OR operator requires at least one True to result in True.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 63,False or not not True or not False is,True,"The query appears to be a logical expression: ""False or not not True or not False"". I'll interpret this as: False OR (NOT (NOT True)) OR (NOT False), following standard operator precedence where NOT has higher precedence than OR.
 
 Let's evaluate it step by step:
@@ -1156,7 +1156,7 @@ Let's evaluate it step by step:
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 64,not ( True or True or False ) is,False,"To evaluate the expression ""not ( True or True or False )"", let's break it down step by step:
 
 1. Start with the inner expression inside the parentheses: True or True or False.
@@ -1169,7 +1169,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""not ( True or True or False )"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 65,False or not not not not not False is,True,"To evaluate the logical expression ""False or not not not not not False"", I'll break it down step by step.
 
 ### Step-by-Step Reasoning:
@@ -1191,7 +1191,7 @@ Final Answer: False",False,True,1
 
 Therefore, the expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 66,not ( False ) or not not True is,True,"To evaluate the logical expression ""not (False) or not not True"", let's break it down step by step using standard boolean logic:
 
 1. **Evaluate the first part: not (False)**  
@@ -1211,7 +1211,7 @@ Final Answer: True",True,True,1
 
 The expression ""not (False) or not not True"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 67,True and not False or False and False is,True,"To evaluate the logical expression ""True and not False or False and False"", we need to follow the standard operator precedence for logical operators: NOT is evaluated first, followed by AND, and then OR. We'll also evaluate from left to right where applicable.
 
 ### Step-by-Step Reasoning:
@@ -1231,7 +1231,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 68,True or ( not ( True ) ) is,True,"To evaluate the logical expression ""True or (not (True))"", let's break it down step by step:
 
 1. Start with the innermost part: (True). This is simply the boolean value True.
@@ -1244,7 +1244,7 @@ Final Answer: True",True,True,1
 
 Therefore, the expression ""True or (not (True))"" simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 69,( False or True and not True ) is,False,"To evaluate the logical expression `(False or True and not True)`, we need to follow the standard order of operations for logical operators: NOT is evaluated first, then AND, and finally OR.
 
 1. Start with the innermost operator: `not True`.  
@@ -1262,7 +1262,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression `(False or True and not True)` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 70,False or not True and True or True is,True,"To evaluate the logical expression ""False or not True and True or True"", we need to follow the standard order of operations for Boolean logic: NOT is evaluated first, followed by AND, and then OR. Let's break it down step by step.
 
 1. The expression is: False OR (NOT True) AND True OR True  
@@ -1276,7 +1276,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 71,not not not not not not not True is,False,"The query appears to be asking about the evaluation of the logical expression ""not not not not not not not True"", where ""not"" is the logical negation operator, and ""True"" is a boolean value.
 
 In logic and programming, the ""not"" operator inverts a boolean value: ""not True"" is False, and ""not False"" is True. When multiple ""not"" operators are chained, each one inverts the result of the previous one.
@@ -1294,7 +1294,7 @@ Let's evaluate the expression step by step:
 
 There are seven ""not"" operators, which is an odd number. An odd number of negations results in the inversion of the original value. Since the original value is True, the final result is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 72,( not False ) and False or True is,True,"To evaluate the expression `(not False) and False or True`, I'll break it down step by step based on the order of operations for logical operators in Python (or similar languages). The precedence is: `not` first, then `and`, then `or`.
 
 1. Start with the innermost operation: `not False`.  
@@ -1310,7 +1310,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression `(not False) and False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 73,False and False or not ( True ) is,False,"To evaluate the logical expression ""False and False or not (True)"", we need to follow the standard operator precedence rules for logical operators. In most programming languages and logic systems, 'not' has the highest precedence, followed by 'and', and then 'or'. Parentheses are evaluated first.
 
 Step-by-step reasoning:
@@ -1328,7 +1328,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 74,( not False or True ) and True is,True,"To evaluate the logical expression ""(not False or True) and True"", let's break it down step by step based on standard logical operator precedence (where 'not' is evaluated first, followed by 'or', and then 'and', with parentheses grouping the subexpression).
 
 1. Start with the inner expression inside the parentheses: ""not False or True"".
@@ -1342,7 +1342,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""(not False or True) and True"" evaluates to true.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 75,not ( False ) and ( False ) is,False,"To evaluate the logical expression ""not (False) and (False)"", I'll break it down step by step based on standard logical operations. In logic, the ""not"" operator has higher precedence than ""and"", so we evaluate it as (not (False)) and (False).
 
 1. Start with the inner expression: not (False).  
@@ -1357,7 +1357,7 @@ Final Answer: True",True,True,1
 
 The expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 76,False or True and not not not False is,True,"To evaluate the logical expression ""False or True and not not not False"", follow the order of operations for logical operators: NOT has the highest precedence, followed by AND, and then OR.
 
 1. Start with the innermost NOT in ""not not not False"":
@@ -1374,7 +1374,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 77,( True ) and True and not True is,False,"To evaluate the logical expression ""( True ) and True and not True"", let's break it down step by step:
 
 1. **Understand the expression**: This is a logical AND operation involving three parts: (True), True, and (not True). In logic, ""and"" requires all operands to be True for the result to be True.
@@ -1390,7 +1390,7 @@ Final Answer: True",True,True,1
    - Then, evaluate True and False: This results in False.
    - Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 78,( not True ) and True and False is,False,"To answer the query, we need to evaluate the logical expression: `(not True) and True and False`.
 
 ### Step-by-Step Reasoning:
@@ -1408,7 +1408,7 @@ Final Answer: False",False,True,1
 4. **Final result**:  
    - The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 79,( not not True and not False ) is,True,"To evaluate the expression `(not not True and not False)`, let's break it down step by step using boolean logic:
 
 1. Start with the innermost parts:
@@ -1426,7 +1426,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression `(not not True and not False)` simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 80,True and ( False ) or not False is,True,"To evaluate the logical expression ""True and (False) or not False"", I'll break it down step by step based on standard Boolean logic rules. In Boolean algebra, the operators have the following precedence: 'not' is evaluated first, then 'and', and finally 'or'. Parentheses are evaluated first as well.
 
 ### Step-by-Step Reasoning:
@@ -1446,7 +1446,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""True and (False) or not False"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 81,not not not False or False and False is,True,"To evaluate the expression ""not not not False or False and False"", I'll break it down step by step based on Python's operator precedence. In Python, the logical operators follow this order: ""not"" has the highest precedence, followed by ""and"", and then ""or"". The trailing ""is"" in your query appears to be unrelated to the expression (possibly a typo or sentence ender), so I'll focus on the logical expression itself.
 
 ### Step-by-Step Reasoning:
@@ -1468,7 +1468,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 82,not not not False and True or False is,True,"To evaluate the expression ""not not not False and True or False"", I'll break it down step by step based on Python's operator precedence. In Python, the 'not' operator has the highest precedence, followed by 'and', and then 'or'. We'll evaluate from left to right where applicable.
 
 ### Step-by-Step Reasoning:
@@ -1489,7 +1489,7 @@ Final Answer: True",True,True,1
 3. **Final evaluation:**
    - The entire expression ""not not not False and True or False"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 83,True or ( True or not False ) is,True,"Let's evaluate the logical expression step by step: ""True or ( True or not False )"".
 
 1. Start with the innermost part: ""not False"".  
@@ -1503,7 +1503,7 @@ Final Answer: True",True,True,1
 
 The entire expression simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 84,not False or ( ( False ) ) is,True,"The given expression appears to be a logical statement: ""not False or ((False))"". Let's evaluate it step by step.
 
 1. **Parse the expression**: The expression is ""not False or ((False))"". The inner parentheses around ""False"" don't change the value, as ""False"" is already a boolean value. So, it simplifies to ""not False or False"".
@@ -1514,7 +1514,7 @@ Final Answer: True",True,True,1
 
 4. **Final evaluation**: The entire expression evaluates to ""True"".
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 85,not not ( False and not False ) is,False,"To evaluate the logical expression ""not not (False and not False)"", let's break it down step by step:
 
 1. Start with the innermost part: ""not False"".  
@@ -1535,7 +1535,7 @@ Final Answer: True",True,True,1
 
 In logical terms, double negation (not not X) is equivalent to X, but here X is False, so not not False is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 86,not not not not True or not True is,True,"To answer the query, I need to evaluate the logical expression: ""not not not not True or not True"". This appears to be a Python-style logical expression, where ""not"" is the negation operator and ""or"" is the logical OR operator. I'll break it down step by step for clarity.
 
 ### Step-by-Step Reasoning:
@@ -1561,7 +1561,7 @@ Final Answer: False",False,True,1
 
 This is based on standard Boolean logic in Python.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 87,False and not ( False or False ) is,False,"To evaluate the logical expression ""False and not (False or False)"", let's break it down step by step:
 
 1. Start with the innermost parentheses: ""False or False"".  
@@ -1575,7 +1575,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""False and not (False or False)"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 88,True and True and True or not False is,True,"To evaluate the logical expression ""True and True and True or not False"", I'll break it down step by step based on standard Boolean logic rules. In Boolean algebra, operator precedence is as follows: NOT is evaluated first, followed by AND, and then OR. Operations are evaluated from left to right within the same precedence level.
 
 ### Step-by-Step Reasoning:
@@ -1596,7 +1596,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 89,False or not False or True and True is,True,"The given expression is: ""False or not False or True and True""
 
 To evaluate this logical expression, I need to follow the standard order of operations for logical operators: NOT has the highest precedence, followed by AND, and then OR.
@@ -1617,7 +1617,7 @@ To evaluate this logical expression, I need to follow the standard order of oper
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 90,not False and False and False or False is,False,"To evaluate the expression ""not False and False and False or False"" in Python, we need to follow the operator precedence rules. In Python, the 'not' operator has the highest precedence, followed by 'and', and then 'or'. The expression is evaluated from left to right within the same precedence level.
 
 Let's break it down step by step:
@@ -1637,7 +1637,7 @@ Let's break it down step by step:
 
 The full evaluation confirms that the expression results in `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 91,( False ) or not False or True is,True,"To evaluate the logical expression ""( False ) or not False or True"", let's break it down step by step using boolean logic.
 
 1. **Identify the components:**
@@ -1659,14 +1659,14 @@ Final Answer: False",False,True,1
 4. **Final result:**
    - The entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 92,( not False ) or ( True ) is,True,"To answer your question, let's evaluate the logical expression step by step. The expression is: `(not False) or (True)`.
 
 - First, evaluate `not False`. The NOT operator reverses the boolean value, so `not False` becomes `True`.
 - Next, the second part is simply `True`.
 - Now, combine them with the OR operator: `True or True`. The OR operator returns `True` if at least one of the operands is `True`, so this evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 93,not not ( False or not True ) is,False,"To evaluate the expression ""not not (False or not True)"", I'll break it down step by step using logical operators.
 
 1. Start with the innermost expression: ""not True"".  
@@ -1681,7 +1681,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 94,False or not False or False or False is,True,"To answer the query, I need to evaluate the logical expression: ""False or not False or False or False"". This is a boolean expression using the logical OR operator, which returns True if at least one of the operands is True. Let's break it down step by step.
 
 1. Start with the expression: False or not False or False or False.
@@ -1698,7 +1698,7 @@ Final Answer: False",False,True,1
 
 5. Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 95,False or not False and ( False ) is,False,"To evaluate the logical expression ""False or not False and ( False )"", follow the standard order of operations for logical operators: parentheses first, then NOT, then AND, and finally OR.
 
 1. Start with the parentheses: ( False ) evaluates to False.  
@@ -1714,7 +1714,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 96,False or ( False ) or not True is,False,"To evaluate the logical expression ""False or (False) or not True"", I'll break it down step by step using standard boolean logic.
 
 1. **Parse the expression**: The expression is ""False or (False) or not True"".  
@@ -1731,7 +1731,7 @@ Final Answer: False",False,True,1
 
    Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 97,not True or False and True and True is,False,"To evaluate the Boolean expression ""not True or False and True and True"", we need to follow the operator precedence rules in Python (and most programming languages): NOT has the highest precedence, followed by AND, and then OR. We'll evaluate it step by step.
 
 1. Start with the NOT operator:  
@@ -1749,7 +1749,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 98,True or ( True or not True ) is,True,"To answer the query, I need to evaluate the logical expression: ""True or (True or not True)"".
 
 Let's break it down step by step using boolean logic:
@@ -1767,7 +1767,7 @@ Let's break it down step by step using boolean logic:
 
 Therefore, the entire expression ""True or (True or not True)"" simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 99,True and not False and True or True is,True,"To evaluate the logical expression ""True and not False and True or True"", we need to follow the standard order of operations for Boolean logic: NOT has the highest precedence, followed by AND, and then OR. Let's break it down step by step.
 
 1. **Evaluate the NOT operator first:**  
@@ -1785,7 +1785,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 100,False or not False or not not True is,True,"To answer the query, I first need to interpret the logical expression: ""False or not False or not not True"". This appears to be a Boolean expression using the OR operator and the NOT operator. I'll evaluate it step by step, assuming standard logical rules:
 
 - **NOT** is a unary operator that inverts the truth value (e.g., NOT True = False, and NOT False = True).
@@ -1812,7 +1812,7 @@ So, the full expression is now: False OR True OR True.
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 101,( True or not False ) or False is,True,"To evaluate the logical expression ""(True or not False) or False"", I'll break it down step by step using standard boolean logic.
 
 1. Start with the innermost part: ""not False"".  
@@ -1830,7 +1830,7 @@ Final Answer: True",True,True,1
 
 The entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 102,False or not ( True ) and True is,False,"It appears the query is asking to evaluate the logical expression: ""False or not (True) and True"". This is a Boolean expression using logical operators. Let me break it down step by step.
 
 ### Reasoning:
@@ -1851,7 +1851,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 103,not False and not True and not False is,False,"To evaluate the expression ""not False and not True and not False"" in Python (or similar Boolean logic), let's break it down step by step:
 
 1. First, evaluate each ""not"" operator individually:
@@ -1867,7 +1867,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 104,False and ( True and not False ) is,False,"To evaluate the logical expression ""False and ( True and not False )"", I'll break it down step by step using the rules of boolean logic:
 
 1. Start with the innermost part: ""not False"".  
@@ -1881,7 +1881,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 105,not False or ( False ) or True is,True,"To evaluate the expression ""not False or (False) or True"", I'll break it down step by step using standard boolean logic (as in Python or general programming).
 
 1. Start with the first part: ""not False"".  
@@ -1896,7 +1896,7 @@ Final Answer: False",False,True,1
 
 3. Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 106,False and not ( False and True ) is,False,"To evaluate the logical expression ""False and not (False and True)"", I'll break it down step by step:
 
 1. Start with the innermost parentheses: ""False and True"".  
@@ -1910,7 +1910,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 107,( True or not not not False ) is,True,"To answer the query, I need to evaluate the logical expression: ""(True or not not not False)"".
 
 Let's break it down step by step:
@@ -1933,7 +1933,7 @@ Let's break it down step by step:
 
 Therefore, the expression ""(True or not not not False)"" is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 108,False and ( False or not False ) is,False,"To evaluate the logical expression ""False and ( False or not False )"", let's break it down step by step:
 
 1. Start with the innermost part: ""not False"".  
@@ -1948,7 +1948,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 109,False or not True or True and False is,False,"To evaluate the logical expression ""False or not True or True and False"", we need to follow the standard operator precedence for logical operators: NOT is evaluated first, then AND, and finally OR. Let's break it down step by step.
 
 1. Start with the expression: False or not True or True and False  
@@ -1961,7 +1961,7 @@ Final Answer: False",False,True,1
    - False or False = False  
 5. The final result of the expression is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 110,True and not True or True and True is,True,"To evaluate the logical expression ""True and not True or True and True"", I'll break it down step by step based on standard logical operator precedence: NOT is evaluated first, followed by AND, and then OR.
 
 1. Start with the expression: True AND (NOT True) OR (True AND True)
@@ -1982,7 +1982,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 111,( not False or ( True ) ) is,True,"To evaluate the expression `(not False or (True))`, I'll break it down step by step using standard logical operations (similar to Python's boolean logic).
 
 ### Step-by-Step Reasoning:
@@ -1999,7 +1999,7 @@ Final Answer: True",True,True,1
 4. **Final evaluation:**
    - The entire expression `(not False or (True))` simplifies to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 112,( ( not ( True ) ) ) is,False,"To answer the query, let's evaluate the logical expression step by step.
 
 The expression is: `( ( not ( True ) ) )`
@@ -2016,7 +2016,7 @@ The expression is: `( ( not ( True ) ) )`
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 113,False and False and not ( False ) is,False,"To evaluate the logical expression ""False and False and not (False)"", let's break it down step by step:
 
 1. Start with the innermost operation: not (False).  
@@ -2030,7 +2030,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""False and False and not (False)"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 114,not True and not True and not True is,False,"To answer the query ""not True and not True and not True is,"" let's break it down step by step using standard boolean logic, as commonly used in programming and mathematics.
 
 1. **Evaluate each part individually:**
@@ -2046,7 +2046,7 @@ Final Answer: False",False,True,1
    - Then, False and False = False.
    - Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 115,not ( True or False ) or True is,True,"Let me evaluate the logical expression: `not (True or False) or True`.
 
 Step-by-step reasoning:
@@ -2065,7 +2065,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 116,False or ( True ) or not True is,True,"To answer the query ""False or ( True ) or not True is,"" I'll interpret this as a logical expression involving boolean values and operators. Let's break it down step by step.
 
 ### Step 1: Understand the expression
@@ -2087,7 +2087,7 @@ Final Answer: True",True,True,1
 ### Step 3: Conclusion
 - The entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 117,False or False and False or not True is,False,"To evaluate the logical expression ""False or False and False or not True"", I need to follow the standard order of operations for logical operators: NOT is evaluated first, then AND, and finally OR.
 
 1. Start with ""not True"":  
@@ -2103,7 +2103,7 @@ Final Answer: True",True,True,1
    - False or False is False.  
    - So, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 118,True or False or not True or False is,True,"It seems like your query is incomplete or ambiguous, but I'll interpret it as asking about the truth value of the logical expression: ""True or False or not True or False.""
 
 To evaluate this step by step:
@@ -2117,7 +2117,7 @@ To evaluate this step by step:
    - True or False = True.
 3. Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 119,not True and ( True and True ) is,False,"To evaluate the logical expression `not True and (True and True)`, let's break it down step by step based on standard logical operator precedence (where `not` is evaluated before `and`, and parentheses are handled first).
 
 1. Start with the innermost parentheses: `True and True`.  
@@ -2131,7 +2131,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression `not True and (True and True)` simplifies to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 120,not True and True or True and False is,False,"To evaluate the expression ""not True and True or True and False"", we need to follow Python's operator precedence rules, where ""not"" has the highest precedence, followed by ""and"", and then ""or"". Let's break it down step by step:
 
 1. Evaluate ""not True"": This is False, because ""not"" negates the value of True.
@@ -2149,7 +2149,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 121,not False or ( True or True ) is,True,"To evaluate the expression ""not False or (True or True)"", I'll break it down step by step using standard boolean logic (as in Python or similar languages).
 
 1. Start with the innermost parentheses:  
@@ -2169,7 +2169,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 122,not ( False or ( False ) ) is,True,"To evaluate the logical expression `not (False or (False))`, let's break it down step by step:
 
 1. Start with the innermost parentheses: `(False)`. This is simply `False`.
@@ -2180,7 +2180,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 123,not ( True or True ) and True is,False,"To evaluate the logical expression ""not ( True or True ) and True"", let's break it down step by step:
 
 1. Start with the innermost parentheses:  
@@ -2194,7 +2194,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression simplifies to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 124,False or not False or True or True is,True,"To evaluate the logical expression ""False or not False or True or True"", I'll break it down step by step based on standard logical operators. In logic:
 
 - ""not"" is a unary operator that negates the following value.
@@ -2220,7 +2220,7 @@ Final Answer: False",False,True,1
 5. **Final result**:
    - The entire expression evaluates to True, as an ""or"" operation results in True if any part is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 125,False or False and not not not False is,False,"To evaluate the logical expression ""False or False and not not not False"", we need to follow the operator precedence rules: NOT operators are evaluated first, followed by AND, and then OR.
 
 1. Start with the innermost NOT:  
@@ -2240,7 +2240,7 @@ Final Answer: True",True,True,1
 
 The full evaluation is: False or (False and (not not not False)) = False or (False and True) = False or False = False  
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 126,not ( True or False or True ) is,False,"Let me reason through the given logical expression step by step.
 
 The expression is: `not (True or False or True)`
@@ -2255,7 +2255,7 @@ The expression is: `not (True or False or True)`
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 127,( False ) or not True and False is,False,"It appears the query is asking to evaluate a logical expression: ""( False ) or not True and False"". I'll interpret this as a Boolean expression using standard logical operator precedence (NOT has the highest precedence, followed by AND, then OR). The ""is"" at the end seems like it might be a typo or incomplete, so I'll evaluate the expression as: `(False) or (not True and False)`.
 
 ### Step-by-Step Reasoning:
@@ -2273,7 +2273,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 128,True and True and not not not False is,True,"To evaluate the logical expression ""True and True and not not not False"", I'll break it down step by step using standard boolean logic.
 
 1. Start with the innermost part of the expression: ""not not not False"".
@@ -2288,7 +2288,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""True and True and not not not False"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 129,( True ) or True and not True is,True,"To evaluate the expression ""( True ) or True and not True"", we need to follow the standard rules of Boolean operator precedence. In most programming languages and logical systems, the precedence is as follows: NOT has the highest precedence, followed by AND, and then OR.
 
 Let's break it down step by step:
@@ -2307,7 +2307,7 @@ Let's break it down step by step:
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 130,False and False and not True and False is,False,"To evaluate the logical expression ""False and False and not True and False"", I'll break it down step by step using the rules of Boolean logic:
 
 1. **Evaluate ""not True"" first**, as it's a unary operator:
@@ -2322,7 +2322,7 @@ Final Answer: True",True,True,1
 
 Since AND operations result in False as soon as any operand is False, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 131,( True ) and not True or True is,True,"To evaluate the expression ""( True ) and not True or True"", we need to follow the standard order of operations for Boolean logic. In most programming languages and logical systems:
 
 - **NOT** has the highest precedence.
@@ -2347,7 +2347,7 @@ Let's break it down step by step:
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 132,not not not True and False and False is,False,"To evaluate the expression ""not not not True and False and False"", I'll break it down step by step based on Python's operator precedence rules. In Python, the 'not' operator has higher precedence than 'and', so we evaluate the 'not' operations first, from left to right, before applying 'and'.
 
 ### Step-by-Step Reasoning:
@@ -2371,7 +2371,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""not not not True and False and False"" evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 133,False and False and not not not True is,False,"To evaluate the logical expression ""False and False and not not not True"", I'll break it down step by step.
 
 1. Start with the innermost part: ""not not not True"".
@@ -2388,7 +2388,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 134,False and False or False or not True is,False,"To evaluate the logical expression ""False and False or False or not True"", I'll break it down step by step based on Python's operator precedence rules. In Python, the 'not' operator has the highest precedence, followed by 'and', and then 'or'. Expressions are evaluated from left to right within the same precedence level.
 
 1. Start with the expression: False and False or False or not True
@@ -2407,7 +2407,7 @@ Final Answer: False",False,True,1
 
 The final result of the expression is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 135,False or ( not ( False ) ) is,True,"To evaluate the logical expression ""False or ( not ( False ) )"", let's break it down step by step:
 
 1. Start with the innermost part: not ( False ).  
@@ -2420,7 +2420,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""False or ( not ( False ) )"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 136,not True and True and not not False is,False,"To evaluate the logical expression ""not True and True and not not False"", I'll break it down step by step using standard boolean logic rules:
 
 1. Start with the first part: ""not True""  
@@ -2441,7 +2441,7 @@ Final Answer: True",True,True,1
    - Then, ""False and False"" = False.  
    - Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 137,( False ) and ( not False ) is,False,"To evaluate the expression ""( False ) and ( not False )"", let's break it down step by step:
 
 1. Start with the first part: ( False ). This is simply the boolean value False.
@@ -2452,7 +2452,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 138,( not True ) and True or True is,True,"To evaluate the expression `(not True) and True or True`, I'll break it down step by step based on Python's order of operations for logical operators (NOT has the highest precedence, followed by AND, then OR).
 
 1. Start with the innermost operation: `not True`.  
@@ -2470,7 +2470,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression `(not True) and True or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 139,False and True and ( not False ) is,False,"To evaluate the logical expression ""False and True and (not False)"", let's break it down step by step using the rules of Boolean logic:
 
 1. First, evaluate the innermost expression: (not False).  
@@ -2485,7 +2485,7 @@ Final Answer: True",True,True,1
 
 3. Therefore, the entire expression ""False and True and (not False)"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 140,( ( True ) ) or not False is,True,"The given expression is: (( True )) or not False
 
 Let's evaluate it step by step:
@@ -2496,7 +2496,7 @@ Let's evaluate it step by step:
 4. Now, the full expression is True or True.
 5. In logical operations, ""or"" returns True if at least one operand is True. Therefore, True or True evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 141,not True and False or False or True is,True,"To evaluate the expression ""not True and False or False or True"", we need to follow the order of operations for logical operators in Python (and most programming languages). The precedence is: 'not' first, then 'and', then 'or'. Let's break it down step by step:
 
 1. Start with the expression: `not True and False or False or True`
@@ -2511,7 +2511,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 142,True and not True and True and True is,False,"The expression ""True and not True and True and True"" is a logical statement involving the AND operator and the NOT operator. Let's evaluate it step by step:
 
 1. Start with the expression: True AND (NOT True) AND True AND True  
@@ -2523,7 +2523,7 @@ Final Answer: True",True,True,1
    - False AND True = False  
 5. The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 143,( True or True or not False ) is,True,"To evaluate the logical expression ""( True or True or not False )"", let's break it down step by step:
 
 1. Start with the innermost part: ""not False"".  
@@ -2535,7 +2535,7 @@ Final Answer: False",False,True,1
 
 3. Therefore, the entire expression ""( True or True or not False )"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 144,True or not False and True or True is,True,"To answer the query, I need to evaluate the logical expression: ""True or not False and True or True"".
 
 This is a Boolean expression using the operators OR, NOT, and AND. In logical expressions, the standard order of operations is:
@@ -2559,7 +2559,7 @@ Finally, evaluate the OR operators from left to right:
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 145,( not ( False ) or False ) is,True,"To evaluate the logical expression `(not (False) or False)`, let's break it down step by step:
 
 1. Start with the innermost part: `(False)`. This is simply `False`.
@@ -2569,7 +2569,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression `(not (False) or False)` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 146,True and not ( True or False ) is,False,"To evaluate the logical expression ""True and not (True or False)"", let's break it down step by step:
 
 1. Start with the innermost parentheses: ""True or False"".  
@@ -2586,7 +2586,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 147,not ( False and True ) and True is,True,"To evaluate the logical expression `not (False and True) and True`, let's break it down step by step:
 
 1. Start with the innermost operation: `False and True`.  
@@ -2601,7 +2601,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 148,not ( True and True ) or False is,False,"To evaluate the logical expression ""not (True and True) or False"", I'll break it down step by step:
 
 1. Start with the inner expression: ""True and True"".  
@@ -2618,7 +2618,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 149,False or not True and not not False is,False,"To evaluate the logical expression ""False or not True and not not False"", I'll break it down step by step, following standard operator precedence rules for logical operators: 'not' has the highest precedence, followed by 'and', and then 'or'.
 
 1. **Evaluate the innermost expressions first:**
@@ -2646,7 +2646,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to false.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 150,not True and False or False and False is,False,"To evaluate the Boolean expression `not True and False or False and False`, I'll follow the standard order of operations for logical operators in Python (and most programming languages), where:
 
 - `not` has the highest precedence.
@@ -2669,7 +2669,7 @@ Let's break it down step by step:
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 151,not True or True and False or False is,False,"To evaluate the logical expression ""not True or True and False or False"", we need to follow the standard operator precedence for logical operators: ""not"" has the highest precedence, followed by ""and"", and then ""or"". We'll evaluate it step by step.
 
 1. Start with the expression: not True or True and False or False  
@@ -2686,7 +2686,7 @@ Final Answer: False",False,True,1
 
 The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 152,( not ( False ) and False ) is,False,"To evaluate the logical expression `( not ( False ) and False )`, let's break it down step by step:
 
 1. Start with the innermost part: `not ( False )`.  
@@ -2699,7 +2699,7 @@ Final Answer: False",False,True,1
 
 3. Therefore, the entire expression `( not ( False ) and False )` simplifies to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 153,False or ( True and not True ) is,False,"To evaluate the logical expression ""False or ( True and not True )"", I'll break it down step by step:
 
 1. Start with the innermost operation: ""not True"".  
@@ -2713,7 +2713,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression simplifies to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 154,not False and not True or not True is,False,"To evaluate the expression ""not False and not True or not True"" in Python (or standard Boolean logic), I'll break it down step by step based on operator precedence. In Python, the `not` operator has the highest precedence, followed by `and`, and then `or`.
 
 ### Step-by-Step Reasoning:
@@ -2734,7 +2734,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 155,( False or not not not False ) is,True,"To evaluate the logical expression ""( False or not not not False )"", let's break it down step by step:
 
 1. Start with the innermost part: ""not False"".  
@@ -2753,7 +2753,7 @@ Final Answer: False",False,True,1
 
 The entire expression ""( False or not not not False )"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 156,( not False ) or True and False is,True,"To evaluate the logical expression ""( not False ) or True and False"", follow the standard rules of operator precedence in logic, where ""not"" has the highest precedence, followed by ""and"", and then ""or"". Parentheses are evaluated first.
 
 Step-by-step reasoning:
@@ -2771,7 +2771,7 @@ Step-by-step reasoning:
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 157,( not not True ) or not False is,True,"To evaluate the logical expression ""(not not True) or not False"", I'll break it down step by step using basic logical operators:
 
 1. Start with the innermost part: ""not True"".  
@@ -2790,7 +2790,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""(not not True) or not False"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 158,True or not ( ( True ) ) is,True,"To answer the query ""True or not ( ( True ) ) is"", I need to evaluate the expression inside the parentheses.
 
 The expression is ""( ( True ) )"". Let's break it down step by step:
@@ -2801,7 +2801,7 @@ The expression is ""( ( True ) )"". Let's break it down step by step:
 
 Therefore, the entire expression ""( ( True ) )"" evaluates to true. In response to ""True or not"", the answer is that it is true.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 159,( False ) and False or not False is,True,"To evaluate the expression ""( False ) and False or not False"", I'll break it down step by step based on standard logical operator precedence in Python (or similar languages), where 'not' has the highest precedence, followed by 'and', and then 'or'.
 
 ### Step-by-Step Reasoning:
@@ -2820,7 +2820,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 160,not False and True or ( True ) is,True,"The query appears to be asking about the evaluation of the logical expression: ""not False and True or (True)"". I'll assume this is in the context of Python or a similar programming language, where Boolean operators follow operator precedence rules (not > and > or).
 
 ### Reasoning:
@@ -2840,7 +2840,7 @@ Final Answer: True",True,True,1
 
 The word ""is"" at the end of the query might be a typo or an incomplete thought, but based on the provided expression, this is the logical outcome.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 161,True or not not ( not False ) is,True,"To answer the query, I need to evaluate the logical expression: ""True or not not (not False)"".
 
 Let's break it down step by step:
@@ -2859,7 +2859,7 @@ Let's break it down step by step:
 
 Therefore, the expression ""True or not not (not False)"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 162,False and not True and False and True is,False,"To evaluate the logical expression ""False and not True and False and True"", I'll break it down step by step based on standard boolean logic rules. In boolean expressions:
 
 - The ""not"" operator has the highest precedence, so it's evaluated first.
@@ -2880,7 +2880,7 @@ Here's the step-by-step reasoning:
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 163,not not True and True and not True is,False,"To evaluate the logical expression ""not not True and True and not True"", I'll break it down step by step based on the rules of boolean logic:
 
 1. Start with the innermost operations:
@@ -2897,7 +2897,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 164,not False or not ( not False ) is,True,"To evaluate the logical expression ""not False or not (not False)"", I'll break it down step by step using standard Boolean logic (as commonly used in programming languages like Python).
 
 ### Step-by-Step Reasoning:
@@ -2921,7 +2921,7 @@ Final Answer: False",False,True,1
 
 The expression simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 165,not not ( True ) or not True is,True,"To evaluate the logical expression ""not not (True) or not True"", let's break it down step by step using standard logical operations in programming or Boolean algebra, where ""not"" is the negation operator, and ""or"" is the logical OR.
 
 1. Start with the innermost part: `(True)`. This is simply `True`.
@@ -2936,7 +2936,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""not not (True) or not True"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 166,( True and not True and True ) is,False,"To evaluate the logical expression ""( True and not True and True )"", I'll break it down step by step based on standard logical operations:
 
 1. Start with the innermost operation: ""not True"".  
@@ -2950,7 +2950,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""( True and not True and True )"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 167,True or False or not True or True is,True,"The query appears to be asking about the truth value of the logical expression: ""True or False or not True or True.""
 
 To evaluate this step by step:
@@ -2964,7 +2964,7 @@ To evaluate this step by step:
   - True OR True = True.
 - Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 168,not True or True and False and False is,False,"To evaluate the logical expression ""not True or True and False and False"", I'll follow the standard operator precedence rules in Python (and similar languages), where:
 
 - 'not' has the highest precedence.
@@ -2989,7 +2989,7 @@ Let's break it down step by step:
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 169,True and not not not not not True is,False,"To evaluate the expression ""True and not not not not not True"", we need to break it down step by step using logical operations.
 
 1. Start with the right side: ""not not not not not True"".  
@@ -3007,7 +3007,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 170,not True and ( False ) and False is,False,"To evaluate the expression ""not True and (False) and False"", I'll break it down step by step using standard boolean logic (similar to Python's operator precedence, where 'not' has higher precedence than 'and', and 'and' is evaluated left to right).
 
 1. Start with the first part: ""not True"".  
@@ -3025,7 +3025,7 @@ Final Answer: False",False,True,1
 
 So, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 171,False and False or not True and False is,False,"To evaluate the expression ""False and False or not True and False"", we need to follow the operator precedence in Python (or similar languages), where:
 
 1. **not** has the highest precedence.
@@ -3045,7 +3045,7 @@ Let's break it down step by step:
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 172,True or False and not True and False is,True,"The query appears to be asking for the evaluation of the logical expression: ""True or False and not True and False"".
 
 To evaluate this, I'll follow standard logical operator precedence: NOT has the highest precedence, followed by AND, then OR. So, the expression is parsed as:  
@@ -3065,7 +3065,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 173,not ( False or False or True ) is,False,"To evaluate the expression ""not (False or False or True)"", I'll break it down step by step using the rules of logical operators:
 
 1. Start with the inner expression inside the parentheses: False or False or True.
@@ -3078,7 +3078,7 @@ Final Answer: True",True,True,1
 
 Therefore, the full expression ""not (False or False or True)"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 174,not False or True or True and False is,True,"To evaluate the expression ""not False or True or True and False"", we need to follow the rules of operator precedence in logical expressions, as commonly used in programming languages like Python. The precedence order is:
 
 1. **not** (highest precedence)
@@ -3096,7 +3096,7 @@ We'll evaluate the expression step by step:
 
 Thus, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 175,not False and False or False or False is,False,"To evaluate the expression ""not False and False or False or False"" in Python, we need to follow the order of operations for logical operators. In Python, the precedence is: NOT first, then AND, then OR. Let's break it down step by step:
 
 1. Start with the expression: `not False and False or False or False`
@@ -3111,7 +3111,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 176,( not True ) and ( False ) is,False,"To evaluate the logical expression ""(not True) and (False)"", let's break it down step by step:
 
 1. Start with the first part: ""not True"".  
@@ -3125,7 +3125,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""(not True) and (False)"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 177,True and not not False and not False is,False,"To evaluate the logical expression ""True and not not False and not False"", I'll break it down step by step based on standard logical operator precedence (where 'not' is evaluated before 'and').
 
 1. Start with the expression: True and (not not False) and (not False).
@@ -3146,7 +3146,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 178,not ( not not False ) and True is,True,"To evaluate the logical expression ""not ( not not False ) and True"", I'll break it down step by step.
 
 1. Start with the innermost part:  
@@ -3164,7 +3164,7 @@ Final Answer: False",False,True,1
 
 The full expression simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 179,not ( not False ) and not False is,False,"Let's evaluate the logical expression: `not (not False) and not False`.
 
 Step-by-step reasoning:
@@ -3187,7 +3187,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 180,False or True and not False or True is,True,"To evaluate the logical expression ""False or True and not False or True"", I need to follow the standard precedence rules for logical operators: 'not' has the highest precedence, followed by 'and', and then 'or'. I'll evaluate it step by step.
 
 1. Start with the expression: False or True and not False or True
@@ -3202,7 +3202,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 181,( not not not True and True ) is,False,"To evaluate the logical expression `(not not not True and True)`, I'll break it down step by step based on standard boolean logic (similar to Python's operator precedence, where `not` has higher precedence than `and`).
 
 1. Start with the innermost expression: `True` is a boolean value that equals True.
@@ -3221,7 +3221,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 182,False and not ( True ) or True is,True,"To evaluate the logical expression ""False and not (True) or True"", I'll break it down step by step based on the standard order of operations for logical operators: parentheses first, then NOT, then AND, and finally OR.
 
 1. Start with the expression: False and not (True) or True  
@@ -3235,7 +3235,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 183,( not True and False or True ) is,True,"To evaluate the expression `(not True and False or True)`, I'll follow the standard order of operations for logical operators in Python (or similar languages), where `not` has the highest precedence, followed by `and`, and then `or`.
 
 Step-by-step reasoning:
@@ -3249,7 +3249,7 @@ Step-by-step reasoning:
 
 Thus, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 184,not ( not not True ) or False is,False,"To evaluate the logical expression ""not ( not not True ) or False"", let's break it down step by step based on standard boolean logic:
 
 1. Start with the innermost expression: ""not True"".  
@@ -3266,7 +3266,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""not ( not not True ) or False"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 185,( not False ) or ( False ) is,True,"To answer the query, let's evaluate the logical expression step by step. The expression given is: `(not False) or (False)`.
 
 ### Step-by-Step Reasoning:
@@ -3286,7 +3286,7 @@ Final Answer: False",False,True,1
 4. **Final evaluation:**  
    - The entire expression `(not False) or (False)` simplifies to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 186,not not not False and True and False is,False,"To evaluate the expression ""not not not False and True and False"", I'll break it down step by step based on standard logical operator precedence in languages like Python. The 'not' operator has higher precedence than 'and', and 'and' is evaluated from left to right.
 
 ### Step-by-Step Reasoning:
@@ -3308,7 +3308,7 @@ Final Answer: True",True,True,1
 3. **Final result:**
    - The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 187,True or not True or not not True is,True,"To answer your query, I'll interpret the statement ""True or not True or not not True is"" as a logical expression asking whether the expression ""True or not True or not not True"" evaluates to True. Let's break it down step by step.
 
 ### Step-by-Step Reasoning:
@@ -3331,7 +3331,7 @@ Final Answer: False",False,True,1
 
 Therefore, the statement ""True or not True or not not True"" is indeed True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 188,not False or not not False and False is,True,"To evaluate the logical expression ""not False or not not False and False"", I'll break it down step by step based on standard operator precedence rules (where 'not' is evaluated first, followed by 'and', then 'or').
 
 ### Step 1: Evaluate the 'not' operators
@@ -3352,7 +3352,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 189,not False and ( False or False ) is,False,"To evaluate the expression ""not False and ( False or False )"", I'll break it down step by step using logical operators in Python or standard Boolean logic.
 
 1. Start with the innermost parentheses:  
@@ -3368,7 +3368,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""not False and ( False or False )"" evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 190,False and True or ( not False ) is,True,"To evaluate the logical expression ""False and True or (not False)"", I'll break it down step by step based on the order of operations for logical operators in Python (or similar languages). The precedence is: NOT first, then AND, then OR.
 
 1. Start with the parentheses: (not False).  
@@ -3384,7 +3384,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""False and True or (not False)"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 191,False and not False and ( False ) is,False,"To evaluate the logical expression ""False and not False and (False)"", let's break it down step by step using standard logical operators:
 
 1. Start with the innermost parts: ""not False"" evaluates to True, because the negation of False is True.
@@ -3399,7 +3399,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 192,not ( ( False and True ) ) is,True,"To evaluate the logical expression ""not ( ( False and True ) )"", let's break it down step by step:
 
 1. Start with the innermost part: ""False and True"".  
@@ -3410,7 +3410,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""not ( ( False and True ) )"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 193,False or ( not False ) and False is,False,"To evaluate the logical expression ""False or (not False) and False"", I'll break it down step by step based on standard logical operator precedence: 'not' is evaluated first, followed by 'and', and then 'or'.
 
 1. Start with the innermost operation: ""not False"".  
@@ -3426,7 +3426,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 194,False and not False or False and True is,False,"To evaluate the logical expression ""False and not False or False and True"", we need to follow the standard operator precedence: NOT is evaluated first, then AND, and finally OR.
 
 Step-by-step reasoning:
@@ -3446,7 +3446,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 195,not False and not not True and True is,True,"To evaluate the expression ""not False and not not True and True"", I'll break it down step by step using standard boolean logic (as commonly implemented in programming languages like Python).
 
 ### Step-by-Step Reasoning:
@@ -3471,7 +3471,7 @@ Final Answer: False",False,True,1
 
 In summary, the expression ""not False and not not True and True"" simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 196,True and True or False and not True is,True,"To evaluate the expression ""True and True or False and not True"", I'll break it down step by step based on standard logical operator precedence in programming languages like Python. The precedence order is: 
 
 1. **not** (highest precedence)
@@ -3495,7 +3495,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 197,not True or False and True or False is,False,"The query appears to be asking about the evaluation of a logical expression: ""not True or False and True or False"". I'll interpret this as a Boolean expression using standard logical operator precedence, where:
 
 - **NOT** has the highest precedence.
@@ -3519,7 +3519,7 @@ Let's break it down step by step:
 
 The final result of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 198,True or False or not True and True is,True,"It seems like your query is attempting to form a logical expression: ""True or False or not True and True is"". This is a bit ambiguous, but I'll interpret it as a Boolean expression: `(True OR False OR (NOT True) AND True)`. Let's break it down step by step using standard logical operator precedence (NOT first, then AND, then OR).
 
 ### Reasoning:
@@ -3537,7 +3537,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 199,False or False or not True or False is,False,"To answer your question, I'll evaluate the logical expression ""False or False or not True or False"" step by step. This is a Boolean expression using logical operators.
 
 ### Step-by-Step Reasoning:
@@ -3559,7 +3559,7 @@ Final Answer: True",True,True,1
 5. **Final evaluation**:
    - All operands are False, and OR requires at least one True to result in True. Therefore, the entire expression evaluates to False.
 
-### Final Answer: False",False,True,1
+### Final Answer: False",False,True,1,
 200,False or False or True and not False is,True,"To evaluate the logical expression ""False or False or True and not False"", I'll break it down step by step based on standard logical operator precedence. In logic, 'not' has the highest precedence, followed by 'and', and then 'or'. Expressions with 'or' are evaluated from left to right.
 
 1. Start with the expression: False or False or True and not False  
@@ -3573,7 +3573,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 201,( not ( True or False ) ) is,False,"To evaluate the logical expression `( not ( True or False ) )`, let's break it down step by step:
 
 1. Start with the innermost expression: `True or False`.  
@@ -3586,7 +3586,7 @@ Final Answer: True",True,True,1
 
 3. Therefore, the full expression `( not ( True or False ) )` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 202,not False and False or True and True is,True,"To evaluate the expression ""not False and False or True and True"", we need to follow Python's operator precedence rules. In Python, the precedence is: `not` > `and` > `or`. Let's break it down step by step:
 
 1. Start with the expression: `not False and False or True and True`
@@ -3602,7 +3602,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 203,True and False or ( not False ) is,True,"To evaluate the logical expression ""True and False or (not False)"", I'll break it down step by step using standard Boolean logic rules. In Boolean algebra:
 
 - The ""not"" operator has the highest precedence.
@@ -3630,7 +3630,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""True and False or (not False)"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 204,not False or not not not not True is,True,"To evaluate the logical expression ""not False or not not not not True"", I'll break it down step by step using standard boolean logic.
 
 1. Start with the right side: ""not not not not True"".
@@ -3648,7 +3648,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 205,True and ( not ( True ) ) is,False,"To evaluate the expression ""True and (not (True))"", let's break it down step by step:
 
 1. Start with the innermost part: (True). This is simply the boolean value True.
@@ -3657,7 +3657,7 @@ Final Answer: True",True,True,1
 
 3. Now evaluate the full expression: True and (not (True)), which is True and False. The ""and"" operator returns True only if both operands are True; otherwise, it returns False. Therefore, True and False evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 206,True and False and not True or False is,False,"To evaluate the logical expression ""True and False and not True or False"", we need to follow the standard operator precedence in logic, which is:
 
 1. **Not** (highest precedence)
@@ -3678,7 +3678,7 @@ The expression is evaluated from left to right, applying these rules.
 
 Thus, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 207,( ( not False ) ) and True is,True,"To evaluate the expression `(( not False )) and True`, let's break it down step by step:
 
 1. Start with the innermost part: `not False`.  
@@ -3694,7 +3694,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression `(( not False )) and True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 208,not ( True ) and ( False ) is,False,"To evaluate the logical expression ""not ( True ) and ( False )"", let's break it down step by step:
 
 1. Start with the first part: ""not ( True )"".  
@@ -3708,7 +3708,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 209,True or not False and False and False is,True,"The user's query appears to be asking about the evaluation of the logical expression: ""True or not False and False and False"".
 
 To evaluate this expression, I need to follow standard logical operator precedence: NOT is evaluated first, followed by AND, and then OR. Parentheses are not present, so I'll apply the precedence rules.
@@ -3729,7 +3729,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 210,True and not ( False or False ) is,True,"To evaluate the logical expression ""True and not (False or False)"", let's break it down step by step:
 
 1. Start with the innermost part: (False or False).  
@@ -3745,7 +3745,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 211,not True and False or False and True is,False,"To evaluate the logical expression ""not True and False or False and True"", I need to follow the standard operator precedence for Boolean operators: 'not' has the highest precedence, followed by 'and', and then 'or'. I'll break it down step by step.
 
 1. Start with the expression: not True and False or False and True  
@@ -3760,7 +3760,7 @@ Final Answer: True",True,True,1
 
 The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 212,not True or not False and not True is,False,"To evaluate the logical expression ""not True or not False and not True"", we need to follow the standard rules of logical operators. In logic, the ""and"" operator has higher precedence than ""or"", so we evaluate ""and"" first. Additionally, we'll evaluate the ""not"" operators from left to right as needed.
 
 Step-by-step reasoning:
@@ -3782,7 +3782,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 213,not True or False or True and True is,True,"To evaluate the expression ""not True or False or True and True"", we need to follow the order of operations for logical operators in Python (or similar programming languages). The precedence is: ""not"" first, then ""and"", and finally ""or"". Let's break it down step by step:
 
 1. Start with the expression: `not True or False or True and True`
@@ -3801,7 +3801,7 @@ The entire expression evaluates to True.
 
 The word ""is"" at the end of your query might be a typo or part of the sentence, but I've treated the core as the logical expression above.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 214,not True and True and False and True is,False,"To evaluate the logical expression ""not True and True and False and True"", we need to follow the rules of logical operators. In most programming languages and logical contexts, the ""not"" operator has the highest precedence, followed by ""and"". The expression is evaluated from left to right for ""and"" operations.
 
 Let's break it down step by step:
@@ -3821,7 +3821,7 @@ Let's break it down step by step:
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 215,False and False or not True and True is,False,"To evaluate the logical expression ""False and False or not True and True"", I'll follow the order of operations for logical operators in Python (or similar languages), where:
 
 - **NOT** has the highest precedence.
@@ -3844,7 +3844,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 216,( not False or False and True ) is,True,"To evaluate the logical expression `(not False or False and True)`, I'll follow the standard order of operations for logical operators in most programming languages (like Python), where:
 
 - `not` has the highest precedence.
@@ -3866,7 +3866,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression `(not False or False and True)` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 217,( True or False ) or not True is,True,"It seems like your question is asking whether the logical expression ""(True or False) or not True"" evaluates to True or False. Let me break it down step by step:
 
 1. Start with the inner expression: ""True or False"".  
@@ -3881,7 +3881,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""(True or False) or not True"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 218,not not not ( False ) and False is,False,"To evaluate the expression ""not not not (False) and False"", I'll break it down step by step using logical operations.
 
 1. Start with the innermost part: False.
@@ -3896,7 +3896,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 219,not False and False and False and True is,False,"To evaluate the expression ""not False and False and False and True"", I'll break it down step by step. This is a logical expression, likely in a programming context like Python, where ""not"" is a negation operator and ""and"" is a logical AND operator.
 
 ### Step-by-Step Reasoning:
@@ -3912,7 +3912,7 @@ Final Answer: False",False,True,1
    - `False and True` evaluates to `False` (because False AND True is False).
 4. The final result of the entire expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 220,False and not True and True or False is,False,"To evaluate the logical expression ""False and not True and True or False"", we need to follow the standard operator precedence rules for logical operators: ""not"" has the highest precedence, followed by ""and"", and then ""or"". We'll evaluate it step by step.
 
 1. Start with the expression: False and not True and True or False  
@@ -3927,7 +3927,7 @@ Final Answer: False",False,True,1
 
 The entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 221,( False or not False and False ) is,False,"To evaluate the logical expression `(False or not False and False)`, we need to follow the standard operator precedence in logic: 'not' is evaluated first, followed by 'and', and then 'or'. The expression is already enclosed in parentheses, so we'll treat it as a single unit.
 
 Step-by-step reasoning:
@@ -3947,7 +3947,7 @@ Step-by-step reasoning:
 
 Thus, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 222,False or ( False or not False ) is,True,"To evaluate the logical expression ""False or (False or not False)"", let's break it down step by step:
 
 1. Start with the innermost operation: ""not False"".  
@@ -3962,7 +3962,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""False or (False or not False)"" simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 223,not False or True or False and False is,True,"To evaluate the expression ""not False or True or False and False"", we need to follow Python's operator precedence rules for logical operators. The precedence is:
 
 1. **not** (highest precedence)
@@ -3981,7 +3981,7 @@ Let's break it down step by step:
 
 Thus, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 224,True or ( not False ) or True is,True,"To evaluate the logical expression ""True or (not False) or True"", I'll break it down step by step using standard Boolean logic.
 
 1. Start with the innermost part: ""not False"".  
@@ -3995,7 +3995,7 @@ Final Answer: True",True,True,1
 
 3. Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 225,not False and False or True or False is,True,"To evaluate the expression `not False and False or True or False`, we need to follow the order of operations for logical operators in Python (or similar languages). The precedence is: NOT first, then AND, then OR. Expressions are evaluated from left to right, respecting precedence.
 
 Here's the step-by-step reasoning:
@@ -4016,7 +4016,7 @@ Here's the step-by-step reasoning:
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 226,False and not ( not not False ) is,False,"To evaluate the expression ""False and not (not not False)"", let's break it down step by step:
 
 1. Start with the innermost part: ""False"".
@@ -4027,7 +4027,7 @@ Final Answer: True",True,True,1
 
 Thus, the expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 227,not not ( not True ) or False is,False,"To evaluate the logical expression ""not not (not True) or False"", I'll break it down step by step based on standard boolean logic (similar to Python's operator precedence, where 'not' has higher precedence and parentheses are evaluated first).
 
 ### Step-by-Step Reasoning:
@@ -4052,7 +4052,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""not not (not True) or False"" simplifies to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 228,False and not True and True and False is,False,"To evaluate the logical expression ""False and not True and True and False"", I'll break it down step by step based on standard logical operator precedence. In logic, the ""not"" operator has higher precedence than ""and"", and ""and"" operations are evaluated from left to right.
 
 1. Start with the expression: False and not True and True and False  
@@ -4066,7 +4066,7 @@ Final Answer: False",False,True,1
 
 The overall result of the expression is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 229,True or False and not ( True ) is,True,"To evaluate the logical expression ""True or False and not (True)"", I need to follow the standard order of operations for logical operators: parentheses first, then 'not', followed by 'and', and finally 'or'.
 
 1. Start with the innermost parentheses: not (True).  
@@ -4082,7 +4082,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""True or False and not (True)"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 230,not ( False ) and ( True ) is,True,"To evaluate the logical expression ""not (False) and (True)"", let's break it down step by step based on standard logical operator precedence (where ""not"" is evaluated before ""and"").
 
 1. Start with the first part: ""not (False)"".  
@@ -4100,7 +4100,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""not (False) and (True)"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 231,False and not ( ( True ) ) is,False,"To evaluate the logical expression ""False and not ( ( True ) )"", let's break it down step by step:
 
 1. Start with the innermost part: ( ( True ) ). This is simply True, as the extra parentheses don't change the value.
@@ -4108,7 +4108,7 @@ Final Answer: True",True,True,1
 3. Now the expression is: False and False.
 4. The 'and' operator returns True only if both operands are True. Since both are False, the result is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 232,not False or ( not not False ) is,True,"To evaluate the logical expression ""not False or (not not False)"", I'll break it down step by step using standard boolean logic (as commonly used in programming languages like Python).
 
 ### Step-by-Step Reasoning:
@@ -4132,7 +4132,7 @@ Final Answer: False",False,True,1
 
 The overall expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 233,( ( not False ) and False ) is,False,"To evaluate the logical expression `( ( not False ) and False )`, let's break it down step by step:
 
 1. Start with the innermost part: `not False`.  
@@ -4145,7 +4145,7 @@ Final Answer: True",True,True,1
 
 3. Therefore, the full expression `( ( not False ) and False )` evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 234,True or False and not False and True is,True,"To evaluate the logical expression ""True or False and not False and True"", I need to follow the standard order of operations for logical operators. In Boolean logic, 'not' has the highest precedence, followed by 'and', and then 'or'.
 
 Step-by-step reasoning:
@@ -4165,7 +4165,7 @@ Step-by-step reasoning:
 
 Therefore, the entire expression ""True or False and not False and True"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 235,( ( not True and True ) ) is,False,"To evaluate the expression `( ( not True and True ) )`, let's break it down step by step:
 
 1. Start with the innermost part: `not True`.  
@@ -4176,7 +4176,7 @@ Final Answer: True",True,True,1
 
 3. The outer parentheses don't change the result, so the full expression `( ( not True and True ) )` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 236,not ( False ) or not not False is,True,"To answer the query, I need to evaluate the logical expression: `not (False) or not not False`. This is a boolean expression in Python or similar languages. Let's break it down step by step.
 
 ### Step-by-Step Reasoning:
@@ -4198,7 +4198,7 @@ Final Answer: False",False,True,1
 
 The ""is"" at the end of the query seems to be part of the sentence and not part of the expression, so I'll ignore it for the evaluation.
 
-### Final Answer: True",True,True,1
+### Final Answer: True",True,True,1,
 237,not ( False or False and False ) is,True,"To evaluate the logical expression ""not ( False or False and False )"", I'll break it down step by step based on the order of operations for logical operators (AND has higher precedence than OR, and parentheses are evaluated first).
 
 1. Start with the innermost operation: False and False.  
@@ -4212,7 +4212,7 @@ The ""is"" at the end of the query seems to be part of the sentence and not part
 
 Therefore, the expression ""not ( False or False and False )"" simplifies to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 238,False and not ( not not True ) is,False,"To evaluate the logical expression ""False and not ( not not True )"", let's break it down step by step:
 
 1. Start with the innermost part: ""not not True"".
@@ -4227,7 +4227,7 @@ Final Answer: True",True,True,1
 
 Therefore, the expression ""False and not ( not not True )"" simplifies to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 239,False and False and not ( True ) is,False,"To evaluate the logical expression ""False and False and not (True)"", let's break it down step by step:
 
 1. Start with the innermost part: ""not (True)"".  
@@ -4242,7 +4242,7 @@ Final Answer: False",False,True,1
 
 3. Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 240,False or ( not False and False ) is,False,"To evaluate the logical expression ""False or (not False and False)"", I'll break it down step by step using the rules of boolean logic:
 
 1. Start with the innermost expression: ""not False"".  
@@ -4261,7 +4261,7 @@ Final Answer: False",False,True,1
 
 The expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 241,False or ( not not not True ) is,False,"To evaluate the logical expression ""False or (not not not True)"", I'll break it down step by step.
 
 1. Start with the innermost part: ""not not not True"".
@@ -4277,7 +4277,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression ""False or (not not not True)"" is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 242,( not False ) or not not False is,True,"To evaluate the logical expression `(not False) or not not False`, let's break it down step by step using boolean logic:
 
 1. Start with the inner expressions:
@@ -4295,7 +4295,7 @@ Final Answer: False",False,True,1
 
 Thus, the entire expression `(not False) or not not False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 243,not False and False and True or False is,False,"To evaluate the expression ""not False and False and True or False"", we need to follow Python's operator precedence rules. The precedence is: `not` > `and` > `or`. Evaluation occurs from left to right within the same precedence level.
 
 Step-by-step reasoning:
@@ -4317,7 +4317,7 @@ Step-by-step reasoning:
 
 The final result of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 244,True or not False and ( False ) is,True,"The query appears to be asking about the evaluation of a logical expression: ""True or not False and (False)"". I'll interpret this as a Boolean expression using standard logical operator precedence, where NOT has the highest precedence, followed by AND, and then OR. The expression is: True OR (NOT False) AND False.
 
 Let's evaluate it step by step:
@@ -4333,7 +4333,7 @@ Let's evaluate it step by step:
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 245,( not ( False ) ) or False is,True,"To evaluate the logical expression ""( not ( False ) ) or False"", let's break it down step by step:
 
 1. Start with the innermost part: ""False"". This is a boolean value that is simply False.
@@ -4343,7 +4343,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression ""( not ( False ) ) or False"" evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 246,True and not True or False and True is,False,"To evaluate the logical expression ""True and not True or False and True"", I'll follow standard logical operator precedence: NOT is evaluated first, followed by AND, and then OR. The expression can be parsed as: (True AND (NOT True)) OR (False AND True).
 
 Let's break it down step by step:
@@ -4364,7 +4364,7 @@ Let's break it down step by step:
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 247,not ( not not not not False ) is,True,"To evaluate the logical expression ""not ( not not not not False )"", I'll break it down step by step. In logic, the ""not"" operator inverts a boolean value (True becomes False, and False becomes True).
 
 - Start with the innermost expression: False
@@ -4376,7 +4376,7 @@ Final Answer: False",False,True,1
 
 So, after five ""not"" operations (an odd number), the original False value is flipped to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 248,True and ( not True or False ) is,False,"To evaluate the logical expression ""True and (not True or False)"", let's break it down step by step:
 
 1. Start with the innermost part: ""not True"".  
@@ -4390,7 +4390,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression is False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 249,( not not not False or True ) is,True,"To evaluate the logical expression `(not not not False or True)`, I'll break it down step by step based on standard logical operator precedence. In logic, the `not` operator has higher precedence and is applied from right to left, while `or` is evaluated after.
 
 1. Start with the innermost expression: `not False`.  
@@ -4408,4 +4408,4 @@ Final Answer: False",False,True,1
 
 The expression `(not not not False or True)` therefore evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,

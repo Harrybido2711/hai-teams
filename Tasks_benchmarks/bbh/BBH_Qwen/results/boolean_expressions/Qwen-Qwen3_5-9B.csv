@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,not ( True ) and ( True ) is,False,"The expression provided is `not (True) and (True)`. The word ""is"" at the end is interpreted as the question asking for the result of the expression (e.g., ""What is...""), rather than the Python identity operator, which would require a value on the right side.
 
 Here is the step-by-step evaluation based on boolean logic:
@@ -9,7 +9,7 @@ Here is the step-by-step evaluation based on boolean logic:
 
 Therefore, the value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 1,True and not not ( not False ) is,True,"To evaluate the expression `True and not not ( not False )`, we follow the order of operations, starting with the innermost parentheses and working outward.
 
 1.  **Evaluate the innermost parentheses:**
@@ -30,7 +30,7 @@ Final Answer: False",False,True,1
     In boolean logic, the `and` operator returns `True` only if both operands are `True`.
     Therefore, `True and True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 2,not True or False or ( False ) is,False,"To evaluate the expression `not True or False or ( False )`, we follow the standard order of operations for boolean logic (specifically in languages like Python):
 
 1.  **Operator Precedence**: The `not` operator has higher precedence than the `or` operator. Therefore, `not True` is evaluated first.
@@ -38,7 +38,7 @@ Final Answer: True",True,True,1
 3.  **Substitute**: The expression simplifies to `False or False or False`.
 4.  **Evaluate `or`**: The `or` operator returns `True` only if at least one of the operands is `True`. Since all operands in this case are `False`, the result remains `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 3,False or not ( True ) and False is,False,"To evaluate the expression `False or not ( True ) and False`, we must follow the standard operator precedence rules for boolean logic (typically `not` > `and` > `or`).
 
 1.  **Evaluate `not`**: The `not` operator has the highest precedence.
@@ -52,7 +52,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate `or`**: Finally, the `or` operator is evaluated.
     `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 4,True or not False and True and False is,True,"To determine the value of the expression `True or not False and True and False`, we must apply standard boolean operator precedence rules (common in programming languages like Python, C++, and Java).
 
 1.  **Operator Precedence**: The order of operations is typically `not` (highest), then `and`, then `or` (lowest).
@@ -68,7 +68,7 @@ Final Answer: False",False,True,1
 
 Therefore, the expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 5,False or not not not False and True is,True,"To determine the value of the expression `False or not not not False and True`, we must follow the standard order of operations (precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -95,7 +95,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate the `or` operation:**
     *   `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 6,not True and ( False or True ) is,False,"To evaluate the expression `not True and ( False or True )`, we follow the standard order of operations for boolean logic:
 
 1.  **Evaluate `not True`**: The `not` operator negates the value. `not True` evaluates to `False`.
@@ -104,7 +104,7 @@ Final Answer: True",True,True,1
 
 The trailing `is` in the question appears to be part of the sentence structure (e.g., asking ""What is..."") rather than part of the code syntax itself.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 7,True and not False or ( True ) is,True,"The expression provided is `True and not False or ( True ) is`.
 
 1.  **Analyze the Syntax**: In Python, the keyword `is` is an identity operator that requires two operands (e.g., `a is b`). The expression ends with `is` without a right-hand operand, which would technically result in a `SyntaxError` if run as code. However, in the context of a logic question, the word ""is"" likely serves as the verb for the question (e.g., ""What is the value of...?"") rather than part of the code itself. We will evaluate the boolean logic preceding it.
@@ -126,7 +126,7 @@ Final Answer: False",False,True,1
 
 4.  **Conclusion**: The boolean value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 8,not True or ( False and True ) is,False,"To evaluate the boolean expression `not True or ( False and True )`, we follow the standard order of operations (precedence):
 
 1.  **Parentheses**: Evaluate the expression inside the parentheses first.
@@ -140,7 +140,7 @@ Final Answer: True",True,True,1
 3.  **Logical OR**: Finally, evaluate the `or` operator.
     *   `False or False` evaluates to `False` because the `or` operator returns true only if at least one operand is true.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 9,not True or ( True or False ) is,True,"The expression provided is `not True or ( True or False )`. The trailing word `is` is interpreted as the question verb (e.g., ""What is...""), as the expression is syntactically incomplete if `is` is treated as an operator without a right-hand operand.
 
 Here is the step-by-step evaluation based on standard boolean operator precedence (where `not` binds tighter than `or`, and parentheses are evaluated first):
@@ -154,7 +154,7 @@ Here is the step-by-step evaluation based on standard boolean operator precedenc
 
 Therefore, the boolean value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 10,False or ( False ) and not False is,False,"To determine the value of the expression `False or ( False ) and not False`, we must follow the standard order of operations (precedence) for logical operators:
 
 1.  **`not`** has the highest precedence.
@@ -177,7 +177,7 @@ Final Answer: True",True,True,1
     The `or` operator connects `False` and `False`. Since both operands are `False`, the result is `False`.
     `False or False` becomes `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 11,not False or True and False and False is,True,"The input string provided is `not False or True and False and False is`. In the context of a logic question, the word ""is"" at the end is interpreted as the verb of the question (asking ""What is the result of...""), rather than part of the code expression itself. Therefore, the expression to evaluate is:
 
 `not False or True and False and False`
@@ -207,7 +207,7 @@ Here is the step-by-step reasoning based on standard operator precedence (specif
 
 In all valid interpretations of the logic, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 12,not True or False or not not True is,True,"To evaluate the boolean expression `not True or False or not not True`, we must follow the standard order of operations for logical operators. The `not` operator (negation) has higher precedence than the `or` operator (disjunction).
 
 1.  **Evaluate `not` operations first:**
@@ -224,7 +224,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 13,True and True and False and not True is,False,"To evaluate the expression `True and True and False and not True`, we follow the order of operations for boolean logic:
 
 1.  **Evaluate `not` first:** The `not` operator has higher precedence than `and`. Therefore, `not True` evaluates to `False`.
@@ -236,7 +236,7 @@ Final Answer: True",True,True,1
 
 Since there is a `False` value in the chain, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 14,not not True and not True or True is,True,"The expression provided is `not not True and not True or True is`.
 
 1.  **Analyze the Syntax**: In Python, the keyword `is` is used for identity comparison (e.g., `a is b`) and requires a right-hand operand. The expression ends with `is` without a following value, which would technically result in a `SyntaxError` if run as raw code. However, in the context of a question (""Question: ... is""), the word `is` is likely the verb of the question asking for the value of the preceding expression, or it is a typo for `True`. We will evaluate the logical boolean chain assuming the expression is `not not True and not True or True`.
@@ -262,7 +262,7 @@ Final Answer: False",False,True,1
 
 4.  **Conclusion**: The logical value of the boolean expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 15,not not not ( True and False ) is,True,"To evaluate the expression `not not not ( True and False )`, we follow the order of operations and boolean logic rules:
 
 1.  **Evaluate the parentheses first:** The expression inside the parentheses is `( True and False )`. In boolean logic, `True and False` evaluates to `False`.
@@ -272,7 +272,7 @@ Final Answer: True",True,True,1
 
 Alternatively, since there are three `not` operators (an odd number), the final result will be the opposite of the initial value inside the parentheses. Since `True and False` is `False`, the opposite is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 16,not not False and not not not False is,False,"The expression provided is `not not False and not not not False is`.
 
 1.  **Analyze the Syntax**: In Python, `is` is a keyword used for identity comparison (e.g., `a is b`). Having `is` at the end of an expression without a right-hand operand (e.g., `False is`) results in a `SyntaxError`. However, in the context of logic puzzles or questions, the trailing `is` often functions as a question marker (e.g., ""Is [expression] true?"") or is a typo for `is True`. We will evaluate the logical boolean value of the expression preceding `is`.
@@ -294,7 +294,7 @@ Final Answer: True",True,True,1
 
 5.  **Conclusion**: The logical value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 17,( True and not True and False ) is,False,"To determine the value of the expression `(True and not True and False)`, we evaluate it step-by-step based on standard boolean logic:
 
 1.  **Evaluate the `not` operator:** The expression contains `not True`. The negation of `True` is `False`.
@@ -305,7 +305,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 18,False and False and False or not False is,True,"To evaluate the boolean expression `False and False and False or not False`, we must follow the standard operator precedence rules used in most programming languages (like Python):
 
 1.  **`not`** has the highest precedence.
@@ -329,7 +329,7 @@ Final Answer: False",False,True,1
     The `or` operator returns `True` if at least one operand is `True`.
     `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 19,False or ( False and not False ) is,False,"To evaluate the expression `False or ( False and not False )`, we follow the standard order of operations for boolean logic:
 
 1.  **Parentheses first**: Evaluate `( False and not False )`.
@@ -339,7 +339,7 @@ Final Answer: True",True,True,1
 2.  **Evaluate the remaining expression**: The original expression simplifies to `False or False`.
     *   The `or` operator returns `True` if at least one operand is `True`. Since both operands are `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 20,True and False or ( not True ) is,False,"To evaluate the expression `True and False or ( not True )`, we must follow the standard order of operations for boolean logic (precedence):
 
 1.  **Evaluate `not` first:**
@@ -356,7 +356,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 21,not not ( True ) and not False is,True,"The expression provided is `not not ( True ) and not False`. The word ""is"" at the end of the question line functions as the grammatical verb of the question (e.g., ""What is...?""), rather than being part of the logical expression itself (as `is` is an identity operator in programming languages like Python and would require a right-hand operand to be valid syntax).
 
 Here is the step-by-step evaluation of the logical expression:
@@ -376,7 +376,7 @@ Here is the step-by-step evaluation of the logical expression:
 
 Therefore, the result of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 22,not False or ( True ) and True is,True,"The expression provided is `not False or ( True ) and True is`. To evaluate this, we must consider operator precedence and short-circuit evaluation rules typically found in programming languages like Python (where `True` and `False` are capitalized).
 
 1.  **Operator Precedence**: The operators involved are `not`, `and`, `or`, and `is`. Their precedence from highest to lowest is generally:
@@ -396,7 +396,7 @@ Final Answer: True",True,True,1
 
 4.  **Syntax Note**: While the trailing `is` would cause a `SyntaxError` in a strict Python interpreter if the code were to be parsed fully (since `is` requires two operands), the logical flow of the boolean expression stops at the first `True` due to the `or` operator. In the context of logical evaluation questions, the short-circuiting takes precedence.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 23,not ( True ) or False or True is,True,"To evaluate the expression `not ( True ) or False or True`, we follow the standard order of operations for logical operators, where `not` has higher precedence than `or`.
 
 1.  **Evaluate `not ( True )`**: The `not` operator negates the value inside the parentheses. Since `True` negated is `False`, this part becomes `False`.
@@ -405,7 +405,7 @@ Final Answer: True",True,True,1
     *   Expression becomes: `False or True`
 3.  **Evaluate `False or True`**: Since the second operand is `True`, the result of the `or` operation is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 24,( True and not not not True ) is,False,"To evaluate the expression `( True and not not not True )`, we break it down step-by-step:
 
 1.  **Evaluate the `not` operators:**
@@ -421,7 +421,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 25,( False or not False or False ) is,True,"The expression provided is `( False or not False or False )`. To determine the value, we evaluate the boolean logic step-by-step based on standard operator precedence (specifically consistent with Python syntax, indicated by the capitalized `False` and `not` keyword).
 
 1.  **Operator Precedence**: The `not` operator has higher precedence than the `or` operator. Therefore, we must evaluate `not False` first.
@@ -432,7 +432,7 @@ Final Answer: False",False,True,1
     *   Next, `True or False` evaluates to `True`.
 5.  **Conclusion**: The entire expression evaluates to the boolean value `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 26,False and False or True and not False is,True,"To evaluate the boolean expression `False and False or True and not False`, we must follow the standard order of operations (precedence) for logical operators. The precedence is typically:
 
 1.  **`not`** (highest)
@@ -456,7 +456,7 @@ Final Answer: True",True,True,1
     Finally, we evaluate the `or` operation.
     `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 27,not not False or not False or True is,True,"The input string is `not not False or not False or True is`.
 
 1.  **Analyze the Syntax**: In Python (and most programming languages), `True is` is an incomplete syntax error because `is` is an identity operator that requires a right-hand operand (e.g., `True is True`). However, given the context of the prompt (""Question: ... is""), the word `is` is most likely part of the question phrasing (meaning ""What is..."") rather than part of the code expression itself. Therefore, we will evaluate the boolean expression: `not not False or not False or True`.
@@ -480,7 +480,7 @@ Final Answer: True",True,True,1
 
 5.  **Conclusion**: The final result of the boolean expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 28,True and not True or False or True is,True,"To evaluate the expression `True and not True or False or True`, we must follow the standard operator precedence rules (typically used in Python):
 
 1.  **`not`** has the highest precedence.
@@ -496,7 +496,7 @@ Final Answer: True",True,True,1
     *   The expression becomes: `False or True`.
     *   `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 29,not False or True and False or False is,True,"The input string `not False or True and False or False is` appears to be a Python boolean expression where the trailing `is` is likely a grammatical artifact (e.g., part of the sentence ""Question: ... is"") or a typo, as `False is` is incomplete syntax and would cause a `SyntaxError` if executed as-is.
 
 To provide a helpful answer, we evaluate the logical expression part: `not False or True and False or False`.
@@ -514,7 +514,7 @@ To provide a helpful answer, we evaluate the logical expression part: `not False
     *   `True or False` evaluates to `True`.
 5.  **Short-Circuiting**: Alternatively, since the first operand of the first `or` is `True`, the rest of the expression is not evaluated, and the result is immediately `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 30,False and ( not False ) or False is,False,"To evaluate the expression `False and ( not False ) or False`, we follow the standard order of operations for boolean logic:
 
 1.  **Evaluate Parentheses and `not`**: The expression inside the parentheses is `not False`. The negation of `False` is `True`.
@@ -523,7 +523,7 @@ Final Answer: True",True,True,1
     *   Current expression: `False or False`
 3.  **Evaluate `or`**: Finally, we evaluate `False or False`. Since both operands are `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 31,not not not not ( not False ) is,True,"To determine the value of the expression `not not not not ( not False )`, we evaluate it step-by-step based on standard boolean logic (specifically Python syntax, where `not` is a logical negation operator).
 
 1.  **Evaluate the innermost parenthesis:**
@@ -546,7 +546,7 @@ Final Answer: False",False,True,1
 
     The calculated value is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 32,( True ) and True or not True is,True,"To evaluate the expression `( True ) and True or not True`, we must follow the standard operator precedence rules used in programming languages like Python:
 
 1.  **`not`** has the highest precedence.
@@ -566,7 +566,7 @@ Final Answer: True",True,True,1
 3.  Evaluate `or`:
     `True or False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 33,not True or False and False and False is,False,"To determine the result of the expression `not True or False and False and False`, we must follow the standard operator precedence rules used in programming languages like Python (which uses capitalized `True` and `False`).
 
 1.  **Operator Precedence**: The order of precedence for these logical operators is:
@@ -584,7 +584,7 @@ Final Answer: True",True,True,1
     *   Finally, evaluate the `or` operation: `False or False`.
         *   Since both operands are `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 34,not not not not not not not False is,True,"The expression provided is a sequence of logical negations applied to the boolean value `False`.
 
 1.  **Count the operators:** There are 7 instances of the word ""not"" preceding the word ""False"".
@@ -598,7 +598,7 @@ Final Answer: False",False,True,1
 5.  **Calculate:** The starting value is `False`. Negating `False` results in `True`.
 6.  **Note on ""is"":** The word ""is"" at the end appears to be part of the sentence structure or a question fragment and does not alter the boolean evaluation of the preceding expression.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 35,not True or not False and not False is,True,"To evaluate the expression `not True or not False and not False`, we must apply the standard operator precedence rules used in most programming languages (such as Python, C++, and Java). The precedence order is:
 
 1.  **`not`** (Highest precedence among these operators)
@@ -624,7 +624,7 @@ Final Answer: True",True,True,1
 
 Therefore, the result of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 36,False or True or False and not False is,True,"To determine the value of the expression `False or True or False and not False`, we must follow the standard order of operations (operator precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -646,14 +646,14 @@ Final Answer: True",True,True,1
     *   The expression is now: `True or False`.
     *   `True or False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 37,not ( True or True ) and False is,False,"To evaluate the expression `not ( True or True ) and False`, we follow the standard order of operations (precedence):
 
 1.  **Parentheses**: First, evaluate the expression inside the parentheses: `(True or True)`. Since `True or True` evaluates to `True`, the expression simplifies to `not True and False`.
 2.  **Not Operator**: Next, apply the `not` operator to the result of the parentheses. `not True` evaluates to `False`. The expression now simplifies to `False and False`.
 3.  **And Operator**: Finally, evaluate the `and` operation. `False and False` evaluates to `False` because the `and` operator requires both operands to be true to return true.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 38,not not not not True and not True is,False,"The expression provided is `not not not not True and not True is`.
 
 1.  **Analyze the Boolean Logic**:
@@ -676,7 +676,7 @@ Final Answer: False",False,True,1
 3.  **Conclusion**:
     *   Ignoring the syntactic incompleteness of the trailing `is` (treating it as a question marker), the logical value of the boolean expression `not not not not True and not True` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 39,( False ) or False and not True is,False,"To evaluate the boolean expression `( False ) or False and not True`, we must follow the standard operator precedence rules for boolean logic (which apply to most programming languages like Python, Java, and C++):
 
 1.  **Parentheses `()`**: Evaluate first. `( False )` simplifies to `False`.
@@ -692,7 +692,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 40,( False and True or not False ) is,True,"To evaluate the expression `( False and True or not False )`, we must follow the standard operator precedence rules for boolean logic (typically used in programming languages like Python):
 
 1.  **`not`** has the highest precedence.
@@ -707,7 +707,7 @@ Final Answer: False",False,True,1
     *   The expression becomes: `False or True`
 3.  Finally, evaluate the `or` operation (`False or True`). This results in `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 41,not not not ( False and True ) is,True,"To evaluate the expression `not not not ( False and True )`, we follow the order of operations:
 
 1.  **Evaluate the parentheses first:**
@@ -724,7 +724,7 @@ Final Answer: True",True,True,1
 
 Alternatively, since there are three `not` operators (an odd number), the final value will be the opposite of the initial value (`False`). The opposite of `False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 42,not not True and not False or True is,True,"The expression provided is `not not True and not False or True is`.
 
 1.  **Analyze the Syntax**: In Python (and many other programming languages), the keyword `is` is used for identity comparison (e.g., `a is b`). An expression ending with `is` without a right-hand operand (e.g., `True is`) would result in a `SyntaxError`. However, in the context of a question like ""Question: [Expression] is"", the word ""is"" is often part of the sentence structure (meaning ""What is..."") rather than part of the code itself. We will evaluate the logical portion of the expression: `not not True and not False or True`.
@@ -746,7 +746,7 @@ Final Answer: True",True,True,1
 
 4.  **Conclusion**: The logical value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 43,not False or True and not not True is,True,"To evaluate the expression `not False or True and not not True`, we must apply the standard operator precedence rules used in programming languages like Python. The trailing word `is` appears to be part of the question phrasing (e.g., ""What is..."") rather than part of the logical expression itself, as including it would result in a syntax error.
 
 Here is the step-by-step evaluation based on precedence (`not` > `and` > `or`):
@@ -765,7 +765,7 @@ Here is the step-by-step evaluation based on precedence (`not` > `and` > `or`):
 
 (Note: Even without evaluating the right side fully, since the left side of the `or` operator is `True`, the entire expression short-circuits to `True`.)
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 44,True or True or not False or False is,True,"To evaluate the expression `True or True or not False or False`, we follow the standard order of operations for boolean logic:
 
 1.  **Evaluate `not` first:** The `not` operator has higher precedence than `or`.
@@ -779,7 +779,7 @@ Final Answer: True",True,True,1
 
 Since there are multiple `True` values in the chain, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 45,( not False and False and False ) is,False,"The expression provided is a Python boolean logic statement. To determine the result, we evaluate it based on operator precedence and logical rules:
 
 1.  **Operator Precedence**: In Python, the `not` operator has higher precedence than the `and` operator. Therefore, the expression `not False` is evaluated first.
@@ -792,7 +792,7 @@ Final Answer: True",True,True,1
 
 Therefore, the value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 46,( ( not True ) or True ) is,True,"To evaluate the expression `( ( not True ) or True )`, we break it down step-by-step:
 
 1.  **Evaluate `not True`**: The `not` operator inverts the boolean value. Since `True` is true, `not True` evaluates to `False`.
@@ -801,7 +801,7 @@ Final Answer: False",False,True,1
 
 Therefore, the value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 47,not not ( not False or True ) is,True,"To evaluate the expression `not not ( not False or True )`, we follow the order of operations for boolean logic (negation `not` has higher precedence than disjunction `or`):
 
 1.  **Evaluate the innermost negation:**
@@ -818,7 +818,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 48,not True or False or ( True ) is,True,"To determine the value of the expression `not True or False or ( True )`, we must follow the standard order of operations for boolean logic (specifically in languages like Python, JavaScript, or C++):
 
 1.  **Operator Precedence**: The `not` operator has higher precedence than the `or` operator. Therefore, we evaluate `not True` first.
@@ -831,7 +831,7 @@ Final Answer: True",True,True,1
 4.  **Final Evaluation**:
     *   `False or True` evaluates to `True` because at least one operand is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 49,False or ( not False ) and True is,True,"To determine the value of the expression `False or ( not False ) and True`, we must follow the standard order of operations (operator precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -851,7 +851,7 @@ Final Answer: True",True,True,1
 3.  Evaluate the `or` operation last.
     *   `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 50,not False or False or ( False ) is,True,"The expression provided is `not False or False or ( False ) is`.
 
 1.  **Analyze the Syntax**: In Python, `is` is a binary identity operator that requires two operands (e.g., `a is b`). The expression ends with `is` without a right-hand operand, which would technically result in a `SyntaxError` if executed as raw code.
@@ -865,7 +865,7 @@ Final Answer: True",True,True,1
     *   `True or (False)` evaluates to `True`.
 4.  **Conclusion**: The logical value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 51,not not False or False and not True is,False,"The expression provided is `not not False or False and not True`. The word ""is"" at the end is interpreted as the question marker (""... is [what]?"") rather than part of the code, as `True is` is incomplete syntax in most programming languages.
 
 Here is the step-by-step evaluation based on standard operator precedence (where `not` has the highest precedence, followed by `and`, and then `or`):
@@ -887,7 +887,7 @@ Here is the step-by-step evaluation based on standard operator precedence (where
 4.  **Evaluate `or` last:**
     *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 52,True or ( ( not True ) ) is,True,"To determine the value of the expression `True or ( ( not True ) )`, we evaluate it step-by-step using standard boolean logic rules:
 
 1.  **Evaluate the inner negation:** The expression inside the parentheses is `not True`. The logical NOT operator inverts the value, so `not True` evaluates to `False`.
@@ -896,7 +896,7 @@ Final Answer: False",False,True,1
 
 Therefore, the expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 53,not False and not False and not False is,True,"To determine the value of the expression `not False and not False and not False`, we evaluate it step-by-step using standard boolean logic (common in programming languages like Python):
 
 1.  **Evaluate `not False`**: The `not` operator negates a boolean value. Since `False` is false, `not False` evaluates to `True`.
@@ -904,7 +904,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate `and`**: The `and` operator returns `True` only if all operands on both sides are `True`.
 4.  **Final Calculation**: Since `True and True` is `True`, and `True and True` is `True`, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 54,( False ) and not False and True is,False,"To evaluate the expression `( False ) and not False and True`, we follow the standard order of operations for boolean logic:
 
 1.  **Parentheses**: The term `( False )` is simply `False`.
@@ -912,7 +912,7 @@ Final Answer: True",True,True,1
 3.  **Substitution**: Substituting these values back into the expression, we get: `False and True and True`.
 4.  **Logical AND (`and`)**: The `and` operator returns `True` only if all operands are `True`. If any operand is `False`, the result is `False`. Since the first operand is `False`, the entire expression evaluates to `False` immediately (short-circuit evaluation).
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 55,( True ) and False or not False is,True,"To evaluate the expression `(True) and False or not False`, we follow the standard operator precedence rules (typically used in Python and similar languages):
 
 1.  **Parentheses**: `(True)` is evaluated first, resulting in `True`.
@@ -923,14 +923,14 @@ Final Answer: False",False,True,1
     *   Expression becomes: `False or True`
 4.  **`or` operator**: Finally, `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 56,( not False and ( True ) ) is,True,"The expression provided is `( not False and ( True ) )`. Although the sentence ends with `is`, the core task is to evaluate the boolean logic within the parentheses.
 
 1.  **Evaluate `not False`**: The `not` operator inverts the boolean value. Since `False` is false, `not False` evaluates to `True`.
 2.  **Evaluate `True and True`**: The `and` operator returns `True` only if both operands are `True`. Since the first operand (from step 1) is `True` and the second operand is explicitly `True`, the result is `True`.
 3.  **Conclusion**: The entire expression evaluates to the boolean value `True`. The trailing `is` implies the question is asking for the value or identity of the expression.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 57,False or not ( False ) or True is,True,"To evaluate the expression `False or not ( False ) or True`, we follow the standard order of operations for boolean logic:
 
 1.  **Evaluate `not` first:** The `not` operator has higher precedence than `or`.
@@ -943,7 +943,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 58,True and not False and not not True is,True,"To evaluate the expression `True and not False and not not True`, we follow the order of operations, specifically noting that the `not` operator has higher precedence than the `and` operator.
 
 1.  **Evaluate `not False`**: The negation of `False` is `True`.
@@ -957,7 +957,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 59,not True and True and True or False is,False,"To determine the result of the expression `not True and True and True or False`, we must follow the standard operator precedence rules for boolean logic (specifically in Python, which is the standard context for this syntax):
 
 1.  **`not`** has the highest precedence.
@@ -982,7 +982,7 @@ Final Answer: True",True,True,1
     Finally, we evaluate the `or` operation.
     `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 60,not not ( False and not True ) is,False,"To determine the value of the expression `not not ( False and not True )`, we evaluate it step-by-step from the innermost parentheses outward, following standard boolean logic rules (and Python operator precedence, where `not` binds tighter than `and`, but parentheses override this).
 
 1.  **Evaluate the innermost term:** `not True`
@@ -1000,10 +1000,10 @@ Final Answer: False",False,True,1
 
 The trailing `is` in the question implies an inquiry into the value of the expression (e.g., ""What is...""). The boolean value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 61,True or not ( ( False ) ) is,True,"The expression provided is `( ( False ) )`. In logic and programming, parentheses are used for grouping and do not alter the truth value of the boolean constant they enclose. The core value is `False`. Therefore, the expression evaluates to `False`. Since the question asks to determine if it is ""True or not,"" and the value is `False`, the correct determination is that it is not True.
 
-Final Answer: False",False,True,0
+Final Answer: False",False,True,0,
 62,False or not True or False or False is,False,"The expression provided is a boolean logic statement: `False or not True or False or False`.
 
 1.  **Operator Precedence**: In boolean logic, the `not` operator has higher precedence than the `or` operator. Therefore, we must evaluate `not True` first.
@@ -1011,7 +1011,7 @@ Final Answer: False",False,True,0
 3.  **Substitute**: Replacing `not True` with `False`, the expression becomes `False or False or False or False`.
 4.  **Evaluate `or`**: The `or` operator returns `True` if at least one of its operands is `True`. If all operands are `False`, the result is `False`. Since every part of the expression is now `False`, the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 63,False or not not True or not False is,True,"To evaluate the expression `False or not not True or not False`, we must follow the standard order of operations for logical operators, where `not` (negation) has higher precedence than `or` (disjunction).
 
 1.  **Evaluate the `not` operations first:**
@@ -1031,13 +1031,13 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 64,not ( True or True or False ) is,False,"To evaluate the expression `not ( True or True or False )`, we follow the order of operations:
 
 1.  **Evaluate the parentheses first:** Inside the parentheses, we have `True or True or False`. The logical `OR` operator returns `True` if at least one of the operands is `True`. Since the first two operands are `True`, the entire expression inside the parentheses evaluates to `True`.
 2.  **Apply the `not` operator:** Now the expression simplifies to `not True`. The `not` operator inverts the boolean value, turning `True` into `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 65,False or not not not not not False is,True,"To determine the value of the expression `False or not not not not not False`, we must follow the standard order of operations for boolean logic, where the `not` operator has higher precedence than the `or` operator.
 
 1.  **Analyze Precedence**: The expression is parsed as `False or (not not not not not False)`.
@@ -1051,7 +1051,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate the `or` operation**: Now substitute the result back into the main expression: `False or True`.
 4.  **Final Result**: In boolean logic, `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 66,not ( False ) or not not True is,True,"The expression provided is `not ( False ) or not not True is`. This appears to be a boolean logic question where the word ""is"" functions as the question verb (e.g., ""What is the value of...?""). We will evaluate the boolean expression `not ( False ) or not not True`.
 
 1.  **Evaluate `not ( False )`**:
@@ -1070,7 +1070,7 @@ Final Answer: True",True,True,1
 
 (Note: If interpreted strictly as Python code without the ""is"" being a question verb, it would be a syntax error due to the incomplete `is` operator, but in the context of a logic question, the intended answer is the truth value of the expression.)
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 67,True and not False or False and False is,True,"To evaluate the expression `True and not False or False and False`, we must follow the standard order of operations (operator precedence) for boolean logic, which typically follows this hierarchy:
 
 1.  **`not`** (highest precedence)
@@ -1094,14 +1094,14 @@ Final Answer: True",True,True,1
     Finally, we evaluate the `or` operation.
     `True or False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 68,True or ( not ( True ) ) is,True,"To evaluate the expression `True or ( not ( True ) )`, we follow the standard order of operations for logical operators, where `not` has higher precedence than `or`.
 
 1.  **Evaluate the inner expression:** First, we calculate `not (True)`. The negation of `True` is `False`.
 2.  **Substitute back:** The expression now becomes `True or False`.
 3.  **Evaluate the outer expression:** The logical `or` operator returns `True` if at least one of its operands is `True`. Since the first operand is `True`, the result of `True or False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 69,( False or True and not True ) is,False,"To evaluate the expression `( False or True and not True )`, we must follow the standard order of operations (operator precedence) for boolean logic, which is consistent across most programming languages (like Python, Java, C++).
 
 1.  **Operator Precedence**: The precedence order is `not` (highest), then `and`, then `or` (lowest).
@@ -1116,7 +1116,7 @@ Final Answer: True",True,True,1
 
 The trailing word ""is"" suggests the question is asking for the value of the expression.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 70,False or not True and True or True is,True,"To determine the value of the expression `False or not True and True or True`, we must follow the standard operator precedence rules for boolean logic (typically used in programming languages like Python):
 
 1.  **`not`** has the highest precedence.
@@ -1141,7 +1141,7 @@ Final Answer: False",False,True,1
 
 Therefore, the final result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 71,not not not not not not not True is,False,"The expression consists of the boolean value `True` preceded by a series of logical negation operators (`not`).
 
 1.  **Count the operators:** There are 7 `not` operators in the sequence (""not not not not not not not"").
@@ -1153,7 +1153,7 @@ Final Answer: True",True,True,1
     *   An odd number of `not` operators applied to `True` results in `False`.
 4.  **Conclusion:** Since 7 is an odd number, the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 72,( not False ) and False or True is,True,"To evaluate the expression `( not False ) and False or True`, we follow the standard order of operations for boolean logic (precedence):
 
 1.  **Parentheses and `not`**: First, evaluate the expression inside the parentheses. `not False` evaluates to `True`.
@@ -1164,7 +1164,7 @@ Final Answer: False",False,True,1
 3.  **`or` operator**: Finally, evaluate the remaining `or` operation.
     *   `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 73,False and False or not ( True ) is,False,"To evaluate the expression `False and False or not ( True )`, we follow the standard operator precedence rules (typically used in programming languages like Python):
 
 1.  **Parentheses `()`**: Evaluate the content inside first.
@@ -1179,7 +1179,7 @@ Final Answer: True",True,True,1
 4.  **`or` operator**: Finally, evaluate the remaining operation.
     *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 74,( not False or True ) and True is,True,"To evaluate the expression `( not False or True ) and True`, we follow the order of operations and the grouping provided by parentheses:
 
 1.  **Evaluate inside the parentheses `( not False or True )`:**
@@ -1194,14 +1194,14 @@ Final Answer: False",False,True,1
     *   The `and` operator requires both sides to be true for the result to be true.
     *   `True and True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 75,not ( False ) and ( False ) is,False,"The expression provided is `not ( False ) and ( False )`. The word ""is"" at the end functions as the verb of the question (asking ""What is..."").
 
 1.  **Evaluate `not ( False )`**: The `not` operator negates the boolean value. `not False` evaluates to `True`.
 2.  **Evaluate `True and ( False )`**: The `and` operator returns `True` only if both operands are `True`. Since the second operand is `False`, the result of the conjunction is `False`.
 3.  **Conclusion**: The logical value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 76,False or True and not not not False is,True,"To determine the value of the expression `False or True and not not not False`, we must follow the standard order of operations (operator precedence) for boolean logic.
 
 1.  **Operator Precedence**: The standard precedence is `not` (highest), followed by `and`, and finally `or` (lowest).
@@ -1219,7 +1219,7 @@ Final Answer: False",False,True,1
 5.  **Evaluate `or` operations**:
     *   `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 77,( True ) and True and not True is,False,"To evaluate the expression `( True ) and True and not True`, we follow the order of operations for boolean logic:
 
 1.  **Evaluate the `not` operator:** The expression contains `not True`. The negation of `True` is `False`.
@@ -1230,7 +1230,7 @@ Final Answer: True",True,True,1
 
 Since one of the operands in the chain is `False`, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 78,( not True ) and True and False is,False,"To evaluate the expression `( not True ) and True and False`, we follow the order of operations:
 
 1.  **Parentheses:** First, evaluate the expression inside the parentheses: `not True`. In boolean logic, the negation of `True` is `False`.
@@ -1241,7 +1241,7 @@ Final Answer: False",False,True,1
 
 Since the first operand in the chain is `False`, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 79,( not not True and not False ) is,True,"The expression provided is `( not not True and not False )`. The trailing `is` suggests the question is asking for the value of the expression (e.g., ""What is..."").
 
 Here is the step-by-step evaluation of the boolean logic:
@@ -1260,7 +1260,7 @@ Here is the step-by-step evaluation of the boolean logic:
 
 Therefore, the expression evaluates to the boolean value `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 80,True and ( False ) or not False is,True,"To evaluate the expression `True and ( False ) or not False`, we must follow the standard order of operations (precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -1280,7 +1280,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate `or`**:
     The `or` operator returns `True` if at least one operand is `True`. `False or True` results in `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 81,not not not False or False and False is,True,"The expression provided is `not not not False or False and False is`.
 
 1.  **Analyze the Syntax**: The trailing `is` appears to be a typo or part of the question phrasing (e.g., ""Question: ... is [True/False]?""), as `False is` is incomplete syntax in most programming languages (like Python) where `is` is an identity operator requiring a right-hand operand. However, for the purpose of logical evaluation, we focus on the boolean operators present.
@@ -1305,7 +1305,7 @@ Final Answer: True",True,True,1
 
 4.  **Conclusion**: Since the left side of the `or` operator evaluates to `True`, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 82,not not not False and True or False is,True,"The expression provided is `not not not False and True or False is`. The trailing `is` appears to be part of the question phrasing (e.g., ""Question: ... is [True/False]?"") or a typo, as `is` is a keyword in languages like Python that requires a comparison operand (e.g., `is True`), making the expression syntactically invalid if included literally. Assuming the intent is to evaluate the boolean logic expression `not not not False and True or False`, we proceed as follows:
 
 1.  **Operator Precedence**: In standard boolean logic (and languages like Python), the precedence order is `not` (highest), then `and`, then `or` (lowest).
@@ -1325,7 +1325,7 @@ Final Answer: True",True,True,1
 
 Therefore, the result of the boolean expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 83,True or ( True or not False ) is,True,"To evaluate the expression `True or ( True or not False )`, we can break it down step-by-step:
 
 1.  **Evaluate the innermost operation:** `not False`.
@@ -1340,7 +1340,7 @@ Final Answer: True",True,True,1
     *   Again, since the first operand is `True`, the result is `True`.
     *   (Note: Even without evaluating the rest, the outer `or` has `True` as its first operand, which guarantees the entire expression evaluates to `True` regardless of the right side).
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 84,not False or ( ( False ) ) is,True,"The expression provided is `not False or ( ( False ) )`. The trailing `is` is interpreted as the question marker ""What is..."", indicating a request to evaluate the boolean expression preceding it.
 
 1.  **Operator Precedence**: In standard boolean logic and programming languages like Python, the `not` operator has higher precedence than the `or` operator.
@@ -1348,7 +1348,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate `or`**: The expression now simplifies to `True or ( ( False ) )`. The `or` operator returns `True` if at least one of its operands is `True`. Since the left operand is `True`, the result is `True` regardless of the right operand (short-circuit evaluation).
 4.  **Conclusion**: The logical value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 85,not not ( False and not False ) is,False,"To evaluate the expression `not not ( False and not False )`, we break it down step-by-step using standard boolean logic rules:
 
 1.  **Innermost Operation**: Evaluate `not False`.
@@ -1366,7 +1366,7 @@ Final Answer: True",True,True,1
 
 The trailing `is` in the question implies a request for the truth value of the expression. The evaluated result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 86,not not not not True or not True is,True,"The expression provided is `not not not not True or not True is`.
 
 **Reasoning:**
@@ -1391,14 +1391,14 @@ Final Answer: False",False,True,1
 
 6.  **Conclusion**: Assuming the trailing `is` is grammatical and not part of the executable code, the logical result of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 87,False and not ( False or False ) is,False,"To evaluate the expression `False and not ( False or False )`, we follow the order of operations (precedence):
 
 1.  **Parentheses**: Evaluate `( False or False )`. Since `False` OR `False` is `False`, the expression becomes `False and not ( False )`.
 2.  **Negation**: Evaluate `not ( False )`. The negation of `False` is `True`. The expression becomes `False and True`.
 3.  **Conjunction**: Evaluate `False and True`. In boolean logic, for an `AND` operation to be true, both sides must be true. Since the first side is `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 88,True and True and True or not False is,True,"To evaluate the expression `True and True and True or not False`, we must follow the standard order of operations (precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -1420,7 +1420,7 @@ Final Answer: False",False,True,1
 3.  Evaluate the `or` operation:
     *   `True or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 89,False or not False or True and True is,True,"To determine the value of the expression `False or not False or True and True`, we must follow the standard operator precedence rules for boolean logic (common in languages like Python, C, and Java).
 
 1.  **Operator Precedence**: The order of operations is typically:
@@ -1440,7 +1440,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 90,not False and False and False or False is,False,"The expression provided is `not False and False and False or False is`. In standard programming languages like Python, the keyword `is` is a binary operator used for identity comparison (e.g., `a is b`), and it requires two operands. The trailing `is` without a following value makes the expression syntactically invalid.
 
 However, assuming the `is` is a typo or part of the question phrasing (e.g., ""What is...""), we can evaluate the boolean logic of the preceding part: `not False and False and False or False`.
@@ -1458,7 +1458,7 @@ However, assuming the `is` is a typo or part of the question phrasing (e.g., ""W
 
 Therefore, the logical result of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 91,( False ) or not False or True is,True,"To evaluate the expression `( False ) or not False or True`, we follow the standard order of operations for boolean logic:
 
 1.  **Parentheses**: The expression starts with `( False )`, which simply evaluates to `False`.
@@ -1470,7 +1470,7 @@ Final Answer: False",False,True,1
 
 Since the presence of a `True` value in an `or` chain guarantees the result is `True`, the final value is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 92,( not False ) or ( True ) is,True,"To evaluate the expression `( not False ) or ( True )`, we follow the standard rules of boolean logic:
 
 1.  **Evaluate the `not` operator:** The expression starts with `( not False )`. The `not` operator negates the value. Since `False` is false, `not False` evaluates to `True`.
@@ -1480,7 +1480,7 @@ Final Answer: True",True,True,1
 
 Therefore, the logical result of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 93,not not ( False or not True ) is,False,"To evaluate the expression `not not ( False or not True )`, we break it down step-by-step following the order of operations (parentheses first, then logical operators):
 
 1.  **Evaluate the innermost parentheses:**
@@ -1499,7 +1499,7 @@ Final Answer: True",True,True,1
 
 Therefore, the value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 94,False or not False or False or False is,True,"The expression is `False or not False or False or False`.
 
 1.  **Operator Precedence**: In standard boolean logic and most programming languages, the `not` operator has higher precedence than the `or` operator. Therefore, `not False` is evaluated first.
@@ -1507,7 +1507,7 @@ Final Answer: False",False,True,1
 3.  **Substitute**: The expression becomes `False or True or False or False`.
 4.  **Evaluate `or`**: The `or` operator returns `True` if at least one of its operands is `True`. Since the second operand is `True`, the entire expression evaluates to `True` regardless of the other `False` values.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 95,False or not False and ( False ) is,False,"To determine the value of the expression `False or not False and ( False )`, we must follow the standard operator precedence rules for boolean logic (typically used in languages like Python, C++, and JavaScript).
 
 1.  **Operator Precedence**: The order of operations is:
@@ -1529,7 +1529,7 @@ Final Answer: True",True,True,1
     The expression is now `False or False`.
     The `or` operator returns `True` if at least one operand is `True`. Since both operands are `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 96,False or ( False ) or not True is,False,"To evaluate the expression `False or ( False ) or not True`, we follow the order of operations for logical operators, where `not` has higher precedence than `or`.
 
 1.  **Evaluate `not True`**: The `not` operator inverts the boolean value. `not True` evaluates to `False`.
@@ -1540,7 +1540,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 97,not True or False and True and True is,False,"To evaluate the expression `not True or False and True and True`, we must follow the standard operator precedence rules used in programming languages like Python:
 
 1.  **`not`** has the highest precedence.
@@ -1564,7 +1564,7 @@ Final Answer: False",False,True,1
     The `or` operator returns `True` if at least one operand is `True`.
     `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 98,True or ( True or not True ) is,True,"To evaluate the expression `True or ( True or not True )`, we break it down step-by-step using standard boolean logic rules:
 
 1.  **Evaluate the innermost operation:** `not True`.
@@ -1582,7 +1582,7 @@ Final Answer: False",False,True,1
 
 The final value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 99,True and not False and True or True is,True,"To evaluate the expression `True and not False and True or True`, we must follow the standard operator precedence rules used in most programming languages (like Python):
 
 1.  **`not`** has the highest precedence.
@@ -1604,7 +1604,7 @@ Final Answer: True",True,True,1
 3.  Finally, evaluate the `or` operation:
     `True or True` becomes `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 100,False or not False or not not True is,True,"To evaluate the expression `False or not False or not not True`, we follow the standard order of operations for logical operators, where `not` (negation) has higher precedence than `or` (disjunction).
 
 1.  **Evaluate the `not` operations:**
@@ -1621,7 +1621,7 @@ Final Answer: True",True,True,1
 
 Since the second and third parts of the expression are `True`, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 101,( True or not False ) or False is,True,"To determine the value of the expression `(True or not False) or False`, we evaluate it step-by-step based on standard boolean logic rules:
 
 1.  **Evaluate the `not` operator:** The expression contains `not False`. The negation of `False` is `True`.
@@ -1632,7 +1632,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 102,False or not ( True ) and True is,False,"To determine the value of the expression `False or not ( True ) and True`, we must follow the standard order of operations (operator precedence) for boolean logic, which is typically used in programming languages like Python.
 
 1.  **Parentheses**: Evaluate `( True )` first. This remains `True`.
@@ -1648,7 +1648,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 103,not False and not True and not False is,False,"The expression provided is `not False and not True and not False is`.
 
 1.  **Analyze the Syntax**: In programming languages like Python, `is` is an identity operator that requires a right-hand operand (e.g., `x is y`). The expression as written is syntactically incomplete. However, in the context of a question (""Question: ... is""), the word `is` is likely functioning as a grammatical verb asking for the value of the preceding boolean expression.
@@ -1664,14 +1664,14 @@ Final Answer: False",False,True,1
         *   `False and True` evaluates to `False`.
 3.  **Conclusion**: The logical value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 104,False and ( True and not False ) is,False,"To evaluate the expression `False and ( True and not False )`, we follow the order of operations, starting with the innermost parentheses:
 
 1.  **Evaluate `not False`**: The negation of `False` is `True`.
 2.  **Evaluate the parentheses `( True and True )`**: Since both operands are `True`, the result of the `and` operation is `True`.
 3.  **Evaluate the full expression `False and True`**: In boolean logic, the `and` operator returns `False` if the first operand is `False`. Therefore, `False and True` results in `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 105,not False or ( False ) or True is,True,"The expression provided is `not False or ( False ) or True is`. To evaluate this, we must consider operator precedence and the logical flow of the statement.
 
 1.  **Operator Precedence**: In Python (and many similar languages), the `not` operator has higher precedence than the `or` operator. The `is` operator (identity check) also has higher precedence than `or`.
@@ -1682,7 +1682,7 @@ Final Answer: False",False,True,1
 
 Therefore, the logical value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 106,False and not ( False and True ) is,False,"To evaluate the expression `False and not ( False and True )`, we follow the order of operations, starting with the parentheses:
 
 1.  **Evaluate the inner parentheses:** `( False and True )`
@@ -1696,7 +1696,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate the final `and` operator:** `False and True`
     *   For an `and` operation to be `True`, both sides must be `True`. Since the first side is `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 107,( True or not not not False ) is,True,"To determine the value of the expression `( True or not not not False )`, we must evaluate the logical operators based on their precedence.
 
 1.  **Operator Precedence**: In boolean logic (and programming languages like Python), the `not` operator has higher precedence than the `or` operator. Therefore, we evaluate the `not` operations first.
@@ -1713,7 +1713,7 @@ Final Answer: False",False,True,1
 
 The trailing ""is"" in the question implies asking for the value or state of the expression.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 108,False and ( False or not False ) is,False,"To evaluate the expression `False and ( False or not False )`, we follow the order of operations and boolean logic rules:
 
 1.  **Evaluate the `not` operator:** Inside the parentheses, we first encounter `not False`. The negation of `False` is `True`.
@@ -1722,7 +1722,7 @@ Final Answer: True",True,True,1
     *   Expression becomes: `False and True`
 3.  **Evaluate the `and` operator:** Finally, we evaluate `False and True`. In boolean logic, for an `and` statement to be `True`, both sides must be `True`. Since the first side is `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 109,False or not True or True and False is,False,"To evaluate the expression `False or not True or True and False`, we must follow the standard order of operations (precedence) for logical operators:
 
 1.  **`not`** has the highest precedence.
@@ -1745,7 +1745,7 @@ Final Answer: False",False,True,1
 
 The final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 110,True and not True or True and True is,True,"To evaluate the expression `True and not True or True and True`, we must follow the standard order of operations (precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -1766,7 +1766,7 @@ Final Answer: False",False,True,1
 3.  Evaluate the `or` operation:
     *   `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 111,( not False or ( True ) ) is,True,"The expression to evaluate is `( not False or ( True ) )`.
 
 1.  **Evaluate the `not` operator:** The `not` operator has higher precedence than `or`. First, we evaluate `not False`. The logical negation of `False` is `True`.
@@ -1775,7 +1775,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 112,( ( not ( True ) ) ) is,False,"The expression provided is `( ( not ( True ) ) )`. To determine its value, we evaluate it step-by-step:
 
 1.  **Inner Value**: The innermost term is the boolean literal `True`.
@@ -1785,7 +1785,7 @@ Final Answer: True",True,True,1
 
 The word ""is"" at the end of the question implies ""What is the value of..."".
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 113,False and False and not ( False ) is,False,"To evaluate the expression `False and False and not ( False )`, we follow the standard order of operations for boolean logic:
 
 1.  **Evaluate `not` first:** The `not` operator has higher precedence than `and`.
@@ -1799,7 +1799,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 114,not True and not True and not True is,False,"To evaluate the expression `not True and not True and not True`, we follow the order of operations and boolean logic rules:
 
 1.  **Evaluate `not` operators first:** The `not` operator has higher precedence than `and`.
@@ -1812,7 +1812,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 115,not ( True or False ) or True is,True,"To evaluate the expression `not ( True or False ) or True`, we follow the standard order of operations for boolean logic:
 
 1.  **Parentheses**: Evaluate the expression inside the parentheses first. `True or False` evaluates to `True`.
@@ -1821,7 +1821,7 @@ Final Answer: False",False,True,1
     *   Expression becomes: `False or True`
 3.  **Or Operator**: Finally, evaluate the `or` operation. `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 116,False or ( True ) or not True is,True,"To evaluate the expression `False or ( True ) or not True`, we follow the order of operations for boolean logic:
 
 1.  **Parentheses**: Evaluate `( True )`, which remains `True`.
@@ -1834,7 +1834,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 117,False or False and False or not True is,False,"To evaluate the boolean expression `False or False and False or not True`, we must apply the standard operator precedence rules for boolean logic (which applies to languages like Python):
 
 1.  **Precedence**: The order of operations is `not` (highest), then `and`, then `or` (lowest).
@@ -1852,7 +1852,7 @@ Final Answer: True",True,True,1
 
 Therefore, the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 118,True or False or not True or False is,True,"The expression provided is a boolean logic statement: `True or False or not True or False`.
 
 1.  **Operator Precedence**: In standard boolean logic (and most programming languages), the `not` operator has higher precedence than the `or` operator. Therefore, `not True` is evaluated first.
@@ -1864,7 +1864,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 119,not True and ( True and True ) is,False,"To determine the value of the expression `not True and ( True and True )`, we evaluate it step-by-step based on standard boolean logic and operator precedence:
 
 1.  **Parentheses**: The expression inside the parentheses `( True and True )` is evaluated first. Since `True and True` is logically valid, this evaluates to `True`.
@@ -1873,7 +1873,7 @@ Final Answer: True",True,True,1
 
 The trailing `is` in the prompt appears to be part of the question structure (e.g., asking ""What is...""), rather than a valid operator in the expression itself.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 120,not True and True or True and False is,False,"The expression provided is `not True and True or True and False is`. The trailing word `is` appears to be part of the question's sentence structure (e.g., ""What is..."") rather than part of the code expression itself, as `is` is an identity operator that requires a right-hand operand in programming languages like Python. Assuming the expression to evaluate is `not True and True or True and False`, we can determine the result using standard operator precedence rules (common in Python, C, Java, etc.):
 
 1.  **Operator Precedence**: The order of operations is `not` (highest), then `and`, then `or` (lowest).
@@ -1887,7 +1887,7 @@ Final Answer: False",False,True,1
 
 Therefore, the logical result of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 121,not False or ( True or True ) is,True,"To evaluate the expression `not False or ( True or True )`, we follow the standard order of operations for boolean logic:
 
 1.  **Evaluate Parentheses**: The expression inside the parentheses `( True or True )` is evaluated first. Since `True or True` results in `True`, this part simplifies to `True`.
@@ -1896,7 +1896,7 @@ Final Answer: False",False,True,1
 
 The trailing word ""is"" is interpreted as part of the question phrasing (e.g., ""What is..."").
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 122,not ( False or ( False ) ) is,True,"To evaluate the expression `not ( False or ( False ) )`, we follow the order of operations for logical operators:
 
 1.  **Inner Parentheses**: First, evaluate `( False )`. This is simply `False`.
@@ -1905,14 +1905,14 @@ Final Answer: True",True,True,1
 
 Therefore, the expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 123,not ( True or True ) and True is,False,"To evaluate the expression `not ( True or True ) and True`, we follow the standard order of operations for boolean logic:
 
 1.  **Parentheses first**: Evaluate `( True or True )`. Since `True or True` is `True`, the expression becomes `not True and True`.
 2.  **Negation (`not`)**: Evaluate `not True`. This results in `False`. The expression becomes `False and True`.
 3.  **Conjunction (`and`)**: Evaluate `False and True`. Since one operand is `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 124,False or not False or True or True is,True,"To determine the value of the expression `False or not False or True or True`, we follow the standard order of operations for logical operators:
 
 1.  **Operator Precedence**: The `not` operator has higher precedence than the `or` operator. Therefore, we evaluate `not False` first.
@@ -1926,7 +1926,7 @@ Final Answer: False",False,True,1
 
 Since there are multiple `True` values in the chain, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 125,False or False and not not not False is,False,"To determine the value of the expression `False or False and not not not False`, we must apply the standard precedence rules for logical operators. The order of precedence is typically:
 
 1.  **`not`** (highest priority)
@@ -1952,13 +1952,13 @@ Substituting this back into the expression, we get:
 **Step 3: Evaluate the `or` operation.**
 *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 126,not ( True or False or True ) is,False,"To determine the value of the expression `not ( True or False or True )`, we follow the order of operations:
 
 1.  **Evaluate the parentheses first:** The expression inside the parentheses is `True or False or True`. The logical `or` operator returns `True` if at least one of the operands is `True`. Since there are two `True` values in this sequence, the result of `( True or False or True )` is `True`.
 2.  **Apply the `not` operator:** Now the expression simplifies to `not True`. The `not` operator inverts the boolean value, turning `True` into `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 127,( False ) or not True and False is,False,"To evaluate the expression `( False ) or not True and False`, we must follow the standard order of operations (operator precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -1981,7 +1981,7 @@ Final Answer: False",False,True,1
     Finally, the `or` operator evaluates the remaining terms.
     `False or False` results in `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 128,True and True and not not not False is,True,"To evaluate the expression `True and True and not not not False`, we follow the standard order of operations for boolean logic, where the `not` operator has higher precedence than the `and` operator.
 
 1.  **Evaluate the `not` operations:**
@@ -1995,7 +1995,7 @@ Final Answer: False",False,True,1
     *   Evaluate from left to right: `True and True` evaluates to `True`.
     *   Finally: `True and True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 129,( True ) or True and not True is,True,"The expression provided is `(True) or True and not True`. The word ""is"" at the end is treated as part of the question sentence structure (e.g., ""What is..."") rather than part of the boolean expression itself.
 
 Here is the step-by-step evaluation based on standard operator precedence (where `not` has the highest precedence, followed by `and`, and then `or`):
@@ -2008,7 +2008,7 @@ Here is the step-by-step evaluation based on standard operator precedence (where
 
 Alternatively, due to short-circuit evaluation in most programming languages, since the first operand of the `or` operator is `True`, the rest of the expression is not evaluated, and the result is immediately `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 130,False and False and not True and False is,False,"To evaluate the expression `False and False and not True and False`, we follow the standard order of operations for boolean logic:
 
 1.  **Evaluate `not` first:** The `not` operator has higher precedence than `and`.
@@ -2017,7 +2017,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate `and` operations:** The `and` operator returns `True` only if all operands are `True`. If any operand is `False`, the result is `False`.
     *   Since every term in the expression is `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 131,( True ) and not True or True is,True,"To evaluate the expression `( True ) and not True or True`, we must follow the standard operator precedence for boolean logic (typically used in languages like Python):
 
 1.  **`not`** has the highest precedence.
@@ -2040,7 +2040,7 @@ Final Answer: False",False,True,1
     The `or` operator returns true if at least one operand is true.
     `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 132,not not not True and False and False is,False,"The expression provided is `not not not True and False and False is`.
 
 1.  **Analyze the Syntax**: In Python (and many other programming languages), `is` is a binary identity operator (e.g., `a is b`). If interpreted strictly as code, the expression ends with `is` without a right-hand operand, which would result in a `SyntaxError`.
@@ -2058,7 +2058,7 @@ Final Answer: True",True,True,1
     *   `False and False` evaluates to `False`.
 5.  **Conclusion**: The logical value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 133,False and False and not not not True is,False,"To evaluate the expression `False and False and not not not True`, we follow the order of operations for boolean logic, where `not` has higher precedence than `and`.
 
 1.  **Evaluate the `not` operations:**
@@ -2077,7 +2077,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 134,False and False or False or not True is,False,"To evaluate the expression `False and False or False or not True`, we must follow the standard operator precedence rules for boolean logic (typically used in languages like Python):
 
 1.  **Precedence**: The `not` operator has the highest precedence, followed by `and`, and finally `or`.
@@ -2093,14 +2093,14 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 135,False or ( not ( False ) ) is,True,"To evaluate the expression `False or ( not ( False ) )`, we follow the order of operations for logical operators:
 
 1.  **Evaluate the innermost parentheses:** The expression `not ( False )` negates the boolean value `False`. The negation of `False` is `True`.
 2.  **Substitute the result:** The expression now becomes `False or True`.
 3.  **Evaluate the `or` operator:** The logical `or` operator returns `True` if at least one of the operands is `True`. Since the second operand is `True`, the result of `False or True` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 136,not True and True and not not False is,False,"The expression provided is `not True and True and not not False`. The trailing word ""is"" appears to be part of the question phrasing (e.g., ""What is..."") rather than part of the code itself, as `is` is a keyword in languages like Python that requires two operands for identity comparison.
 
 Here is the step-by-step evaluation of the boolean logic:
@@ -2117,14 +2117,14 @@ Here is the step-by-step evaluation of the boolean logic:
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 137,( False ) and ( not False ) is,False,"To evaluate the expression `( False ) and ( not False )`, we break it down step-by-step:
 
 1.  **Evaluate the negation:** The term `( not False )` negates the boolean value `False`. The negation of `False` is `True`.
 2.  **Substitute back:** The expression now becomes `False and True`.
 3.  **Evaluate the conjunction:** The logical `and` operator returns `True` only if both operands are `True`. Since the first operand is `False`, the result of the operation is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 138,( not True ) and True or True is,True,"The expression provided is `( not True ) and True or True is`.
 
 1.  **Interpretation**: In the context of a question, the word `is` at the end functions as the grammatical verb (e.g., ""What is the result?""), rather than the Python identity operator. If `is` were treated as code, the expression would be a syntax error because it is incomplete (`True is` requires a right-hand operand). We will evaluate the boolean logic portion: `( not True ) and True or True`.
@@ -2146,7 +2146,7 @@ Final Answer: False",False,True,1
 
 4.  **Conclusion**: The boolean expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 139,False and True and ( not False ) is,False,"The expression provided is `False and True and ( not False ) is`.
 
 1.  **Analyze the Operators**: The expression contains boolean operators `and`, `not`, and the keyword `is`.
@@ -2158,7 +2158,7 @@ Final Answer: True",True,True,1
 5.  **Interpret `is`**: The trailing `is` makes the expression syntactically incomplete if treated as a standalone Python statement (as `is` requires a right-hand operand for comparison). However, in the context of a question (""... is""), it functions as the verb asking for the value of the preceding expression.
 6.  **Conclusion**: The boolean value of the logic chain is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 140,( ( True ) ) or not False is,True,"To evaluate the expression `( ( True ) ) or not False`, we break it down step by step:
 
 1.  **Evaluate the left operand:** `( ( True ) )`
@@ -2170,7 +2170,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate the logical OR operation:** `True or True`
     The `or` operator returns `True` if at least one of the operands is `True`. Since both operands are `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 141,not True and False or False or True is,True,"To evaluate the expression `not True and False or False or True`, we must follow the standard order of operations (precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -2192,7 +2192,7 @@ Final Answer: True",True,True,1
     *   The expression becomes: `False or True`.
     *   `False or True` results in `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 142,True and not True and True and True is,False,"To evaluate the expression `True and not True and True and True`, we follow the order of operations for boolean logic, where the `not` operator has higher precedence than the `and` operator.
 
 1.  **Evaluate `not True`**: The `not` operator inverts the boolean value. `not True` evaluates to `False`.
@@ -2205,7 +2205,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 143,( True or True or not False ) is,True,"The expression provided is a boolean logic statement: `(True or True or not False)`.
 
 1.  **Evaluate the negation:** The term `not False` evaluates to `True`.
@@ -2214,7 +2214,7 @@ Final Answer: False",False,True,1
 
 Therefore, the expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 144,True or not False and True or True is,True,"To determine the value of the expression `True or not False and True or True`, we must apply standard boolean operator precedence rules (common in languages like Python, C, Java, etc.).
 
 1.  **Operator Precedence**: The order of operations for boolean operators is typically:
@@ -2243,7 +2243,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 145,( not ( False ) or False ) is,True,"The expression provided is `( not ( False ) or False ) is`. To determine the value, we evaluate the logical components step-by-step:
 
 1.  **Evaluate `not (False)`**: The `not` operator inverts the boolean value. Since `False` is false, `not False` evaluates to `True`.
@@ -2251,14 +2251,14 @@ Final Answer: True",True,True,1
 3.  **Evaluate `True or False`**: The `or` operator returns `True` if at least one of the operands is `True`. Since the first operand is `True`, the result is `True`.
 4.  **Context of `is`**: The trailing `is` typically indicates an identity check in programming (like Python) or acts as a verb in a question (e.g., ""Is [expression] true?""). While the syntax `(expression) is` is incomplete without a second operand in code, the logical value of the expression itself is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 146,True and not ( True or False ) is,False,"To evaluate the expression `True and not ( True or False )`, we follow the standard order of operations for logical expressions:
 
 1.  **Parentheses:** First, evaluate the expression inside the parentheses: `( True or False )`. Since `True` OR `False` is `True`, this simplifies to `True`.
 2.  **Negation:** Next, apply the `not` operator to the result from the previous step: `not True`. This evaluates to `False`.
 3.  **Conjunction:** Finally, evaluate the `and` operation: `True and False`. Since both operands must be `True` for an `and` statement to be true, and the second operand is `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 147,not ( False and True ) and True is,True,"To evaluate the expression `not ( False and True ) and True`, we follow the order of operations, starting with the parentheses:
 
 1.  **Evaluate the parentheses:** `( False and True )`
@@ -2272,14 +2272,14 @@ Final Answer: False",False,True,1
 3.  **Evaluate the final `and` operator:** `True and True`
     *   Since both operands are `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 148,not ( True and True ) or False is,False,"To evaluate the expression `not ( True and True ) or False`, we follow the standard order of operations for boolean logic:
 
 1.  **Parentheses**: First, evaluate the expression inside the parentheses: `(True and True)`. Since both operands are `True`, the result is `True`.
 2.  **Negation**: Next, apply the `not` operator to the result from the previous step: `not True`. This evaluates to `False`.
 3.  **Disjunction**: Finally, evaluate the `or` operation with the remaining operand: `False or False`. Since both sides are `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 149,False or not True and not not False is,False,"To evaluate the expression `False or not True and not not False`, we must follow the standard order of operations for boolean logic (specifically Python-style precedence):
 
 1.  **`not`** has the highest precedence.
@@ -2302,7 +2302,7 @@ Final Answer: False",False,True,1
 3.  Evaluate the `or` operation last:
     *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 150,not True and False or False and False is,False,"To evaluate the boolean expression `not True and False or False and False`, we must follow the standard operator precedence rules (typically used in Python and similar languages):
 
 1.  **Precedence**: The `not` operator has the highest precedence, followed by `and`, and finally `or`.
@@ -2319,7 +2319,7 @@ Final Answer: False",False,True,1
 
 Therefore, the result of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 151,not True or True and False or False is,False,"The expression provided is `not True or True and False or False is`.
 
 1.  **Analyze the Syntax**: The keyword `is` is typically used for identity comparison (e.g., `a is b`). In this context, `False is` is incomplete and would cause a syntax error in languages like Python. It is highly likely that `is` is a typo or part of the question phrasing (e.g., ""What is the result...?""). We will evaluate the logical boolean expression preceding it: `not True or True and False or False`.
@@ -2342,7 +2342,7 @@ Final Answer: False",False,True,1
 
 4.  **Conclusion**: The boolean value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 152,( not ( False ) and False ) is,False,"To evaluate the expression `( not ( False ) and False )`, we follow the order of operations for logical operators:
 
 1.  **Evaluate the negation:** The innermost part is `not (False)`. The logical NOT of `False` is `True`.
@@ -2352,14 +2352,14 @@ Final Answer: False",False,True,1
 
 The trailing `is` in the question likely functions as the verb asking for the value of the expression (e.g., ""What is...""). Therefore, the value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 153,False or ( True and not True ) is,False,"To evaluate the expression `False or ( True and not True )`, we follow the standard order of operations for boolean logic:
 
 1.  **Evaluate the `not` operator:** Inside the parentheses, `not True` evaluates to `False`.
 2.  **Evaluate the `and` operator:** Now the expression inside the parentheses is `True and False`. Since `and` requires both operands to be true, this evaluates to `False`.
 3.  **Evaluate the `or` operator:** The full expression is now `False or False`. Since `or` requires at least one operand to be true, and both are false, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 154,not False and not True or not True is,False,"The expression provided is `not False and not True or not True is`. The trailing `is` appears to be part of the question's grammatical structure (e.g., ""What is..."") rather than part of the code itself, as `is` at the end of a boolean expression is syntactically invalid in most programming languages (like Python) without a second operand. Therefore, we evaluate the boolean expression: `not False and not True or not True`.
 
 1.  **Operator Precedence**: In standard programming logic (like Python), the precedence order is `not` (highest), then `and`, then `or` (lowest).
@@ -2374,7 +2374,7 @@ Final Answer: False",False,True,1
 4.  **Evaluate `or` operation**:
     *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 155,( False or not not not False ) is,True,"To determine the value of the expression `( False or not not not False )`, we evaluate it step-by-step based on standard boolean logic rules, where `not` has higher precedence than `or`.
 
 1.  **Evaluate the `not` operations:**
@@ -2387,7 +2387,7 @@ Final Answer: False",False,True,1
     *   Substitute the result back into the original expression: `False or True`.
     *   In boolean logic, `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 156,( not False ) or True and False is,True,"To evaluate the boolean expression `( not False ) or True and False`, we must follow the standard order of operations (operator precedence) for boolean logic, which is typically used in programming languages like Python, Java, and C++.
 
 1.  **Parentheses**: First, evaluate the expression inside the parentheses.
@@ -2404,7 +2404,7 @@ Final Answer: True",True,True,1
 4.  **Evaluate `or`**:
     *   `True or False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 157,( not not True ) or not False is,True,"To evaluate the expression `( not not True ) or not False`, we break it down step-by-step based on operator precedence and boolean logic rules:
 
 1.  **Evaluate the left side:** `( not not True )`
@@ -2418,10 +2418,10 @@ Final Answer: True",True,True,1
 3.  **Evaluate the `or` operation:** `True or True`
     *   The logical OR operator returns `True` if at least one operand is `True`. Since both operands are `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 158,True or not ( ( True ) ) is,True,"The expression `( ( True ) )` contains the boolean literal `True`. In logic and programming, parentheses are used for grouping and do not alter the truth value of the expression inside them. Therefore, `( ( True ) )` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 159,( False ) and False or not False is,True,"The expression provided is `( False ) and False or not False`. The word ""is"" at the end appears to be part of the question phrasing (e.g., ""What is..."") rather than part of the code itself, as `is` is an identity operator that requires two operands in most programming contexts (like Python), and `False is` would be a syntax error.
 
 Assuming the expression to evaluate is `( False ) and False or not False`, we follow standard boolean operator precedence (typically used in Python and logic):
@@ -2435,7 +2435,7 @@ Step-by-step breakdown:
 2.  `False and False` $\rightarrow$ `False`
 3.  `False or True` $\rightarrow$ `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 160,not False and True or ( True ) is,True,"The expression provided is `not False and True or ( True ) is`.
 
 1.  **Analyze Syntax**: In Python (which uses `not`, `and`, `or`), the keyword `is` is an identity operator that requires a right-hand operand (e.g., `x is y`). The expression ends with `is` without a following value, which would technically result in a `SyntaxError` if executed as raw code.
@@ -2451,7 +2451,7 @@ Final Answer: True",True,True,1
     *   `True or ( True )` evaluates to `True` (since the left side of `or` is already true, it short-circuits).
 5.  **Conclusion**: The logical value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 161,True or not not ( not False ) is,True,"To determine the value of the expression `not not ( not False )`, we evaluate it step-by-step from the inside out:
 
 1.  **Innermost operation:** `not False`
@@ -2467,7 +2467,7 @@ Final Answer: True",True,True,1
 
 Since there are three `not` operators (an odd number), the final value flips the original `False` to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 162,False and not True and False and True is,False,"To evaluate the expression `False and not True and False and True`, we follow the order of operations for boolean logic:
 
 1.  **Evaluate `not` first:** The `not` operator has higher precedence than `and`.
@@ -2478,7 +2478,7 @@ Final Answer: True",True,True,1
     *   The `and` operator returns `False` if any of its operands are `False`.
     *   Since the first operand is `False`, the entire expression evaluates to `False` immediately (short-circuit evaluation).
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 163,not not True and True and not True is,False,"The expression provided is `not not True and True and not True is`. In the context of a logic question, the trailing `is` is likely part of the question phrasing (e.g., ""What is..."") rather than part of the code itself, as `is` is a keyword in Python that requires a value on the right-hand side (e.g., `is True`), and its absence would cause a syntax error.
 
 Assuming the core boolean expression to evaluate is `not not True and True and not True`, we apply the standard operator precedence rules (where `not` has higher precedence than `and`):
@@ -2497,7 +2497,7 @@ Assuming the core boolean expression to evaluate is `not not True and True and n
 
 Therefore, the result of the boolean logic is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 164,not False or not ( not False ) is,True,"To evaluate the expression `not False or not ( not False )`, we break it down step-by-step based on standard boolean logic rules:
 
 1.  **Evaluate the first term:** `not False`
@@ -2513,7 +2513,7 @@ Final Answer: False",False,True,1
     *   The logical `or` operator returns `True` if at least one of the operands is `True`.
     *   Since the first operand is `True`, the result of the entire expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 165,not not ( True ) or not True is,True,"The expression provided is `not not ( True ) or not True is`. The trailing `is` appears to be a typo or part of the question phrasing (e.g., ""The result is...""), as it would cause a syntax error if treated as a Python operator without a second operand. We will evaluate the logical expression `not not (True) or not True`.
 
 1.  **Evaluate `not not (True)`**:
@@ -2530,7 +2530,7 @@ Final Answer: True",True,True,1
 
 Therefore, the result of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 166,( True and not True and True ) is,False,"To evaluate the expression `(True and not True and True)`, we follow the order of operations for boolean logic:
 
 1.  **Evaluate `not` first:** The `not` operator has higher precedence than `and`.
@@ -2543,7 +2543,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 167,True or False or not True or True is,True,"The logical expression provided is `True or False or not True or True`.
 
 1.  **Analyze the Operator**: The primary operator connecting these values is the logical OR (`or`).
@@ -2552,7 +2552,7 @@ Final Answer: False",False,True,1
 
 Therefore, the expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 168,not True or True and False and False is,False,"To evaluate the boolean expression `not True or True and False and False`, we must follow the standard operator precedence rules used in most programming languages (such as Python, Java, and C++). The precedence order is:
 
 1.  `not` (highest)
@@ -2573,7 +2573,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate `or`**: Finally, we evaluate the `or` operation.
     *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 169,True and not not not not not True is,False,"To evaluate the expression `True and not not not not not True`, we break it down step-by-step:
 
 1.  **Analyze the `not` chain:** There are five `not` operators applied to `True`.
@@ -2585,7 +2585,7 @@ Final Answer: False",False,True,1
     *   The expression becomes `True and False`.
     *   In boolean logic, `True and False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 170,not True and ( False ) and False is,False,"The input string is `not True and ( False ) and False is`.
 
 1.  **Interpretation of the Input**: The trailing word `is` appears to be part of the question's grammatical structure (e.g., ""What is..."") rather than part of the code expression itself. In standard programming contexts (like Python), `False is` is an incomplete syntax error because `is` is a binary operator requiring a right-hand operand. Therefore, we evaluate the logical expression preceding it: `not True and ( False ) and False`.
@@ -2600,7 +2600,7 @@ Final Answer: False",False,True,1
 
 4.  **Conclusion**: The logical value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 171,False and False or not True and False is,False,"To evaluate the boolean expression `False and False or not True and False`, we must follow the standard order of operations (operator precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -2624,7 +2624,7 @@ Final Answer: False",False,True,1
     Finally, we evaluate the `or` operation.
     `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 172,True or False and not True and False is,True,"To determine the value of the expression ""True or False and not True and False"", we must apply the standard order of operations (precedence) for boolean logic. The precedence is typically: `not` (highest), then `and`, then `or` (lowest).
 
 1.  **Evaluate `not`**: The expression contains `not True`. This evaluates to `False`.
@@ -2636,7 +2636,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate `or`**: Finally, the `or` operator is evaluated.
     *   `True or False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 173,not ( False or False or True ) is,False,"To evaluate the expression `not ( False or False or True )`, we follow the order of operations for logical operators:
 
 1.  **Evaluate the expression inside the parentheses:** `( False or False or True )`.
@@ -2649,7 +2649,7 @@ Final Answer: True",True,True,1
 
 Therefore, the value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 174,not False or True or True and False is,True,"The expression provided is `not False or True or True and False is`.
 
 1.  **Analyze Syntax**: In Python (and most programming languages), the keyword `is` is an identity operator that requires a value on both sides (e.g., `a is b`). The trailing `is` at the end of the expression makes it syntactically invalid if treated strictly as code. However, in the context of a question asking ""What is..."", the `is` is likely part of the sentence structure (e.g., ""Question: [Expression] is [what]?"") rather than part of the code itself. We will evaluate the logical expression preceding it: `not False or True or True and False`.
@@ -2668,7 +2668,7 @@ Final Answer: False",False,True,1
 
 4.  **Conclusion**: The logical value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 175,not False and False or False or False is,False,"The input string appears to be a Python boolean expression followed by the word ""is"", which likely serves as the verb for the question (e.g., ""What is...""). The trailing `is` would cause a syntax error if treated as part of the code because the identity operator `is` requires a right-hand operand. Therefore, we evaluate the expression `not False and False or False or False`.
 
 1.  **Operator Precedence**: In Python, the precedence order for these operators is `not` (highest), followed by `and`, and then `or` (lowest).
@@ -2682,7 +2682,7 @@ Final Answer: True",True,True,1
 
 The final result of the boolean expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 176,( not True ) and ( False ) is,False,"To determine the result of the expression, we evaluate the boolean logic step-by-step, assuming the trailing ""is"" is part of the question phrasing (""What is..."") rather than a Python identity operator (which would require a right-hand operand and cause a syntax error).
 
 1.  **Evaluate `not True`**: The `not` operator negates the boolean value. `not True` evaluates to `False`.
@@ -2691,7 +2691,7 @@ Final Answer: False",False,True,1
 
 Therefore, the logical result of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 177,True and not not False and not False is,False,"To evaluate the expression `True and not not False and not False`, we must follow the standard order of operations for boolean logic, where the `not` operator has higher precedence than the `and` operator.
 
 1.  **Analyze Precedence**: The expression is parsed as `True and (not not False) and (not False)`.
@@ -2704,7 +2704,7 @@ Final Answer: False",False,True,1
     *   `True and False` evaluates to `False`.
     *   `False and True` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 178,not ( not not False ) and True is,True,"To evaluate the expression `not ( not not False ) and True`, we follow the order of operations, starting with the innermost parentheses and the unary `not` operator before the binary `and` operator.
 
 1.  **Evaluate the innermost `not` operations:**
@@ -2720,7 +2720,7 @@ Final Answer: False",False,True,1
     *   The expression is now `True and True`.
     *   Since both operands are `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 179,not ( not False ) and not False is,False,"To determine the value of the expression `not ( not False ) and not False`, we evaluate the logical operators step-by-step from the inside out, following standard boolean logic rules (similar to Python or C).
 
 1.  **Evaluate the inner `not`**:
@@ -2740,7 +2740,7 @@ Final Answer: True",True,True,1
 
 The trailing `is` in the question is interpreted as the question marker asking for the value of the preceding expression.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 180,False or True and not False or True is,True,"To determine the value of the expression `False or True and not False or True`, we must apply the standard order of operations (precedence) for logical operators:
 
 1.  **`not`** has the highest precedence.
@@ -2757,7 +2757,7 @@ Final Answer: False",False,True,1
     *   `False or True` becomes `True`.
     *   `True or True` becomes `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 181,( not not not True and True ) is,False,"The expression provided is `(not not not True and True)`. To determine the result, we must evaluate the boolean logic based on standard operator precedence (where `not` binds tighter than `and`).
 
 1.  **Evaluate the `not` operations:**
@@ -2773,7 +2773,7 @@ Final Answer: True",True,True,1
 
 The trailing ""is"" in the question likely asks for the value of the expression.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 182,False and not ( True ) or True is,True,"To evaluate the expression `False and not ( True ) or True`, we follow the standard order of operations for boolean logic (precedence):
 
 1.  **Evaluate `not` first:** The `not` operator has the highest precedence.
@@ -2785,7 +2785,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate `or` last:**
     *   `False or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 183,( not True and False or True ) is,True,"To evaluate the expression `( not True and False or True )`, we must follow the standard operator precedence rules for logical operators (typically used in languages like Python):
 
 1.  **`not`** has the highest precedence.
@@ -2807,7 +2807,7 @@ Final Answer: True",True,True,1
 
 Therefore, the expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 184,not ( not not True ) or False is,False,"To evaluate the expression `not ( not not True ) or False`, we break it down step-by-step based on operator precedence and logical rules:
 
 1.  **Evaluate the innermost logical operations:**
@@ -2826,7 +2826,7 @@ Final Answer: True",True,True,1
 4.  **Evaluate the disjunction (OR):**
     *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 185,( not False ) or ( False ) is,True,"The expression provided is `( not False ) or ( False ) is`. To determine the value, we evaluate the boolean logic components first, treating the trailing ""is"" as the question verb (e.g., ""What is..."") rather than a code operator, as the expression would otherwise be syntactically incomplete.
 
 1.  **Evaluate `not False`**: The `not` operator inverts the boolean value. `not False` evaluates to `True`.
@@ -2835,7 +2835,7 @@ Final Answer: False",False,True,1
 
 Therefore, the logical value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 186,not not not False and True and False is,False,"The expression provided is `not not not False and True and False is`. In the context of programming (specifically Python) or boolean logic, this string appears to be a boolean expression followed by the word ""is"", which is likely part of the question phrasing (e.g., ""What is..."") rather than an operator, as `is` requires a right-hand operand to be valid syntax.
 
 Assuming the core expression to evaluate is `not not not False and True and False`, we apply the standard operator precedence rules:
@@ -2854,7 +2854,7 @@ Assuming the core expression to evaluate is `not not not False and True and Fals
 
 The trailing `is` is treated as a question marker and ignored for the calculation of the boolean value.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 187,True or not True or not not True is,True,"The expression provided is a logical statement involving boolean operators (`or` and `not`). To determine its value, we evaluate the components step-by-step:
 
 1.  **Evaluate `not True`**: The negation of `True` is `False`.
@@ -2862,7 +2862,7 @@ Final Answer: False",False,True,1
 3.  **Combine with `or`**: The full expression becomes `True or False or True`.
 4.  **Apply Logic Rules**: In boolean logic, the `OR` operator returns `True` if at least one of the operands is `True`. Since the first operand is `True`, the entire expression evaluates to `True` regardless of the other values.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 188,not False or not not False and False is,True,"The expression provided is `not False or not not False and False is`.
 
 1.  **Analyze the Syntax**: In Python, the keyword `is` is an identity operator that requires two operands (e.g., `a is b`). The expression ends with `False is`, which is syntactically incomplete and would raise a `SyntaxError` in a strict Python interpreter. However, in the context of logic puzzles, this is likely a typo or a sentence fragment (e.g., ""Question: ... is [True/False]?""). We will evaluate the logical boolean components assuming the `is` is extraneous or a typo for a comparison that doesn't affect the short-circuit logic.
@@ -2883,7 +2883,7 @@ Final Answer: True",True,True,1
 
 5.  **Conclusion**: Despite the trailing `is` making the code technically invalid in Python, the logical evaluation of the boolean operators yields `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 189,not False and ( False or False ) is,False,"To determine the result of the expression, we evaluate the boolean logic step-by-step, assuming standard programming logic (like Python) where `not`, `and`, and `or` are operators. The trailing `is` is treated as part of the question phrasing (e.g., ""What is..."") rather than a code operator, as it lacks a second operand.
 
 1.  **Evaluate `not False`**: The `not` operator negates the value. `not False` becomes `True`.
@@ -2892,7 +2892,7 @@ Final Answer: True",True,True,1
 
 Therefore, the expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 190,False and True or ( not False ) is,True,"To evaluate the expression `False and True or ( not False )`, we must follow the standard operator precedence rules for boolean logic (common in languages like Python, C++, Java, etc.):
 
 1.  **Parentheses and `not`**: The `not` operator has the highest precedence.
@@ -2908,7 +2908,7 @@ Final Answer: False",False,True,1
 
 The word ""is"" at the end of the input is interpreted as the verb of the question asking for the value of the expression.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 191,False and not False and ( False ) is,False,"To evaluate the expression `False and not False and ( False )`, we follow the order of operations and boolean logic rules:
 
 1.  **Evaluate the `not` operator:** The expression contains `not False`. In boolean logic, the negation of `False` is `True`.
@@ -2920,7 +2920,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 192,not ( ( False and True ) ) is,True,"To evaluate the expression `not ( ( False and True ) )`, we follow the standard order of operations for boolean logic:
 
 1.  **Evaluate the inner parentheses:** First, we look at `( False and True )`. The logical `and` operator returns `True` only if both operands are `True`. Since the first operand is `False`, the result of this operation is `False`.
@@ -2928,7 +2928,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 193,False or ( not False ) and False is,False,"To determine the value of the expression `False or ( not False ) and False`, we must follow the standard operator precedence rules for boolean logic (typically used in programming languages like Python):
 
 1.  **`not`** has the highest precedence.
@@ -2948,7 +2948,7 @@ Final Answer: True",True,True,1
 3.  Evaluate the `or` operation:
     `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 194,False and not False or False and True is,False,"To evaluate the boolean expression `False and not False or False and True`, we must follow the standard operator precedence rules for boolean logic (typically used in programming languages like Python):
 
 1.  **`not`** has the highest precedence.
@@ -2972,7 +2972,7 @@ Final Answer: False",False,True,1
     Finally, we evaluate the `or` operation.
     `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 195,not False and not not True and True is,True,"The expression provided is `not False and not not True and True is`.
 
 1.  **Analyze the Syntax**: In Python (and many programming languages), `is` is a keyword used for identity comparison (e.g., `a is b`). An expression ending with `is` without a second operand is a syntax error. However, in the context of a logic question, the word ""is"" at the end is likely part of the question phrasing (e.g., ""What is the value of...?"") rather than part of the code itself. We will evaluate the logical boolean chain provided.
@@ -2987,7 +2987,7 @@ Final Answer: False",False,True,1
 
 5.  **Conclusion**: The logical value of the boolean expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 196,True and True or False and not True is,True,"To determine the value of the expression `True and True or False and not True`, we must follow the standard order of operator precedence for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -3011,7 +3011,7 @@ Final Answer: True",True,True,1
     Finally, we evaluate the `or` operation.
     `True or False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 197,not True or False and True or False is,False,"To determine the value of the expression `not True or False and True or False`, we must follow the standard operator precedence rules used in programming languages like Python.
 
 1.  **Operator Precedence**: The order of operations is:
@@ -3030,7 +3030,7 @@ Final Answer: True",True,True,1
 
 The final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 198,True or False or not True and True is,True,"To determine the value of the expression `True or False or not True and True`, we must apply the standard precedence rules for boolean operators: `not` is evaluated first, followed by `and`, and finally `or`.
 
 1.  **Evaluate `not`**: The expression contains `not True`.
@@ -3045,7 +3045,7 @@ Final Answer: False",False,True,1
 
 Alternatively, using short-circuit logic: In an `or` chain, if the first operand is `True`, the entire expression evaluates to `True` without needing to evaluate the remaining terms. Since the expression starts with `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 199,False or False or not True or False is,False,"To evaluate the expression `False or False or not True or False`, we follow the standard order of operations for logical operators, where `not` has higher precedence than `or`.
 
 1.  **Evaluate `not True`**: The `not` operator inverts the boolean value. `not True` evaluates to `False`.
@@ -3057,7 +3057,7 @@ Final Answer: True",True,True,1
 
 Since every part of the expression evaluates to `False`, the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 200,False or False or True and not False is,True,"To evaluate the expression `False or False or True and not False`, we must follow the standard operator precedence rules for boolean logic (typically used in programming languages like Python):
 
 1.  **Precedence**: The order of operations is `not` (highest), then `and`, then `or` (lowest).
@@ -3071,7 +3071,7 @@ Final Answer: False",False,True,1
 
 Therefore, the expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 201,( not ( True or False ) ) is,False,"To determine the value of the expression `( not ( True or False ) )`, we evaluate it step-by-step using standard boolean logic rules (common in languages like Python):
 
 1.  **Evaluate the inner expression:** `( True or False )`
@@ -3084,7 +3084,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 202,not False and False or True and True is,True,"To evaluate the expression `not False and False or True and True is`, we must first address the syntax and operator precedence.
 
 1.  **Syntax Analysis**: The trailing `is` is a keyword in Python used for identity comparison (e.g., `a is b`). However, it requires a right-hand operand (e.g., `True is True`). Since there is no operand after `is`, strictly speaking, this would be a `SyntaxError` in Python. However, in the context of a logic question, it is highly likely that `is` is part of the question sentence structure (e.g., ""The expression ... is [what?]"") rather than part of the code itself. We will evaluate the logical expression: `not False and False or True and True`.
@@ -3107,7 +3107,7 @@ Final Answer: False",False,True,1
 
 Therefore, the logical result of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 203,True and False or ( not False ) is,True,"To determine the result of the expression `True and False or ( not False )`, we must follow the standard order of operations (operator precedence) for logical operators:
 
 1.  **Parentheses and `not`**: First, evaluate the expression inside the parentheses. `not False` evaluates to `True`.
@@ -3120,7 +3120,7 @@ Final Answer: True",True,True,1
 
 Therefore, the value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 204,not False or not not not not True is,True,"The expression provided is `not False or not not not not True is`. This appears to be a boolean logic question, likely in the context of Python or general logic, where the trailing `is` is either a typo or part of the question phrasing (e.g., ""is [True/False]?"").
 
 Here is the step-by-step evaluation of the logical components:
@@ -3138,14 +3138,14 @@ Here is the step-by-step evaluation of the logical components:
 
 Therefore, the expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 205,True and ( not ( True ) ) is,False,"To evaluate the expression `True and ( not ( True ) )`, we follow the order of operations:
 
 1.  **Evaluate the inner parentheses:** The expression contains `not (True)`. The logical NOT operator inverts the value, so `not (True)` evaluates to `False`.
 2.  **Substitute back:** The expression now simplifies to `True and (False)`.
 3.  **Evaluate the AND operator:** The logical AND operator returns `True` only if both operands are `True`. Since the second operand is `False`, the result of `True and False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 206,True and False and not True or False is,False,"To determine the value of the expression `True and False and not True or False`, we must follow the standard operator precedence rules (typically used in Python and similar languages):
 
 1.  **`not`** has the highest precedence.
@@ -3169,14 +3169,14 @@ Final Answer: False",False,True,1
 3.  **Evaluate `or`**:
     Finally, evaluate `False or False`, which results in `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 207,( ( not False ) ) and True is,True,"To evaluate the expression `( ( not False ) ) and True`, we follow the order of operations for boolean logic:
 
 1.  **Evaluate the `not` operator:** The innermost part is `not False`. The `not` operator negates a boolean value. Since `False` negated becomes `True`, this part evaluates to `True`.
 2.  **Substitute the result:** The expression now simplifies to `True and True`.
 3.  **Evaluate the `and` operator:** The `and` operator returns `True` only if both operands are `True`. Since both operands are `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 208,not ( True ) and ( False ) is,False,"To evaluate the expression `not ( True ) and ( False )`, we follow the standard order of operations for logical operators:
 
 1.  **Operator Precedence**: The logical NOT operator (`not`) has higher precedence than the logical AND operator (`and`). Therefore, we evaluate the `not` operation first.
@@ -3184,7 +3184,7 @@ Final Answer: True",True,True,1
 3.  **Substitute and Evaluate**: The expression now becomes `False and ( False )`.
 4.  **Evaluate `and`**: The logical AND operator returns `True` only if both operands are `True`. Since the first operand is `False`, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 209,True or not False and False and False is,True,"To determine the value of the expression `True or not False and False and False`, we must follow the standard order of operations (operator precedence) for boolean logic, which typically follows the hierarchy: `not` (highest), `and` (middle), `or` (lowest).
 
 1.  **Evaluate `not`**: The expression contains `not False`. This evaluates to `True`.
@@ -3198,14 +3198,14 @@ Final Answer: False",False,True,1
 
 Therefore, the expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 210,True and not ( False or False ) is,True,"To evaluate the expression `True and not ( False or False )`, we follow the standard order of operations for logical operators:
 
 1.  **Parentheses**: First, evaluate the expression inside the parentheses: `( False or False )`. Since `False` OR `False` is `False`, this simplifies to `False`.
 2.  **Negation**: Next, apply the `not` operator to the result: `not ( False )`. The negation of `False` is `True`.
 3.  **Conjunction**: Finally, evaluate the `and` operator: `True and True`. Since both operands are `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 211,not True and False or False and True is,False,"To determine the result of the expression `not True and False or False and True`, we must apply the standard order of operations (precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -3229,7 +3229,7 @@ Final Answer: True",True,True,1
     Finally, we evaluate the `or` operation.
     `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 212,not True or not False and not True is,False,"To evaluate the expression `not True or not False and not True`, we must follow the standard operator precedence rules used in most programming languages (such as Python, C++, Java, and JavaScript).
 
 1.  **Operator Precedence**: The order of operations is:
@@ -3255,7 +3255,7 @@ Final Answer: False",False,True,1
 4.  **Evaluate `or` operations last**:
     *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 213,not True or False or True and True is,True,"To evaluate the expression `not True or False or True and True`, we must follow the standard operator precedence rules used in most programming languages (like Python) and boolean logic.
 
 1.  **Operator Precedence**: The order of operations is:
@@ -3276,7 +3276,7 @@ Final Answer: False",False,True,1
 
 Therefore, the final value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 214,not True and True and False and True is,False,"To evaluate the expression `not True and True and False and True`, we follow the standard order of operations for boolean logic (specifically in Python, which this syntax resembles):
 
 1.  **Operator Precedence**: The `not` operator has higher precedence than the `and` operator. Therefore, the expression is evaluated as `(not True) and True and False and True`.
@@ -3284,7 +3284,7 @@ Final Answer: True",True,True,1
 3.  **Substitute and Simplify**: The expression now becomes `False and True and False and True`.
 4.  **Evaluate `and`**: The `and` operator returns `True` only if all operands are `True`. If any operand is `False`, the result is immediately `False` (short-circuit evaluation). Since the first operand is `False`, the entire chain evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 215,False and False or not True and True is,False,"To evaluate the boolean expression `False and False or not True and True`, we must follow the standard operator precedence rules used in most programming languages (such as Python, C++, Java).
 
 1.  **Precedence Order**: The order of operations is:
@@ -3307,7 +3307,7 @@ Final Answer: False",False,True,1
     Finally, we evaluate the `or` operation.
     *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 216,( not False or False and True ) is,True,"To evaluate the boolean expression `( not False or False and True )`, we must follow the standard order of operations (operator precedence) for boolean logic, which typically applies in most programming languages (like Python, C++, Java).
 
 1.  **Operator Precedence**: The `not` operator has the highest precedence, followed by `and`, and finally `or`.
@@ -3316,7 +3316,7 @@ Final Answer: False",False,True,1
 4.  **Simplify**: Substituting these results back into the original expression, we get `True or False`.
 5.  **Evaluate `or`**: The expression `True or False` evaluates to `True` because the first operand is true.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 217,( True or False ) or not True is,True,"To determine the value of the expression `(True or False) or not True`, we evaluate it step-by-step based on standard boolean logic rules:
 
 1.  **Evaluate the parentheses first:** `(True or False)`.
@@ -3331,7 +3331,7 @@ Final Answer: True",True,True,1
     *   The expression now simplifies to `True or False`.
     *   Again, since the first operand is `True`, the result of the OR operation is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 218,not not not ( False ) and False is,False,"The expression provided is `not not not ( False ) and False is`. The trailing `is` appears to be a grammatical marker for the question (e.g., ""What is..."") rather than part of the logical expression, as `is` is typically an identity operator requiring two operands in programming languages like Python. Assuming the core logical expression to evaluate is `not not not ( False ) and False`:
 
 1.  **Evaluate the `not` operators:** The `not` operator has higher precedence than `and`. We evaluate the chain of `not` operators first.
@@ -3346,7 +3346,7 @@ Final Answer: True",True,True,1
 
 3.  **Conclusion:** The logical value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 219,not False and False and False and True is,False,"To evaluate the expression `not False and False and False and True`, we follow the standard operator precedence rules (where `not` has higher precedence than `and`) and evaluate from left to right.
 
 1.  **Evaluate `not`**: The `not` operator has the highest precedence.
@@ -3362,7 +3362,7 @@ Final Answer: False",False,True,1
 
 Since there is at least one `False` value in the chain of `and` operations, the entire expression results in `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 220,False and not True and True or False is,False,"To evaluate the expression `False and not True and True or False`, we must follow the standard order of operations (precedence) for boolean logic:
 
 1.  **`not`** has the highest precedence.
@@ -3386,7 +3386,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate `or`**:
     Finally, `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 221,( False or not False and False ) is,False,"To determine the value of the expression `( False or not False and False )`, we must evaluate the boolean logic based on standard operator precedence.
 
 1.  **Identify Operator Precedence**: In most programming languages and logic systems (like Python), the precedence order is:
@@ -3410,7 +3410,7 @@ Final Answer: False",False,True,1
 
 The trailing `is` in the question is interpreted as the verb asking for the value of the expression (e.g., ""What is..."").
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 222,False or ( False or not False ) is,True,"To evaluate the expression `False or ( False or not False )`, we break it down step-by-step using standard boolean logic:
 
 1.  **Evaluate the innermost operation:** `not False`.
@@ -3424,7 +3424,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate the final operation:** `False or True`.
     *   Again, since the second operand is `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 223,not False or True or False and False is,True,"The input string `not False or True or False and False is` appears to be a Python boolean expression with a trailing `is`. In Python, `is` is an identity operator that requires two operands (e.g., `x is y`). Since the expression ends with `is`, it is syntactically incomplete. However, assuming the `is` is a typo or part of the question phrasing (e.g., ""What is...""), we can evaluate the logical expression `not False or True or False and False`.
 
 Here is the step-by-step evaluation based on Python operator precedence (`not` > `and` > `or`):
@@ -3440,14 +3440,14 @@ Here is the step-by-step evaluation based on Python operator precedence (`not` >
 
 Since the first operand of the `or` chain is `True`, the entire expression evaluates to `True` regardless of the subsequent terms.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 224,True or ( not False ) or True is,True,"To determine the value of the expression `True or ( not False ) or True`, we evaluate it step-by-step based on standard boolean logic rules:
 
 1.  **Evaluate the negation:** The term inside the parentheses is `not False`. The logical negation of `False` is `True`.
 2.  **Substitute back:** The expression now becomes `True or True or True`.
 3.  **Evaluate the OR operations:** The `or` operator returns `True` if at least one of its operands is `True`. Since the first operand is `True`, the entire expression evaluates to `True` immediately (short-circuit evaluation).
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 225,not False and False or True or False is,True,"The expression provided is `not False and False or True or False is`. In most programming languages that use this syntax (like Python or C#), `is` is a keyword used for identity comparison (e.g., `x is None`). If included as part of the code without a right-hand operand, it would result in a syntax error. Therefore, it is interpreted that the trailing `is` is part of the question phrasing (meaning ""What is...""), and the logical expression to evaluate is `not False and False or True or False`.
 
 Here is the step-by-step evaluation based on standard operator precedence (`not` > `and` > `or`):
@@ -3460,7 +3460,7 @@ Here is the step-by-step evaluation based on standard operator precedence (`not`
     *   Expression becomes: `True or False`
 4.  **Evaluate `True or False`**: Finally, `True or False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 226,False and not ( not not False ) is,False,"To evaluate the expression `False and not ( not not False )`, we break it down step-by-step using standard boolean logic rules:
 
 1.  **Evaluate the innermost `not` operations:**
@@ -3477,7 +3477,7 @@ Final Answer: True",True,True,1
 
 Therefore, the result of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 227,not not ( not True ) or False is,False,"To evaluate the expression `not not ( not True ) or False`, we follow the order of operations, prioritizing parentheses and the `not` operator before the `or` operator.
 
 1.  **Evaluate the innermost parentheses:**
@@ -3494,7 +3494,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate the `or` operator:**
     `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 228,False and not True and True and False is,False,"To evaluate the expression `False and not True and True and False`, we follow the order of operations for boolean logic:
 
 1.  **Evaluate `not` first:** The `not` operator has higher precedence than `and`.
@@ -3510,7 +3510,7 @@ Final Answer: False",False,True,1
 
 Since there are multiple `False` values in the chain, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 229,True or False and not ( True ) is,True,"The expression to evaluate is `True or False and not (True)`.
 
 1.  **Operator Precedence**: In standard boolean logic and most programming languages (like Python, C, Java), the precedence of operators is as follows:
@@ -3528,7 +3528,7 @@ Final Answer: False",False,True,1
 
 Therefore, the value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 230,not ( False ) and ( True ) is,True,"To evaluate the expression `not ( False ) and ( True )`, we break it down step-by-step based on standard boolean logic rules:
 
 1.  **Evaluate `not (False)`**: The `not` operator inverts the boolean value. Since `False` is false, `not False` evaluates to `True`.
@@ -3537,14 +3537,14 @@ Final Answer: True",True,True,1
 
 Therefore, the logical result of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 231,False and not ( ( True ) ) is,False,"To evaluate the expression `False and not ( ( True ) )`, we follow the order of operations:
 
 1.  **Evaluate parentheses:** The innermost expression `( True )` is simply `True`.
 2.  **Apply the `not` operator:** `not (True)` evaluates to `False`.
 3.  **Evaluate the `and` operator:** The expression now simplifies to `False and False`. In boolean logic, the `and` operator returns `True` only if both operands are `True`. Since the first operand is `False`, the result is `False`. (Note: In many programming languages, this would also trigger short-circuit evaluation, returning `False` immediately without evaluating the second part).
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 232,not False or ( not not False ) is,True,"The expression provided is `not False or ( not not False )`. The trailing ""is"" appears to be part of the question phrasing (e.g., ""What is..."") rather than part of the logical expression itself, as it would cause a syntax error in code without a right-hand operand. We will evaluate the boolean logic of the expression.
 
 1.  **Evaluate `not False`**: The `not` operator negates the boolean value. `not False` evaluates to `True`.
@@ -3554,7 +3554,7 @@ Final Answer: False",False,True,1
     *   So, `( not not False )` evaluates to `False`.
 3.  **Evaluate `True or False`**: The `or` operator returns `True` if at least one of its operands is `True`. Since the left operand (`not False`) is `True`, the entire expression evaluates to `True` (short-circuit evaluation).
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 233,( ( not False ) and False ) is,False,"To evaluate the boolean expression `( ( not False ) and False )`, we proceed step-by-step:
 
 1.  **Evaluate the negation:** The innermost operation is `not False`. In boolean logic, the negation of `False` is `True`.
@@ -3563,7 +3563,7 @@ Final Answer: True",True,True,1
 
 Therefore, the value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 234,True or False and not False and True is,True,"To determine the value of the expression `True or False and not False and True`, we must apply standard boolean operator precedence rules, which are consistent across most programming languages (like Python, Java, C++) and mathematical logic.
 
 1.  **Operator Precedence**: The order of operations is typically:
@@ -3583,7 +3583,7 @@ Final Answer: False",False,True,1
 
     *(Note: Even if evaluated strictly left-to-right without precedence rules, `(True or False)` is `True`, and `True and ...` remains `True`.)*
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 235,( ( not True and True ) ) is,False,"The expression provided is `( ( not True and True ) )`. Although the prompt ends with ""is"", which suggests a question asking for the value of the expression (e.g., ""What is...""), we can evaluate the boolean logic contained within the parentheses.
 
 1.  **Evaluate `not True`**: The `not` operator inverts the boolean value. `not True` evaluates to `False`.
@@ -3592,7 +3592,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 236,not ( False ) or not not False is,True,"The expression provided is `not ( False ) or not not False is`.
 
 1.  **Analyze the Syntax**: In Python (and many programming languages), `is` is a keyword used for identity comparison (e.g., `a is b`). If treated as a standalone expression ending in `is`, it would result in a syntax error because the operator requires a right-hand operand. However, in the context of a logic question, the trailing `is` is likely a typo or part of the question phrasing (e.g., ""Is [expression] True?""). We will evaluate the boolean logic of the expression preceding `is`.
@@ -3612,7 +3612,7 @@ Final Answer: False",False,True,1
 
 5.  **Conclusion**: The logical value of the expression is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 237,not ( False or False and False ) is,True,"To determine the value of the expression `not ( False or False and False )`, we must follow the standard order of operations (operator precedence) for logical expressions.
 
 1.  **Parentheses**: First, we evaluate the expression inside the parentheses: `( False or False and False )`.
@@ -3624,7 +3624,7 @@ Final Answer: True",True,True,1
 5.  **NOT Operation**: Finally, we apply the `not` operator to the result of the parentheses.
     *   `not False` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 238,False and not ( not not True ) is,False,"To evaluate the expression `False and not ( not not True )`, we break it down step-by-step:
 
 1.  **Evaluate the innermost parentheses**: `not not True`.
@@ -3642,7 +3642,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 239,False and False and not ( True ) is,False,"To evaluate the expression `False and False and not ( True )`, we follow the order of operations for boolean logic:
 
 1.  **Evaluate the `not` operator first:** The `not` operator has higher precedence than `and`.
@@ -3655,7 +3655,7 @@ Final Answer: False",False,True,1
 
 Alternatively, using short-circuit evaluation: Since the first operand of the `and` chain is `False`, the entire expression evaluates to `False` immediately without needing to evaluate the subsequent parts.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 240,False or ( not False and False ) is,False,"To evaluate the expression `False or ( not False and False )`, we follow the standard order of operations for logical operators (precedence): `not` is evaluated first, followed by `and`, and finally `or`.
 
 1.  **Evaluate `not False`**: The negation of `False` is `True`.
@@ -3664,7 +3664,7 @@ Final Answer: False",False,True,1
     *   Expression becomes: `False or False`
 3.  **Evaluate `False or False`**: The logical OR of `False` and `False` is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 241,False or ( not not not True ) is,False,"To evaluate the expression `False or ( not not not True )`, we follow the order of operations, prioritizing the parentheses and the `not` operator before the `or` operator.
 
 1.  **Evaluate the inner expression:** `( not not not True )`
@@ -3678,7 +3678,7 @@ Final Answer: False",False,True,1
     *   The expression is now `False or False`.
     *   In boolean logic, the `or` operator returns `True` if at least one operand is `True`. Since both operands are `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 242,( not False ) or not not False is,True,"The expression provided is `( not False ) or not not False is`.
 
 1.  **Analyze the Structure**: The trailing word `is` appears to be the grammatical verb of the question (e.g., ""What is...""), rather than part of the logical expression itself. If `is` were treated as a programming operator (like in Python), the expression would be syntactically incomplete or invalid because `is` requires two operands. Therefore, we evaluate the logical part: `( not False ) or not not False`.
@@ -3697,7 +3697,7 @@ Final Answer: False",False,True,1
     *   In boolean logic, the `or` operator returns `True` if at least one of the operands is `True`.
     *   Since the first operand is `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 243,not False and False and True or False is,False,"The expression provided is `not False and False and True or False is`.
 
 1.  **Syntax Analysis**: In Python, `is` is a binary operator used for identity comparison (e.g., `a is b`). The expression ends with `is` without a right-hand operand, which would technically result in a `SyntaxError` if run as code. However, in the context of logic questions, this is often a phrasing artifact (e.g., ""Question: [Expression] is [True/False]?"") or a typo. We will evaluate the logical boolean value of the expression preceding `is`.
@@ -3721,7 +3721,7 @@ Final Answer: True",True,True,1
 
 4.  **Conclusion**: The boolean value of the expression is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 244,True or not False and ( False ) is,True,"The question asks to evaluate the truth value of the logical expression `False and (False)`.
 
 1.  **Identify the Expression**: The core logical operation presented is `False and (False)`. The phrase ""True or not"" at the beginning typically functions as a question format (i.e., ""True or False?""), asking for the validity of the subsequent statement.
@@ -3733,14 +3733,14 @@ Final Answer: False",False,True,1
     *   Result: `False`
 4.  **Conclusion**: Since the expression evaluates to `False`, the statement is not True. Therefore, the answer to ""True or not"" is ""not"" (False).
 
-Final Answer: False",False,True,0
+Final Answer: False",False,True,0,
 245,( not ( False ) ) or False is,True,"To evaluate the expression `( not ( False ) ) or False`, we follow the order of operations for logical operators:
 
 1.  **Evaluate the inner negation:** First, look at `not ( False )`. The logical NOT operator inverts the boolean value. Since `False` is negated, this becomes `True`.
 2.  **Substitute back:** The expression now simplifies to `True or False`.
 3.  **Evaluate the disjunction:** The logical OR operator returns `True` if at least one of the operands is `True`. Since the first operand is `True`, the result of the operation is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 246,True and not True or False and True is,False,"To evaluate the expression `True and not True or False and True`, we must follow the standard operator precedence rules for boolean logic (specifically in Python, where `True` and `False` are capitalized):
 
 1.  **Precedence:** The `not` operator has the highest precedence, followed by `and`, and finally `or`.
@@ -3755,7 +3755,7 @@ Final Answer: True",True,True,1
 4.  **Evaluate `or`:**
     *   `False or False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 247,not ( not not not not False ) is,True,"To determine the value of the expression `not ( not not not not False )`, we need to evaluate the logical negations step-by-step.
 
 1.  **Identify the base value:** The innermost value is `False`.
@@ -3771,7 +3771,7 @@ Final Answer: False",False,True,1
     *   Since there are 5 `not` operators (an odd number), the final result will be the opposite of `False`.
     *   Opposite of `False` is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 248,True and ( not True or False ) is,False,"To evaluate the expression `True and ( not True or False )`, we follow the standard order of operations for boolean logic (precedence):
 
 1.  **Parentheses**: Evaluate the expression inside the parentheses first: `( not True or False )`.
@@ -3783,7 +3783,7 @@ Final Answer: True",True,True,1
 4.  **AND**: Now substitute the result back into the main expression: `True and False`.
     *   `True and False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 249,( not not not False or True ) is,True,"To evaluate the expression `( not not not False or True )`, we follow the standard order of operations for logical operators, where `not` (negation) has higher precedence than `or` (disjunction).
 
 1.  **Evaluate the `not` operations first:**
@@ -3799,4 +3799,4 @@ Final Answer: False",False,True,1
 
 The trailing `is` in the question implies an inquiry into the value of the expression.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,

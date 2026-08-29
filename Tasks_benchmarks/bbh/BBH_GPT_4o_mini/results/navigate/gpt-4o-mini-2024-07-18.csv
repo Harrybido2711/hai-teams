@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step backward. Take 9 steps left. Take 2 steps backward. Take 6 steps forward. Take 4 steps forward. Take 4 steps backward. Take 3 steps right.
 Options:
 - Yes
@@ -17,7 +17,7 @@ Now, let's summarize the final position:
 
 The starting point was (0, 0), and we are now at (-6, 3). Since the final position is not the same as the starting point, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 1,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps left. Take 10 steps forward. Take 7 steps forward. Take 2 steps forward.
 Options:
 - Yes
@@ -47,7 +47,7 @@ To determine if you return to the starting point (0, 0), we compare the final po
 
 Therefore, the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 2,"If you follow these instructions, do you return to the starting point? Take 1 step. Take 10 steps. Take 4 steps. Take 1 step. Take 10 steps. Turn right. Turn around.
 Options:
 - Yes
@@ -63,7 +63,7 @@ Options:
 
 Since you have moved a total of 26 steps away from the starting point and have only changed direction without moving back, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 3,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step right. Take 3 steps left. Take 2 steps right.
 Options:
 - Yes
@@ -78,7 +78,7 @@ After following all the instructions, we end up back at position 0, which is the
 
 Therefore, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 4,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps backward. Take 7 steps backward. Take 8 steps right. Take 6 steps right. Take 3 steps left.
 Options:
 - Yes
@@ -100,7 +100,7 @@ Now, we need to determine if we have returned to the starting point (0, 0). Our 
 
 Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 5,"If you follow these instructions, do you return to the starting point? Take 8 steps. Turn around. Take 8 steps.
 Options:
 - Yes
@@ -114,7 +114,7 @@ Options:
 
 Since you end up back at your starting point after following these instructions, the answer is:
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 6,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps right. Take 1 step forward. Take 10 steps left. Take 8 steps forward. Take 9 steps backward. Take 4 steps right.
 Options:
 - Yes
@@ -142,7 +142,7 @@ After following all these steps, we end up back at the starting point (0, 0).
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 7,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps forward. Take 7 steps backward. Take 7 steps backward. Take 8 steps forward.
 Options:
 - Yes
@@ -162,7 +162,7 @@ After following all the instructions, we end up back at the starting point (posi
 
 Therefore, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 8,"If you follow these instructions, do you return to the starting point? Take 5 steps. Take 4 steps. Take 3 steps.
 Options:
 - Yes
@@ -180,7 +180,7 @@ Now, let's calculate the total movement:
 
 Since you are 12 steps away from the starting point after completing all the steps, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 9,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps backward. Take 9 steps forward. Take 4 steps forward. Take 2 steps left. Take 4 steps forward. Take 6 steps forward. Take 10 steps backward. Take 8 steps right. Take 1 step left.
 Options:
 - Yes
@@ -201,7 +201,7 @@ Now, the final position is (5, 5), which is not the starting point (0, 0).
 
 Therefore, the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 10,"If you follow these instructions, do you return to the starting point? Take 8 steps. Take 5 steps. Take 5 steps. Take 10 steps. Take 5 steps.
 Options:
 - Yes
@@ -221,7 +221,7 @@ After taking all these steps, you end up at (33, 0), which is not the starting p
 
 Thus, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 11,"If you follow these instructions, do you return to the starting point? Take 3 steps. Take 6 steps. Take 8 steps. Take 5 steps. Take 6 steps. Take 2 steps. Take 1 step. Take 2 steps.
 Options:
 - Yes
@@ -243,7 +243,7 @@ Now, let's sum these steps:
 
 Since all the steps are in one direction (assuming forward), you do not return to the starting point after taking a total of 33 steps.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 12,"If you follow these instructions, do you return to the starting point? Take 3 steps. Turn around. Take 3 steps. Turn right.
 Options:
 - Yes
@@ -260,7 +260,7 @@ Since you returned to the starting point (point A) after the first three steps a
 
 Thus, you do return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 13,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps backward. Take 2 steps left. Take 5 steps right. Take 3 steps left. Take 5 steps backward. Take 10 steps forward.
 Options:
 - Yes
@@ -284,7 +284,7 @@ After following all the instructions, we end up back at the starting point (0, 0
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 14,"If you follow these instructions, do you return to the starting point? Always face forward. Take 3 steps left. Take 10 steps right. Take 7 steps left.
 Options:
 - Yes
@@ -302,7 +302,7 @@ After following all the instructions, you end up back at the starting point (pos
 
 Therefore, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 15,"If you follow these instructions, do you return to the starting point? Turn left. Turn right. Turn around. Turn left. Take 4 steps. Turn left. Turn around. Take 3 steps.
 Options:
 - Yes
@@ -323,7 +323,7 @@ To determine if we return to the starting point (0,0), we compare our final posi
 
 Thus, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 16,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps forward. Take 1 step backward. Take 4 steps backward. Take 4 steps backward.
 Options:
 - Yes
@@ -341,7 +341,7 @@ Options:
 
 After following all the instructions, we end up back at position 0, which is the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 17,"If you follow these instructions, do you return to the starting point? Take 3 steps. Turn around. Take 5 steps. Turn right. Turn right. Take 1 step. Take 1 step.
 Options:
 - Yes
@@ -374,7 +374,7 @@ To determine if we return to the starting point (0, 0), we compare our final pos
 
 Thus, the answer is ""No"".
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 18,"If you follow these instructions, do you return to the starting point? Take 3 steps. Take 6 steps. Take 9 steps.
 Options:
 - Yes
@@ -388,7 +388,7 @@ If we assume that all steps are taken in the same direction (which is the most s
 
 Since you are moving in one direction and not returning or changing direction, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 19,"If you follow these instructions, do you return to the starting point? Take 8 steps. Turn left. Take 9 steps. Take 7 steps. Turn around.
 Options:
 - Yes
@@ -407,7 +407,7 @@ To return to the starting point (0, 0), you would need to move 16 steps east and
 
 Since you do not return to the starting point after completing the given instructions, the answer is:
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 20,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps backward. Take 6 steps forward. Take 6 steps right.
 Options:
 - Yes
@@ -425,7 +425,7 @@ Now, we need to determine if we return to the starting point (point A) after com
 
 Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 21,"If you follow these instructions, do you return to the starting point? Take 4 steps. Take 2 steps. Turn around. Take 6 steps.
 Options:
 - Yes
@@ -444,7 +444,7 @@ Since you were 6 steps away from point A and you take 6 steps back, you will end
 
 Therefore, you do return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 22,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step forward. Take 10 steps left. Take 4 steps forward.
 Options:
 - Yes
@@ -459,7 +459,7 @@ Now, we need to determine if we return to the starting point (0, 0). Our final p
 
 Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 23,"If you follow these instructions, do you return to the starting point? Take 7 steps. Turn right. Turn right. Take 6 steps. Turn right.
 Options:
 - Yes
@@ -482,7 +482,7 @@ Now, let's analyze the final position:
 
 Since the final position (-6,1) is not the same as the starting position (0,0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 24,"If you follow these instructions, do you return to the starting point? Always face forward. Take 2 steps backward. Take 8 steps backward.
 Options:
 - Yes
@@ -501,7 +501,7 @@ So, the total distance moved backward is:
 
 Since you are now 10 steps away from the starting point and have not moved forward at any point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 25,"If you follow these instructions, do you return to the starting point? Take 9 steps. Take 6 steps. Take 9 steps. Take 6 steps. Take 2 steps. Turn left. Take 6 steps. Turn around. Take 8 steps.
 Options:
 - Yes
@@ -538,7 +538,7 @@ After following all the steps, the final position is (2, 32), which is not the s
 
 Thus, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 26,"If you follow these instructions, do you return to the starting point? Take 10 steps. Turn around. Take 4 steps. Take 6 steps. Turn around.
 Options:
 - Yes
@@ -551,7 +551,7 @@ Options:
 
 After following all the instructions, you end up back at the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 27,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps forward. Take 5 steps backward. Take 5 steps left. Take 5 steps forward.
 Options:
 - Yes
@@ -569,7 +569,7 @@ Now, let's analyze the final position:
 
 Since the final position (-5, 8) is not the same as the starting position (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 28,"If you follow these instructions, do you return to the starting point? Turn left. Take 5 steps. Turn around. Turn right.
 Options:
 - Yes
@@ -590,7 +590,7 @@ At this point, you are not facing point A anymore, and you have not moved back t
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 29,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps forward. Take 7 steps backward. Take 10 steps backward.
 Options:
 - Yes
@@ -605,7 +605,7 @@ After following all the instructions, you end up at position -12, which is not t
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 30,"If you follow these instructions, do you return to the starting point? Take 7 steps. Take 7 steps. Take 10 steps. Take 1 step. Turn left. Take 7 steps.
 Options:
 - Yes
@@ -627,7 +627,7 @@ Now, let's analyze your final position (25, 7) compared to your starting positio
 
 Since your final position is not the same as your starting position, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 31,"If you follow these instructions, do you return to the starting point? Always face forward. Take 4 steps forward. Take 5 steps right. Take 7 steps left.
 Options:
 - Yes
@@ -642,7 +642,7 @@ Now, we need to check if the final coordinates (-2, 4) are the same as the start
 
 Therefore, the answer to the question is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 32,"If you follow these instructions, do you return to the starting point? Take 10 steps. Turn left. Turn left. Take 10 steps.
 Options:
 - Yes
@@ -658,7 +658,7 @@ Options:
 
 Since you end up back at your starting point after following all the instructions, the answer is:
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 33,"If you follow these instructions, do you return to the starting point? Take 3 steps. Take 5 steps. Take 8 steps. Turn right. Turn right. Take 5 steps. Turn around. Take 2 steps. Take 4 steps.
 Options:
 - Yes
@@ -682,7 +682,7 @@ Options:
 
 After following all these steps, your final position is (-1, 16). Since this is not the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 34,"If you follow these instructions, do you return to the starting point? Take 7 steps. Take 8 steps. Turn right. Turn right. Take 1 step. Take 7 steps. Take 6 steps. Take 1 step.
 Options:
 - Yes
@@ -716,7 +716,7 @@ After following all the steps, you end up back at the starting point (0, 0).
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 35,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps forward. Take 4 steps backward. Take 4 steps backward. Take 5 steps forward. Take 7 steps forward. Take 10 steps backward. Take 1 step backward.
 Options:
 - Yes
@@ -740,7 +740,7 @@ Options:
 
 After following all the steps, we end up back at position 0, which is the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 36,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps forward. Take 7 steps left. Take 5 steps backward. Take 4 steps right. Take 3 steps right. Take 4 steps backward.
 Options:
 - Yes
@@ -773,7 +773,7 @@ After following all these steps, we end up back at the starting point (0, 0).
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 37,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps right. Take 5 steps right. Take 7 steps left. Take 3 steps left. Take 7 steps left. Take 6 steps right.
 Options:
 - Yes
@@ -799,7 +799,7 @@ Now, let's calculate the total movement:
 
 After all the movements, we end up back at the starting point (0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 38,"If you follow these instructions, do you return to the starting point? Take 1 step. Take 5 steps. Turn around. Turn around. Turn around. Take 6 steps.
 Options:
 - Yes
@@ -821,7 +821,7 @@ Now, let's analyze your position:
 
 Thus, you do return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 39,"If you follow these instructions, do you return to the starting point? Always face forward. Take 2 steps forward. Take 2 steps backward.
 Options:
 - Yes
@@ -841,7 +841,7 @@ After completing all the steps, you end up back at the starting point (0).
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 40,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps left. Take 6 steps right. Take 10 steps right. Take 2 steps left. Take 5 steps left. Take 1 step left.
 Options:
 - Yes
@@ -865,7 +865,7 @@ After following all the instructions, we end up at position 0, which is the star
 
 Therefore, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 41,"If you follow these instructions, do you return to the starting point? Take 6 steps. Take 10 steps. Take 10 steps. Take 1 step. Take 7 steps. Take 5 steps. Turn around.
 Options:
 - Yes
@@ -887,7 +887,7 @@ Since you have not taken any steps after turning around, you remain at (0, 39), 
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 42,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps left. Take 2 steps backward. Take 7 steps backward. Take 7 steps backward. Take 3 steps forward.
 Options:
 - Yes
@@ -906,7 +906,7 @@ To determine if we return to the starting point (0, 0), we compare our final pos
 
 Thus, the answer is **No**.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 43,"If you follow these instructions, do you return to the starting point? Take 6 steps. Take 8 steps. Take 7 steps. Turn around. Take 6 steps.
 Options:
 - Yes
@@ -927,7 +927,7 @@ Now, let's calculate the total distance from the starting point A to point E:
 
 Since point E is 15 steps away from the starting point A, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 44,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps forward. Take 7 steps backward. Take 10 steps backward. Take 10 steps forward.
 Options:
 - Yes
@@ -947,7 +947,7 @@ After following all the instructions, you end up back at the starting point (pos
 
 Therefore, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 45,"If you follow these instructions, do you return to the starting point? Turn right. Take 9 steps. Turn around. Take 9 steps. Turn right.
 Options:
 - Yes
@@ -970,7 +970,7 @@ Now, let's visualize this:
 
 Since you returned to point A after the steps, you indeed return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 46,"If you follow these instructions, do you return to the starting point? Turn right. Take 9 steps. Take 10 steps. Turn left. Take 10 steps. Turn right. Turn around. Take 4 steps.
 Options:
 - Yes
@@ -990,7 +990,7 @@ Now, let's analyze the final position:
 
 Since (15, 10) is not the same as (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 47,"If you follow these instructions, do you return to the starting point? Turn left. Turn around. Take 1 step. Take 10 steps. Turn around. Take 7 steps. Take 4 steps.
 Options:
 - Yes
@@ -1008,7 +1008,7 @@ After following all the instructions, you end up back at the starting point (0,0
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 48,"If you follow these instructions, do you return to the starting point? Always face forward. Take 2 steps right. Take 4 steps right. Take 6 steps left.
 Options:
 - Yes
@@ -1032,7 +1032,7 @@ After following all the instructions, we end up back at the starting point (0, 0
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 49,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps right. Take 1 step forward. Take 3 steps left. Take 2 steps left.
 Options:
 - Yes
@@ -1056,7 +1056,7 @@ Now, let's analyze the final position (2, 1) compared to the starting point (0, 
 
 Since (2, 1) is not equal to (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 50,"If you follow these instructions, do you return to the starting point? Take 10 steps. Take 7 steps. Turn around. Take 8 steps. Take 9 steps.
 Options:
 - Yes
@@ -1072,7 +1072,7 @@ After following all these instructions, you end up back at point 0, which is the
 
 Therefore, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 51,"If you follow these instructions, do you return to the starting point? Always face forward. Take 2 steps right. Take 2 steps right. Take 4 steps left.
 Options:
 - Yes
@@ -1093,7 +1093,7 @@ Options:
 
 Since we end up back at the starting point after following all the instructions, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 52,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps left. Take 7 steps forward. Take 8 steps left. Take 7 steps left. Take 6 steps forward. Take 1 step forward. Take 4 steps forward.
 Options:
 - Yes
@@ -1133,7 +1133,7 @@ Now, we check the final position: (-21, 18).
 
 The starting point was (0, 0), and the final position is (-21, 18). Since these two points are not the same, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 53,"If you follow these instructions, do you return to the starting point? Take 9 steps. Take 5 steps. Take 2 steps. Take 10 steps. Turn right. Take 10 steps. Take 8 steps.
 Options:
 - Yes
@@ -1158,7 +1158,7 @@ Now, let's summarize your final position:
 
 Since your final position (18, 26) is not the same as your starting position (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 54,"If you follow these instructions, do you return to the starting point? Turn right. Take 3 steps. Turn around. Take 3 steps. Turn left.
 Options:
 - Yes
@@ -1179,7 +1179,7 @@ Now, let's summarize:
 
 Therefore, you do return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 55,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps left. Take 4 steps backward.
 Options:
 - Yes
@@ -1199,7 +1199,7 @@ Now, your final position is (-9, -4).
 
 Since this position is not the same as the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 56,"If you follow these instructions, do you return to the starting point? Take 9 steps. Turn left. Turn left. Take 5 steps. Take 4 steps. Turn left. Turn left.
 Options:
 - Yes
@@ -1223,7 +1223,7 @@ At this point, you are back at the starting point (0, 0).
 
 Since you returned to the starting point after following all the instructions, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 57,"If you follow these instructions, do you return to the starting point? Take 4 steps. Take 2 steps. Take 7 steps.
 Options:
 - Yes
@@ -1235,7 +1235,7 @@ Options:
 
 Since you have moved a total of 13 steps away from the starting point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 58,"If you follow these instructions, do you return to the starting point? Take 8 steps. Take 1 step. Take 8 steps. Turn right.
 Options:
 - Yes
@@ -1253,7 +1253,7 @@ At this point, you are at (0, 17) and facing right. The instructions do not spec
 
 Since you started at (0, 0) and ended at (0, 17), you have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 59,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps left. Take 5 steps left. Take 10 steps right.
 Options:
 - Yes
@@ -1273,7 +1273,7 @@ Now, let's analyze the movements:
 
 Since we end up at Point B and not at Point A, we do not return to the starting point.
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 60,"If you follow these instructions, do you return to the starting point? Take 6 steps. Take 2 steps. Take 6 steps.
 Options:
 - Yes
@@ -1285,7 +1285,7 @@ Options:
 
 Since you have moved a total of 14 steps forward and have not moved backward at any point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 61,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps forward. Take 10 steps right. Take 10 steps backward. Take 3 steps forward. Take 7 steps forward. Take 9 steps left.
 Options:
 - Yes
@@ -1315,7 +1315,7 @@ Now, let's summarize the final position:
 
 Since the final position (1, 10) is not the same as the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 62,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps left. Take 8 steps left. Take 1 step left. Take 9 steps left. Take 10 steps forward. Take 5 steps forward.
 Options:
 - Yes
@@ -1349,7 +1349,7 @@ Options:
 
 After following all the instructions, the final position is (-25, 15). Since this is not the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 63,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step right. Take 9 steps left. Take 9 steps right. Take 1 step backward. Take 3 steps right. Take 6 steps backward.
 Options:
 - Yes
@@ -1380,7 +1380,7 @@ Now, let's follow the instructions:
 
 Now, we check the final position (4, -7) against the starting point (0, 0). Since (4, -7) is not equal to (0, 0), we have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 64,"If you follow these instructions, do you return to the starting point? Turn left. Take 4 steps. Turn around. Take 4 steps.
 Options:
 - Yes
@@ -1399,7 +1399,7 @@ Now, let's analyze the movements:
 
 Thus, following these instructions does indeed return you to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 65,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps forward. Take 3 steps backward. Take 4 steps backward.
 Options:
 - Yes
@@ -1414,7 +1414,7 @@ After following all the instructions, you end up back at the starting point (pos
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 66,"If you follow these instructions, do you return to the starting point? Take 5 steps. Turn around. Take 10 steps. Turn right. Take 10 steps.
 Options:
 - Yes
@@ -1432,7 +1432,7 @@ Options:
 
 Now, let's analyze your final position. You started at (0, 0) and ended at (-10, -5). Since your final position is not the same as your starting point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 67,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step right. Take 4 steps right. Take 5 steps left.
 Options:
 - Yes
@@ -1445,7 +1445,7 @@ Options:
 
 Since you end up back at the starting point after following all the instructions, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 68,"If you follow these instructions, do you return to the starting point? Take 3 steps. Turn left. Turn left. Turn around. Take 5 steps. Turn around. Take 5 steps.
 Options:
 - Yes
@@ -1469,7 +1469,7 @@ Now, let's analyze the movements:
 
 Since you end up 3 steps away from the starting point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 69,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps forward. Take 4 steps backward. Take 6 steps forward.
 Options:
 - Yes
@@ -1487,7 +1487,7 @@ After following all the instructions, the final position is 12, which is not the
 
 Therefore, the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 70,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps backward. Take 2 steps backward. Take 10 steps forward.
 Options:
 - Yes
@@ -1503,7 +1503,7 @@ Options:
 
 After following all the instructions, we end up back at the starting point (position 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 71,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps forward. Take 2 steps backward. Take 4 steps backward.
 Options:
 - Yes
@@ -1521,7 +1521,7 @@ After following all the instructions, you end up back at the starting point (pos
 
 Therefore, the answer to the question is ""Yes.""
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 72,"If you follow these instructions, do you return to the starting point? Take 5 steps. Take 5 steps. Take 2 steps. Turn around. Take 8 steps. Take 4 steps.
 Options:
 - Yes
@@ -1536,7 +1536,7 @@ Options:
 
 After following all the instructions, you end up back at the starting point (point 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 73,"If you follow these instructions, do you return to the starting point? Always face forward. Take 4 steps forward. Take 2 steps backward. Take 10 steps backward.
 Options:
 - Yes
@@ -1552,7 +1552,7 @@ Now, let's analyze the final position:
 
 Since -8 is not the same as 0, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 74,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps left. Take 7 steps forward. Take 9 steps right. Take 7 steps left. Take 7 steps backward. Take 8 steps right. Take 10 steps left. Take 1 step backward. Take 1 step forward.
 Options:
 - Yes
@@ -1580,7 +1580,7 @@ Options:
 
 After all these movements, the final position is (-9, 0). The starting point was (0, 0). Since the final position is not the same as the starting point, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 75,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps backward. Take 2 steps forward. Take 1 step backward. Take 8 steps forward.
 Options:
 - Yes
@@ -1598,7 +1598,7 @@ Options:
 
 After following all the instructions, we end up back at position 0, which is the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 76,"If you follow these instructions, do you return to the starting point? Take 1 step. Take 5 steps. Take 1 step. Take 6 steps. Turn left. Take 7 steps. Take 2 steps. Take 4 steps.
 Options:
 - Yes
@@ -1625,7 +1625,7 @@ Now, let's summarize the final position:
 
 Since the final position (-13, 13) is not the same as the starting position (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 77,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step backward. Take 5 steps right. Take 3 steps left. Take 1 step backward. Take 5 steps backward. Take 4 steps forward. Take 3 steps forward. Take 2 steps left.
 Options:
 - Yes
@@ -1642,7 +1642,7 @@ Options:
 
 After following all the instructions, we end up back at the starting point (0, 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 78,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps right. Take 8 steps backward. Take 1 step right. Take 7 steps backward.
 Options:
 - Yes
@@ -1659,7 +1659,7 @@ Now, let's summarize the final position:
 
 To determine if we return to the starting point (0, 0), we compare our final position (6, -15) with the starting point (0, 0). Since (6, -15) is not equal to (0, 0), we have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 79,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps forward. Take 4 steps forward. Take 7 steps backward. Take 7 steps backward.
 Options:
 - Yes
@@ -1677,7 +1677,7 @@ Options:
 
 After following all the instructions, you end up back at position 0, which is the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 80,"If you follow these instructions, do you return to the starting point? Turn around. Turn left. Take 1 step. Take 2 steps. Turn around. Turn around. Turn around. Take 3 steps.
 Options:
 - Yes
@@ -1702,7 +1702,7 @@ Now, let's analyze the movements:
 
 Since you moved away from your starting point and then took steps in the opposite direction, you do not return to the starting point.
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 81,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps forward. Take 9 steps right. Take 2 steps forward. Take 10 steps backward. Take 9 steps left.
 Options:
 - Yes
@@ -1724,7 +1724,7 @@ After following all the instructions, we end up back at the starting point (0, 0
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 82,"If you follow these instructions, do you return to the starting point? Take 8 steps. Take 1 step. Turn left. Turn left. Take 9 steps.
 Options:
 - Yes
@@ -1742,7 +1742,7 @@ Options:
 
 After following all the instructions, you end up back at the starting point (0, 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 83,"If you follow these instructions, do you return to the starting point? Take 2 steps. Turn around. Turn right. Turn left. Take 2 steps. Turn around. Turn around.
 Options:
 - Yes
@@ -1766,7 +1766,7 @@ After following all these instructions, you end up back at the starting point (0
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 84,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step backward. Take 5 steps forward. Take 10 steps backward. Take 9 steps forward. Take 7 steps right.
 Options:
 - Yes
@@ -1785,7 +1785,7 @@ Now, let's summarize the final position:
 
 Since the final position (7, 3) is not the same as the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 85,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step forward. Take 10 steps forward. Take 6 steps backward. Take 7 steps backward. Take 1 step left. Take 10 steps right.
 Options:
 - Yes
@@ -1804,7 +1804,7 @@ Now, let's analyze the final position:
 
 Since the final position (9, -2) is not the same as the starting position (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 86,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps left. Take 4 steps forward. Take 1 step left. Take 4 steps backward.
 Options:
 - Yes
@@ -1828,7 +1828,7 @@ Now, let's check the final position:
 
 Since the final position (-11, 0) is not the same as the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 87,"If you follow these instructions, do you return to the starting point? Always face forward. Take 3 steps right. Take 5 steps right. Take 2 steps backward.
 Options:
 - Yes
@@ -1847,7 +1847,7 @@ Now, let's analyze the final position:
 
 Since the final position (8, -2) is not the same as the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 88,"If you follow these instructions, do you return to the starting point? Turn left. Turn right. Take 8 steps. Take 4 steps. Turn right. Turn right. Take 10 steps. Take 1 step. Take 1 step.
 Options:
 - Yes
@@ -1871,7 +1871,7 @@ Since we moved 12 steps in one direction and then 12 steps back in the opposite 
 
 Thus, the answer is **Yes**, we return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 89,"If you follow these instructions, do you return to the starting point? Turn around. Turn around. Take 7 steps. Take 6 steps. Take 5 steps.
 Options:
 - Yes
@@ -1892,7 +1892,7 @@ Now, let's calculate your final position relative to the starting point:
 
 Since you end up 6 steps away from the starting point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 90,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps forward. Take 8 steps right. Take 8 steps right. Take 9 steps left. Take 6 steps right. Take 2 steps forward. Take 9 steps backward.
 Options:
 - Yes
@@ -1916,7 +1916,7 @@ Options:
 
 Now, we check the final position (13, 3) against the starting point (0, 0). Since (13, 3) is not equal to (0, 0), we have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 91,"If you follow these instructions, do you return to the starting point? Turn left. Take 9 steps. Take 9 steps.
 Options:
 - Yes
@@ -1929,7 +1929,7 @@ Options:
 
 Since you have moved 18 steps away from the starting point and not returned to it, the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 92,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps left. Take 3 steps backward. Take 3 steps left.
 Options:
 - Yes
@@ -1958,7 +1958,7 @@ Now, let's analyze the final position:
 
 Since the final position (-9, -3) is not the same as the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 93,"If you follow these instructions, do you return to the starting point? Take 7 steps. Turn around. Take 10 steps. Take 2 steps. Turn around. Take 5 steps. Turn left.
 Options:
 - Yes
@@ -1991,7 +1991,7 @@ To determine if we return to the starting point (0, 0), we see that we are curre
 
 Thus, we do not return to the starting point.
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 94,"If you follow these instructions, do you return to the starting point? Turn left. Turn left. Take 10 steps. Take 6 steps. Turn left. Take 3 steps. Take 3 steps.
 Options:
 - Yes
@@ -2014,7 +2014,7 @@ Now, let's summarize your movements:
 
 Since you have moved away from the starting point and have not returned to it, the answer is ""No.""
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 95,"If you follow these instructions, do you return to the starting point? Take 2 steps. Take 8 steps. Take 8 steps. Take 6 steps.
 Options:
 - Yes
@@ -2029,7 +2029,7 @@ After following all the instructions, you end up at position 24, which is not th
 
 Therefore, the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 96,"If you follow these instructions, do you return to the starting point? Take 6 steps. Turn right. Turn right. Take 7 steps. Turn around. Take 1 step.
 Options:
 - Yes
@@ -2051,7 +2051,7 @@ After following all these instructions, you end up back at the starting point (0
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 97,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps right. Take 6 steps right. Take 10 steps backward. Take 9 steps left. Take 4 steps left.
 Options:
 - Yes
@@ -2071,7 +2071,7 @@ Options:
 
 Now, we check the final position (2, -10) against the starting point (0, 0). Since (2, -10) is not equal to (0, 0), we have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 98,"If you follow these instructions, do you return to the starting point? Take 3 steps. Take 6 steps. Take 6 steps. Turn left. Take 8 steps. Take 1 step. Take 3 steps. Take 7 steps. Take 8 steps.
 Options:
 - Yes
@@ -2107,7 +2107,7 @@ Options:
 
 After following all the instructions, the final position is (-27, 15). Since this is not the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 99,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps backward. Take 2 steps backward. Take 1 step forward. Take 6 steps forward. Take 3 steps forward.
 Options:
 - Yes
@@ -2127,7 +2127,7 @@ Options:
 
 After following all the instructions, the final position is 2. Since this is not the starting point (0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 100,"If you follow these instructions, do you return to the starting point? Take 7 steps. Turn around. Take 7 steps. Turn left. Turn around. Turn around. Turn left.
 Options:
 - Yes
@@ -2145,7 +2145,7 @@ After following all these steps, you end up facing a different direction but are
 
 Thus, you do return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 101,"If you follow these instructions, do you return to the starting point? Turn around. Turn right. Take 7 steps. Turn right.
 Options:
 - Yes
@@ -2166,7 +2166,7 @@ Now, let's visualize this:
 
 At this point, you are 7 steps West of your starting point and facing North. Therefore, you have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 102,"If you follow these instructions, do you return to the starting point? Always face forward. Take 4 steps right. Take 7 steps right. Take 1 step left. Take 4 steps left. Take 6 steps left.
 Options:
 - Yes
@@ -2186,7 +2186,7 @@ Options:
 
 After following all the instructions, we end up at position 0, which is the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 103,"If you follow these instructions, do you return to the starting point? Turn left. Take 7 steps. Turn left. Turn left. Take 9 steps. Take 2 steps. Turn left. Take 4 steps.
 Options:
 - Yes
@@ -2210,7 +2210,7 @@ Now, let's analyze the movements:
 
 Since we end up 4 steps east of the starting point, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 104,"If you follow these instructions, do you return to the starting point? Take 6 steps. Turn left. Take 4 steps. Take 4 steps.
 Options:
 - Yes
@@ -2238,7 +2238,7 @@ To determine if you return to the starting point (point A), we can visualize or 
 
 Since point D is at (-8, 6) and point A is at (0, 0), you have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 105,"If you follow these instructions, do you return to the starting point? Take 6 steps. Turn left. Take 6 steps. Turn around. Take 2 steps. Take 10 steps.
 Options:
 - Yes
@@ -2261,7 +2261,7 @@ Now, let's analyze the final position:
 
 Since (6,6) is not the same as (0,0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 106,"If you follow these instructions, do you return to the starting point? Take 2 steps. Take 2 steps. Turn around. Take 4 steps. Turn right.
 Options:
 - Yes
@@ -2282,7 +2282,7 @@ Now, let's analyze the final position:
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 107,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps right. Take 7 steps left. Take 8 steps right. Take 6 steps left.
 Options:
 - Yes
@@ -2302,7 +2302,7 @@ After completing all the steps, the final position is 0, which is the starting p
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 108,"If you follow these instructions, do you return to the starting point? Take 5 steps. Take 8 steps. Take 2 steps. Turn right. Take 8 steps. Turn left. Take 6 steps. Take 6 steps.
 Options:
 - Yes
@@ -2337,7 +2337,7 @@ Now, let's summarize the final position:
 
 Since the final position (8, 27) is not the same as the starting position (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 109,"If you follow these instructions, do you return to the starting point? Take 10 steps. Take 8 steps. Turn left. Take 3 steps. Take 1 step. Take 6 steps. Take 7 steps.
 Options:
 - Yes
@@ -2361,7 +2361,7 @@ Now, let's summarize your final position: you end up at (3, 12).
 
 Since your final position (3, 12) is not the same as your starting position (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 110,"If you follow these instructions, do you return to the starting point? Turn around. Turn left. Take 6 steps. Take 4 steps.
 Options:
 - Yes
@@ -2380,7 +2380,7 @@ Now, let's analyze the movement:
 
 Since you have moved a total of 10 steps away from the starting point in a direction that is not back towards it, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 111,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps left. Take 4 steps left. Take 1 step left. Take 2 steps left. Take 2 steps right. Take 3 steps left. Take 5 steps forward. Take 3 steps backward.
 Options:
 - Yes
@@ -2422,7 +2422,7 @@ Options:
 
 Now, we check the final position (-13, 2) against the starting point (0, 0). Since the final position is not the same as the starting point, we conclude that we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 112,"If you follow these instructions, do you return to the starting point? Take 8 steps. Take 9 steps. Turn around. Take 5 steps. Turn left.
 Options:
 - Yes
@@ -2446,7 +2446,7 @@ To determine if we return to the starting point (0, 0), we compare our final pos
 
 Thus, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 113,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps left. Take 10 steps right. Take 7 steps backward. Take 7 steps forward.
 Options:
 - Yes
@@ -2464,7 +2464,7 @@ Options:
 
 After analyzing all the steps, we see that we return to the starting point (point A) after completing all the instructions.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 114,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps left. Take 7 steps right. Take 4 steps right. Take 1 step left.
 Options:
 - Yes
@@ -2482,7 +2482,7 @@ Options:
 
 After following all the instructions, we end up back at position 0, which is the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 115,"If you follow these instructions, do you return to the starting point? Take 8 steps. Take 2 steps. Turn right. Turn right. Take 10 steps.
 Options:
 - Yes
@@ -2501,7 +2501,7 @@ Now, let's analyze your final position:
 
 Since (10, 10) is not the same as (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 116,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps backward. Take 6 steps forward. Take 6 steps backward. Take 7 steps forward.
 Options:
 - Yes
@@ -2519,7 +2519,7 @@ Options:
 
 After following all the instructions, we end up back at the starting point (position 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 117,"If you follow these instructions, do you return to the starting point? Take 6 steps. Turn left. Turn left. Take 1 step. Take 5 steps. Turn around.
 Options:
 - Yes
@@ -2541,7 +2541,7 @@ After following all these instructions, you end up back at the starting point (0
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 118,"If you follow these instructions, do you return to the starting point? Always face forward. Take 4 steps backward. Take 8 steps forward. Take 10 steps backward. Take 2 steps forward. Take 4 steps forward.
 Options:
 - Yes
@@ -2561,7 +2561,7 @@ Options:
 
 After following all the instructions, we end up back at position 0, which is the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 119,"If you follow these instructions, do you return to the starting point? Always face forward. Take 3 steps forward. Take 3 steps backward.
 Options:
 - Yes
@@ -2581,7 +2581,7 @@ You end up back at the starting point (0).
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 120,"If you follow these instructions, do you return to the starting point? Take 7 steps. Take 6 steps. Take 5 steps. Turn around. Take 5 steps. Take 3 steps. Take 4 steps. Take 6 steps.
 Options:
 - Yes
@@ -2598,7 +2598,7 @@ Options:
 
 After following all the steps, we end up back at the starting point (0, 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 121,"If you follow these instructions, do you return to the starting point? Always face forward. Take 4 steps right. Take 5 steps right. Take 9 steps left.
 Options:
 - Yes
@@ -2614,7 +2614,7 @@ Options:
 
 After following all the instructions, we end up back at the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 122,"If you follow these instructions, do you return to the starting point? Turn left. Turn left. Turn around. Take 1 step. Take 6 steps. Turn left. Turn left. Take 7 steps.
 Options:
 - Yes
@@ -2634,7 +2634,7 @@ Now, let's summarize the final position:
 
 Since (0,2) is not the starting point (0,0), you do not return to the starting point.
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 123,"If you follow these instructions, do you return to the starting point? Take 6 steps. Take 5 steps. Take 6 steps.
 Options:
 - Yes
@@ -2646,7 +2646,7 @@ Options:
 
 Since you end up 17 steps away from the starting point after completing all the instructions, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 124,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps right. Take 10 steps left. Take 10 steps backward. Take 3 steps backward. Take 5 steps backward. Take 8 steps forward.
 Options:
 - Yes
@@ -2671,7 +2671,7 @@ Now, we check the final position:
 
 Since the final position (-1, -10) is not the same as the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 125,"If you follow these instructions, do you return to the starting point? Turn right. Take 2 steps. Take 8 steps. Turn around.
 Options:
 - Yes
@@ -2693,7 +2693,7 @@ Since you have not taken any additional steps after turning around, you remain 1
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 126,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps backward. Take 8 steps left. Take 3 steps right. Take 7 steps forward. Take 3 steps right. Take 9 steps right. Take 1 step backward. Take 7 steps left.
 Options:
 - Yes
@@ -2719,7 +2719,7 @@ Options:
 
 After following all the instructions, we end up back at the starting point (0, 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 127,"If you follow these instructions, do you return to the starting point? Turn left. Take 5 steps. Take 9 steps. Take 7 steps. Turn around. Take 1 step. Take 10 steps.
 Options:
 - Yes
@@ -2748,7 +2748,7 @@ The net movement is:
 
 Since you are still 10 steps away from the starting point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 128,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps backward. Take 1 step forward. Take 1 step backward. Take 5 steps forward. Take 6 steps backward. Take 8 steps forward.
 Options:
 - Yes
@@ -2770,7 +2770,7 @@ Options:
 
 After following all the instructions, we end up back at position 0, which is the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 129,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps right. Take 5 steps forward. Take 10 steps forward.
 Options:
 - Yes
@@ -2790,7 +2790,7 @@ Now, we need to determine if we return to the starting point (0, 0). Our final p
 
 Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 130,"If you follow these instructions, do you return to the starting point? Take 10 steps. Take 2 steps. Take 3 steps. Turn around. Take 4 steps. Turn around. Take 4 steps.
 Options:
 - Yes
@@ -2808,7 +2808,7 @@ After following all the steps, we end up at (15, 0), which is not the starting p
 
 Thus, the answer is **No**, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 131,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step right. Take 2 steps forward. Take 2 steps right. Take 4 steps right.
 Options:
 - Yes
@@ -2833,7 +2833,7 @@ Now, let's summarize the final position:
 
 Since the final position (7, 2) is not the same as the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 132,"If you follow these instructions, do you return to the starting point? Always face forward. Take 2 steps forward. Take 2 steps backward. Take 4 steps right. Take 7 steps right.
 Options:
 - Yes
@@ -2847,7 +2847,7 @@ Options:
 
 After following all the instructions, the final position is (11, 0). Since this is not the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 133,"If you follow these instructions, do you return to the starting point? Take 5 steps. Take 4 steps. Turn around. Take 10 steps. Take 8 steps. Turn around. Take 2 steps. Take 7 steps.
 Options:
 - Yes
@@ -2864,7 +2864,7 @@ Options:
 
 After following all the instructions, we end up back at the starting point (0, 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 134,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps forward. Take 3 steps backward.
 Options:
 - Yes
@@ -2878,7 +2878,7 @@ After completing these instructions, you end up at position 7, not at the starti
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 135,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps left. Take 4 steps forward. Take 2 steps forward.
 Options:
 - Yes
@@ -2898,7 +2898,7 @@ Now, we need to determine if we return to the starting point (0, 0). Our final p
 
 Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 136,"If you follow these instructions, do you return to the starting point? Always face forward. Take 2 steps left. Take 4 steps backward. Take 10 steps right. Take 2 steps left. Take 3 steps left. Take 7 steps right.
 Options:
 - Yes
@@ -2930,7 +2930,7 @@ Options:
 
 Now, we check the final position (10, -4) against the starting point (0, 0). Since the final position is not the same as the starting point, we conclude that we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 137,"If you follow these instructions, do you return to the starting point? Take 2 steps. Turn right. Take 6 steps. Take 10 steps. Take 7 steps.
 Options:
 - Yes
@@ -2950,7 +2950,7 @@ Options:
 
 After following all these instructions, you end up at the point (23, 2). Since this is not the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 138,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step right. Take 4 steps forward. Take 8 steps forward. Take 6 steps backward. Take 1 step left. Take 6 steps right.
 Options:
 - Yes
@@ -2981,7 +2981,7 @@ Now, let's follow the instructions:
 
 Now, we check the final position (6, 6) against the starting point (0, 0). Since (6, 6) is not equal to (0, 0), we have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 139,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps left. Take 5 steps right. Take 2 steps left. Take 2 steps right. Take 6 steps forward. Take 10 steps backward. Take 1 step forward. Take 6 steps left.
 Options:
 - Yes
@@ -3001,7 +3001,7 @@ Now, we check our final position: (-10, -3).
 
 Since we started at (0, 0) and ended at (-10, -3), we have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 140,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps left. Take 8 steps right.
 Options:
 - Yes
@@ -3013,7 +3013,7 @@ Options:
 
 Since the movements to the left and right cancel each other out, you will indeed return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 141,"If you follow these instructions, do you return to the starting point? Take 5 steps. Take 10 steps. Turn around.
 Options:
 - Yes
@@ -3029,7 +3029,7 @@ To return to the starting point, you would need to take 15 steps back in the dir
 
 Therefore, you do not return to the starting point after following these instructions.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 142,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps left. Take 7 steps left. Take 2 steps left.
 Options:
 - Yes
@@ -3051,7 +3051,7 @@ Options:
 
 After all the movements, the final position is (-14, 0). Since this is not the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 143,"If you follow these instructions, do you return to the starting point? Take 1 step. Take 5 steps. Take 10 steps. Take 4 steps. Take 4 steps. Take 1 step. Turn right.
 Options:
 - Yes
@@ -3067,7 +3067,7 @@ Options:
 
 After completing all these steps, you have moved a total of 25 units forward in one direction. Since you have not moved backward or taken any steps that would return you to the starting point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 144,"If you follow these instructions, do you return to the starting point? Turn left. Turn right. Take 5 steps. Take 4 steps. Turn around. Take 9 steps.
 Options:
 - Yes
@@ -3086,7 +3086,7 @@ Now, let's analyze the movements:
 
 Since you moved 9 steps away and then 9 steps back, you return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 145,"If you follow these instructions, do you return to the starting point? Turn around. Turn around. Turn left. Take 7 steps. Take 8 steps.
 Options:
 - Yes
@@ -3105,7 +3105,7 @@ Now, let's analyze your final position:
 
 Since you have moved away from the starting point and not returned to it, the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 146,"If you follow these instructions, do you return to the starting point? Turn right. Turn around. Take 2 steps. Take 6 steps. Take 4 steps.
 Options:
 - Yes
@@ -3125,7 +3125,7 @@ Now, let's analyze the total movement:
 
 Since you have moved a total of 12 steps away from the starting point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 147,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps left. Take 9 steps right. Take 1 step right.
 Options:
 - Yes
@@ -3155,7 +3155,7 @@ After following all the instructions, we end up at position 2. Since we started 
 
 Thus, the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 148,"If you follow these instructions, do you return to the starting point? Take 1 step. Take 5 steps. Take 1 step. Turn left. Turn left. Take 9 steps.
 Options:
 - Yes
@@ -3173,7 +3173,7 @@ Now, let's analyze your final position:
 
 Since (0, -2) is not the same as (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 149,"If you follow these instructions, do you return to the starting point? Take 2 steps. Turn around. Take 9 steps. Take 7 steps. Take 6 steps. Turn left. Take 2 steps.
 Options:
 - Yes
@@ -3204,7 +3204,7 @@ Now, we need to check if we are back at the starting point (0, 0). Our final pos
 
 Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 150,"If you follow these instructions, do you return to the starting point? Take 7 steps. Take 8 steps. Take 10 steps. Turn around. Turn around. Take 5 steps. Turn around.
 Options:
 - Yes
@@ -3230,7 +3230,7 @@ To check if we return to the starting point (0, 0), we note that we are currentl
 
 Thus, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 151,"If you follow these instructions, do you return to the starting point? Take 9 steps. Turn left. Turn left. Take 9 steps.
 Options:
 - Yes
@@ -3246,7 +3246,7 @@ Options:
 
 Since you end up back at your starting point after following all the instructions, the answer is:
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 152,"If you follow these instructions, do you return to the starting point? Always face forward. Take 3 steps forward. Take 9 steps backward.
 Options:
 - Yes
@@ -3264,7 +3264,7 @@ After following these instructions, we end up at position -6, which is not the s
 
 Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 153,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps forward. Take 7 steps backward. Take 4 steps right. Take 10 steps backward. Take 4 steps backward.
 Options:
 - Yes
@@ -3281,7 +3281,7 @@ Now, we check our final position: (4, -16).
 
 The starting point was (0, 0), and the final position is (4, -16). Since these two points are not the same, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 154,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps right. Take 3 steps forward. Take 8 steps right. Take 2 steps right.
 Options:
 - Yes
@@ -3306,7 +3306,7 @@ Now, let's analyze the final position:
 
 Since the final position (20, 3) is not the same as the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 155,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps right. Take 8 steps left.
 Options:
 - Yes
@@ -3319,7 +3319,7 @@ Options:
 
 Since you end up back at your starting point after following these instructions, the answer is:
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 156,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step backward. Take 4 steps left. Take 4 steps left.
 Options:
 - Yes
@@ -3343,7 +3343,7 @@ The final position is (-8, -1), which is not the starting point (0, 0).
 
 Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 157,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps forward. Take 8 steps backward. Take 4 steps forward. Take 4 steps right.
 Options:
 - Yes
@@ -3359,7 +3359,7 @@ Now, the final position is (4, 1).
 
 Since the final position (4, 1) is not the same as the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 158,"If you follow these instructions, do you return to the starting point? Take 5 steps. Turn around. Take 4 steps. Take 1 step. Turn left. Turn around. Turn left.
 Options:
 - Yes
@@ -3375,7 +3375,7 @@ Options:
 
 After following all these instructions, we end up at the point (0, 0) but facing south. Since we returned to the starting point, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 159,"If you follow these instructions, do you return to the starting point? Take 10 steps. Turn around. Take 1 step. Take 9 steps. Turn around.
 Options:
 - Yes
@@ -3391,7 +3391,7 @@ At this point, you are 18 steps away from the starting point, facing the startin
 
 Since you have not returned to the starting point after following all the instructions, the answer is ""No"".
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 160,"If you follow these instructions, do you return to the starting point? Take 7 steps. Turn around. Take 7 steps.
 Options:
 - Yes
@@ -3405,7 +3405,7 @@ Options:
 
 Since you took 7 steps away from point A to point B and then took 7 steps back towards point A after turning around, you will indeed return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 161,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps backward. Take 8 steps forward. Take 7 steps forward. Take 5 steps backward.
 Options:
 - Yes
@@ -3423,7 +3423,7 @@ Options:
 
 After following all the instructions, the final position is 5. Since this is not the starting point (0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 162,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step forward. Take 4 steps left. Take 6 steps left. Take 10 steps right. Take 7 steps backward. Take 5 steps left.
 Options:
 - Yes
@@ -3454,7 +3454,7 @@ Options:
 
 Now, let's analyze the final position (-5, -6) compared to the starting position (0, 0). Since the final position is not the same as the starting position, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 163,"If you follow these instructions, do you return to the starting point? Take 1 step. Take 7 steps. Take 1 step.
 Options:
 - Yes
@@ -3476,7 +3476,7 @@ You end up at position 9, which is not the starting point (position 0).
 
 Therefore, the answer to the question is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 164,"If you follow these instructions, do you return to the starting point? Turn left. Turn left. Take 6 steps. Take 3 steps. Turn around. Take 1 step. Take 3 steps. Take 5 steps.
 Options:
 - Yes
@@ -3503,7 +3503,7 @@ Now, let's summarize the movements:
 
 Since you end up at the starting point after following all the instructions, the answer is:
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 165,"If you follow these instructions, do you return to the starting point? Take 10 steps. Turn around. Take 10 steps.
 Options:
 - Yes
@@ -3517,7 +3517,7 @@ Options:
 
 Since you started at point A, moved to point B, and then returned to point A, you do indeed return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 166,"If you follow these instructions, do you return to the starting point? Take 2 steps. Take 1 step. Take 8 steps. Take 4 steps. Turn right. Turn right. Take 4 steps. Turn left. Turn around.
 Options:
 - Yes
@@ -3539,7 +3539,7 @@ To return to the starting point (0, 0), we would need to move south. However, we
 
 Since we have not moved back to (0, 0) after following all the instructions, the answer is:
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 167,"If you follow these instructions, do you return to the starting point? Take 4 steps. Take 5 steps. Take 9 steps. Take 3 steps. Turn right.
 Options:
 - Yes
@@ -3563,7 +3563,7 @@ Options:
 
 After following all these instructions, you end up at the position (0, 21) facing east. Since you have moved north all the way and have not returned to the starting point (0, 0), the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 168,"If you follow these instructions, do you return to the starting point? Take 3 steps. Take 1 step. Take 10 steps.
 Options:
 - Yes
@@ -3581,7 +3581,7 @@ Now, let's calculate the total movement:
 
 Since you end up at position 14 and not back at the starting point (which is position 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 169,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps left. Take 2 steps right. Take 6 steps right.
 Options:
 - Yes
@@ -3602,7 +3602,7 @@ After following all the instructions, we end up back at the starting point (posi
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 170,"If you follow these instructions, do you return to the starting point? Turn right. Take 10 steps. Turn around. Take 10 steps.
 Options:
 - Yes
@@ -3618,7 +3618,7 @@ Options:
 
 Since you end up back at the starting point after following all the instructions, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 171,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps right. Take 8 steps backward. Take 1 step backward. Take 8 steps backward. Take 8 steps forward.
 Options:
 - Yes
@@ -3636,7 +3636,7 @@ Now, let's summarize the final position:
 
 The starting point was (0, 0), and the final position is (10, -9). Since these two points are not the same, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 172,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps backward. Take 4 steps left. Take 7 steps left. Take 7 steps right. Take 8 steps forward.
 Options:
 - Yes
@@ -3668,7 +3668,7 @@ Now, let's summarize the final position:
 
 Since the final position (-4, 1) is not the same as the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 173,"If you follow these instructions, do you return to the starting point? Take 10 steps. Turn left. Turn around. Take 9 steps. Take 8 steps. Turn right. Turn around. Take 8 steps.
 Options:
 - Yes
@@ -3703,7 +3703,7 @@ Now, let's summarize the final position:
 
 Since the final position (17, 18) is not the same as the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 174,"If you follow these instructions, do you return to the starting point? Take 1 step. Take 2 steps. Turn right. Take 6 steps.
 Options:
 - Yes
@@ -3716,7 +3716,7 @@ Options:
 
 Now, let's analyze your final position. You started at (0, 0) and ended at (6, 3). Since (6, 3) is not the same as (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 175,"If you follow these instructions, do you return to the starting point? Take 2 steps. Take 10 steps. Turn around. Take 6 steps. Turn left. Turn right. Take 6 steps.
 Options:
 - Yes
@@ -3734,7 +3734,7 @@ At this point, we were 6 steps away from the starting point after the previous s
 
 Since we end up 12 steps away from the starting point, we do not return to the starting point.
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 176,"If you follow these instructions, do you return to the starting point? Take 7 steps. Take 4 steps. Take 3 steps. Take 10 steps. Turn left. Turn around.
 Options:
 - Yes
@@ -3758,7 +3758,7 @@ Since you have not taken any steps back towards the starting point after moving 
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 177,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps backward. Take 8 steps forward. Take 10 steps forward. Take 8 steps backward. Take 8 steps right. Take 6 steps backward. Take 7 steps forward. Take 8 steps forward.
 Options:
 - Yes
@@ -3786,7 +3786,7 @@ After following all the steps, the final position is (8, 11), which is not the s
 
 Therefore, the answer to the question is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 178,"If you follow these instructions, do you return to the starting point? Turn left. Turn around. Take 4 steps. Take 5 steps. Turn left. Take 3 steps.
 Options:
 - Yes
@@ -3801,7 +3801,7 @@ Options:
 
 After following all the instructions, you end up at the point (9,3). Since this is not the starting point (0,0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 179,"If you follow these instructions, do you return to the starting point? Take 6 steps. Take 2 steps. Take 2 steps. Turn left. Take 5 steps. Take 8 steps. Turn around.
 Options:
 - Yes
@@ -3830,7 +3830,7 @@ Now, let's analyze if we returned to the starting point (0, 0):
 
 Since (10, 13) is not the same as (0, 0), we did not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 180,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps left. Take 7 steps right. Take 4 steps backward.
 Options:
 - Yes
@@ -3855,7 +3855,7 @@ Now, let's analyze the final position:
 
 Since the final position (-3, -4) is not the same as the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 181,"If you follow these instructions, do you return to the starting point? Take 10 steps. Take 4 steps. Take 7 steps. Take 1 step. Take 2 steps. Take 10 steps.
 Options:
 - Yes
@@ -3872,7 +3872,7 @@ After taking all these steps, you end up at point 34, which is not the starting 
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 182,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps forward. Take 10 steps right. Take 8 steps right.
 Options:
 - Yes
@@ -3887,7 +3887,7 @@ Now, your final position is (18, 6).
 
 Since you started at (0, 0) and ended at (18, 6), you have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 183,"If you follow these instructions, do you return to the starting point? Take 7 steps. Turn around. Take 7 steps. Turn left.
 Options:
 - Yes
@@ -3909,7 +3909,7 @@ Now, let's analyze if you return to the starting point:
 
 Since you returned to Point A after the second set of steps, you indeed return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 184,"If you follow these instructions, do you return to the starting point? Always face forward. Take 4 steps forward. Take 5 steps left. Take 6 steps forward. Take 8 steps backward. Take 5 steps backward. Take 1 step backward. Take 1 step backward.
 Options:
 - Yes
@@ -3928,7 +3928,7 @@ After following all the steps, we end up at the coordinates (-5, -5).
 
 Since the final position (-5, -5) is not the same as the starting point (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 185,"If you follow these instructions, do you return to the starting point? Take 2 steps. Take 3 steps. Turn around. Take 5 steps.
 Options:
 - Yes
@@ -3948,7 +3948,7 @@ Now, let's calculate your position:
 
 Since you end up back at point A, you do return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 186,"If you follow these instructions, do you return to the starting point? Take 2 steps. Take 10 steps. Take 8 steps.
 Options:
 - Yes
@@ -3962,7 +3962,7 @@ After completing all the steps, you end up at point 20, which is not the startin
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 187,"If you follow these instructions, do you return to the starting point? Turn left. Take 9 steps. Take 2 steps. Take 5 steps. Turn right. Turn right. Take 5 steps. Take 10 steps. Take 1 step.
 Options:
 - Yes
@@ -3980,7 +3980,7 @@ Options:
 
 After following all the instructions, we end up back at the starting point (0, 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 188,"If you follow these instructions, do you return to the starting point? Turn right. Take 5 steps. Take 6 steps. Take 4 steps. Take 1 step. Turn around. Take 6 steps. Take 10 steps. Turn around.
 Options:
 - Yes
@@ -3998,7 +3998,7 @@ Options:
 
 After following all these steps, your final position is (-6, 6). Since you started at (0, 0) and ended at (-6, 6), you did not return to the starting point.
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 189,"If you follow these instructions, do you return to the starting point? Always face forward. Take 8 steps left. Take 9 steps left. Take 8 steps right. Take 8 steps left. Take 3 steps right.
 Options:
 - Yes
@@ -4018,7 +4018,7 @@ Options:
 
 After following all the instructions, we end up at position -14. Since we started at position 0 and ended at -14, we did not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 190,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps backward. Take 9 steps forward.
 Options:
 - Yes
@@ -4031,7 +4031,7 @@ Options:
 
 Since you moved 9 steps backward and then 9 steps forward, you effectively return to your original starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 191,"If you follow these instructions, do you return to the starting point? Take 2 steps. Take 3 steps. Turn around. Take 4 steps. Take 1 step.
 Options:
 - Yes
@@ -4051,7 +4051,7 @@ After following all the instructions, you end up back at your starting point (0,
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 192,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps backward. Take 9 steps backward. Take 9 steps backward. Take 9 steps left. Take 10 steps right. Take 3 steps right. Take 3 steps forward. Take 9 steps right.
 Options:
 - Yes
@@ -4071,7 +4071,7 @@ Now, let's summarize the final position: (13, -25).
 
 To determine if we return to the starting point (0, 0), we compare the final position (13, -25) with the starting point (0, 0). Since they are not the same, we have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 193,"If you follow these instructions, do you return to the starting point? Take 3 steps. Turn right. Turn left. Take 5 steps. Take 10 steps. Take 7 steps. Turn left.
 Options:
 - Yes
@@ -4104,7 +4104,7 @@ At this point, you are at the coordinates (0, 25) and facing west.
 
 Since you have not moved back towards the starting point (0, 0) after these steps, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 194,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps left. Take 10 steps right.
 Options:
 - Yes
@@ -4116,7 +4116,7 @@ Options:
 
 Since the left and right movements cancel each other out, you end up back where you started.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 195,"If you follow these instructions, do you return to the starting point? Take 1 step. Take 8 steps. Turn around. Take 8 steps.
 Options:
 - Yes
@@ -4136,7 +4136,7 @@ So, your final position is:
 
 Since you are 1 step away from the starting point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 196,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps forward. Take 8 steps left. Take 3 steps backward. Take 7 steps right. Take 2 steps forward. Take 4 steps forward. Take 10 steps forward.
 Options:
 - Yes
@@ -4162,7 +4162,7 @@ Now, we check the final position: (-1, 23).
 
 The starting point was (0, 0), and the final position is (-1, 23). Since the final position is not the same as the starting point, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 197,"If you follow these instructions, do you return to the starting point? Always face forward. Take 4 steps forward. Take 9 steps right. Take 6 steps right. Take 8 steps right.
 Options:
 - Yes
@@ -4179,7 +4179,7 @@ Now, let's analyze your final position:
 
 Since your final position (23, 4) is not the same as your starting position (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 198,"If you follow these instructions, do you return to the starting point? Take 3 steps. Take 5 steps. Turn around. Take 3 steps. Take 5 steps. Turn right. Turn right.
 Options:
 - Yes
@@ -4201,7 +4201,7 @@ Options:
 
 At this point, you are at (0, 0) and facing up. Since you returned to the starting point (0, 0), the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 199,"If you follow these instructions, do you return to the starting point? Always face forward. Take 2 steps backward. Take 5 steps backward. Take 5 steps right. Take 9 steps right.
 Options:
 - Yes
@@ -4225,7 +4225,7 @@ Options:
 
 Now, we check the final position (14, -7) against the starting point (0, 0). Since (14, -7) is not equal to (0, 0), we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 200,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps left. Take 10 steps forward. Take 9 steps right. Take 10 steps backward.
 Options:
 - Yes
@@ -4251,7 +4251,7 @@ After completing all the movements, we end up back at the starting point (0, 0).
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 201,"If you follow these instructions, do you return to the starting point? Take 4 steps. Turn around. Take 4 steps. Turn around. Turn right.
 Options:
 - Yes
@@ -4267,7 +4267,7 @@ After following these instructions, you end up at point A, but facing a differen
 
 Since the question asks if you return to the starting point, the answer is yes, you do return to the starting point (point A).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 202,"If you follow these instructions, do you return to the starting point? Take 6 steps. Take 4 steps. Turn around. Take 10 steps.
 Options:
 - Yes
@@ -4285,7 +4285,7 @@ After following all these instructions, you end up back at your starting point (
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 203,"If you follow these instructions, do you return to the starting point? Take 7 steps. Take 1 step. Take 7 steps. Turn left. Take 5 steps.
 Options:
 - Yes
@@ -4303,7 +4303,7 @@ Options:
 
 Now, let's analyze your final position. You started at (0, 0) and ended at (15, 5). Since (15, 5) is not the same as (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 204,"If you follow these instructions, do you return to the starting point? Take 10 steps. Turn left. Turn left. Take 9 steps. Take 3 steps. Take 3 steps. Turn around. Take 5 steps.
 Options:
 - Yes
@@ -4327,7 +4327,7 @@ Options:
 
 After following all the instructions, we end up back at the starting point (0, 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 205,"If you follow these instructions, do you return to the starting point? Turn left. Turn right. Take 7 steps. Turn around. Take 7 steps. Turn right. Turn left. Turn right.
 Options:
 - Yes
@@ -4346,7 +4346,7 @@ After taking 7 steps forward and then 7 steps back, you are back at the starting
 
 Thus, you do return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 206,"If you follow these instructions, do you return to the starting point? Take 8 steps. Take 9 steps. Turn right. Turn right. Take 8 steps. Take 9 steps.
 Options:
 - Yes
@@ -4368,7 +4368,7 @@ After following all the instructions, you end up back at the starting point (0, 
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 207,"If you follow these instructions, do you return to the starting point? Take 6 steps. Turn around. Take 8 steps. Take 2 steps.
 Options:
 - Yes
@@ -4384,7 +4384,7 @@ After following all the instructions, you end up at (-4, 0), which is not the st
 
 Therefore, the answer is **No**.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 208,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step left. Take 4 steps forward. Take 6 steps forward.
 Options:
 - Yes
@@ -4397,7 +4397,7 @@ Options:
 
 After following all the instructions, we end up 11 steps to the west of our starting point. Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 209,"If you follow these instructions, do you return to the starting point? Take 3 steps. Take 9 steps. Turn around. Take 2 steps. Take 7 steps. Take 3 steps.
 Options:
 - Yes
@@ -4412,7 +4412,7 @@ Options:
 
 After following all the instructions, we end up 20 steps forward from the starting point. Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 210,"If you follow these instructions, do you return to the starting point? Always face forward. Take 1 step backward. Take 1 step backward. Take 1 step backward. Take 3 steps forward.
 Options:
 - Yes
@@ -4426,7 +4426,7 @@ Options:
 
 After analyzing the movements, we see that we do indeed return to the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 211,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps backward. Take 8 steps right. Take 1 step backward. Take 5 steps left. Take 2 steps left.
 Options:
 - Yes
@@ -4446,7 +4446,7 @@ Options:
 
 Now, we check the final position (1, -7) against the starting point (0, 0). Since (1, -7) is not equal to (0, 0), we have not returned to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 212,"If you follow these instructions, do you return to the starting point? Always face forward. Take 9 steps left. Take 10 steps left. Take 3 steps left. Take 1 step left. Take 3 steps backward. Take 6 steps left. Take 3 steps forward. Take 4 steps right.
 Options:
 - Yes
@@ -4476,7 +4476,7 @@ After following all the instructions, the final position is (-25, 0), which is n
 
 Therefore, the answer is **No**.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 213,"If you follow these instructions, do you return to the starting point? Always face forward. Take 4 steps left. Take 3 steps forward. Take 1 step right.
 Options:
 - Yes
@@ -4501,7 +4501,7 @@ Now, let's analyze the final position:
 
 Since the final position (-3, 3) is not the same as the starting point (0, 0), you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 214,"If you follow these instructions, do you return to the starting point? Always face forward. Take 3 steps right. Take 1 step backward. Take 6 steps left. Take 1 step forward. Take 3 steps right.
 Options:
 - Yes
@@ -4526,7 +4526,7 @@ After following all these steps, we end up back at the starting point (0, 0).
 
 Thus, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 215,"If you follow these instructions, do you return to the starting point? Turn right. Turn right. Turn around. Turn left. Take 4 steps. Take 10 steps. Take 8 steps.
 Options:
 - Yes
@@ -4551,7 +4551,7 @@ So, your final position is:
 
 You are not at the starting point, as you are 4 steps east and 10 steps south of it.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 216,"If you follow these instructions, do you return to the starting point? Take 10 steps. Turn around. Take 9 steps. Take 10 steps. Turn around. Take 3 steps. Take 6 steps.
 Options:
 - Yes
@@ -4576,7 +4576,7 @@ Now, let's summarize the final position:
 
 Since you are not at the starting point (0), the answer is ""No"".
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 217,"If you follow these instructions, do you return to the starting point? Take 7 steps. Take 9 steps. Turn around. Turn right.
 Options:
 - Yes
@@ -4598,7 +4598,7 @@ After following all these steps, you end up at (9, 9), which is not the starting
 
 Therefore, the answer is **No**, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 218,"If you follow these instructions, do you return to the starting point? Turn around. Take 1 step. Take 2 steps. Take 9 steps. Take 7 steps. Turn left.
 Options:
 - Yes
@@ -4622,7 +4622,7 @@ After turning left, you are now facing a new direction, but you have not moved b
 
 Since you are 19 steps away from the starting point and have not moved back towards it, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 219,"If you follow these instructions, do you return to the starting point? Turn right. Take 1 step. Take 7 steps. Take 1 step. Take 5 steps.
 Options:
 - Yes
@@ -4636,7 +4636,7 @@ Options:
 
 After following all the instructions, you end up 14 steps east of your starting point. Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 220,"If you follow these instructions, do you return to the starting point? Take 1 step. Take 1 step. Take 3 steps. Turn left. Take 6 steps.
 Options:
 - Yes
@@ -4650,7 +4650,7 @@ Options:
 
 Since you end up 11 steps away from the starting point, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 221,"If you follow these instructions, do you return to the starting point? Take 5 steps. Take 3 steps. Take 2 steps. Turn around. Take 10 steps.
 Options:
 - Yes
@@ -4666,7 +4666,7 @@ After following all these instructions, you end up back at the starting point (p
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 222,"If you follow these instructions, do you return to the starting point? Take 3 steps. Take 7 steps. Turn around. Take 10 steps.
 Options:
 - Yes
@@ -4681,7 +4681,7 @@ After these steps, you end up 3 steps away from point A in the opposite directio
 
 Since you do not return to the starting point (point A), the answer is ""No"".
 
-Final Answer: No",No,True,0
+Final Answer: No",No,True,0,
 223,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps left. Take 2 steps right. Take 5 steps backward. Take 8 steps left. Take 7 steps forward. Take 7 steps right. Take 9 steps forward.
 Options:
 - Yes
@@ -4705,7 +4705,7 @@ Options:
 
 Now, we check the final position (-6, 11) against the starting point (0, 0). Since the final position is not the same as the starting point, we conclude that we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 224,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps backward. Take 9 steps left.
 Options:
 - Yes
@@ -4725,7 +4725,7 @@ Now, let's check the final position:
 
 Since you do not return to the starting point after following the instructions, the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 225,"If you follow these instructions, do you return to the starting point? Turn around. Take 4 steps. Turn around. Take 4 steps.
 Options:
 - Yes
@@ -4738,7 +4738,7 @@ Options:
 
 Since you took 4 steps away from the starting point and then took 4 steps back towards it, you will end up at the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 226,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps left. Take 6 steps right.
 Options:
 - Yes
@@ -4750,7 +4750,7 @@ Options:
 
 Since the left and right movements cancel each other out, you end up at the same location where you started.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 227,"If you follow these instructions, do you return to the starting point? Turn right. Take 5 steps. Turn around. Take 5 steps. Turn around.
 Options:
 - Yes
@@ -4768,7 +4768,7 @@ Options:
 
 Since you returned to your starting point after taking the steps, the answer is ""Yes.""
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 228,"If you follow these instructions, do you return to the starting point? Always face forward. Take 2 steps backward. Take 3 steps backward. Take 3 steps backward. Take 8 steps forward.
 Options:
 - Yes
@@ -4784,7 +4784,7 @@ After following all the instructions, we end up back at the starting point (posi
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 229,"If you follow these instructions, do you return to the starting point? Take 3 steps. Take 10 steps. Take 4 steps. Take 1 step.
 Options:
 - Yes
@@ -4799,7 +4799,7 @@ After following all the instructions, you end up at point 18, which is not the s
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 230,"If you follow these instructions, do you return to the starting point? Take 9 steps. Turn around. Take 9 steps. Turn around.
 Options:
 - Yes
@@ -4815,7 +4815,7 @@ At this point, you are back at the starting point (point A) after following all 
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 231,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps right. Take 7 steps backward. Take 3 steps left. Take 8 steps backward. Take 3 steps backward. Take 8 steps right.
 Options:
 - Yes
@@ -4843,7 +4843,7 @@ Now, we need to check if we have returned to the starting point (0, 0). Our fina
 
 Therefore, the answer is **No**.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 232,"If you follow these instructions, do you return to the starting point? Take 7 steps. Turn around. Turn around. Turn around. Take 1 step. Take 6 steps.
 Options:
 - Yes
@@ -4865,7 +4865,7 @@ After following all these instructions, you end up at (0, 0), which is the start
 
 Therefore, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 233,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps backward. Take 4 steps backward. Take 9 steps forward.
 Options:
 - Yes
@@ -4878,7 +4878,7 @@ Options:
 
 After following all the instructions, you end up back at the starting point (position 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 234,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps left. Take 1 step backward. Take 4 steps right. Take 1 step backward. Take 8 steps left. Take 6 steps left.
 Options:
 - Yes
@@ -4910,7 +4910,7 @@ Options:
 
 Now, we check the final position (-15, -2) against the starting position (0, 0). Since the final position is not the same as the starting position, we conclude that we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 235,"If you follow these instructions, do you return to the starting point? Always face forward. Take 3 steps forward. Take 3 steps backward. Take 3 steps backward. Take 7 steps left. Take 7 steps right. Take 8 steps backward. Take 4 steps backward.
 Options:
 - Yes
@@ -4929,7 +4929,7 @@ After following all the instructions, we end up at the position (0, -15), which 
 
 Therefore, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 236,"If you follow these instructions, do you return to the starting point? Turn around. Take 2 steps. Take 8 steps. Turn around. Take 10 steps. Turn around.
 Options:
 - Yes
@@ -4949,7 +4949,7 @@ Since you moved 10 steps back towards the starting point after being 10 steps aw
 
 Therefore, the answer is **Yes**.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 237,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps forward. Take 4 steps forward. Take 9 steps backward. Take 1 step backward.
 Options:
 - Yes
@@ -4967,7 +4967,7 @@ Options:
 
 After following all the instructions, we end up back at position 0, which is the starting point.
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 238,"If you follow these instructions, do you return to the starting point? Take 5 steps. Take 5 steps. Take 7 steps. Take 10 steps.
 Options:
 - Yes
@@ -4982,7 +4982,7 @@ After completing all the steps, you end up at point 27. Since you started at poi
 
 Therefore, the answer is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 239,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps backward. Take 7 steps left. Take 4 steps backward. Take 8 steps backward. Take 3 steps left.
 Options:
 - Yes
@@ -5012,7 +5012,7 @@ Now, we need to determine if we have returned to the starting point (0, 0). Our 
 
 Therefore, the answer is **No**.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 240,"If you follow these instructions, do you return to the starting point? Always face forward. Take 2 steps backward. Take 4 steps backward. Take 6 steps forward.
 Options:
 - Yes
@@ -5027,7 +5027,7 @@ After following all the instructions, you end up back at the starting point (pos
 
 Therefore, the answer to the question is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 241,"If you follow these instructions, do you return to the starting point? Take 10 steps. Turn around. Turn right. Turn left.
 Options:
 - Yes
@@ -5051,7 +5051,7 @@ However, you have not moved from Point B after these turns. You are still at Poi
 
 Since you have not taken any steps back towards Point A after the turns, you do not return to the starting point (Point A).
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 242,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps left. Take 8 steps right. Take 10 steps backward. Take 4 steps left.
 Options:
 - Yes
@@ -5067,7 +5067,7 @@ Now, we check the final position: (-3, -10).
 
 The starting point was (0, 0), and the final position is (-3, -10). Since these two points are not the same, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 243,"If you follow these instructions, do you return to the starting point? Always face forward. Take 5 steps right. Take 4 steps backward. Take 8 steps left. Take 5 steps left. Take 6 steps backward. Take 9 steps forward. Take 5 steps right. Take 1 step forward. Take 3 steps right.
 Options:
 - Yes
@@ -5098,7 +5098,7 @@ Options:
 
 After following all the instructions, we end up back at the starting point (0, 0).
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 244,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps right. Take 1 step forward. Take 4 steps right. Take 4 steps left. Take 8 steps left. Take 2 steps forward. Take 9 steps forward. Take 3 steps left.
 Options:
 - Yes
@@ -5127,7 +5127,7 @@ Now, let's analyze the final position:
 
 Thus, we do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 245,"If you follow these instructions, do you return to the starting point? Turn left. Take 9 steps. Take 3 steps. Turn right.
 Options:
 - Yes
@@ -5153,7 +5153,7 @@ At this point, you are at (0,12) and facing east. You have not returned to the s
 
 Therefore, the answer is **No**.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 246,"If you follow these instructions, do you return to the starting point? Always face forward. Take 6 steps right. Take 9 steps left. Take 5 steps left. Take 8 steps right.
 Options:
 - Yes
@@ -5173,7 +5173,7 @@ After all the movements, we end up back at position 0, which is the starting poi
 
 Thus, the answer is ""Yes"".
 
-Final Answer: Yes",Yes,True,1
+Final Answer: Yes",Yes,True,1,
 247,"If you follow these instructions, do you return to the starting point? Always face forward. Take 4 steps left. Take 5 steps backward. Take 2 steps forward.
 Options:
 - Yes
@@ -5198,7 +5198,7 @@ Now, let's analyze the final position:
 
 Therefore, you do not return to the starting point.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 248,"If you follow these instructions, do you return to the starting point? Always face forward. Take 10 steps backward. Take 8 steps backward. Take 10 steps forward. Take 7 steps backward. Take 1 step forward. Take 7 steps right. Take 1 step left. Take 1 step right.
 Options:
 - Yes
@@ -5218,7 +5218,7 @@ Now, let's analyze the final position (7, -14) compared to the starting point (0
 
 Therefore, the answer to the question is ""No"".
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,
 249,"If you follow these instructions, do you return to the starting point? Always face forward. Take 7 steps backward. Take 10 steps right. Take 4 steps forward. Take 1 step left.
 Options:
 - Yes
@@ -5238,4 +5238,4 @@ Now, we check if we have returned to the starting point (0, 0). Our final positi
 
 Therefore, the answer is **No**.
 
-Final Answer: No",No,True,1
+Final Answer: No",No,True,1,

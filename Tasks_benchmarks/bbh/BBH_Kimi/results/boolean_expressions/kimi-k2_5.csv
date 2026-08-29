@@ -1,4 +1,4 @@
-idx,question,gold_answer,model_response,final_answer,has_marker,score
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
 0,not ( True ) and ( True ) is,False,"**Step-by-step reasoning:**
 
 1.  **Operator Precedence:** In Boolean logic (and Python), the `not` operator has higher precedence than the `and` operator. This means `not` is evaluated before `and`.
@@ -13,7 +13,7 @@ idx,question,gold_answer,model_response,final_answer,has_marker,score
 
 **Result:** The expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 1,True and not not ( not False ) is,True,"Here is the step-by-step evaluation:
 
 **Step 1:** Evaluate the innermost parentheses `( not False )`
@@ -31,7 +31,7 @@ Final Answer: False",False,True,1
 **Step 4:** Evaluate the `and` operator
 - `True and True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 2,not True or False or ( False ) is,False,"Here is the step-by-step evaluation based on operator precedence (`not` binds tighter than `or`):
 
 1.  **Evaluate `not` first:**  
@@ -46,7 +46,7 @@ Final Answer: True",True,True,1
 4.  **Final evaluation:**  
     `False or (False)` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 3,False or not ( True ) and False is,False,"Here is the step-by-step evaluation using standard boolean operator precedence (where `not` > `and` > `or`):
 
 1. **Parentheses**: Evaluate `( True )` → `True`
@@ -55,7 +55,7 @@ Final Answer: False",False,True,1
 4. **AND operation** (higher precedence than OR): `False and False` → `False`
 5. **OR operation**: `False or False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 4,True or not False and True and False is,True,"Let's evaluate this boolean expression step by step using standard operator precedence (where `not` > `and` > `or`):
 
 **Expression:** `True or not False and True and False`
@@ -73,7 +73,7 @@ Final Answer: False",False,True,1
 **Step 3:** Evaluate `or` (lowest precedence)
 - `True or False` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 5,False or not not not False and True is,True,"**Step-by-step evaluation:**
 
 **Operator precedence** (highest to lowest): `not` → `and` → `or`
@@ -90,7 +90,7 @@ Therefore, the expression parses as:
 
 Alternatively, note that three `not` operators (an odd number) cancel out to a single negation: `not not not False` = `not False` = `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 6,not True and ( False or True ) is,False,"Here's the step-by-step evaluation:
 
 1. **Parentheses first**: `(False or True)` evaluates to `True` (since OR returns True if at least one operand is True)
@@ -101,7 +101,7 @@ Final Answer: True",True,True,1
 
 3. **AND operator**: `False and True` evaluates to `False` (since AND requires both operands to be True)
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 7,True and not False or ( True ) is,True,"Here's the step-by-step evaluation following the order of operations (precedence: `not` > `and` > `or`):
 
 **Step 1:** Evaluate parentheses  
@@ -118,7 +118,7 @@ Expression becomes: `True or True`
 **Step 4:** Evaluate `or` (disjunction)  
 `True or True` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 8,not True or ( False and True ) is,False,"Let's evaluate the expression step by step using standard Boolean operator precedence (where `not` > `and` > `or`):
 
 **Step 1:** Evaluate `not True`
@@ -132,7 +132,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 9,not True or ( True or False ) is,True,"Let me evaluate this Boolean expression step by step, following operator precedence rules (parentheses → `not` → `or`).
 
 **Step 1:** Evaluate the parentheses first
@@ -159,7 +159,7 @@ False or True
 - `not True` → `False`
 - `False or True` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 10,False or ( False ) and not False is,False,"To evaluate the expression `False or ( False ) and not False`, I need to apply the standard Boolean operator precedence rules:
 
 1. **`not`** has highest precedence
@@ -188,7 +188,7 @@ False or False                 [False and True = False]
 False                          [False or False = False]
 ```
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 11,not False or True and False and False is,True,"To evaluate `not False or True and False and False`, I need to follow the order of operations (precedence) for Boolean operators:
 
 1. **`not`** has the highest precedence
@@ -213,7 +213,7 @@ Step-by-step evaluation:
 
 Alternatively, grouping by precedence: `(not False) or ((True and False) and False)` = `True or (False and False)` = `True or False` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 12,not True or False or not not True is,True,"Let's evaluate this step by step using Boolean operator precedence (where `not` has higher precedence than `or`).
 
 **Expression:** `not True or False or not not True`
@@ -236,7 +236,7 @@ Final Answer: True",True,True,1
 = True
 ```
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 13,True and True and False and not True is,False,"Let me evaluate this boolean expression step by step.
 
 **Expression:** `True and True and False and not True`
@@ -253,7 +253,7 @@ Now the expression becomes: `True and True and False and False`
 
 **Alternative reasoning:** The `and` operator returns `True` only if ALL operands are `True`. Since this expression contains `False` (the third operand), the entire expression evaluates to `False` regardless of the other values.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 14,not not True and not True or True is,True,"Here is the step-by-step evaluation according to standard Boolean operator precedence (where `not` > `and` > `or`):
 
 1.  **Evaluate `not` operations first** (right-to-left within their group):
@@ -274,7 +274,7 @@ Final Answer: False",False,True,1
 
 Explicitly grouped: `(((not (not True)) and (not True)) or True)` → `((True and False) or True)` → `(False or True)` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 15,not not not ( True and False ) is,True,"Here's my step-by-step reasoning:
 
 1. **Evaluate the innermost parentheses first**: `(True and False)`
@@ -289,7 +289,7 @@ Alternatively, using the property that an odd number of `not` operators (3 is od
 - Original value: `False`
 - After 3 negations: `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 16,not not False and not not not False is,False,"Let me evaluate this step by step, following operator precedence (where `not` has higher precedence than `and`).
 
 **Left side:** `not not False`
@@ -303,7 +303,7 @@ Final Answer: True",True,True,1
 
 **Final operation:** `False and True` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 17,( True and not True and False ) is,False,"Here is the step-by-step reasoning:
 
 1.  **Apply the `not` operator first** (it has higher precedence than `and`):
@@ -317,7 +317,7 @@ Final Answer: False",False,True,1
 3.  **Final evaluation**:
     *   `False and False` evaluates to `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 18,False and False and False or not False is,True,"Reasoning:
 
 1. **Operator precedence** (from highest to lowest): `not` → `and` → `or`
@@ -331,7 +331,7 @@ Final Answer: False",False,True,1
 
 Alternatively, with explicit parentheses based on precedence: `((False and False) and False) or (not False)` = `(False) or (True)` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 19,False or ( False and not False ) is,False,"Let me evaluate this step-by-step using Boolean logic and operator precedence (not > and > or).
 
 **Step 1:** Evaluate `not False` inside the parentheses
@@ -345,7 +345,7 @@ Final Answer: True",True,True,1
 - `False or False` = `False`
 - (Since OR requires at least one operand to be true)
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 20,True and False or ( not True ) is,False,"Here is the step-by-step evaluation following the operator precedence rules (`not` → `and` → `or`):
 
 1. **Parentheses/NOT operator first**: Evaluate `(not True)`
@@ -361,7 +361,7 @@ Final Answer: False",False,True,1
 3. **OR operator last**: Evaluate `False or False`
    - `False or False` = **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 21,not not ( True ) and not False is,True,"Let's evaluate this step by step, following the order of operations (where `not` has higher precedence than `and`):
 
 **Step 1:** Evaluate `not not (True)`
@@ -375,7 +375,7 @@ Final Answer: False",False,True,1
 **Step 3:** Apply the `and` operator
 - `True and True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 22,not False or ( True ) and True is,True,"To evaluate `not False or ( True ) and True`, I follow the operator precedence rules (from highest to lowest): `not` → `and` → `or`.
 
 **Step 1:** Evaluate `not` (highest precedence)
@@ -391,7 +391,7 @@ Expression becomes: `True or True`
 **Step 3:** Evaluate `or` (lowest precedence)
 - `True or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 23,not ( True ) or False or True is,True,"Here's the step-by-step evaluation:
 
 1. **Evaluate `not (True)`**: The `not` operator negates `True`, resulting in `False`
@@ -405,7 +405,7 @@ Alternatively, since `or` returns the first truthy value encountered (or the las
 - `False` (falsy) → continue  
 - `True` (truthy) → return `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 24,( True and not not not True ) is,False,"Reasoning:
 
 1.  **Analyze the expression:** `( True and not not not True )`
@@ -423,7 +423,7 @@ Final Answer: True",True,True,1
 
 5.  **Evaluate the `and`:** `True and False` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 25,( False or not False or False ) is,True,"Here's the step-by-step evaluation:
 
 1.  **Order of operations**: The `not` operator has higher precedence than `or`, so it is evaluated first.
@@ -435,7 +435,7 @@ Final Answer: False",False,True,1
     *   First: `False or True` evaluates to `True`
     *   Then: `True or False` evaluates to `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 26,False and False or True and not False is,True,"Here's the step-by-step evaluation following standard boolean operator precedence (`not` → `and` → `or`):
 
 **Original expression:**
@@ -471,7 +471,7 @@ False or True
 = True
 ```
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 27,not not False or not False or True is,True,"Let's evaluate this Boolean expression step by step, following operator precedence (where `not` binds tighter than `or`).
 
 **Step 1:** Evaluate `not not False` (rightmost `not` first)
@@ -488,7 +488,7 @@ The expression becomes: `False or True or True`
 - `False or True` = `True`
 - `True or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 28,True and not True or False or True is,True,"Here is the step-by-step evaluation using standard Boolean operator precedence (`not` > `and` > `or`):
 
 1. **Apply `not` first:**  
@@ -503,7 +503,7 @@ Final Answer: True",True,True,1
    `False or False` = `False`  
    `False or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 29,not False or True and False or False is,True,"Let me evaluate this Boolean expression step by step, following operator precedence (not → and → or).
 
 **Expression:** `not False or True and False or False`
@@ -522,7 +522,7 @@ Expression becomes: `True or False or False`
 - `True or False` = `True`
 - `True or False` = `True`
 
-**Final Answer: True**",True**,True,0
+**Final Answer: True**",True,True,1,
 30,False and ( not False ) or False is,False,"Here is the step-by-step evaluation following standard logical operator precedence (`not` → `and` → `or`):
 
 1. **Evaluate the parentheses first**: `(not False)` → `True`
@@ -533,7 +533,7 @@ Expression becomes: `True or False or False`
 
 3. **Evaluate `or`**: `False or False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 31,not not not not ( not False ) is,True,"Starting from the innermost expression and working outward:
 
 1. Evaluate inside the parentheses: `not False` = **True**
@@ -546,7 +546,7 @@ Final Answer: False",False,True,1
 
 Alternatively, counting the total number of NOT operators: there are 4 NOTs outside the parentheses plus 1 inside, for a total of 5 NOT operations. Since 5 is odd, the result is the negation of the original value `False`, which is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 32,( True ) and True or not True is,True,"Here's the step-by-step evaluation following standard Boolean operator precedence (parentheses → not → and → or):
 
 1. **Parentheses**: `( True )` evaluates to `True`  
@@ -562,7 +562,7 @@ Final Answer: True",True,True,1
 
 Alternatively, viewing it with precedence grouping: `(True and True) or (not True)` = `True or False` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 33,not True or False and False and False is,False,"Here is the step-by-step reasoning based on standard operator precedence (where `not` > `and` > `or`):
 
 **Step 1:** Evaluate the `not` operator first  
@@ -577,7 +577,7 @@ Final Answer: True",True,True,1
 **Step 3:** Evaluate the `or` operator  
 `False or False` = **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 34,not not not not not not not False is,True,"Here is the step-by-step reasoning:
 
 1.  **Count the operators**: There are **7** ""not"" operators applied to `False`.
@@ -600,7 +600,7 @@ Alternatively, evaluating sequentially:
 
 Since there is an odd number (7) of negations, the final result is the opposite of the starting value.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 35,not True or not False and not False is,True,"Here's the step-by-step evaluation using standard Boolean operator precedence (where `not` > `and` > `or`):
 
 **Step 1:** Evaluate the `not` operators (highest precedence)
@@ -618,7 +618,7 @@ Expression becomes: `False or True`
 **Step 3:** Evaluate `or` (lowest precedence)
 - `False or True` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 36,False or True or False and not False is,True,"Here is the step-by-step evaluation using Boolean operator precedence (where `not` > `and` > `or`):
 
 **Original expression:** False or True or False and not False
@@ -635,7 +635,7 @@ Final Answer: True",True,True,1
 - `False or True` = **True**
 - `True or False` = **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 37,not ( True or True ) and False is,False,"Here's the step-by-step evaluation:
 
 1. **Parentheses first**: Evaluate `(True or True)`  
@@ -649,7 +649,7 @@ Final Answer: True",True,True,1
 
 (Alternatively, note that anything `and False` always results in `False`, regardless of the other operand.)
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 38,not not not not True and not True is,False,"Reasoning:
 
 1.  **Analyze the expression:** `not not not not True and not True`
@@ -664,7 +664,7 @@ Final Answer: False",False,True,1
 4.  **Evaluate the right side:** `not True` = `False`
 5.  **Combine with `and`:** `True and False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 39,( False ) or False and not True is,False,"Here is the step-by-step evaluation:
 
 1.  **Parentheses**: `( False )` simplifies to `False`.
@@ -673,7 +673,7 @@ Final Answer: False",False,True,1
 4.  **And operator**: The `and` operator has higher precedence than `or`, so we evaluate `False and False` first, which equals `False`.
 5.  **Or operator**: Now we evaluate `False or False`, which equals `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 40,( False and True or not False ) is,True,"Here is the step-by-step evaluation following Boolean operator precedence (`not` → `and` → `or`):
 
 1.  **Evaluate `not` first:** `not False` is **True**
@@ -684,7 +684,7 @@ Final Answer: False",False,True,1
 
 3.  **Evaluate `or` last:** `False or True` is **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 41,not not not ( False and True ) is,True,"Here's the step-by-step reasoning:
 
 1. **Evaluate the parentheses first**: `(False and True)`
@@ -697,7 +697,7 @@ Final Answer: True",True,True,1
 
 Alternatively, note that an **odd number** of `not` operators (3 in this case) inverts the boolean value, while an even number preserves it. Since we start with `False` and apply 3 negations, we end with `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 42,not not True and not False or True is,True,"Let me evaluate this step-by-step using operator precedence (not > and > or):
 
 **Step 1:** Evaluate the `not` operations (highest precedence)
@@ -714,7 +714,7 @@ Now the expression becomes: `True or True`
 **Step 3:** Evaluate the `or` operation
 - `True or True` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 43,not False or True and not not True is,True,"To evaluate `not False or True and not not True`, I follow the standard Boolean operator precedence: `not` (highest), then `and`, then `or` (lowest).
 
 **Step 1: Evaluate `not` operations**
@@ -731,7 +731,7 @@ Expression becomes: `True or True`
 **Step 3: Evaluate `or` operation**
 - `True or True` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 44,True or True or not False or False is,True,"**Reasoning:**
 
 1.  **Operator Precedence:** The `not` operator has higher precedence than `or`, so we evaluate `not False` first.
@@ -747,7 +747,7 @@ Final Answer: True",True,True,1
 
 Since there are multiple `True` values connected by `or`, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 45,( not False and False and False ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate `not False`**: The `not` operator inverts the boolean value, so `not False` becomes `True`.
@@ -759,7 +759,7 @@ Final Answer: True",True,True,1
    - Now we have: `False and False`
    - Finally: `False and False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 46,( ( not True ) or True ) is,True,"**Step-by-step reasoning:**
 
 1. Evaluate the inner expression `not True`:
@@ -773,7 +773,7 @@ Final Answer: False",False,True,1
    - The `or` operator returns `True` if at least one operand is `True`
    - `False or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 47,not not ( not False or True ) is,True,"Step-by-step evaluation:
 
 1. Start with the innermost expression: `not False`
@@ -791,7 +791,7 @@ Alternatively, using the property that double negation cancels out (`not not x` 
 - `not False` = `True`
 - `True or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 48,not True or False or ( True ) is,True,"Looking at this Python expression: `not True or False or ( True )`
 
 I need to follow Python's operator precedence rules:
@@ -817,7 +817,7 @@ I need to follow Python's operator precedence rules:
 - Which is: `False or True`
 - Result: `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 49,False or ( not False ) and True is,True,"Here's the step-by-step evaluation:
 
 **Step 1:** Evaluate the expression inside the parentheses
@@ -836,7 +836,7 @@ Alternatively, working strictly left-to-right with the parentheses:
 
 Both approaches yield the same result.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 50,not False or False or ( False ) is,True,"Here's the step-by-step evaluation using operator precedence (where `not` binds tighter than `or`):
 
 1. **Evaluate `not False` first** (highest precedence)
@@ -855,7 +855,7 @@ Final Answer: True",True,True,1
 `= True or False`  
 `= True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 51,not not False or False and not True is,False,"To evaluate `not not False or False and not True`, I need to follow the operator precedence rules (not > and > or):
 
 **Step 1:** Evaluate the `not` operators first
@@ -873,7 +873,7 @@ Now the expression becomes: `False or False`
 **Step 3:** Evaluate `or`
 - `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 52,True or ( ( not True ) ) is,True,"**Reasoning:**
 
 1.  **Evaluate the innermost expression:** `not True`
@@ -886,7 +886,7 @@ Final Answer: False",False,True,1
     *   The `or` operator returns `True` if at least one operand is `True`.
     *   Since the first operand is `True`, the result is **True** (this is also an example of short-circuit evaluation).
 
-**Final Answer: True**",True**,True,0
+**Final Answer: True**",True,True,1,
 53,not False and not False and not False is,True,"First, let's evaluate the `not` operations. The `not` operator has higher precedence than `and`, so we evaluate each one first:
 
 - `not False` = `True`
@@ -899,7 +899,7 @@ The `and` operator returns `True` only if all operands are `True`. Evaluating le
 - `True and True` = `True`
 - `True and True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 54,( False ) and not False and True is,False,"To evaluate the expression `( False ) and not False and True`:
 
 **Step 1:** Handle parentheses and operator precedence.
@@ -916,7 +916,7 @@ Final Answer: True",True,True,1
 **Step 4:** Final result.
 - The entire expression evaluates to `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 55,( True ) and False or not False is,True,"Here's the step-by-step evaluation following standard boolean operator precedence (not > and > or):
 
 1. **Evaluate parentheses**: `( True )` simplifies to `True`
@@ -930,7 +930,7 @@ Final Answer: False",False,True,1
 
 4. **Apply `or` (lowest precedence)**: `False or True` evaluates to `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 56,( not False and ( True ) ) is,True,"Here's the step-by-step reasoning:
 
 1. **Evaluate `not False`**: The `not` operator negates `False`, resulting in `True`.
@@ -939,7 +939,7 @@ Final Answer: True",True,True,1
 
 3. **Evaluate `True and True`**: The `and` operator returns `True` only when both operands are `True`. Since both sides are `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 57,False or not ( False ) or True is,True,"Let me evaluate this boolean expression step by step:
 
 **Expression:** `False or not ( False ) or True`
@@ -957,7 +957,7 @@ Final Answer: True",True,True,1
 - `False or True` = `True`
 - `True or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 58,True and not False and not not True is,True,"**Step-by-step evaluation:**
 
 1.  **Operator precedence:** The `not` operator has higher precedence than `and`, so we evaluate the `not` expressions first.
@@ -976,7 +976,7 @@ Final Answer: True",True,True,1
     - `True and True` = `True`
     - `True and True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 59,not True and True and True or False is,False,"Here is the step-by-step reasoning based on standard operator precedence (`not` > `and` > `or`):
 
 1. **Evaluate `not` first**: `not True` → `False`
@@ -991,7 +991,7 @@ Final Answer: True",True,True,1
 3. **Evaluate `or`**:
    - `False or False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 60,not not ( False and not True ) is,False,"Here's the step-by-step evaluation:
 
 1. **Innermost operation**: `not True` → **False**
@@ -1003,7 +1003,7 @@ Alternatively, using the double negation rule (`not not X` = `X`):
 - `not not (False and not True)` simplifies to `False and not True`
 - `False and False` = **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 61,True or not ( ( False ) ) is,True,"**Step-by-step evaluation:**
 
 1.  **Innermost expression:** `False` evaluates to **False**.
@@ -1017,7 +1017,7 @@ Final Answer: False",False,True,1
 → `True or True`  
 → **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 62,False or not True or False or False is,False,"Let me evaluate this boolean expression step by step.
 
 **Expression:** `False or not True or False or False`
@@ -1039,7 +1039,7 @@ Now the expression becomes: `False or False or False or False`
 - Second operation: `False or False` = `False`
 - Third operation: `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 63,False or not not True or not False is,True,"To evaluate the expression `False or not not True or not False`, I follow the standard order of operations (operator precedence), where `not` has higher precedence than `or`.
 
 **Step 1:** Evaluate the `not` operations first (working from left to right on the `not` operators):
@@ -1059,7 +1059,7 @@ False or True or True
 
 (Alternatively, since `or` returns `True` if any operand is `True`, and we have `True` in the middle, the final result must be `True`.)
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 64,not ( True or True or False ) is,False,"First, I'll evaluate the expression inside the parentheses:
 - `True or True` evaluates to `True` (since OR returns True if at least one operand is True)
 - `True or False` evaluates to `True` (again, because at least one operand is True)
@@ -1068,7 +1068,7 @@ Final Answer: True",True,True,1
 Next, I apply the `not` operator:
 - `not True` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 65,False or not not not not not False is,True,"Let me evaluate this step by step.
 
 Starting with the right side: **not not not not not False**
@@ -1086,7 +1086,7 @@ Now the full expression becomes: **False or True**
 The logical OR operator returns True if at least one operand is True.
 - False or True = **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 66,not ( False ) or not not True is,True,"Here's the step-by-step evaluation:
 
 **Step 1:** Evaluate `not (False)`
@@ -1100,7 +1100,7 @@ Final Answer: True",True,True,1
 **Step 3:** Evaluate the `or` operation
 - `True or True` = **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 67,True and not False or False and False is,True,"Here's the step-by-step evaluation following operator precedence (not > and > or):
 
 **Original expression:** `True and not False or False and False`
@@ -1120,7 +1120,7 @@ Final Answer: True",True,True,1
 **Verification with parentheses:**
 `(True and (not False)) or (False and False)` = `(True and True) or False` = `True or False` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 68,True or ( not ( True ) ) is,True,"**Step-by-step reasoning:**
 
 1. **Evaluate the innermost expression:** `True` evaluates to **True**
@@ -1138,7 +1138,7 @@ Final Answer: True",True,True,1
 | not (True) | False |
 | True or (not(True)) | True |
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 69,( False or True and not True ) is,False,"To evaluate the expression `( False or True and not True )`, I follow the standard logical operator precedence: `not` → `and` → `or`.
 
 **Step 1:** Evaluate `not` (highest precedence)
@@ -1156,7 +1156,7 @@ Expression becomes: `False or False`
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 70,False or not True and True or True is,True,"To evaluate `False or not True and True or True`, we follow standard boolean operator precedence (`not` → `and` → `or`):
 
 1. **Apply `not` first:**
@@ -1171,7 +1171,7 @@ Final Answer: False",False,True,1
    - `False or False` = `False`
    - `False or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 71,not not not not not not not True is,False,"Let me work through this step by step, counting the negations from the inside out:
 
 Starting value: **True**
@@ -1188,7 +1188,7 @@ Alternatively, using the pairing rule: two ""not"" operators cancel each other o
 
 So: not not not not not not not True = not(True) = False
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 72,( not False ) and False or True is,True,"Let me evaluate this boolean expression step by step, following the standard operator precedence (not > and > or).
 
 **Step 1:** Evaluate the expression inside parentheses and the `not` operator (highest precedence)
@@ -1207,7 +1207,7 @@ Final Answer: False",False,True,1
 - `True and False` evaluates to `False`
 - `False or True` evaluates to `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 73,False and False or not ( True ) is,False,"Here's the step-by-step evaluation following operator precedence (not → and → or):
 
 1. **Evaluate `not (True)` first** (highest precedence)
@@ -1221,7 +1221,7 @@ Final Answer: True",True,True,1
 
 With explicit parentheses, the expression is evaluated as: `((False and False) or (not True))` = `(False or False)` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 74,( not False or True ) and True is,True,"Here's the step-by-step evaluation:
 
 1. **Evaluate the parentheses first**: `(not False or True)`
@@ -1232,7 +1232,7 @@ Final Answer: False",False,True,1
 2. **Evaluate the remaining expression**: `True and True`
    - This evaluates to `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 75,not ( False ) and ( False ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate `not (False)`**: The `not` operator inverts the boolean value, so `not False` = **True**
@@ -1241,7 +1241,7 @@ Final Answer: True",True,True,1
 
 3. **Evaluate `True and False`**: The `and` operator returns `True` only if both operands are `True`. Since one side is `False`, the result is **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 76,False or True and not not not False is,True,"Here is the step-by-step evaluation using standard boolean operator precedence (`not` > `and` > `or`):
 
 **Step 1:** Evaluate the `not` operators first (right to left)
@@ -1260,7 +1260,7 @@ So, `not not not False` = **`True`**
 **Step 4:** Evaluate `or`
 - `False or True` = **`True`**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 77,( True ) and True and not True is,False,"Here's the step-by-step evaluation:
 
 1. **Parentheses**: `( True )` simplifies to `True`
@@ -1274,7 +1274,7 @@ Final Answer: True",True,True,1
    - First: `True and True` = `True`
    - Then: `True and False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 78,( not True ) and True and False is,False,"Here is the step-by-step evaluation:
 
 1. **Evaluate the `not` operator first** (it has higher precedence than `and`):
@@ -1289,7 +1289,7 @@ Final Answer: False",False,True,1
 
 Since the `and` operator returns `True` only if **all** operands are `True`, and we have `False` as the first operand, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 79,( not not True and not False ) is,True,"To evaluate the expression `(not not True and not False)`, we follow the order of operations where `not` has higher precedence than `and`:
 
 1. **Evaluate `not not True`** (left side):
@@ -1304,7 +1304,7 @@ Final Answer: False",False,True,1
 
 Alternatively, recognizing that double negation cancels out: `not not True` simplifies to `True`, and `not False` is `True`, so `True and True` yields `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 80,True and ( False ) or not False is,True,"Here's the step-by-step evaluation following operator precedence (not > and > or):
 
 1. **Parentheses**: `( False )` evaluates to `False`
@@ -1318,7 +1318,7 @@ Final Answer: True",True,True,1
 
 4. **or** (lowest precedence): `False or True` evaluates to `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 81,not not not False or False and False is,True,"**Step-by-step reasoning:**
 
 1.  **Identify operator precedence:** In Boolean logic (and Python), the precedence is: `not` (highest) → `and` → `or` (lowest).
@@ -1338,7 +1338,7 @@ Final Answer: True",True,True,1
 5.  **Evaluate `or` operation:**
     *   `True or False` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 82,not not not False and True or False is,True,"Here's the step-by-step evaluation following operator precedence (not > and > or):
 
 **Step 1:** Evaluate the `not` operations from right to left (innermost first)
@@ -1358,7 +1358,7 @@ Now the expression is: `True or False`
 
 With explicit parentheses, the expression evaluates as: `((((not (not (not False))) and True) or False)` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 83,True or ( True or not False ) is,True,"Let's evaluate this Boolean expression step by step, working from the innermost parentheses outward:
 
 **Step 1:** Evaluate `not False` inside the parentheses
@@ -1373,7 +1373,7 @@ Final Answer: True",True,True,1
 
 Since the OR operator returns `True` if at least one operand is `True`, and we have `True` on the left side of the main OR operation, the entire expression evaluates to `True` regardless of the right side.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 84,not False or ( ( False ) ) is,True,"Step-by-step evaluation:
 
 1.  **Analyze the expression**: `not False or ( ( False ) )`
@@ -1383,7 +1383,7 @@ Final Answer: True",True,True,1
 5.  **Evaluate the `or`**: Now we have `True or False`.
 6.  **Result**: The `or` operator returns `True` if at least one operand is `True`. Since the left side is `True`, the result is `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 85,not not ( False and not False ) is,False,"Here's the step-by-step evaluation:
 
 1. **Innermost operation**: `not False` = `True`
@@ -1396,7 +1396,7 @@ Final Answer: True",True,True,1
    
    (Alternatively, `not not` cancels out, so `not not X` = `X`, giving us `False` directly)
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 86,not not not not True or not True is,True,"Let me break this down step by step, respecting operator precedence (where `not` binds tighter than `or`).
 
 **Step 1: Evaluate `not not not not True`**
@@ -1414,14 +1414,14 @@ Or simply: 4 is an even number, so four `not` operators cancel out, leaving `Tru
 **Step 3: Apply `or`**
 - `True or False` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 87,False and not ( False or False ) is,False,"Here's the step-by-step evaluation:
 
 1.  **Evaluate the inner parentheses first:** `(False or False)` evaluates to `False`
 2.  **Apply the `not` operator:** `not False` evaluates to `True`
 3.  **Apply the `and` operator:** `False and True` evaluates to `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 88,True and True and True or not False is,True,"Here is the step-by-step reasoning based on Boolean operator precedence (`not` > `and` > `or`):
 
 **Step 1:** Evaluate `not` (highest precedence)
@@ -1436,7 +1436,7 @@ Final Answer: False",False,True,1
 **Step 3:** Evaluate `or`
 - `True or True` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 89,False or not False or True and True is,True,"Here is the step-by-step evaluation following standard logical operator precedence (`not` → `and` → `or`):
 
 1. **Evaluate `not` first:**  
@@ -1451,7 +1451,7 @@ Final Answer: True",True,True,1
    `False or True` = `True`  
    `True or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 90,not False and False and False or False is,False,"Here's the step-by-step evaluation following operator precedence (`not` > `and` > `or`):
 
 **Step 1:** Evaluate `not` (highest precedence)
@@ -1469,7 +1469,7 @@ Final Answer: True",True,True,1
 **Step 4:** Evaluate `or` (lowest precedence)
 - `False or False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 91,( False ) or not False or True is,True,"Reasoning:
 
 1.  **Parentheses**: Evaluate `( False )` first, which is simply `False`.
@@ -1484,7 +1484,7 @@ Final Answer: False",False,True,1
     *   Expression becomes: `True or True`
     *   Finally, evaluate `True or True`, which results in `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 92,( not False ) or ( True ) is,True,"Here's the step-by-step evaluation:
 
 1. **Evaluate the left side**: `not False`
@@ -1495,7 +1495,7 @@ Final Answer: True",True,True,1
    - The `or` operator returns `True` if at least one operand is `True`
    - Since both sides are `True`, the result is `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 93,not not ( False or not True ) is,False,"Here's the step-by-step evaluation:
 
 1. **Innermost expression**: `not True` evaluates to `False`
@@ -1505,7 +1505,7 @@ Final Answer: True",True,True,1
 
 Alternatively, using the double negation rule: `not not X` is equivalent to `X`, so we can simplify directly to `False or not True` = `False or False` = `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 94,False or not False or False or False is,True,"Let me evaluate this Boolean expression step by step.
 
 **Step 1: Apply operator precedence**
@@ -1522,7 +1522,7 @@ The expression becomes: `False or True or False or False`
 
 Alternatively, since ""or"" is associative and returns True if any operand is True, and we have at least one True value in the chain, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 95,False or not False and ( False ) is,False,"Let me evaluate this boolean expression step by step, following standard operator precedence (NOT > AND > OR).
 
 **Expression:** `False or not False and (False)`
@@ -1542,7 +1542,7 @@ Now we have: `False or False`
 **Step 4:** Evaluate OR  
 `False or False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 96,False or ( False ) or not True is,False,"Here is the step-by-step evaluation:
 
 1.  **Parentheses**: `( False )` evaluates to `False`.
@@ -1557,7 +1557,7 @@ Final Answer: False",False,True,1
 
 Since all operands are `False`, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 97,not True or False and True and True is,False,"To evaluate `not True or False and True and True`, I need to follow operator precedence rules:
 
 1. **Operator precedence**: `not` > `and` > `or`
@@ -1578,7 +1578,7 @@ Final Answer: False",False,True,1
 
 Equivalently: `(not True) or ((False and True) and True)` = `False or (False and True)` = `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 98,True or ( True or not True ) is,True,"Let's evaluate this step-by-step:
 
 1. **Innermost operation** (the `not` operator):
@@ -1592,7 +1592,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 99,True and not False and True or True is,True,"Here is the step-by-step evaluation following standard boolean operator precedence (where `not` > `and` > `or`):
 
 **Step 1:** Evaluate the `not` operator (highest precedence)
@@ -1610,7 +1610,7 @@ Final Answer: True",True,True,1
 
 **Final grouping:** `((True and (not False)) and True) or True` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 100,False or not False or not not True is,True,"Here is the step-by-step reasoning:
 
 1.  **Evaluate the negations (`not`) first** (they have higher precedence than `or`):
@@ -1624,7 +1624,7 @@ Final Answer: True",True,True,1
     *   `False or True` = **True**
     *   `True or True` = **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 101,( True or not False ) or False is,True,"**Step-by-step reasoning:**
 
 1.  **Innermost operation:** Evaluate `not False`.
@@ -1638,7 +1638,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 102,False or not ( True ) and True is,False,"Let's evaluate this step by step using standard operator precedence (where `not` > `and` > `or`):
 
 1. **First**, evaluate `not (True)`:
@@ -1652,7 +1652,7 @@ Final Answer: True",True,True,1
 
 So the expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 103,not False and not True and not False is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate each ""not"" operator:**
@@ -1667,7 +1667,7 @@ Final Answer: False",False,True,1
    - `True and False` = `False`
    - `False and True` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 104,False and ( True and not False ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate the innermost expression first**: `not False`
@@ -1681,7 +1681,7 @@ Final Answer: False",False,True,1
 
 Since the `and` operator returns `True` only if both operands are `True`, and the first operand is `False`, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 105,not False or ( False ) or True is,True,"Reasoning:
 1.  **Operator Precedence**: The `not` operator has higher precedence than `or`, so it is evaluated first.
     *   `not False` evaluates to `True`.
@@ -1691,7 +1691,7 @@ Final Answer: False",False,True,1
     *   The expression simplifies to: `True or True`.
     *   Finally, `True or True` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 106,False and not ( False and True ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate the innermost parentheses first**: (False and True)
@@ -1703,7 +1703,7 @@ Final Answer: True",True,True,1
 3. **Evaluate the remaining AND operation**: False and True
    - False AND True = **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 107,( True or not not not False ) is,True,"Let's evaluate the expression step by step, working from the innermost operator outward.
 
 **Expression:** `True or not not not False`
@@ -1721,7 +1721,7 @@ So `not not not False` = True (an odd number of ""not"" operators flips the bool
 
 Alternatively, using boolean logic: since the left side is already `True`, and `True or anything` always equals `True`, the entire expression must be True regardless of the right side.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 108,False and ( False or not False ) is,False,"Here's the step-by-step evaluation:
 
 1.  **Evaluate the innermost operation (not):**
@@ -1733,7 +1733,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate the final operation (and):**
     `False and True` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 109,False or not True or True and False is,False,"To evaluate the expression `False or not True or True and False`, I follow the standard order of operations for boolean logic:
 
 1.  **`not` has the highest precedence**: Evaluate `not True` first.
@@ -1750,7 +1750,7 @@ Final Answer: False",False,True,1
     *   `False or False` = `False`
     *   `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 110,True and not True or True and True is,True,"To evaluate the expression **True and not True or True and True**, we follow the standard order of operations (operator precedence) for Boolean logic:
 
 1.  **`not`** has the highest precedence
@@ -1778,7 +1778,7 @@ Final Answer: False",False,True,1
 → `False or True`
 → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 111,( not False or ( True ) ) is,True,"Here's the step-by-step evaluation:
 
 1. **Evaluate `not False`**: The logical negation of False is **True**
@@ -1787,7 +1787,7 @@ Final Answer: True",True,True,1
 
 Operator precedence note: `not` has higher precedence than `or`, so the expression is evaluated as `(not False) or True`, not `not (False or True)`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 112,( ( not ( True ) ) ) is,False,"**Reasoning:**
 
 1. Start with the innermost expression: `True` evaluates to **True** (boolean truth value).
@@ -1796,7 +1796,7 @@ Final Answer: True",True,True,1
 
 Therefore, `( ( not ( True ) ) )` = `not True` = **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 113,False and False and not ( False ) is,False,"To evaluate the expression `False and False and not ( False )`:
 
 **Step 1:** Evaluate the innermost parentheses first
@@ -1811,7 +1811,7 @@ Final Answer: False",False,True,1
 
 Alternatively, using short-circuit logic: since the first operand is `False` and we're using `and`, the entire expression will be `False` regardless of subsequent operands.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 114,not True and not True and not True is,False,"Here is the step-by-step reasoning:
 
 1.  **Evaluate the `not` operators first** (higher precedence than `and`):
@@ -1828,7 +1828,7 @@ Final Answer: False",False,True,1
 
 Alternatively, using short-circuit logic: since `and` requires all operands to be true, and the first operand is `False`, the entire expression immediately evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 115,not ( True or False ) or True is,True,"Here's the step-by-step evaluation:
 
 1.  **Evaluate the parentheses first:** `(True or False)` = `True`
@@ -1840,7 +1840,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate the remaining `or` operation:** `False or True` = `True`
     *   (OR returns True if at least one operand is True)
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 116,False or ( True ) or not True is,True,"Let me evaluate this logical expression step by step.
 
 **Operator precedence:** `not` has higher precedence than `or`, and `or` is left-associative.
@@ -1858,7 +1858,7 @@ Final Answer: True",True,True,1
 
 Alternatively, since `or` returns `True` if any operand is `True`, and we have `True` in the middle, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 117,False or False and False or not True is,False,"To evaluate the expression `False or False and False or not True`, I need to follow the standard order of operations for Boolean logic:
 
 1.  **`not`** has the highest precedence
@@ -1889,7 +1889,7 @@ False or False
 False
 ```
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 118,True or False or not True or False is,True,"To evaluate the expression **True or False or not True or False**, I need to apply Boolean logic rules (where `or` is the logical disjunction and `not` is the logical negation).
 
 **Step 1: Apply operator precedence**
@@ -1906,7 +1906,7 @@ The expression becomes: **True or False or False or False**
 
 Alternatively, since logical `or` returns **True** if at least one operand is **True**, and we have `True` as the first operand, the entire expression evaluates to **True** regardless of the other values.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 119,not True and ( True and True ) is,False,"Here's the step-by-step reasoning:
 
 1. **Evaluate the inner parentheses first**: `(True and True)` evaluates to `True`
@@ -1920,7 +1920,7 @@ Breaking it down:
 - `True and True` → `True`  
 - `False and True` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 120,not True and True or True and False is,False,"Here's the step-by-step evaluation following operator precedence (not → and → or):
 
 **Expression:** `not True and True or True and False`
@@ -1945,7 +1945,7 @@ False or False
 False
 ```
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 121,not False or ( True or True ) is,True,"Here's my step-by-step reasoning:
 
 1.  **Parentheses first**: Evaluate `(True or True)`
@@ -1959,7 +1959,7 @@ Final Answer: False",False,True,1
 3.  **Final OR operation**: Evaluate `True or True`
     *   `True or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 122,not ( False or ( False ) ) is,True,"Let's evaluate this step-by-step:
 
 1. **Innermost parentheses**: `( False )` simplifies to `False`
@@ -1974,7 +1974,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 123,not ( True or True ) and True is,False,"Here's the step-by-step evaluation:
 
 1. **Parentheses first**: `(True or True)` evaluates to `True`
@@ -1985,7 +1985,7 @@ Final Answer: True",True,True,1
 
 3. **AND operator**: `False and True` evaluates to `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 124,False or not False or True or True is,True,"Let me evaluate this boolean expression step by step.
 
 **Operator precedence:** `not` has higher precedence than `or`, so it binds first.
@@ -2003,7 +2003,7 @@ Final Answer: False",False,True,1
 
 Alternatively, since `or` returns `True` if any operand is `True`, and we have `True` in the expression, the entire expression evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 125,False or False and not not not False is,False,"Let's evaluate the expression step by step according to standard Boolean operator precedence (where `not` > `and` > `or`):
 
 **Step 1:** Evaluate the `not` operations (right-to-left)
@@ -2017,7 +2017,7 @@ Final Answer: True",True,True,1
 **Step 3:** Evaluate the `or` operation
 - `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 126,not ( True or False or True ) is,False,"Here's the step-by-step reasoning:
 
 1.  **Evaluate the expression inside the parentheses first** (following order of operations): `(True or False or True)`
@@ -2029,7 +2029,7 @@ Final Answer: False",False,True,1
 3.  **Apply the NOT operator** to the result of the parentheses:
     *   `not True` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 127,( False ) or not True and False is,False,"Here's the step-by-step evaluation following standard boolean operator precedence (not > and > or):
 
 1. **Parentheses**: `( False )` evaluates to `False`
@@ -2043,7 +2043,7 @@ Final Answer: False",False,True,1
 
 4. **or**: `False or False` evaluates to `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 128,True and True and not not not False is,True,"Let's evaluate this step by step, respecting operator precedence (where `not` binds tighter than `and`):
 
 **Step 1:** Evaluate the `not` operations from right to left (innermost first)
@@ -2060,7 +2060,7 @@ So `not not not False` evaluates to `True`.
 - `True and True` = `True`
 - `True and True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 129,( True ) or True and not True is,True,"To evaluate the expression `( True ) or True and not True`, we need to follow the standard order of operations (precedence) for Boolean logic:
 
 1.  **Parentheses**: The expression inside `( )` is just `True`, so we have: `True or True and not True`
@@ -2072,7 +2072,7 @@ Final Answer: True",True,True,1
 
 Thus, the entire expression evaluates to **True**.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 130,False and False and not True and False is,False,"Here is the step-by-step reasoning:
 
 1.  **Operator Precedence**: The `not` operator has higher precedence than the `and` operator. Therefore, the expression is evaluated as if it were grouped like this:
@@ -2086,7 +2086,7 @@ Final Answer: True",True,True,1
     *   `False and False` → `False`
     *   `False and False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 131,( True ) and not True or True is,True,"Here is the step-by-step evaluation following standard boolean operator precedence (where `not` > `and` > `or`):
 
 1.  **Parentheses**: `( True )` evaluates to `True`
@@ -2100,7 +2100,7 @@ Final Answer: False",False,True,1
 
 4.  **`or` operator** (lowest precedence): `False or True` evaluates to `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 132,not not not True and False and False is,False,"Let's evaluate this step by step, respecting operator precedence (where `not` has higher precedence than `and`):
 
 **Step 1:** Evaluate `not not not True`
@@ -2115,7 +2115,7 @@ Final Answer: True",True,True,1
 
 **Result:** `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 133,False and False and not not not True is,False,"Let's evaluate this step-by-step using operator precedence (where `not` binds tighter than `and`).
 
 **Step 1:** Evaluate the `not` operators from right to left
@@ -2133,7 +2133,7 @@ So `not not not True` evaluates to `False`.
 - `False and False` = False
 - `False and False` = **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 134,False and False or False or not True is,False,"Here's the step-by-step evaluation following Boolean operator precedence (`not` → `and` → `or`):
 
 **Step 1:** Evaluate `not` (highest precedence)
@@ -2150,7 +2150,7 @@ Expression becomes: `False or False or False`
 - `False or False` = `False`
 - `False or False` = `False`
 
-**Final Answer: False**",False**,True,0
+**Final Answer: False**",False,True,1,
 135,False or ( not ( False ) ) is,True,"Here's the step-by-step reasoning:
 
 1. Start with the innermost expression: `False` evaluates to **False**
@@ -2158,7 +2158,7 @@ Expression becomes: `False or False or False`
 3. Now the expression becomes: `False or True`
 4. Apply the OR operator: `False or True` = **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 136,not True and True and not not False is,False,"Let me evaluate this step by step, following operator precedence (where `not` binds tighter than `and`).
 
 **Step 1:** Evaluate the `not` operations first (from left to right)
@@ -2173,7 +2173,7 @@ Now the expression becomes: `False and True and False`
 - `False and True` = `False`
 - `False and False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 137,( False ) and ( not False ) is,False,"Let me evaluate this step by step:
 
 1. **First part**: `( False )` evaluates to **False**
@@ -2184,7 +2184,7 @@ Final Answer: False",False,True,1
    - The logical AND operator returns True only if **both** operands are True
    - Since the first operand is False, the entire expression evaluates to **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 138,( not True ) and True or True is,True,"Here's the step-by-step evaluation:
 
 1.  **Parentheses/Not first**: Evaluate `( not True )`
@@ -2198,7 +2198,7 @@ Final Answer: False",False,True,1
 3.  **Or last**: Evaluate `False or True`
     *   `False or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 139,False and True and ( not False ) is,False,"Here is the step-by-step evaluation:
 
 1.  **Evaluate the parentheses first**: `not False` evaluates to `True`.
@@ -2211,7 +2211,7 @@ Final Answer: True",True,True,1
 
 Since the first operand is `False`, and `False` combined with anything using `and` will always result in `False`, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 140,( ( True ) ) or not False is,True,"Here's the step-by-step evaluation:
 
 1. **Evaluate the parentheses**: `( ( True ) )` simplifies to `True` (parentheses group the value but don't change it)
@@ -2220,7 +2220,7 @@ Final Answer: False",False,True,1
 
 3. **Evaluate `or` operator**: Now we have `True or True`, which evaluates to `True` (the OR operator returns `True` if at least one operand is `True`)
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 141,not True and False or False or True is,True,"Let me evaluate this step-by-step using standard boolean operator precedence (not > and > or).
 
 **Given expression:** `not True and False or False or True`
@@ -2238,7 +2238,7 @@ Final Answer: True",True,True,1
 - Expression becomes: `False or True`
 - `False or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 142,True and not True and True and True is,False,"Here's the step-by-step evaluation:
 
 1. **Operator precedence**: `not` binds tighter than `and`, so evaluate `not True` first:
@@ -2253,7 +2253,7 @@ Final Answer: True",True,True,1
 
 Alternatively: Once any part of an `and` chain is `False`, the entire expression is `False` (since `False and anything` = `False`).
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 143,( True or True or not False ) is,True,"Here's the step-by-step reasoning:
 
 1. **Evaluate the innermost expression first**: `not False`
@@ -2268,7 +2268,7 @@ Final Answer: False",False,True,1
 
 Since the `or` operator returns True if at least one operand is True, and all three operands are True, the final result is True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 144,True or not False and True or True is,True,"Let's evaluate the boolean expression step by step, following standard operator precedence (not > and > or).
 
 **Expression:** `True or not False and True or True`
@@ -2291,14 +2291,14 @@ With parentheses showing precedence: `True or ((not False) and True) or True`
 = `True or True or True`
 = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 145,( not ( False ) or False ) is,True,"Here's the step-by-step evaluation:
 
 1. **Evaluate the innermost expression**: `False` is False
 2. **Apply the NOT operator**: `not ( False )` = `not False` = **True**
 3. **Apply the OR operator**: `True or False` = **True** (since OR returns True when at least one operand is True)
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 146,True and not ( True or False ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate the inner parentheses first**: (True or False) = **True**
@@ -2309,7 +2309,7 @@ Final Answer: True",True,True,1
 3. **Apply the AND operator**: True and False = **False**
    - The AND operator returns True only if both operands are True.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 147,not ( False and True ) and True is,True,"Here is the step-by-step evaluation:
 
 1.  **Evaluate the inner parentheses first:** `(False and True)`
@@ -2321,7 +2321,7 @@ Final Answer: False",False,True,1
 3.  **Complete the final `and` operation:** `(True) and True`
     *   Now we evaluate `True and True`, which returns: **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 148,not ( True and True ) or False is,False,"Here is the step-by-step reasoning:
 
 1.  **Evaluate the parentheses** (highest precedence):
@@ -2337,7 +2337,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate `or`** (lowest precedence):
     `False or False` evaluates to `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 149,False or not True and not not False is,False,"To evaluate the boolean expression `False or not True and not not False`, we follow the standard order of operations (precedence): **NOT** first, then **AND**, then **OR**.
 
 **Step 1: Evaluate NOT operations**
@@ -2360,7 +2360,7 @@ False or False
 **Step 3: Evaluate OR operation**
 - `False or False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 150,not True and False or False and False is,False,"Let's evaluate the expression step by step following the standard order of operations (precedence) for boolean operators:
 1. `not` (highest precedence)
 2. `and` 
@@ -2382,7 +2382,7 @@ Final Answer: False",False,True,1
 
 Alternatively, viewing it with explicit grouping: `((not True) and False) or (False and False)` = `(False and False) or (False and False)` = `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 151,not True or True and False or False is,False,"To evaluate the expression `not True or True and False or False`, we follow the standard operator precedence rules (not > and > or):
 
 1.  **Evaluate `not` first:**
@@ -2401,7 +2401,7 @@ Final Answer: False",False,True,1
 
 Thus, the final result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 152,( not ( False ) and False ) is,False,"Step-by-step evaluation:
 
 1. Evaluate the inner expression: `False` is `False`
@@ -2410,7 +2410,7 @@ Final Answer: False",False,True,1
 
 Therefore, the expression `( not ( False ) and False )` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 153,False or ( True and not True ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate the innermost expression (not True):**
@@ -2422,7 +2422,7 @@ Final Answer: False",False,True,1
 3. **Evaluate the full expression (False or False):**
    - `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 154,not False and not True or not True is,False,"To evaluate the expression `not False and not True or not True`, we follow the standard order of precedence for logical operators:
 
 **Order of precedence:**
@@ -2455,7 +2455,7 @@ Final Answer: False",False,True,1
 = False
 ```
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 155,( False or not not not False ) is,True,"To evaluate `( False or not not not False )`, I'll work through the order of operations (where `not` has higher precedence than `or`):
 
 **Step 1:** Evaluate the innermost `not` operations first (working right to left):
@@ -2470,7 +2470,7 @@ So `not not not False` evaluates to **True**.
 
 Alternatively, using the rule that an odd number of `not` operators (3 in this case) inverts the original value: `not not not False` = `not False` = True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 156,( not False ) or True and False is,True,"To evaluate the expression `( not False ) or True and False`, I follow the standard order of operations for Boolean logic:
 
 **Step 1:** Evaluate `not` (highest precedence)
@@ -2484,7 +2484,7 @@ Final Answer: True",True,True,1
 **Step 3:** Evaluate `or` (lowest precedence)
 - `True or False` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 157,( not not True ) or not False is,True,"Step-by-step evaluation:
 
 1. Evaluate the innermost expressions first:
@@ -2500,7 +2500,7 @@ Final Answer: True",True,True,1
 4. Evaluate the OR operation:
    - `True or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 158,True or not ( ( True ) ) is,True,"Here is the step-by-step evaluation of the expression `True or not ( ( True ) )`:
 
 1.  **Innermost parentheses**: The expression `((True))` contains nested parentheses around the boolean value `True`. Parentheses do not change the value, so this evaluates to simply `True`.
@@ -2509,7 +2509,7 @@ Final Answer: True",True,True,1
 
 Since `True or False` equals `True`, the entire expression is **True**.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 159,( False ) and False or not False is,True,"Here's the step-by-step evaluation using standard Boolean operator precedence (not > and > or):
 
 1. **Parentheses**: `( False )` evaluates to `False`
@@ -2523,7 +2523,7 @@ Final Answer: True",True,True,1
 
 4. **Or** (lowest precedence): `False or True` evaluates to `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 160,not False and True or ( True ) is,True,"**Step-by-step evaluation:**
 
 1. **Parentheses first**: `( True )` evaluates to `True`
@@ -2539,7 +2539,7 @@ Final Answer: True",True,True,1
 
 **Operator precedence reminder:** `not` > `and` > `or`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 161,True or not not ( not False ) is,True,"Here is the step-by-step evaluation:
 
 1.  **Evaluate the innermost parentheses:** `(not False)`
@@ -2554,7 +2554,7 @@ Final Answer: True",True,True,1
     *   Expression becomes: `True or True`
     *   `True or True` = **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 162,False and not True and False and True is,False,"To evaluate the expression `False and not True and False and True`, I follow the order of operations (operator precedence):
 
 1.  **Precedence**: `not` has higher precedence than `and`, so it is evaluated first.
@@ -2570,7 +2570,7 @@ Final Answer: True",True,True,1
 
 Alternatively, since `and` requires all operands to be true to return true, and the first operand is `False`, the entire expression short-circuits to `False` immediately.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 163,not not True and True and not True is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate `not not True`** (working from the innermost operator outward):
@@ -2591,7 +2591,7 @@ Final Answer: False",False,True,1
    - `True and True` = `True`
    - `True and False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 164,not False or not ( not False ) is,True,"Here's the step-by-step evaluation:
 
 **Step 1:** Evaluate `not False`
@@ -2606,7 +2606,7 @@ Final Answer: False",False,True,1
 
 (Operator precedence note: `not` binds tighter than `or`, so this is equivalent to `(not False) or (not (not False))`)
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 165,not not ( True ) or not True is,True,"Let's evaluate this step-by-step, following operator precedence (where `not` binds tighter than `or`):
 
 1.  **Evaluate parentheses:**
@@ -2622,7 +2622,7 @@ Final Answer: True",True,True,1
 4.  **Evaluate the `or` operation:**
     `True or False` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 166,( True and not True and True ) is,False,"Here's the step-by-step evaluation:
 
 1.  **Operator precedence**: The `not` operator has higher precedence than `and`, so it is evaluated first.
@@ -2635,7 +2635,7 @@ Final Answer: True",True,True,1
     *   `True and False` → `False` (both operands must be True for `and` to return True)
     *   `False and True` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 167,True or False or not True or True is,True,"Let's evaluate the Boolean expression step by step:
 
 **Expression:** True or False or not True or True
@@ -2655,7 +2655,7 @@ Final Answer: False",False,True,1
 
 (Alternatively: Since OR returns True if at least one operand is True, and we have True values in the expression, the result is True.)
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 168,not True or True and False and False is,False,"**Step 1: Identify operator precedence**
 - `not` has the highest precedence
 - `and` has medium precedence  
@@ -2681,7 +2681,7 @@ Now the expression is: `False or False`
 Finally, evaluate `or`:
 - `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 169,True and not not not not not True is,False,"Let me evaluate this step by step, working from right to left.
 
 Starting with the rightmost expression: `not not not not not True`
@@ -2699,7 +2699,7 @@ So the expression simplifies to: `True and False`
 
 `True and False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 170,not True and ( False ) and False is,False,"**Step-by-step reasoning:**
 
 1.  **Operator Precedence:** The `not` operator has higher precedence than the `and` operator. Therefore, `not True` is evaluated first.
@@ -2719,7 +2719,7 @@ Final Answer: False",False,True,1
 
 **Summary:** `not True` becomes `False`, then `False and False and False` chains to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 171,False and False or not True and False is,False,"To evaluate `False and False or not True and False`, I need to follow operator precedence rules (from highest to lowest: `not`, `and`, `or`).
 
 **Step 1:** Evaluate `not` first
@@ -2738,7 +2738,7 @@ Expression becomes: `False or False`
 
 Alternatively, with explicit parentheses based on precedence: `((False and False) or ((not True) and False))` = `(False or (False and False))` = `(False or False)` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 172,True or False and not True and False is,True,"Here is the step-by-step evaluation using standard boolean operator precedence (where `not` > `and` > `or`):
 
 1.  **Evaluate `not` first:**
@@ -2755,7 +2755,7 @@ Final Answer: False",False,True,1
 3.  **Evaluate `or`:**
     `True or False` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 173,not ( False or False or True ) is,False,"First, I'll evaluate the expression inside the parentheses from left to right:
 
 1. `False or False` evaluates to `False`
@@ -2766,7 +2766,7 @@ So `(False or False or True)` = `True`
 Now apply the `not` operator:
 - `not True` evaluates to `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 174,not False or True or True and False is,True,"To evaluate the expression `not False or True or True and False`, I need to follow the order of precedence for boolean operators:
 
 1.  **`not`** has the highest precedence
@@ -2792,7 +2792,7 @@ Final Answer: False",False,True,1
 = `(True or True or False)`
 = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 175,not False and False or False or False is,False,"To evaluate `not False and False or False or False`, I follow the order of precedence for boolean operators: `not` > `and` > `or`.
 
 **Step 1:** Apply `not` (highest precedence)
@@ -2807,7 +2807,7 @@ Final Answer: True",True,True,1
 - `False or False` = `False`
 - `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 176,( not True ) and ( False ) is,False,"Here's the step-by-step evaluation:
 
 1.  **Evaluate the first part** `(not True)`:
@@ -2821,7 +2821,7 @@ Final Answer: False",False,True,1
     *   The `and` operator returns `True` only if both operands are `True`.
     *   Since both sides are `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 177,True and not not False and not False is,False,"To evaluate the expression `True and not not False and not False`, I follow operator precedence rules where `not` has higher precedence than `and`, and `and` is left-associative.
 
 **Step 1: Evaluate `not` operations (right to left within their groups)**
@@ -2841,7 +2841,7 @@ Final Answer: False",False,True,1
 - `True and False` = `False`
 - `False and True` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 178,not ( not not False ) and True is,True,"Let's evaluate the expression step by step, working from the innermost parentheses outward:
 
 **Step 1:** Evaluate `False`
@@ -2859,7 +2859,7 @@ Final Answer: False",False,True,1
 **Step 5:** Evaluate `True and True`
 - `True and True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 179,not ( not False ) and not False is,False,"Here is the step-by-step evaluation:
 
 1. **Innermost expression:** `False` evaluates to **False**
@@ -2868,7 +2868,7 @@ Final Answer: True",True,True,1
 4. **Right side of `and`:** `not False` evaluates to **True**
 5. **Final conjunction:** `False and True` evaluates to **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 180,False or True and not False or True is,True,"Here is the step-by-step evaluation using standard Boolean operator precedence (where `not` binds tightest, then `and`, then `or`):
 
 **Step 1: Evaluate `not` (highest precedence)**
@@ -2885,7 +2885,7 @@ Final Answer: False",False,True,1
 
 **Final Result:** `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 181,( not not not True and True ) is,False,"To evaluate `(not not not True and True)`, I need to follow operator precedence rules (where `not` has higher precedence than `and`):
 
 **Step 1:** Evaluate the leftmost `not`
@@ -2902,7 +2902,7 @@ Final Answer: True",True,True,1
 
 The expression is equivalent to: `(((not (not (not True))) and True)` = `(False and True)` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 182,False and not ( True ) or True is,True,"Here's the step-by-step evaluation following Boolean operator precedence (parentheses → not → and → or):
 
 1. **Parentheses**: `True` evaluates to `True`
@@ -2916,7 +2916,7 @@ Final Answer: False",False,True,1
 
 4. **Or**: `False or True` evaluates to `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 183,( not True and False or True ) is,True,"Reasoning:
 To evaluate this expression, we follow the standard order of operations for boolean logic (as in Python and most programming languages):
 1. `not` has the highest precedence
@@ -2933,7 +2933,7 @@ Step-by-step evaluation of `( not True and False or True )`:
 
 3. Finally, evaluate `False or True` → **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 184,not ( not not True ) or False is,False,"Let's evaluate the expression step by step:
 
 **Expression:** `not ( not not True ) or False`
@@ -2951,7 +2951,7 @@ Final Answer: True",True,True,1
 
 Therefore, the expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 185,( not False ) or ( False ) is,True,"Let's evaluate this logical expression step by step:
 
 **Step 1:** Evaluate the inner expression `(not False)`
@@ -2967,7 +2967,7 @@ Final Answer: False",False,True,1
 
 Therefore, `(not False) or (False)` evaluates to `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 186,not not not False and True and False is,False,"Here is the step-by-step evaluation following operator precedence (where `not` binds tighter than `and`):
 
 1.  **Evaluate the `not` operations first** (right-to-left due to right-associativity):
@@ -2983,7 +2983,7 @@ Final Answer: True",True,True,1
     *   `True and True` → `True`
     *   `True and False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 187,True or not True or not not True is,True,"Let's evaluate this step by step following logical operator precedence (where `not` binds tighter than `or`):
 
 1. Evaluate `not True` → **False**
@@ -3000,7 +3000,7 @@ Evaluate left to right (or operations are associative):
 
 Alternatively, since `or` returns True if any operand is True, and we have `True` as both the first and last operands, the result must be True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 188,not False or not not False and False is,True,"Let's evaluate the expression step by step, following the standard order of precedence for logical operators (not > and > or).
 
 **Original expression:**
@@ -3028,7 +3028,7 @@ True or False
 **Step 3:** Evaluate `or` (lowest precedence)
 - `True or False` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 189,not False and ( False or False ) is,False,"**Step-by-step reasoning:**
 
 1.  **Evaluate the parentheses first:** `(False or False)`
@@ -3047,7 +3047,7 @@ Final Answer: True",True,True,1
 `False or False` → `False`  
 `True and False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 190,False and True or ( not False ) is,True,"Here's the step-by-step evaluation according to standard Boolean operator precedence (not > and > or):
 
 **Step 1:** Evaluate the expression inside parentheses and the `not` operator
@@ -3061,7 +3061,7 @@ Final Answer: False",False,True,1
 **Step 3:** Evaluate `or`
 - `False or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 191,False and not False and ( False ) is,False,"Let me evaluate this boolean expression step by step, considering operator precedence and associativity.
 
 **Operator precedence rules:**
@@ -3082,7 +3082,7 @@ The expression becomes: `False and True and (False)`
 
 Therefore, the entire expression evaluates to **False**.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 192,not ( ( False and True ) ) is,True,"Step-by-step evaluation:
 
 1. **Evaluate the inner expression** `(False and True)`:
@@ -3094,7 +3094,7 @@ Final Answer: False",False,True,1
    - `not False` negates the boolean value.
    - Result: `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 193,False or ( not False ) and False is,False,"Let me evaluate this step-by-step using standard logical operator precedence (not > and > or):
 
 **Step 1:** Evaluate the `not` operation inside the parentheses
@@ -3110,7 +3110,7 @@ Now the expression is: `False or False`
 **Step 3:** Evaluate the `or` operation
 - `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 194,False and not False or False and True is,False,"Let me evaluate this boolean expression step by step, following the standard order of operations (precedence):
 
 1.  **not** (highest precedence)
@@ -3139,7 +3139,7 @@ With explicit parentheses showing precedence:
 `= (False or False)`
 `= False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 195,not False and not not True and True is,True,"Let me evaluate this step-by-step using boolean logic:
 
 **Step 1:** Evaluate `not False`
@@ -3156,7 +3156,7 @@ Final Answer: False",False,True,1
 - `True and True` = `True`
 - `True and True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 196,True and True or False and not True is,True,"To evaluate this Boolean expression, I follow the order of operations (precedence): `not` first, then `and`, then `or`.
 
 **Step 1:** Evaluate `not` (highest precedence)
@@ -3181,7 +3181,7 @@ Alternatively, with explicit parentheses showing precedence:
 = True
 ```
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 197,not True or False and True or False is,False,"To evaluate `not True or False and True or False`, we follow the standard operator precedence rules (from highest to lowest): `not` → `and` → `or`.
 
 **Step-by-step evaluation:**
@@ -3198,7 +3198,7 @@ Final Answer: True",True,True,1
    `False or False` = `False`  
    `False or False` = `False`
 
-**Final Answer: False**",False**,True,0
+**Final Answer: False**",False,True,1,
 198,True or False or not True and True is,True,"Let me evaluate this boolean expression step by step using standard operator precedence (where `not` > `and` > `or`).
 
 **Expression:** `True or False or not True and True`
@@ -3217,7 +3217,7 @@ Final Answer: True",True,True,1
 
 **Result:** `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 199,False or False or not True or False is,False,"To evaluate this boolean expression, I need to follow the order of operations (operator precedence):
 
 **Step 1:** Apply `not` first (highest precedence)
@@ -3233,7 +3233,7 @@ Final Answer: True",True,True,1
 
 Alternatively, since `or` returns `True` only if at least one operand is `True`, and all four operands are `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 200,False or False or True and not False is,True,"Let's evaluate this Boolean expression step by step, following the order of operations (precedence: `not` > `and` > `or`).
 
 **Expression:** `False or False or True and not False`
@@ -3254,14 +3254,14 @@ Now we have: `False or False or True`
 
 **Result:** `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 201,( not ( True or False ) ) is,False,"Here is the step-by-step reasoning:
 
 1.  **Evaluate the inner parentheses first**: The expression inside the innermost parentheses is `True or False`.
 2.  **Apply the OR operator**: In Boolean logic, the OR operator (`or`) returns `True` if at least one of its operands is `True`. Since the first operand is `True`, the result of `True or False` is `True`.
 3.  **Apply the NOT operator**: The expression now becomes `not (True)`. The NOT operator (`not`) inverts the Boolean value. Therefore, `not True` evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 202,not False and False or True and True is,True,"To evaluate the expression `not False and False or True and True`, I follow the standard operator precedence rules (highest to lowest): `not` → `and` → `or`.
 
 **Step 1:** Evaluate `not` first
@@ -3276,7 +3276,7 @@ Final Answer: False",False,True,1
 **Step 3:** Evaluate `or`
 - `False or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 203,True and False or ( not False ) is,True,"Here is the step-by-step evaluation following standard operator precedence (parentheses → `not` → `and` → `or`):
 
 **Step 1:** Evaluate the expression inside the parentheses  
@@ -3294,7 +3294,7 @@ The expression becomes:
 **Step 3:** Evaluate the `or` operation  
 `False or True` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 204,not False or not not not not True is,True,"Let me break down the expression step by step according to operator precedence (where `not` has higher precedence than `or`):
 
 **Expression:** `not False or not not not not True`
@@ -3317,7 +3317,7 @@ Final Answer: True",True,True,1
 **Step 4:** Apply `or`
 - `True or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 205,True and ( not ( True ) ) is,False,"Here is the step-by-step evaluation:
 
 1.  **Evaluate the innermost expression**: The value inside the inner parentheses is `True`.
@@ -3325,7 +3325,7 @@ Final Answer: True",True,True,1
 3.  **Substitute back**: The expression becomes `True and False`.
 4.  **Apply the `and` operator**: The `and` operator returns `True` only if both operands are true. Since one operand is `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 206,True and False and not True or False is,False,"Let me evaluate this step by step using Boolean operator precedence (not → and → or).
 
 **Step 1:** Evaluate `not` first
@@ -3346,7 +3346,7 @@ Alternatively, with explicit parentheses based on precedence:
 `= False or False`
 `= False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 207,( ( not False ) ) and True is,True,"Let me evaluate this boolean expression step by step:
 
 1. **Innermost operation**: `not False` evaluates to `True` (the negation of false is true)
@@ -3357,7 +3357,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to true.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 208,not ( True ) and ( False ) is,False,"Here's the step-by-step reasoning:
 
 1. **Operator precedence**: The `not` operator has higher precedence than `and`, so the expression is evaluated as: `(not (True)) and (False)`
@@ -3366,7 +3366,7 @@ Final Answer: True",True,True,1
 
 3. **Evaluate the `and` operation**: Now we have `False and (False)`, which evaluates to `False` (since both operands must be True for `and` to return True)
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 209,True or not False and False and False is,True,"First, I need to apply standard Boolean operator precedence (not > and > or):
 
 1. **Evaluate `not`** (highest precedence):
@@ -3382,7 +3382,7 @@ Final Answer: False",False,True,1
 3. **Evaluate `or`** (lowest precedence):
    - `True or False` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 210,True and not ( False or False ) is,True,"Here's the step-by-step evaluation:
 
 1. **Evaluate the parentheses first**: (False or False) = **False**
@@ -3402,7 +3402,7 @@ True and not ( False or False )
 = True
 ```
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 211,not True and False or False and True is,False,"To evaluate the expression `not True and False or False and True`, I need to follow the operator precedence rules:
 
 1. **Operator precedence**: `not` > `and` > `or`
@@ -3421,7 +3421,7 @@ Step-by-step evaluation:
 
 4. Evaluate `False or False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 212,not True or not False and not True is,False,"To evaluate the expression `not True or not False and not True`, I need to follow the operator precedence rules (from highest to lowest): `not` > `and` > `or`.
 
 **Step 1:** Evaluate the `not` operators first:
@@ -3447,7 +3447,7 @@ False    or (False)
 False
 ```
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 213,not True or False or True and True is,True,"Let me evaluate this step-by-step using standard boolean operator precedence (not > and > or).
 
 **Expression:** `not True or False or True and True`
@@ -3464,7 +3464,7 @@ Final Answer: False",False,True,1
 - `False or False` = `False`
 - `False or True` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 214,not True and True and False and True is,False,"Here is the step-by-step evaluation following operator precedence (where `not` has higher precedence than `and`, and `and` evaluates left-to-right):
 
 1. **Evaluate `not` first:**  
@@ -3481,7 +3481,7 @@ Final Answer: True",True,True,1
 
 The entire expression evaluates to `False` because once the first operand is `False` in a chain of `and` operations, the result remains `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 215,False and False or not True and True is,False,"To evaluate the expression `False and False or not True and True`, I follow the standard operator precedence rules (not > and > or):
 
 1. **Evaluate `not` first** (highest precedence):
@@ -3498,7 +3498,7 @@ Final Answer: False",False,True,1
 
 Alternatively, using explicit grouping: `(False and False) or ((not True) and True)` = `False or (False and True)` = `False or False` = `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 216,( not False or False and True ) is,True,"To evaluate the expression `( not False or False and True )`, I follow the standard order of operations for logical operators: `not` (highest precedence), then `and`, then `or` (lowest precedence).
 
 **Step-by-step evaluation:**
@@ -3518,7 +3518,7 @@ Final Answer: False",False,True,1
 5. **Evaluate `or`:**  
    `True or False` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 217,( True or False ) or not True is,True,"Reasoning:
 1. First, evaluate the expression inside the parentheses: **(True or False)** = **True** (since OR returns True if at least one operand is True)
 2. Next, evaluate the negation: **not True** = **False**
@@ -3526,7 +3526,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 218,not not not ( False ) and False is,False,"Let me evaluate this step by step:
 
 1. Start with the innermost expression: `False`
@@ -3543,7 +3543,7 @@ Final Answer: True",True,True,1
 
 6. The `and` operator returns `True` only if both operands are `True`. Since the second operand is `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 219,not False and False and False and True is,False,"Here's the step-by-step evaluation:
 
 1. **Operator precedence**: `not` has higher precedence than `and`, so `not False` is evaluated first.
@@ -3556,7 +3556,7 @@ Final Answer: False",False,True,1
 
 Since `and` requires both operands to be `True` to return `True`, and we have `False` values in the chain, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 220,False and not True and True or False is,False,"**Step-by-step reasoning:**
 
 1.  **Operator precedence:** In Boolean logic, `not` has the highest precedence, followed by `and`, and then `or`.
@@ -3574,7 +3574,7 @@ Final Answer: False",False,True,1
 4.  **Apply `or`:** Finally, evaluate the remaining `or` operation.
     *   `False or False` = `False`
 
-**Final Answer: False**",False**,True,0
+**Final Answer: False**",False,True,1,
 221,( False or not False and False ) is,False,"To evaluate `( False or not False and False )`, we apply the standard operator precedence rules (not > and > or):
 
 1. **Evaluate `not` first:** `not False` → `True`
@@ -3583,7 +3583,7 @@ Final Answer: False",False,True,1
 
 So the expression is equivalent to: `False or ((not False) and False)` = `False or (True and False)` = `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 222,False or ( False or not False ) is,True,"Let me evaluate this step-by-step:
 
 **Step 1:** Evaluate the innermost expression `not False`
@@ -3597,7 +3597,7 @@ Final Answer: False",False,True,1
 - This becomes `False or True`
 - `False or True` = **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 223,not False or True or False and False is,True,"Reasoning:
 
 1.  **Operator Precedence**: In Boolean logic (and Python), the order of operations is:
@@ -3619,7 +3619,7 @@ Final Answer: True",True,True,1
 
 (Alternatively, once the expression is reduced to `True or True or False`, since `or` only needs one operand to be `True` to return `True`, and the first value is `True`, the final result is `True`.)
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 224,True or ( not False ) or True is,True,"**Step-by-step reasoning:**
 
 1.  **Analyze the expression:** `True or ( not False ) or True`
@@ -3639,7 +3639,7 @@ Final Answer: True",True,True,1
 
 Since at least one value is `True` (in fact, all of them are), the entire expression evaluates to `True`.
 
-**Final Answer: True**",True**,True,0
+**Final Answer: True**",True,True,1,
 225,not False and False or True or False is,True,"Here's the step-by-step evaluation based on Boolean operator precedence (not > and > or):
 
 1. **Evaluate `not` first (highest precedence):**
@@ -3654,7 +3654,7 @@ Since at least one value is `True` (in fact, all of them are), the entire expres
    - `False or True` → `True`
    - `True or False` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 226,False and not ( not not False ) is,False,"Step-by-step evaluation:
 
 1.  **Innermost expression:** Start with `False`
@@ -3664,7 +3664,7 @@ Final Answer: True",True,True,1
 4.  **`not` outside parentheses:** `not (False)` evaluates to `True`
 5.  **Final `and` operation:** `False and True` evaluates to `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 227,not not ( not True ) or False is,False,"Let's evaluate this step-by-step, following operator precedence (where `not` binds tighter than `or`):
 
 **Step 1:** Evaluate the innermost parentheses
@@ -3681,7 +3681,7 @@ Now the expression becomes: `False or False`
 **Step 3:** Evaluate the `or` operator
 - `False or False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 228,False and not True and True and False is,False,"Let me evaluate this step by step, following standard Boolean logic operator precedence (where `not` has higher precedence than `and`).
 
 **Step 1:** Evaluate `not` first
@@ -3697,7 +3697,7 @@ Final Answer: False",False,True,1
 
 Alternatively, recognizing that `and` requires all operands to be `True` to return `True`, and since the first operand is `False`, the entire expression short-circuits to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 229,True or False and not ( True ) is,True,"**Step-by-step evaluation:**
 
 1. **Parentheses**: `(True)` evaluates to `True`
@@ -3711,7 +3711,7 @@ Final Answer: False",False,True,1
 
 **Operator precedence applied:** `True or (False and (not(True)))` → `True or (False and False)` → `True or False` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 230,not ( False ) and ( True ) is,True,"Here's the step-by-step reasoning:
 
 1.  **Evaluate `not ( False )`:** The logical operator `not` inverts the boolean value. The negation of `False` is **`True`**.
@@ -3720,7 +3720,7 @@ Final Answer: True",True,True,1
 
 3.  **Evaluate `True and True`:** The logical operator `and` returns `True` only if both operands are true. Since both sides are `True`, the result is **`True`**.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 231,False and not ( ( True ) ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate the innermost parentheses**: `( True )` simplifies to `True`
@@ -3729,7 +3729,7 @@ Final Answer: True",True,True,1
 
 Therefore, the entire expression evaluates to False.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 232,not False or ( not not False ) is,True,"Here's the step-by-step evaluation:
 
 1. **Evaluate `not False`**:
@@ -3745,7 +3745,7 @@ Final Answer: False",False,True,1
    - The `or` operator returns `True` if at least one operand is `True`
    - Therefore: `True or False` = `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 233,( ( not False ) and False ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate the inner expression** `not False`:
@@ -3759,7 +3759,7 @@ Final Answer: True",True,True,1
    - The logical operator `and` returns `True` only if both operands are `True`
    - Since one operand is `True` and the other is `False`, the result is **False**
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 234,True or False and not False and True is,True,"To evaluate the expression **True or False and not False and True**, I need to follow the standard order of operations (operator precedence) for Boolean logic:
 
 1.  **`not`** has the highest precedence
@@ -3791,7 +3791,7 @@ Final Answer: False",False,True,1
 → `True or False`  
 → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 235,( ( not True and True ) ) is,False,"**Reasoning:**
 
 1.  First, evaluate the `not` operator: `not True` evaluates to **False**.
@@ -3799,7 +3799,7 @@ Final Answer: True",True,True,1
 3.  Next, evaluate the `and` operator: `False and True` returns **False** because the logical `and` operation requires both operands to be True to return True.
 4.  The outer parentheses do not change the value.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 236,not ( False ) or not not False is,True,"Let's evaluate the expression step by step:
 
 **Expression:** `not ( False ) or not not False`
@@ -3816,7 +3816,7 @@ Final Answer: False",False,True,1
 **Step 3:** Evaluate the `or` operator
 - `True or False` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 237,not ( False or False and False ) is,True,"Here is the step-by-step reasoning:
 
 1.  **Identify the expression structure**: We need to evaluate `not ( False or False and False )`. The parentheses indicate we should first evaluate the inner expression `False or False and False`.
@@ -3833,7 +3833,7 @@ Final Answer: True",True,True,1
 5.  **Apply the `not` operator**:
     The expression becomes `not False`, which results in `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 238,False and not ( not not True ) is,False,"Here's the step-by-step evaluation:
 
 1. **Innermost expression** (`not True`):
@@ -3849,7 +3849,7 @@ Final Answer: True",True,True,1
 4. **Final AND operation**:
    - `False and False` = `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 239,False and False and not ( True ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate the inner parentheses**: `True` is `True`
@@ -3861,7 +3861,7 @@ Final Answer: False",False,True,1
 
 Since the `and` operator requires all operands to be `True` to return `True`, and all operands here are `False`, the result is `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 240,False or ( not False and False ) is,False,"Here is the step-by-step evaluation using the order of operations (not → and → or):
 
 1. **Evaluate `not` (highest precedence):**
@@ -3879,7 +3879,7 @@ Final Answer: False",False,True,1
 5. **Evaluate `or` (lowest precedence):**
    - `False or False` → `False` (at least one must be true for OR to be true)
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 241,False or ( not not not True ) is,False,"Here's the step-by-step evaluation:
 
 1. **Evaluate the innermost expression**: `True` = `True`
@@ -3896,7 +3896,7 @@ Final Answer: False",False,True,1
 
 Therefore, the entire expression evaluates to `False`.
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 242,( not False ) or not not False is,True,"Here's the step-by-step evaluation:
 
 **Step 1:** Evaluate `not False`
@@ -3912,7 +3912,7 @@ Final Answer: False",False,True,1
 - The OR operator returns True if at least one operand is True
 - **True** or False = **True**
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 243,not False and False and True or False is,False,"Here's the step-by-step evaluation following operator precedence (not > and > or):
 
 1. **Evaluate `not` first** (highest precedence):
@@ -3930,7 +3930,7 @@ Final Answer: True",True,True,1
 
 **Grouping by precedence:** `(((not False) and False) and True) or False` → `((True and False) and True) or False` → `(False and True) or False` → `False or False` → `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 244,True or not False and ( False ) is,True,"Here is the step-by-step evaluation using standard logical operator precedence (where `not` > `and` > `or`):
 
 1. **Evaluate `not`**: `not False` = `True`  
@@ -3943,7 +3943,7 @@ Final Answer: False",False,True,1
 
 Thus, the expression evaluates to **True**.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 245,( not ( False ) ) or False is,True,"Here is the step-by-step reasoning:
 
 1. **Evaluate the innermost parentheses**: `False` is simply the boolean value **False**.
@@ -3954,7 +3954,7 @@ Final Answer: True",True,True,1
 
 Therefore, `( not ( False ) ) or False` evaluates to True.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 246,True and not True or False and True is,False,"Here's the step-by-step evaluation using standard operator precedence (where `not` binds tightest, then `and`, then `or`):
 
 **Expression:** `True and not True or False and True`
@@ -3977,7 +3977,7 @@ The expression is grouped as: `(True and (not True)) or (False and True)`
 - `False or False`
 - `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 247,not ( not not not not False ) is,True,"Let me evaluate this step by step, working from the inside out.
 
 **Step-by-step evaluation:**
@@ -3997,7 +3997,7 @@ Final Answer: False",False,True,1
 **Alternative reasoning using parity:**
 There are 5 `not` operators total (an odd number). An odd number of negations inverts the original boolean value. Since we start with `False`, applying an odd number of `not` operations results in `True`.
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
 248,True and ( not True or False ) is,False,"**Step-by-step evaluation:**
 
 1.  **Evaluate the innermost parentheses first:** `( not True or False )`
@@ -4011,7 +4011,7 @@ Final Answer: True",True,True,1
 3.  **Evaluate the final expression:**
     *   `True and False` evaluates to `False`
 
-Final Answer: False",False,True,1
+Final Answer: False",False,True,1,
 249,( not not not False or True ) is,True,"Here's the step-by-step evaluation:
 
 1.  **Operator precedence**: `not` has higher precedence than `or`, so the expression is grouped as: `(not not not False) or True`
@@ -4025,4 +4025,4 @@ Final Answer: False",False,True,1
 
 3.  **Evaluate the `or`**: `True or True` → `True`
 
-Final Answer: True",True,True,1
+Final Answer: True",True,True,1,
