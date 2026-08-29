@@ -18,6 +18,7 @@ commit had landed. Run the check, read it, then commit.
 | `orphan` | a file in `references/` or `tools/` that no index links to | add its routing row, phrased as a condition an agent can recognise — or delete the file |
 | `structure` | a workflow with no row or no detail file, or a detail file whose four sections drifted | add the row and the page in the same edit; keep the sections Input / Output / Preflight / When it fails |
 | `benchmarks` | a page exists that the benchmark index does not list | add it to the index table |
+| `models` | a model a runner submits is missing from `model-parameters.md` (what limits to set) or from `model-calls.md` / `provider-gotchas.md` (which client reaches it) | write the missing half. Only models beside an `#SBATCH` script count — vendored upstream code has its own `--model` flags |
 | `size` *(advisory — prints as `note`, never fails)* | past this file's budget: `<!-- size-budget: N -->`, or ~5 KB if it declares none | split it if it has two jobs; raise its budget if it is legitimately one long thing. Ignoring it is also allowed |
 | `canary … is owned by X` | a fact that must have one home grew a second one | delete the copy, or declare the second home with a reason |
 | `canary … left its owner` | the fact moved and the owner was not updated | change the owner in `CANARIES`. This is the normal aftermath of a deliberate move, not an error |

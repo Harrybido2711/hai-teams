@@ -134,6 +134,70 @@ def check_benchmarks():
     return out
 
 
+MODEL_LIMITS = ".claude/references/model-parameters.md"
+MODEL_CALLS = (".claude/references/model-calls.md", ".claude/references/provider-gotchas.md")
+
+
+def called_models():
+    """Model ids a runner actually calls, from the sbatch scripts and argparse defaults.
+
+    The runners are the ground truth: a model documented but never called is harmless, a model
+    called but never documented is how someone writes the next runner from a reference that cannot
+    tell them which client to use.
+    """
+    ids, pat = set(), re.compile(r"--model[= ]+\"?([A-Za-z0-9][\w./-]+)")
+    dflt = re.compile(r"\"--model\"[^)]*?default=\"([^\"]+)\"", re.S)
+
+    # Only OUR runners, identified by living beside a script we submit. Vendored upstream code has
+    # its own --model flags -- Wonderbread's run_experiments.py offers GPT4 and Claude3 -- and
+    # holding this project's references responsible for documenting those is a false alarm.
+    ours = set()
+    for f in glob.glob(os.path.join(REPO, "**", "*.sh"), recursive=True):
+        if os.sep + ".git" + os.sep in f:
+            continue
+        try:
+            if "#SBATCH" in open(f, encoding="utf-8", errors="replace").read():
+                ours.add(os.path.dirname(f))
+        except OSError:
+            pass
+
+    for d in ours:
+        for ext in ("sh", "py"):
+            for f in glob.glob(os.path.join(d, "*." + ext)):
+                try:
+                    text = open(f, encoding="utf-8", errors="replace").read()
+                except OSError:
+                    continue
+                ids |= set(pat.findall(text)) | set(dflt.findall(text))
+    return {i for i in ids if not i.startswith("$")}
+
+
+def check_models():
+    """Every model a runner calls is reachable in both kinds of reference.
+
+    Two different questions get asked about a model and they live in different files: what limits
+    must a runner set (model-parameters.md), and how is it reached at all (model-calls.md, or the
+    client table in provider-gotchas.md). gpt-5.6-luna was adopted with the first and not the
+    second, and nothing noticed until it was asked about directly.
+    """
+    def has(rel_path, mid):
+        full = os.path.join(REPO, rel_path)
+        return os.path.exists(full) and mid in open(full, encoding="utf-8", errors="replace").read()
+
+    out = []
+    for mid in sorted(called_models()):
+        limits = has(MODEL_LIMITS, mid)
+        calls = [c for c in MODEL_CALLS if has(c, mid)]
+        if not limits and not calls:
+            out.append(("models", mid, "called by a runner and documented nowhere"))
+        elif not limits:
+            out.append(("models", mid, "no row in model-parameters.md — what limits must a runner set?"))
+        elif not calls:
+            out.append(("models", mid, "no recipe in model-calls.md or provider-gotchas.md — "
+                                       "which client, key and id reach it?"))
+    return out
+
+
 def content_size(path):
     """Bytes a reader actually takes in.
 
@@ -247,16 +311,48 @@ def impact(term, docs):
     return 0
 
 
+def model_card(mid, docs):
+    """Everything the references say about one model, in one place.
+
+    Facts about a model are split across four files by design — limits, invocation, client failures,
+    cluster ceilings. That split is right and it makes retrieval cost four greps. This prints them
+    together so a runner can be written from one command.
+    """
+    print("What the references hold on %r\n" % mid)
+    hits = 0
+    for p in docs:
+        lines = [(i + 1, l.strip()) for i, l in enumerate(
+            open(p, encoding="utf-8", errors="replace").read().splitlines()) if mid in l]
+        if not lines:
+            continue
+        hits += 1
+        print("  %s" % rel(p))
+        for n, l in lines[:6]:
+            print("      %4d  %s" % (n, l[:150]))
+        if len(lines) > 6:
+            print("      ... %d more" % (len(lines) - 6))
+        print()
+    if not hits:
+        print("  nothing. If a runner calls it, that is a check_models finding.")
+        return 1
+    gaps = [f for f in check_models() if f[1] == mid]
+    for _, _, why in gaps:
+        print("  GAP: %s" % why)
+    return 1 if gaps else 0
+
+
 def main():
     docs = doc_files()
     if len(sys.argv) > 2 and sys.argv[1] == "--impact":
         return impact(sys.argv[2], docs)
+    if len(sys.argv) > 2 and sys.argv[1] == "--model":
+        return model_card(sys.argv[2], docs)
     report_touched = None
     if len(sys.argv) > 2 and sys.argv[1] == "--touched":
         report_touched = sys.argv[2:]
 
     findings = (check_links(docs) + check_orphans(docs) + check_structure()
-                + check_benchmarks() + check_canaries(docs))
+                + check_benchmarks() + check_models() + check_canaries(docs))
     advisories = check_size(docs)
     exc, missing_why = load_exceptions()
 

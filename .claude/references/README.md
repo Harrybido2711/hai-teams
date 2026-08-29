@@ -44,6 +44,12 @@ and proceeding anyway is the failure this table exists to prevent.
 
 Sizes are a cost hint for deciding what to open, not a checksum; they drift as the files grow.
 
+**Retrieving everything about one model costs four greps, by design** — limits, invocation, client
+failures and cluster ceilings live in four files, and that split is right. Do not pay it by hand:
+`python3 .claude/scripts/check_docs.py --model <id>` prints all four at once and names any gap.
+`--impact <term>` is the same idea for a term rather than a model, and is the work list before an
+edit rather than after one.
+
 ## Authority when two documents disagree
 
 1. **[shared-context.md](shared-context.md)** — first, because it decides *which* document is
