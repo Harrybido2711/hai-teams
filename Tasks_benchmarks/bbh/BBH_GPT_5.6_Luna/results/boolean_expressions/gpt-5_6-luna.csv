@@ -1,0 +1,1867 @@
+idx,question,gold_answer,model_response,final_answer,has_marker,score,config
+0,not ( True ) and ( True ) is,False,"`not (True)` evaluates to `False`.
+
+Then:
+
+`False and True` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+1,True and not not ( not False ) is,True,"Reasoning:
+
+- `False` negated is `True`: `not False = True`
+- Negating that twice gives `True`: `not not True = True`
+- Therefore, `True and True = True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+2,not True or False or ( False ) is,False,"Using logical precedence, evaluate `not` first:
+
+- `not True` = `False`
+- So the expression becomes: `False or False or False`
+- `False or False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+3,False or not ( True ) and False is,False,"Using standard logical precedence:
+
+1. \( \text{not True} = \text{False} \)
+2. \( \text{False and False} = \text{False} \)
+3. \( \text{False or False} = \text{False} \)
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+4,True or not False and True and False is,True,"Using standard logical precedence:
+
+1. `not False` = `True`
+2. `True and True and False` = `False`
+3. `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+5,False or not not not False and True is,True,"Apply the operators in order of precedence:
+
+1. `not False` = `True`
+2. `not not False` = `False`
+3. `not not not False` = `True`
+4. `True and True` = `True`
+5. `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+6,not True and ( False or True ) is,False,"`not True` is `False`.
+
+`False or True` is `True`.
+
+Therefore:
+
+`False and True` is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+7,True and not False or ( True ) is,True,"Reasoning:
+
+- `not False` is `True`.
+- `True and True` is `True`.
+- `True or True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+8,not True or ( False and True ) is,False,"Using standard logical precedence:
+
+1. `not True` = `False`
+2. `False and True` = `False`
+3. `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+9,not True or ( True or False ) is,True,"Using standard logical precedence:
+
+- `not True` = `False`
+- `(True or False)` = `True`
+- `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+10,False or ( False ) and not False is,False,"Using operator precedence:
+
+1. `not False` → `True`
+2. `(False) and True` → `False`
+3. `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+11,not False or True and False and False is,True,"Using standard Boolean precedence:
+
+1. `not False` = `True`
+2. `True and False and False` = `False`
+3. `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+12,not True or False or not not True is,True,"Using logical precedence, evaluate `not` before `or`:
+
+- `not True` = `False`
+- `not not True` = `True`
+- Therefore: `False or False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+13,True and True and False and not True is,False,"Evaluate `not` first:
+
+- `not True` = `False`
+- So the expression becomes: `True and True and False and False`
+- An `and` expression is `True` only if every value is `True`; since there are `False` values, the result is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+14,not not True and not True or True is,True,"Using standard logical precedence (`not` before `and`, and `and` before `or`):
+
+- `not not True` = `True`
+- `not True` = `False`
+- `True and False` = `False`
+- `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+15,not not not ( True and False ) is,True,"First evaluate the parentheses:
+
+- `True and False` = `False`
+- `not False` = `True`
+- `not True` = `False`
+- `not False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+16,not not False and not not not False is,False,"Evaluate each part:
+
+- `not not False` → `False`
+- `not not not False` → `True`
+
+Then:
+
+`False and True` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+17,( True and not True and False ) is,False,"Evaluate the expression step by step:
+
+- `not True` is `False`
+- `True and False` is `False`
+- `False and False` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+18,False and False and False or not False is,True,"Using standard logical precedence:
+
+1. `not False` is `True`.
+2. `False and False and False` is `False`.
+3. `False or True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+19,False or ( False and not False ) is,False,"Evaluate the expression step by step:
+
+- `not False` = `True`
+- `False and True` = `False`
+- `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+20,True and False or ( not True ) is,False,"Using standard precedence rules:
+
+1. `True and False` evaluates to `False`.
+2. `not True` evaluates to `False`.
+3. `False or False` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+21,not not ( True ) and not False is,True,"`not not True` evaluates to `True` because applying `not` twice returns the original value.
+
+`not False` evaluates to `True`.
+
+Therefore:
+
+`True and True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+22,not False or ( True ) and True is,True,"Using standard operator precedence:
+
+1. `not False` → `True`
+2. `(True) and True` → `True`
+3. `True or True` → `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+23,not ( True ) or False or True is,True,"Reasoning:
+
+- `not (True)` evaluates to `False`.
+- So the expression begins as `False or False or True`.
+- However, the final `is` operator is incomplete because it requires another value to compare with, such as `True is False`.
+
+Therefore, as written, the expression is syntactically invalid.
+
+Final Answer: The expression is incomplete and causes a syntax error because it ends with `is`.",The expression is incomplete and causes a syntax error because it ends with `is`.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+24,( True and not not not True ) is,False,"The expression is evaluated from the inside out:
+
+- `not True` is `False`
+- `not False` is `True`
+- `not True` is `False`
+- `True and False` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+25,( False or not False or False ) is,True,"Using the order of operations, evaluate `not` first:
+
+- `not False` = `True`
+- So the expression becomes: `False or True or False`
+- Since one part is `True`, the whole `or` expression is `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+26,False and False or True and not False is,True,"Using standard logical precedence:
+
+1. `not False` = `True`
+2. `False and False` = `False`
+3. `True and True` = `True`
+4. `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+27,not not False or not False or True is,True,"Reasoning:
+
+- `not False` is `True`
+- `not not False` is therefore `False`
+- The expression becomes: `False or True or True`
+- Since at least one value is `True`, the result is `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+28,True and not True or False or True is,True,"Using standard Boolean precedence (`not` before `and`, and `and` before `or`):
+
+1. `not True` = `False`
+2. `True and False` = `False`
+3. `False or False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+29,not False or True and False or False is,True,"Using standard logical precedence (`not` before `and` before `or`):
+
+1. `not False` = `True`
+2. `True and False` = `False`
+3. The expression becomes `True or False or False`
+4. `True or False or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+30,False and ( not False ) or False is,False,"Using operator precedence:
+
+1. `not False` evaluates to `True`.
+2. `False and True` evaluates to `False`.
+3. `False or False` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+31,not not not not ( not False ) is,True,"Reasoning:
+
+- `not False` is `True`.
+- Applying `not` four more times preserves the value because an even number of negations cancel out:
+  - `not True` → `False`
+  - `not False` → `True`
+  - `not True` → `False`
+  - `not False` → `True`
+
+Final Answer: **True**",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+32,( True ) and True or not True is,True,"Parentheses first: `(True)` is `True`.
+
+Then evaluate `and`:
+- `True and True` → `True`
+
+Evaluate `not`:
+- `not True` → `False`
+
+Finally, evaluate `or`:
+- `True or False` → `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+33,not True or False and False and False is,False,"Using standard logical precedence:
+
+1. `not` is evaluated first: `not True` → `False`
+2. `and` is evaluated next: `False and False and False` → `False`
+3. `or` is evaluated last: `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+34,not not not not not not not False is,True,"There are 7 occurrences of “not.” Since negating `False` an odd number of times yields `True`:
+
+`not not not not not not not False = True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+35,not True or not False and not False is,True,"Using standard logical precedence, **not** is evaluated first, then **and**, then **or**:
+
+- not True = False
+- not False = True
+- not False = True
+- False or (True and True) = False or True = True
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+36,False or True or False and not False is,True,"Using standard logical precedence:
+
+1. `not False` = `True`
+2. `False and True` = `False`
+3. `False or True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+37,not ( True or True ) and False is,False,"Reasoning:
+1. `True or True` evaluates to `True`.
+2. `not True` evaluates to `False`.
+3. `False and False` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+38,not not not not True and not True is,False,"The `not` operators are evaluated first:
+
+- `not not not not True` → `True` (four negations)
+- `not True` → `False`
+- `True and False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+39,( False ) or False and not True is,False,"Using operator precedence:
+
+1. `not True` = `False`
+2. `False and False` = `False`
+3. `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+40,( False and True or not False ) is,True,"Using standard logical precedence:
+
+1. `not False` is `True`.
+2. `False and True` is `False`.
+3. `False or True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+41,not not not ( False and True ) is,True,"First evaluate the parentheses:
+
+- `False and True` is `False`.
+- Applying `not` three times:
+  - `not False` → `True`
+  - `not True` → `False`
+  - `not False` → `True`
+
+Final Answer: **True**",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+42,not not True and not False or True is,True,"Reasoning:
+
+- `not True` is `False`, so `not not True` is `True`.
+- `not False` is `True`.
+- Thus the expression becomes: `True and True or True`.
+- `True and True` is `True`, and `True or True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+43,not False or True and not not True is,True,"Using standard Boolean precedence (`not` before `and` before `or`):
+
+- `not False` = `True`
+- `not not True` = `True`
+- So the expression becomes `True or (True and True)`
+- `True and True` = `True`
+- `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+44,True or True or not False or False is,True,"Using standard logical precedence, evaluate **not** first:
+
+- **not False = True**
+- The expression becomes: **True or True or True or False**
+- Any expression joined by **or** is true if at least one part is true.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+45,( not False and False and False ) is,False,"The expression is evaluated as:
+
+- `not False` → `True`
+- `True and False and False` → `False`
+
+Final Answer: `False`",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+46,( ( not True ) or True ) is,True,"`not True` is `False`. Then:
+
+`False or True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+47,not not ( not False or True ) is,True,"Inside the parentheses:
+
+- `not False` is `True`
+- `True or True` is `True`
+
+Then:
+
+- `not not True` is `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+48,not True or False or ( True ) is,True,"Using standard logical precedence:
+
+1. `not True` = `False`
+2. The expression becomes `False or False or True`
+3. `False or False` = `False`
+4. `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+49,False or ( not False ) and True is,True,"Using logical operator precedence:
+
+1. `not False` = `True`
+2. `True and True` = `True`
+3. `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+50,not False or False or ( False ) is,True,"Reasoning:
+- `not False` evaluates to `True`.
+- The expression becomes `True or False or False`.
+- Since an `or` expression is `True` if at least one part is `True`, the result is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+51,not not False or False and not True is,False,"Apply the operators in precedence order:
+
+1. `not not False` → `False`
+2. `not True` → `False`
+3. `False and False` → `False`
+4. `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+52,True or ( ( not True ) ) is,True,"Evaluate the expression:
+
+- `not True` is `False`.
+- So `True or False` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+53,not False and not False and not False is,True,"“not False” is True. Therefore:
+
+True and True and True = True
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+54,( False ) and not False and True is,False,"Reasoning:
+
+- `(False)` evaluates to `False`.
+- `not False` evaluates to `True`.
+- The expression becomes `False and True and True`.
+- Since `and` requires all operands to be true, the result is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+55,( True ) and False or not False is,True,"`not False` is `True`.
+
+So the expression becomes:
+
+`True and False or True`
+
+Evaluate `and` first:
+
+`True and False` → `False`
+
+Then:
+
+`False or True` → `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+56,( not False and ( True ) ) is,True,"Reasoning:
+- `not False` evaluates to `True`.
+- `(True)` is `True`.
+- `True and True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+57,False or not ( False ) or True is,True,"Using standard logical precedence, evaluate `not` before `or`:
+
+- `not (False)` = `True`
+- `False or True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+58,True and not False and not not True is,True,"Using standard logical precedence:
+
+- `True` is true.
+- `not False` is `True`.
+- `not not True` is `True`.
+
+Therefore, `True and True and True` is **True**.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+59,not True and True and True or False is,False,"Using the order of operations (`not` before `and` before `or`):
+
+1. `not True` → `False`
+2. `False and True and True` → `False`
+3. `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+60,not not ( False and not True ) is,False,"Evaluate from the inside out:
+
+1. `not True` is `False`.
+2. `False and False` is `False`.
+3. `not False` is `True`.
+4. `not True` is `False`.
+
+Final Answer: `False`",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+61,True or not ( ( False ) ) is,True,"The statement inside the parentheses is **False**. Negating it gives **not False = True**.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+62,False or not True or False or False is,False,"Using standard logical precedence, evaluate **not** first:
+
+- **not True** = False
+- So the expression becomes: **False or False or False or False**
+- **False or False** = False
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+63,False or not not True or not False is,True,"Apply `not` first:
+
+- `not not True` = `True`
+- `not False` = `True`
+
+So the expression becomes:
+
+`False or True or True`
+
+Since at least one value is `True`, the result is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+64,not ( True or True or False ) is,False,"Reasoning:
+- `True or True or False` evaluates to `True`.
+- `not True` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+65,False or not not not not not False is,True,"Evaluate the repeated negations from right to left:
+
+- `not False` = `True`
+- `not True` = `False`
+- `not False` = `True`
+- `not True` = `False`
+- `not False` = `True`
+
+So the expression becomes:
+
+`False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+66,not ( False ) or not not True is,True,"`not False` evaluates to `True`.
+
+`not not True` evaluates to `True` because applying `not` twice returns the original value.
+
+Therefore:
+
+`True or True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+67,True and not False or False and False is,True,"Using standard logical precedence, **NOT** is evaluated first, then **AND**, then **OR**:
+
+- `not False` = `True`
+- `True and True` = `True`
+- `False and False` = `False`
+- `True or False` = `True`
+
+Final Answer: **True**",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+68,True or ( not ( True ) ) is,True,"The expression is:
+
+- `True`
+- `not True` is `False`
+- `True or False` evaluates to `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+69,( False or True and not True ) is,False,"Using the order of operations for Boolean expressions:
+
+1. `not True` is `False`
+2. `True and False` is `False`
+3. `False or False` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+70,False or not True and True or True is,True,"Apply the standard order of operations: **not**, then **and**, then **or**.
+
+1. `not True` = `False`
+2. `False and True` = `False`
+3. `False or False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+71,not not not not not not not True is,False,"Applying “not” seven times to True flips its value an odd number of times:
+
+True → False → True → False → True → False → True → False
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+72,( not False ) and False or True is,True,"The expression is evaluated in this order:
+
+1. `not False` → `True`
+2. `True and False` → `False`
+3. `False or True` → `True`
+
+Final Answer: `True`",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+73,False and False or not ( True ) is,False,"Using standard logical precedence (`not` before `and` before `or`):
+
+1. `not True` = `False`
+2. `False and False` = `False`
+3. `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+74,( not False or True ) and True is,True,"Reasoning:
+- `not False` evaluates to `True`.
+- `True or True` evaluates to `True`.
+- `True and True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+75,not ( False ) and ( False ) is,False,"`not False` evaluates to `True`.
+
+Then:
+
+`True and False` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+76,False or True and not not not False is,True,"Using standard precedence (`not` before `and` before `or`):
+
+1. `not not not False` = `True`
+2. `True and True` = `True`
+3. `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+77,( True ) and True and not True is,False,"Parentheses are evaluated first:
+
+- `(True)` → `True`
+- `not True` → `False`
+- `True and True and False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+78,( not True ) and True and False is,False,"Reasoning:
+
+- `not True` evaluates to `False`.
+- `False and True` evaluates to `False`.
+- `False and False` remains `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+79,( not not True and not False ) is,True,"Evaluate the expression step by step:
+
+- `not True` is `False`
+- `not not True` is therefore `True`
+- `not False` is `True`
+- `True and True` is `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+80,True and ( False ) or not False is,True,"Using standard precedence rules:
+
+1. Parentheses: `(False)` is `False`.
+2. `True and False` is `False`.
+3. `not False` is `True`.
+4. `False or True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+81,not not not False or False and False is,True,"Apply logical operator precedence: `not` first, then `and`, then `or`.
+
+- `not not not False` = `True`
+- `False and False` = `False`
+- `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+82,not not not False and True or False is,True,"Using standard Boolean precedence (`not` before `and`, and `and` before `or`):
+
+- `not False` → `True`
+- `not True` → `False`
+- `not False` → `True`
+- `True and True` → `True`
+- `True or False` → `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+83,True or ( True or not False ) is,True,"Using standard logical operators:
+
+- `not False` is `True`.
+- So, `(True or not False)` becomes `(True or True)`, which is `True`.
+- Therefore, `True or True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+84,not False or ( ( False ) ) is,True,"`not False` is `True`. Therefore:
+
+`True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+85,not not ( False and not False ) is,False,"Evaluate from the inside out:
+
+1. `not False` is `True`.
+2. `False and True` is `False`.
+3. `not not False` is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+86,not not not not True or not True is,True,"Apply `not` from right to left:
+
+- `not True` = `False`
+- `not False` = `True`
+- Four `not`s applied to `True` result in `True`
+- The expression becomes `True or False`
+- `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+87,False and not ( False or False ) is,False,"Evaluate the expression step by step:
+
+- \(False \text{ or } False = False\)
+- \(\text{not } False = True\)
+- \(False \text{ and } True = False\)
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+88,True and True and True or not False is,True,"Using standard logical precedence, evaluate `not` first, then `and`, then `or`:
+
+- `not False` = `True`
+- `True and True and True` = `True`
+- `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+89,False or not False or True and True is,True,"Using standard logical precedence (`not` before `and` before `or`):
+
+- `not False` = `True`
+- `True and True` = `True`
+- So the expression becomes `False or True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+90,not False and False and False or False is,False,"Using standard precedence (`not` before `and`, and `and` before `or`):
+
+- `not False` = `True`
+- `True and False and False` = `False`
+- `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+91,( False ) or not False or True is,True,"`not` has higher precedence than `or`.
+
+1. `not False` becomes `True`.
+2. The expression becomes `False or True or True`.
+3. Any `or` expression containing `True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+92,( not False ) or ( True ) is,True,"`not False` evaluates to `True`. Therefore:
+
+`True or True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+93,not not ( False or not True ) is,False,"Inside the parentheses:
+
+- `not True` is `False`
+- `False or False` is `False`
+- `not not False` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+94,False or not False or False or False is,True,"Apply **“not”** first:
+
+- **not False = True**
+- So the expression becomes: **False or True or False or False**
+- Since an **or** expression is true if at least one part is true, the result is **True**.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+95,False or not False and ( False ) is,False,"Using standard logical precedence:
+
+1. `not False` is `True`.
+2. `True and False` is `False`.
+3. `False or False` is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+96,False or ( False ) or not True is,False,"Reasoning:
+- `False` is false.
+- `(False)` is also false.
+- `not True` is false.
+- Therefore, `False or False or False` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+97,not True or False and True and True is,False,"Using standard logical precedence:
+
+1. `not True` = `False`
+2. `False and True and True` = `False`
+3. `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+98,True or ( True or not True ) is,True,"Using standard logical precedence:
+
+- `not True` = `False`
+- `True or False` = `True`
+- `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+99,True and not False and True or True is,True,"`not` is evaluated first, then `and`, then `or`:
+
+- `not False` = `True`
+- `True and True and True` = `True`
+- `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+100,False or not False or not not True is,True,"Apply `not` first:
+
+- `not False` = `True`
+- `not not True` = `True`
+
+So the expression becomes:
+
+`False or True or True`
+
+Since at least one value is `True`, the result is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+101,( True or not False ) or False is,True,"- `not False` is `True`.
+- `True or True` is `True`.
+- `True or False` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+102,False or not ( True ) and True is,False,"Apply the operators in order:
+
+1. `not True` = `False`
+2. `False and True` = `False`
+3. `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+103,not False and not True and not False is,False,"Applying `not` first:
+
+- `not False` = `True`
+- `not True` = `False`
+- `not False` = `True`
+
+So:
+
+`True and False and True` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+104,False and ( True and not False ) is,False,"First, evaluate the expression inside the parentheses:
+
+- `not False` is `True`
+- `True and True` is `True`
+- `False and True` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+105,not False or ( False ) or True is,True,"Reasoning:
+
+- `not False` is `True`.
+- The expression becomes `True or False or True`.
+- Since at least one part of an `or` expression is `True`, the result is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+106,False and not ( False and True ) is,False,"First evaluate the parentheses:
+
+- `False and True` = `False`
+- `not False` = `True`
+- `False and True` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+107,( True or not not not False ) is,True,"The expression is:
+
+- `not False` = `True`
+- `not True` = `False`
+- `not False` = `True`
+- `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+108,False and ( False or not False ) is,False,"Evaluate the expression step by step:
+
+- `not False` is `True`
+- `False or True` is `True`
+- `False and True` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+109,False or not True or True and False is,False,"Using standard logical precedence, **NOT** is evaluated first, then **AND**, then **OR**:
+
+1. `not True` = `False`
+2. `True and False` = `False`
+3. `False or False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+110,True and not True or True and True is,True,"Using standard logical precedence (`not` before `and`, and `and` before `or`):
+
+- `not True` = `False`
+- `True and False` = `False`
+- `True and True` = `True`
+- `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+111,( not False or ( True ) ) is,True,"`not False` evaluates to `True`. Therefore:
+
+`(not False or True) = (True or True) = True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+112,( ( not ( True ) ) ) is,False,"The expression is:
+
+- `True`
+- `not True` evaluates to `False`
+- The extra parentheses do not change the value.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+113,False and False and not ( False ) is,False,"`not (False)` is `True`.
+
+So the expression becomes:
+
+`False and False and True`
+
+Since an `and` expression is `False` if any part is `False`, the result is:
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+114,not True and not True and not True is,False,"`not True` evaluates to `False`.
+
+So:
+
+`not True and not True and not True`  
+`= False and False and False`  
+`= False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+115,not ( True or False ) or True is,True,"`True or False` evaluates to `True`.  
+`not True` evaluates to `False`.  
+Then `False or True` evaluates to `True`.
+
+However, the trailing `is` operator is incomplete, so the entire expression is not valid syntax.
+
+Final Answer: Syntax error due to the incomplete trailing `is`.",Syntax error due to the incomplete trailing `is`.,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+116,False or ( True ) or not True is,True,"Using standard logical precedence, **not** is evaluated first:
+
+- **not True = False**
+- So the expression becomes: **False or True or False**
+- Since one part is **True**, the whole expression is **True**
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+117,False or False and False or not True is,False,"Using operator precedence:
+
+1. `not True` = `False`
+2. `False and False` = `False`
+3. `False or False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+118,True or False or not True or False is,True,"Assuming the expression is:
+
+**True OR False OR NOT True OR False**
+
+Using standard logical precedence, **NOT True = False**, so it becomes:
+
+**True OR False OR False OR False = True**
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+119,not True and ( True and True ) is,False,"Reasoning:
+- `True and True` evaluates to `True`.
+- `not True` evaluates to `False`.
+- Therefore, `False and True` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+120,not True and True or True and False is,False,"Using the precedence rules `not` → `and` → `or`:
+
+- `not True` = `False`
+- `False and True` = `False`
+- `True and False` = `False`
+- `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+121,not False or ( True or True ) is,True,"Using logical precedence:
+
+- `not False` = `True`
+- `True or True` = `True`
+- Therefore, `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+122,not ( False or ( False ) ) is,True,"Evaluate the expression inside the parentheses:
+
+- `False or False` is `False`
+- `not False` is `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+123,not ( True or True ) and True is,False,"Reasoning:
+- `True or True` evaluates to `True`.
+- `not True` evaluates to `False`.
+- `False and True` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+124,False or not False or True or True is,True,"Apply `not` first:
+
+- `not False` = `True`
+- Expression becomes: `False or True or True or True`
+- Any `or` expression containing `True` is `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+125,False or False and not not not False is,False,"The expression is:
+
+`False or (False and not not not False)`
+
+1. `not False` → `True`
+2. `not True` → `False`
+3. `not False` → `True`
+4. `False and True` → `False`
+5. `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+126,not ( True or False or True ) is,False,"Evaluate the expression inside the parentheses first:
+
+- `True or False or True` = `True`
+- `not True` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+127,( False ) or not True and False is,False,"Using standard operator precedence:
+
+1. `not True` becomes `False`.
+2. `False and False` becomes `False`.
+3. `False or False` becomes `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+128,True and True and not not not False is,True,"Evaluate the negations first:
+
+- `not False` = `True`
+- `not not False` = `False`
+- `not not not False` = `True`
+
+Then:
+
+`True and True and True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+129,( True ) or True and not True is,True,"Parentheses are evaluated first, then `not`, then `and`, then `or`:
+
+- `(True)` → `True`
+- `not True` → `False`
+- `True and False` → `False`
+- `True or False` → `True`
+
+Final Answer: `True`",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+130,False and False and not True and False is,False,"Using the order of operations, evaluate **not True** first:
+
+- **not True** = False
+- So the expression becomes: **False and False and False and False**
+- Any expression joined by **and** is False if at least one part is False.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+131,( True ) and not True or True is,True,"Reasoning:
+
+1. `(True)` evaluates to `True`.
+2. `not True` evaluates to `False`.
+3. `True and False` evaluates to `False`.
+4. `False or True` evaluates to `True`.
+
+Final Answer: `True`",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+132,not not not True and False and False is,False,"Reasoning:
+
+- `not True` is `False`.
+- `not not True` is `True`.
+- `not not not True` is therefore `False`.
+- `False and False and False` evaluates to `False`.
+- However, the expression ends with `is`, which requires another value to compare against, so the complete expression is invalid syntax.
+
+Final Answer: The expression is incomplete and causes a syntax error; without the trailing `is`, it evaluates to `False`.","The expression is incomplete and causes a syntax error; without the trailing `is`, it evaluates to `False`.",True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+133,False and False and not not not True is,False,"Evaluate the `not` operators first:
+
+- `not True` = `False`
+- `not False` = `True`
+- `not True` = `False`
+
+So the expression becomes:
+
+`False and False and False`
+
+Since an `and` expression is only true when all parts are true, the result is false.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+134,False and False or False or not True is,False,"Using standard operator precedence, `not` is evaluated first, then `and`, then `or`:
+
+- `not True` = `False`
+- `False and False` = `False`
+- `False or False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+135,False or ( not ( False ) ) is,True,"Evaluate the expression:
+
+- `not(False)` is `True`.
+- `False or True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+136,not True and True and not not False is,False,"Using standard logical precedence (`not` before `and`):
+
+- `not True` = `False`
+- `not not False` = `False`
+- So the expression becomes `False and True and False`
+- `False and anything` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+137,( False ) and ( not False ) is,False,"`not False` evaluates to `True`. Therefore:
+
+`False and True` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+138,( not True ) and True or True is,True,"The expression is evaluated in this order:
+
+1. `not True` → `False`
+2. `False and True` → `False`
+3. `False or True` → `True`
+
+Final Answer: `True`",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+139,False and True and ( not False ) is,False,"Evaluate the expression:
+
+- `not False` is `True`
+- `False and True and True` is `False` because `False and anything` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+140,( ( True ) ) or not False is,True,"The expression is:
+
+- `(True)` evaluates to `True`.
+- `not False` evaluates to `True`.
+- `True or True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+141,not True and False or False or True is,True,"Using operator precedence (`not` before `and` before `or`):
+
+- `not True` → `False`
+- `False and False` → `False`
+- `False or False` → `False`
+- `False or True` → `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+142,True and not True and True and True is,False,"The expression is:
+
+- `True`
+- `not True` = `False`
+- `True`
+- `True`
+
+Since all parts are joined by `and`, and one part is `False`, the whole expression is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+143,( True or True or not False ) is,True,"Evaluate the expression:
+
+- `not False` is `True`
+- So the expression becomes `True or True or True`
+- An OR expression is `True` if at least one part is true.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+144,True or not False and True or True is,True,"Using standard logical precedence (`not` before `and`, and `and` before `or`):
+
+- `not False` = `True`
+- `True and True` = `True`
+- `True or True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+145,( not ( False ) or False ) is,True,"`not False` evaluates to `True`.  
+Then `True or False` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+146,True and not ( True or False ) is,False,"Evaluate the expression step by step:
+
+- \( \text{True} \text{ or } \text{False} = \text{True}\)
+- \( \text{not True} = \text{False}\)
+- \( \text{True} \text{ and } \text{False} = \text{False}\)
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+147,not ( False and True ) and True is,True,"First evaluate the parentheses:
+
+- `False and True` is `False`.
+- `not False` is `True`.
+- `True and True` is `True`.
+
+Final Answer: `True`",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+148,not ( True and True ) or False is,False,"Evaluate the expression step by step:
+
+1. `True and True` = `True`
+2. `not True` = `False`
+3. `False or False` = `False`
+
+Final Answer: `False`",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+149,False or not True and not not False is,False,"Using standard logical precedence (`not` before `and` before `or`):
+
+- `not True` = `False`
+- `not not False` = `False`
+- `False and False` = `False`
+- `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+150,not True and False or False and False is,False,"Using operator precedence (`not` before `and` before `or`):
+
+- `not True` → `False`
+- `False and False` → `False`
+- `False and False` → `False`
+- `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+151,not True or True and False or False is,False,"Using operator precedence (`not` first, then `and`, then `or`):
+
+- `not True` → `False`
+- `True and False` → `False`
+- So the expression becomes: `False or False or False`
+- Result: `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+152,( not ( False ) and False ) is,False,"Evaluate the expression step by step:
+
+- `not False` is `True`
+- `True and False` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+153,False or ( True and not True ) is,False,"Evaluate the expression step by step:
+
+- `not True` is `False`
+- `True and False` is `False`
+- `False or False` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+154,not False and not True or not True is,False,"Using standard logical precedence (`not` before `and`, and `and` before `or`):
+
+- `not False` = `True`
+- `not True` = `False`
+- `not True` = `False`
+- So: `(True and False) or False`
+- `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+155,( False or not not not False ) is,True,"Evaluate the expression from the inside out:
+
+- `not False` = `True`
+- `not True` = `False`
+- `not False` = `True`
+
+So:
+
+`False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+156,( not False ) or True and False is,True,"Using standard logical precedence:
+
+1. `not False` is `True`.
+2. `True and False` is `False`.
+3. `True or False` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+157,( not not True ) or not False is,True,"Evaluate the expression step by step:
+
+- `not True` is `False`
+- `not not True` is therefore `True`
+- `not False` is `True`
+- `True or True` is `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+158,True or not ( ( True ) ) is,True,"The expression inside the parentheses is `True`. Negating it with “not” gives `False`.
+
+Final Answer: False",False,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+159,( False ) and False or not False is,True,"First evaluate the parentheses:
+
+- `(False) and False` → `False`
+- `not False` → `True`
+- `False or True` → `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+160,not False and True or ( True ) is,True,"In Python, `not` is evaluated first, then `and`, then `or`:
+
+- `not False` → `True`
+- `True and True` → `True`
+- `True or True` → `True`
+
+However, the trailing `is` is incomplete because it needs another value to compare against. Therefore, as written, the expression is invalid syntax.
+
+Final Answer: Invalid syntax بسبب the incomplete `is`; without it, the result is `True`.","Invalid syntax بسبب the incomplete `is`; without it, the result is `True`.",True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+161,True or not not ( not False ) is,True,"Evaluate from the inside out:
+
+- `not False` = `True`
+- `not not True` = `True`
+- `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+162,False and not True and False and True is,False,"Apply `not` first:
+
+- `not True` = `False`
+- So the expression becomes: `False and False and False and True`
+- An `and` expression is `False` if any term is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+163,not not True and True and not True is,False,"Using standard logical precedence, `not` is evaluated before `and`:
+
+- `not not True` = `True`
+- `not True` = `False`
+- Therefore: `True and True and False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+164,not False or not ( not False ) is,True,"Reasoning:
+
+- `not False` is `True`.
+- Therefore, `not (not False)` is `not True`, which is `False`.
+- So the expression becomes `True or False`, which is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+165,not not ( True ) or not True is,True,"`not not (True) or not True`
+
+1. `not True` is `False`.
+2. Therefore, `not not True` is `True`.
+3. `not True` is `False`.
+4. So the expression becomes `True or False`, which is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+166,( True and not True and True ) is,False,"The expression is evaluated as:
+
+- `not True` → `False`
+- `True and False and True` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+167,True or False or not True or True is,True,"The expression is:
+
+**True or False or not True or True**
+
+First, **not True = False**. So it becomes:
+
+**True or False or False or True**
+
+Since an `or` expression is true if at least one part is true, the result is **True**.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+168,not True or True and False and False is,False,"Using operator precedence:
+
+1. `not True` → `False`
+2. `True and False and False` → `False`
+3. `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+169,True and not not not not not True is,False,"There are five “not” operators before the second `True`. Since five is odd:
+
+- `not True` = `False`
+- Applying the remaining pairs of `not` leaves it as `False`
+- `True and False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+170,not True and ( False ) and False is,False,"Reasoning: `not True` evaluates to `False`. However, the expression ends with `False is`, and the `is` operator requires another value to compare with. Therefore, the expression is incomplete and causes a syntax error.
+
+Final Answer: SyntaxError (incomplete expression after `is`)",SyntaxError (incomplete expression after `is`),True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+171,False and False or not True and False is,False,"Using standard precedence (`not` before `and`, and `and` before `or`):
+
+- `not True` = `False`
+- `False and False` = `False`
+- `False and False` = `False`
+- Therefore, `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+172,True or False and not True and False is,True,"Using standard logical precedence:
+
+1. **not** is evaluated first:  
+   `not True` = `False`
+2. **and** is evaluated next:  
+   `False and False and False` = `False`
+3. **or** is evaluated last:  
+   `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+173,not ( False or False or True ) is,False,"Inside the parentheses:
+
+- `False or False` is `False`
+- `False or True` is `True`
+- `not True` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+174,not False or True or True and False is,True,"Using standard logical precedence (`not` before `and`, and `and` before `or`):
+
+- `not False` = `True`
+- `True and False` = `False`
+- So the expression becomes `True or True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+175,not False and False or False or False is,False,"Using standard operator precedence (`not` before `and` before `or`):
+
+- `not False` → `True`
+- `True and False` → `False`
+- `False or False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+176,( not True ) and ( False ) is,False,"`not True` evaluates to `False`. Then:
+
+`False and False` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+177,True and not not False and not False is,False,"Evaluate the negations first:
+
+- `not False` = `True`
+- `not not False` = `not True` = `False`
+
+So the expression becomes:
+
+`True and False and True`
+
+Since an `and` expression is only true if all parts are true, the result is **False**.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+178,not ( not not False ) and True is,True,"Reasoning:
+
+- `not False` is `True`.
+- `not not False` is therefore `False`.
+- `not (not not False)` becomes `not False`, which is `True`.
+- `True and True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+179,not ( not False ) and not False is,False,"Evaluate each part:
+
+- `not False` is `True`
+- `not (not False)` is `not True`, which is `False`
+- The other `not False` is `True`
+- Therefore: `False and True` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+180,False or True and not False or True is,True,"Using standard logical precedence:
+
+1. `not False` = `True`
+2. `True and True` = `True`
+3. `False or True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+181,( not not not True and True ) is,False,"Evaluate the `not` operators from the inside out:
+
+- `not True` = `False`
+- `not False` = `True`
+- `not True` = `False`
+
+So the expression becomes:
+
+`False and True`
+
+Since `False and True` is `False`:
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+182,False and not ( True ) or True is,True,"Reasoning:
+
+1. `not (True)` evaluates to `False`.
+2. `False and False` evaluates to `False`.
+3. `False or True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+183,( not True and False or True ) is,True,"Evaluate the expression step by step:
+
+- `not True` → `False`
+- `False and False` → `False`
+- `False or True` → `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+184,not ( not not True ) or False is,False,"Reasoning:
+
+- `not True` is `False`.
+- `not not True` is therefore `True`.
+- `not (not not True)` becomes `not True`, which is `False`.
+- `False or False` is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+185,( not False ) or ( False ) is,True,"`not False` is `True`.
+
+So:
+
+`(not False) or (False)` = `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+186,not not not False and True and False is,False,"Apply `not` first, from right to left:
+
+- `not False` → `True`
+- `not True` → `False`
+- `not False` → `True`
+
+Then evaluate the `and` operations:
+
+`True and True and False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+187,True or not True or not not True is,True,"Apply “not” first:
+
+- **True** = True  
+- **not True** = False  
+- **not not True** = True  
+
+So the expression becomes:
+
+**True or False or True**
+
+Since at least one part is True, the whole expression is **True**.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+188,not False or not not False and False is,True,"Using standard logical precedence (`not` before `and`, and `and` before `or`):
+
+- `not False` = `True`
+- `not not False` = `False`
+- `False and False` = `False`
+- `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+189,not False and ( False or False ) is,False,"Reasoning:
+- `not False` evaluates to `True`.
+- `False or False` evaluates to `False`.
+- `True and False` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+190,False and True or ( not False ) is,True,"Using standard logical precedence:
+
+1. `False and True` evaluates to `False`.
+2. `not False` evaluates to `True`.
+3. `False or True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+191,False and not False and ( False ) is,False,"Using standard logical precedence:
+
+1. `not False` is `True`.
+2. The expression becomes `False and True and False`.
+3. An `and` expression is `True` only if all parts are `True`.
+
+Therefore, the expression is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+192,not ( ( False and True ) ) is,True,"First, evaluate the parentheses:
+
+- `False and True` is `False` because both values must be true for `and` to be true.
+- `not False` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+193,False or ( not False ) and False is,False,"Using standard operator precedence:
+
+1. `not False` → `True`
+2. `True and False` → `False`
+3. `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+194,False and not False or False and True is,False,"Using standard operator precedence:
+
+1. `not False` = `True`
+2. `False and True` = `False`
+3. `False and True` = `False`
+4. `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+195,not False and not not True and True is,True,"- `not False` is `True`.
+- `not not True` is also `True`.
+- Therefore: `True and True and True` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+196,True and True or False and not True is,True,"Using standard Boolean operator precedence:
+
+1. `not True` = `False`
+2. `True and True` = `True`
+3. `False and False` = `False`
+4. `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+197,not True or False and True or False is,False,"Using standard Boolean precedence (`not` before `and` before `or`):
+
+- `not True` → `False`
+- `False and True` → `False`
+- So the expression becomes `False or False or False`
+- `False or False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+198,True or False or not True and True is,True,"Using standard logical precedence, **not** is evaluated first, then **and**, then **or**:
+
+- **not True** = False  
+- **False and True** = False  
+- **True or False or False** = True  
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+199,False or False or not True or False is,False,"Evaluate `not` first:
+
+- `not True` = `False`
+- Expression becomes: `False or False or False or False`
+- Since every value is `False`, the result is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+200,False or False or True and not False is,True,"Apply the operators in order of precedence:
+
+1. `not False` = `True`
+2. `True and True` = `True`
+3. `False or False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+201,( not ( True or False ) ) is,False,"First, evaluate the expression inside the parentheses:
+
+- `True or False` is `True`.
+- `not True` is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+202,not False and False or True and True is,True,"Using standard operator precedence (`not` before `and`, and `and` before `or`):
+
+- `not False` = `True`
+- `True and False` = `False`
+- `True and True` = `True`
+- `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+203,True and False or ( not False ) is,True,"Using standard logical precedence:
+
+1. `True and False` = `False`
+2. `not False` = `True`
+3. `False or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+204,not False or not not not not True is,True,"Evaluate each part:
+
+- `not False` = `True`
+- `not not not not True` has four negations, so it remains `True`
+- `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+205,True and ( not ( True ) ) is,False,"`not (True)` evaluates to `False`.
+
+Then:
+
+`True and False` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+206,True and False and not True or False is,False,"Using standard Boolean precedence (`not` before `and`, and `and` before `or`):
+
+- `not True` = `False`
+- `True and False and False` = `False`
+- `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+207,( ( not False ) ) and True is,True,"`not False` evaluates to `True`. Therefore:
+
+`True and True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+208,not ( True ) and ( False ) is,False,"The expression is evaluated as:
+
+- `not True` → `False`
+- `False and False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+209,True or not False and False and False is,True,"Using standard Boolean precedence:
+
+1. **not False** = **True**
+2. **True and False and False** = **False**
+3. **True or False** = **True**
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+210,True and not ( False or False ) is,True,"First evaluate the parentheses:
+
+- `False or False` = `False`
+- `not False` = `True`
+- `True and True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+211,not True and False or False and True is,False,"Using standard operator precedence (`not` before `and` before `or`):
+
+- `not True` → `False`
+- `False and False` → `False`
+- `False and True` → `False`
+- `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+212,not True or not False and not True is,False,"Using operator precedence, `not` is evaluated first, then `and`, then `or`:
+
+- `not True` → `False`
+- `not False` → `True`
+- `not True` → `False`
+- `True and False` → `False`
+- `False or False` → `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+213,not True or False or True and True is,True,"Using standard logical precedence (`not` before `and` before `or`):
+
+1. `not False` = `True`
+2. `True and True` = `True`
+3. `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+214,not True and True and False and True is,False,"`not True` evaluates to `False`.
+
+So the expression becomes:
+
+`False and True and False and True`
+
+Since `and` is `False` if any value is `False`, the result is:
+
+Final Answer: `False`",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+215,False and False or not True and True is,False,"Using standard logical precedence (`not` before `and`, and `and` before `or`):
+
+- `False and False` = `False`
+- `not True` = `False`
+- `False and True` = `False`
+- `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+216,( not False or False and True ) is,True,"Using operator precedence, evaluate `not` first, then `and`, then `or`:
+
+- `not False` → `True`
+- `False and True` → `False`
+- `True or False` → `True`
+
+Final Answer: `True`",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+217,( True or False ) or not True is,True,"- \( \text{True} \text{ or } \text{False} = \text{True} \)
+- \( \text{not True} = \text{False} \)
+- \( \text{True} \text{ or } \text{False} = \text{True} \)
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+218,not not not ( False ) and False is,False,"Reasoning:
+- `not (False)` is `True`.
+- `not not (False)` is `False`.
+- `not not not (False)` is `True`.
+- `True and False` is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+219,not False and False and False and True is,False,"Using standard logical precedence, evaluate `not` first:
+
+- `not False` = `True`
+- `True and False and False and True` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+220,False and not True and True or False is,False,"Using the order of operations: `not` first, then `and`, then `or`.
+
+- `not True` = `False`
+- `False and False and True` = `False`
+- `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+221,( False or not False and False ) is,False,"Using standard operator precedence:
+
+1. `not False` = `True`
+2. `True and False` = `False`
+3. `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+222,False or ( False or not False ) is,True,"Evaluate the expression step by step:
+
+- `not False` is `True`.
+- So, `False or not False` becomes `False or True`, which is `True`.
+- Therefore, `False or (True)` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+223,not False or True or False and False is,True,"Using standard logical precedence (`not` before `and` before `or`):
+
+- `not False` = `True`
+- `False and False` = `False`
+- So the expression becomes `True or True or False`
+- `True or True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+224,True or ( not False ) or True is,True,"Reasoning:
+- `False` negated is `True`.
+- The expression becomes `True or True or True`.
+- An OR expression is `True` if at least one part is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+225,not False and False or True or False is,True,"Using operator precedence (`not` before `and` before `or`):
+
+- `not False` = `True`
+- `True and False` = `False`
+- `False or True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+226,False and not ( not not False ) is,False,"Evaluate from the inside out:
+
+- `not False` is `True`
+- `not not False` is therefore `False`
+- `not (not not False)` is `not False`, which is `True`
+- `False and True` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+227,not not ( not True ) or False is,False,"Evaluate from the inside out:
+
+- `not True` → `False`
+- `not (False)` → `True`
+- `not (True)` → `False`
+- `False or False` → `False`
+
+Final Answer: **False**",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+228,False and not True and True and False is,False,"Using standard precedence, evaluate `not` first:
+
+- `not True` = `False`
+- So the expression becomes: `False and False and True and False`
+- Since all terms are joined by `and`, the result is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+229,True or False and not ( True ) is,True,"Using standard logical precedence, evaluate `not` first, then `and`, then `or`:
+
+- `not(True)` = `False`
+- `False and False` = `False`
+- `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+230,not ( False ) and ( True ) is,True,"`not (False)` evaluates to `True`.
+
+Then:
+
+`True and True` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+231,False and not ( ( True ) ) is,False,"Evaluate the expression step by step:
+
+- `(True)` is `True`
+- `not (True)` is `False`
+- `False and False` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+232,not False or ( not not False ) is,True,"Using standard logical negation:
+
+- `not False` = `True`
+- `not not False` = `False`
+- Therefore, `True or False` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+233,( ( not False ) and False ) is,False,"First, `not False` is `True`.
+
+Then, `True and False` is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+234,True or False and not False and True is,True,"Using standard logical precedence:
+
+1. `not False` = `True`
+2. The expression becomes: `True or True and True`
+3. `and` is evaluated before `or`: `True and True` = `True`
+4. `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+235,( ( not True and True ) ) is,False,"`not True` is `False`. Then:
+
+`False and True` is `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+236,not ( False ) or not not False is,True,"Reasoning:
+
+- `not False` is `True`.
+- `not not False` is `False`.
+- Therefore, `True or False` is `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+237,not ( False or False and False ) is,True,"Using standard logical precedence, evaluate inside the parentheses first:
+
+- `False and False` is `False`
+- `False or False` is `False`
+- `not False` is `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+238,False and not ( not not True ) is,False,"`not True` is `False`, so `not not True` is `True`.
+
+Then:
+
+`not (not not True)` = `not True` = `False`
+
+Finally:
+
+`False and False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+239,False and False and not ( True ) is,False,"Evaluate the expression step by step:
+
+- `not (True)` is `False`
+- So the expression becomes: `False and False and False`
+- An `and` expression is `True` only if all parts are true.
+
+Final Answer: `False`",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+240,False or ( not False and False ) is,False,"Evaluate the expression step by step:
+
+1. `not False` = `True`
+2. `True and False` = `False`
+3. `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+241,False or ( not not not True ) is,False,"Evaluate the expression inside the parentheses:
+
+- `not True` = `False`
+- `not not True` = `True`
+- `not not not True` = `False`
+
+Therefore:
+
+`False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+242,( not False ) or not not False is,True,"First evaluate each part:
+
+- `not False` is `True`.
+- `not not False` is `not True`, which is `False`.
+- Therefore, `True or False` is `True`.
+
+Final Answer: **True**",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+243,not False and False and True or False is,False,"Reasoning:
+
+- `not False` is `True`.
+- `True and False and True` evaluates to `False`.
+- `False or False` evaluates to `False`.
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+244,True or not False and ( False ) is,True,"Using standard logical precedence:
+
+1. `not False` is `True`.
+2. The expression becomes `True and False`.
+3. `True and False` is `False`.
+
+Final Answer: False",False,True,0,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+245,( not ( False ) ) or False is,True,"`not False` evaluates to `True`.
+
+Then:
+
+`True or False` evaluates to `True`.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+246,True and not True or False and True is,False,"Using standard precedence (`not` before `and`, and `and` before `or`):
+
+- `not True` = `False`
+- `True and False` = `False`
+- `False and True` = `False`
+- `False or False` = `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+247,not ( not not not not False ) is,True,"Inside the parentheses, there are four consecutive “not” operators:
+
+- not False = True  
+- not True = False  
+- not False = True  
+- not True = False  
+
+The outer “not” changes False to True.
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+248,True and ( not True or False ) is,False,"Evaluate the expression step by step:
+
+- `not True` is `False`
+- `False or False` is `False`
+- `True and False` is `False`
+
+Final Answer: False",False,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42
+249,( not not not False or True ) is,True,"Applying the `not` operators first:
+
+- `not False` = `True`
+- `not True` = `False`
+- `not False` = `True`
+- `True or True` = `True`
+
+Final Answer: True",True,True,1,max_completion_tokens=16384;model=gpt-5.6-luna;reasoning_effort=low;seed=42

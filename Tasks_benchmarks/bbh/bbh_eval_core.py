@@ -16,10 +16,12 @@ A runner supplies only the two things that are actually model-specific: a client
 `call(prompt) -> str` function.
 """
 
+import concurrent.futures
 import csv
 import json
 import os
 import re
+import threading
 import time
 
 # Paths are resolved from THIS FILE, never from the cwd. A runner lives in <bbh>/BBH_<Slot>/ while
@@ -302,7 +304,7 @@ def load_checkpoint(out_path, config, verbose=True):
 
 
 def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=True, limit=0,
-              config=None, per_row_config=None, save_every=20, resume=True):
+              config=None, per_row_config=None, save_every=20, resume=True, workers=1):
     """Drive `call(prompt) -> str` over the requested tasks and write results per task.
 
     A failed call yields `""` for that ITEM and the task continues. The old runners let a `None`
@@ -331,6 +333,53 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
                     fh.write(json.dumps(r, ensure_ascii=False) + "\n")
 
         records = list(done.values())
+        lock = threading.Lock()
+
+        def one_item(i, ex):
+            q, gold = ex["input"], ex["target"]
+            try:
+                resp = call(PROMPT.format(question=q))
+            except Exception as e:  # never let one item take the task down
+                if verbose:
+                    print(f"[{task}#{i}] call failed: {e}", flush=True)
+                resp = ""
+            resp = resp if isinstance(resp, str) else ""
+            row_cfg = dict(config or {})
+            if per_row_config:
+                row_cfg.update(per_row_config() or {})
+            return {
+                "idx": i, "question": q, "gold_answer": gold,
+                "model_response": resp,
+                "final_answer": extract_final_answer(resp),
+                "has_marker": has_marker(resp),
+                "score": score_response(resp, gold, q),
+                "config": config_string(row_cfg),
+            }
+
+        todo = [(i, ex) for i, ex in enumerate(examples) if i not in done]
+        if workers > 1:
+            # 5 concurrent request streams is this project's standing limit and a measured fix,
+            # not a convention (`.claude/references/quest-cluster.md`). Concurrency does not raise
+            # the requests-per-DAY total — that stays at one call per item — it only changes how
+            # fast they are spent, so the RPD ceiling that broke DocVQA is unaffected by this.
+            with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
+                futures = [pool.submit(one_item, i, ex) for i, ex in todo]
+                for k, fut in enumerate(concurrent.futures.as_completed(futures), 1):
+                    with lock:
+                        records.append(fut.result())
+                        if save_every and k % save_every == 0:
+                            flush(records)
+                            if verbose:
+                                print(f"  [{task}] {len(records)}/{len(examples)}", flush=True)
+            records.sort(key=lambda r: r["idx"])
+            s_ = write_task_results(model_dir, task, model_id, records, config=config)
+            summaries.append(s_)
+            if verbose:
+                print(f"{task}: {s_['average_score']}  (n={s_['n']}, no_marker={s_['no_marker']}, "
+                      f"empty={s_['empty_response']})", flush=True)
+            write_overall(model_dir, model_id, summaries)
+            continue
+
         for i, ex in enumerate(examples):
             if i in done:
                 continue

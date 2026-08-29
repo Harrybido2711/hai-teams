@@ -25,6 +25,7 @@ backend change rather than the model.
 import argparse
 import collections
 import json
+import threading
 import os
 import sys
 
@@ -39,7 +40,11 @@ DEFAULT_MODEL = "google/gemini-3.5-flash-lite"
 MODEL = DEFAULT_MODEL
 PARAMS = {}
 BACKENDS = collections.Counter()
-LAST_BACKEND = {"provider": None}
+_BACKEND_LOCK = threading.Lock()
+# Thread-local, not a module global: with 5 concurrent request streams a shared "last backend"
+# would put whichever thread answered most recently onto the row being written, silently
+# misattributing exactly the thing this field exists to track.
+_LOCAL = threading.local()
 
 # `reasoning.effort` goes through extra_body, not as a named parameter, so it is not part of the
 # negotiation — OpenRouter passes it to the backend rather than validating it here.
@@ -63,8 +68,9 @@ def call(prompt):
             **PARAMS,
         )
         provider = getattr(r, "provider", None) or "unreported"
-        BACKENDS[provider] += 1
-        LAST_BACKEND["provider"] = provider
+        with _BACKEND_LOCK:          # Counter += is not atomic
+            BACKENDS[provider] += 1
+        _LOCAL.provider = provider
         return r.choices[0].message.content
     return core.retry(once, label="gemini35lite")
 
@@ -78,6 +84,10 @@ if __name__ == "__main__":
     ap.add_argument("--sleep", type=float, default=0.0, help="seconds between calls")
     ap.add_argument("--limit", type=int, default=0,
                     help="only the first N items of each task — a smoke test, not a run")
+    ap.add_argument("--workers", type=int, default=1,
+                    help="concurrent request streams. 5 is this project's standing limit and a "
+                         "measured fix, not a convention — see quest-cluster.md. Concurrency does "
+                         "not change the requests-per-day total, only how fast they are spent")
     args = ap.parse_args()
 
     MODEL = args.model
@@ -103,10 +113,10 @@ if __name__ == "__main__":
         # because a seed alone does not reproduce here — OpenRouter picks the backend and
         # switches mid-run (`.claude/references/provider-gotchas.md`).
         core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep,
-                       limit=args.limit,
+                       limit=args.limit, workers=args.workers,
                        config=dict(PARAMS, model=MODEL,
                                    reasoning_effort=EXTRA_BODY["reasoning"]["effort"]),
-                       per_row_config=lambda: {"backend": LAST_BACKEND["provider"]})
+                       per_row_config=lambda: {"backend": getattr(_LOCAL, "provider", None)})
     finally:
         # written even on a wall-clock kill: which backend answered is not recoverable afterwards
         with open(os.path.join(MODEL_DIR, "results", "backend_providers.json"), "w") as fh:
