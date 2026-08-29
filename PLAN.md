@@ -54,8 +54,31 @@ hold.
   were tried and then dropped. Its `Emo` sheet is the visible case: eight columns, the six below
   plus `Gemini-3.5-Flash-Lite (OR)` and `GPT-5.6-Luna (effort=medium)`. A leftover column is not a
   retracted result, the same way a leftover CSV is not — see `.claude/references/benchmarks/tasks/bbh.md`.
-- **`Final_Result.xlsx` records only the six selected models** — Gemini, OpenAI, XAI, Qwen, Gemma,
-  Deepseek — and it is the workbook a reported number is taken from.
+- **`Final_Result.xlsx` records only the six selected models** — one per vendor slot, named below —
+  and it is the workbook a reported number is taken from.
+
+### The six, by name
+
+Confirmed with the user 2026-08-29. The slot names are the workbook's column headers; the model id is
+what a runner actually calls. **Two slots were re-pointed and the workbook has not caught up** — see
+the warning under the table.
+
+| Slot | Model id | Route | Where the recipe is |
+| --- | --- | --- | --- |
+| Gemini | `gemini-3.5-flash-lite` | OpenRouter (`google/gemini-3.5-flash-lite`) | `references/model-calls.md` |
+| OpenAI | `gpt-5.6-luna` | OpenAI platform, `reasoning_effort="low"` | `references/model-calls.md` |
+| XAI | `grok-3-mini` | xAI | `references/model-parameters.md` |
+| Qwen | `Qwen/Qwen3.5-9B` | Together, `reasoning={"enabled": False}` | `references/model-parameters.md` |
+| Gemma | `google/gemma-4-31B-it` | DeepInfra | `references/model-calls.md` |
+| Deepseek | `deepseek-reasoner` | DeepSeek | `references/model-calls.md` |
+
+**`gemini-2.5-flash` and `gpt-4o-mini-2024-07-18` are superseded and are not among the six**, but
+they are still what the bbh, MMLU, DocVQA and NegotiationToM runners call, so most `Gemini` and
+`OpenAI` cells in both workbooks are still *their* numbers. Only the `Emo` sheet has been run on the
+current pair, and there it sits in `Results.xlsx` as an extra column rather than in the `Gemini` and
+`OpenAI` slots. Re-pointing those columns means re-running the other four benchmarks, not editing a
+header. `kimi-k2.5` and `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` were run on bbh only and
+were never among the six.
 
 So running a new model adds a column to `Results.xlsx` and **does not** earn one in
 `Final_Result.xlsx` unless that model is one of the six. Numbers still land in `Results.xlsx` first;
