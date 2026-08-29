@@ -1,3 +1,6 @@
+<!-- size-budget: 8000 -->
+<!-- One invocation recipe per model in use; it grows when a model is adopted, which is the
+     file working. Recipes are measured, so they carry the probe that established them. -->
 # How to call each model
 
 Which client, `base_url`, key, model id, and the non-optional parameters. Limits a runner must set:
@@ -30,7 +33,7 @@ returned stopped on its own. · `NEG_Gemma/gemma_neg_eval.py:21-53`
 Across both: **SIGALRM at 120 s is the primary guard**, below the 300 s socket timeout — Together
 ignores `timeout=` outright. And **tolerate four `<think>` spellings**, not one.
 
-## `gemini-3.5-flash-lite` — two routes, both probed
+## `gemini-3.5-flash-lite` — two routes, both probed; **OpenRouter is the settled one**
 
 **Both run end to end.** OpenRouter completed 400/400 in 19:27, 0 empty; the native route 2.76 s an
 item against OpenRouter's 2.92 — the same speed once its calls succeed. **Thinking spends zero.**
@@ -72,6 +75,29 @@ client.chat.completions.create(model="google/gemini-3.5-flash-lite", messages=me
 `Authorization: Bearer sk-or-v1-…`. `reasoning.effort` maps to the thinking level. 1,048,576 context,
 65,536 max output, **$0.30/M in and $2.50/M out**, thinking billed at the output rate. Not
 `gemini-3.5-flash`: a dearer model at $1.50/M and $9.00/M, defaulting to `medium`.
+
+## `gpt-5.6-luna` — OpenAI platform
+
+```python
+OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=300)   # no base_url override
+# .chat.completions.create(model="gpt-5.6-luna", messages=…,
+#                          max_completion_tokens=…, reasoning_effort="low", seed=42)
+```
+
+· Source: `EMO_GPT_5.6_Luna/gpt56luna_emo_eval.py`
+
+- **`max_tokens` is refused** — it must be `max_completion_tokens`, and the error names the
+  replacement. So are `top_p`, `frequency_penalty`, `presence_penalty`, `stop`, `logprobs`, and any
+  `temperature` but the default. What the model page claims and what it accepts differ on six counts;
+  the limits table in [model-parameters.md](model-parameters.md) records the probe.
+- **Negotiate the surface at startup rather than hardcoding it.** The runner spends one call finding
+  what is accepted, prints it, and writes it onto every row — because a rejected parameter is
+  permanent, and discovering it per item costs the run.
+- **A refused *value* is not a refused *parameter*.** `reasoning_effort="minimal"` is rejected while
+  the parameter itself works; dropping it there runs the benchmark at the default `medium`, uncapped.
+- Rate limits on this key, from the response headers: **5,000 RPM, 2,000,000 TPM**. RPD is *not* in
+  the headers and is unestablished — it was the constraint that broke DocVQA at 10 shards
+  ([quest-cluster.md](quest-cluster.md)).
 
 ## `deepseek-reasoner`
 
