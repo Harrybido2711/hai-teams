@@ -1,11 +1,12 @@
 # BIG-Bench Hard — benchmark card
 
-<!-- size-budget: 7000 -->
+<!-- size-budget: 8000 -->
 <!-- One job, not two: the card for one benchmark. It runs long because bbh carries eight
      providers, a broken run that must not be read as a result, and the incident that produced the
      project's one-scorer rule. The split that would shrink it already happened into
      bbh-parameters.md and the benchmark's own README. Raised again when the 20-task scope
-     became a recorded decision rather than a gap someone might try to close. -->
+     became a recorded decision rather than a gap someone might try to close, and again for
+     scorer v3 — whose entry has to carry the 0.000 lesson, or it is just a version number. -->
 
 General task ability. Exact match against a `"Final Answer: <answer>"` prompt contract. No LLM judge.
 
