@@ -89,7 +89,7 @@ carries the judge verdict and the evidence behind it.
 Two layouts, both this project's own work sitting beside the vendored upstream:
 
 ```
-NegotiationToM/                          EmoBench/                bbh/  ·  mmlu/  ·  DocVQA/
+NegotiationToM/                          EmoBench/  ·  bbh/       mmlu/  ·  DocVQA/
 ├── NEG_GPT/                             ├── EMO_Gemini/          ├── <provider>_eval.py
 │   ├── gpt_neg_eval.py                  ├── EMO_Gemma/           ├── <provider>_eval_script.sh
 │   ├── run_negotiation.sh   (sbatch)    ├── EMO_Qwen/            ├── <task>.json         (data)
@@ -100,6 +100,12 @@ NegotiationToM/                          EmoBench/                bbh/  ·  mmlu
 ├── preflight.py · merge_neg_results.py  └── Output template/
 └── NegotiationToM.json (data)
 ```
+
+**bbh left the right-hand column on 2026-08-29** and now has the middle shape: one `<model>/`
+folder per provider holding that model's runner, its SLURM job script, its result CSVs and its own
+logs, with the 20 task JSONs staying at the benchmark root and shared. Its runners resolve every
+path from `__file__`, so they no longer depend on the directory the job was submitted from —
+`Tasks_benchmarks/bbh/README.md`.
 
 One rule matters more than the layout: the per-provider runners **import the shared core**, so a
 runner transferred to Quest without `neg_eval_core.py` fails at import. Sync them together or not at

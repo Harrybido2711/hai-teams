@@ -1,5 +1,10 @@
 # BIG-Bench Hard — benchmark card
 
+<!-- size-budget: 6000 -->
+<!-- One job, not two: this is the card for one benchmark. It runs long because bbh carries eight
+     providers, two different scorers and five recorded traps; the split that would shrink it
+     (parameters) already happened into bbh-parameters.md. -->
+
 General task ability. Exact match against a `"Final Answer: <answer>"` prompt contract. No LLM judge.
 
 ## Paths
@@ -11,9 +16,18 @@ General task ability. Exact match against a `"Final Answer: <answer>"` prompt co
 
 ## Layout
 
-Flat. **20 task JSONs** (`boolean_expressions.json`, `causal_judgement.json`, … verified 2026-08-22),
-one `<provider>_eval.py` and `<provider>_eval_script.sh` per provider, and results as
-`<provider>_<task>.csv` beside them. A `bin/` directory is also present.
+**One folder per model since 2026-08-29.** `<bbh>/<model>/` — `deepseek gemini gemma kimi llama
+openai qwen xai` — holds that model's `<model>_eval.py`, its `<model>_eval_script.sh`, its
+`<model>_<task>.csv` results, its `<model>_overall_results.csv` and its own `_outlog`/`_errlog`.
+The **20 task JSONs stay at the benchmark root** and are shared; so is `.env`. A vendored `bin/` +
+`dotenv/` pip install is also there.
+
+**Submit from the bbh root** (`<model>/<model>_eval_script.sh`): the job script's `--output` and
+`--error` are relative to the submit directory. The runners themselves are cwd-independent — they
+resolve every read and write from `__file__` via `MODEL_DIR` / `BBH_ROOT`.
+
+`<model>/_superseded/` exists in `gemma/` and `kimi/` and holds an older duplicate that was parked
+rather than deleted. Never read a number out of it.
 
 ## Provider coverage — the files on disk are not the answer
 
@@ -29,14 +43,18 @@ are actually reported (`PLAN.md`).
 
 ## Scoring — two different scorers, not one
 
-Every runner extracts the text after `Final Answer:`, but **four score with strict string equality
-and four with a six-branch lenient matcher** that accepts `B` for `(B)`, an option's text for its
-letter, and comma-vs-space differences. The four strict-scored models are penalised for formatting
-rather than reasoning, and nothing in the result CSVs records which scorer produced them.
+Every runner extracts the text after `Final Answer:`, then **five score with strict case-folded
+equality** (`deepseek`, `gemini`, `kimi`, `llama`, `openai`) **and three with a six-branch lenient
+matcher** (`xai`, `gemma`, `qwen`). *(This page said four and four until 2026-08-29; recounted from
+the code it is five and three — by file 5 and 5, since gemma and qwen each have a `_finish` twin.)*
+
+The five strict-scored models are penalised for formatting rather than reasoning, and nothing in a
+result CSV records which scorer produced it. **What the six branches do, what the marker-missing
+fallback costs, and which of the 20 tasks each branch rescues: `Tasks_benchmarks/bbh/README.md`.
+Read it before comparing any two providers here.**
 
 Every generation parameter each runner sets, with `file:line`:
-[bbh-parameters.md](bbh-parameters.md). Read it before comparing any two providers here — it is also
-where the two-file caveat above is spelled out per model.
+[bbh-parameters.md](bbh-parameters.md) — also where the two-file caveat above is spelled out per model.
 
 ## Its own traps
 
@@ -45,12 +63,13 @@ where the two-file caveat above is spelled out per model.
   differ from the `_eval` ones in `max_tokens`, client timeout, retry behaviour and task list. **Read
   the `.sh` before reading any runner here** — documenting these two from the `_eval.py` file gets
   four columns wrong, which is exactly how the first version of the inventory came out wrong.
-- **The `splits` list in four of the eight submitted scripts is a narrowed re-run list** that was
-  never restored. A CSV present is not evidence the script beside it would regenerate it, and no
+- **The `splits` list in several submitted scripts is a narrowed re-run list** — `deepseek` runs 5
+  tasks of 20, `gemma_eval.py` 4, `kimi` 1, `openai` 14, `qwen_finish.py` 3 — never restored. A CSV present is not evidence the script beside it would regenerate it, and no
   result file records which script version wrote it.
-- **One failed call discards a whole task, in seven of eight.** A `None` response reaches `re.search`
-  and raises `TypeError`; the per-split handler catches it and moves to the next split, dropping the
-  rows collected so far without writing a CSV. `gemma_finish.py` returns `""` and is the exception.
+- **One failed call discards a whole task, in eight of the ten runner files.** A `None` response
+  reaches `re.search` and raises `TypeError`; the per-split handler catches it and moves to the next
+  split, dropping the rows collected so far without writing a CSV. `gemma_finish.py` and
+  `qwen_finish.py` return `""` and are the exceptions.
 - **`gemini_eval.py` still calls `gemini-2.5-flash`,** which was superseded on 2026-08-23 by
   `gemini-3.5-flash-lite` on OpenRouter ([../../model-parameters.md](../../model-parameters.md)).
   The runner has not been changed, so this table still describes what it does — updating the page
@@ -62,6 +81,9 @@ where the two-file caveat above is spelled out per model.
 
 ## Where the client details live
 
-`BBH_MODEL_PARAMS.md` in the benchmark folder is authoritative. `EmoBench/EMO_SCRIPT.md` §1 also
+`Tasks_benchmarks/bbh/README.md` is the benchmark's own committed notes: the 20 tasks and their
+sizes, the answer shapes, the six matcher branches, and the layout. *(An earlier version of this
+page pointed at `BBH_MODEL_PARAMS.md` in the benchmark folder. No such file exists — checked
+2026-08-29.)* `EmoBench/EMO_SCRIPT.md` §1 also
 tables the BBH runners' model ids and SDKs — it predates the inventory and covers six of the eight;
 where they disagree, the inventory was read later and cites lines.

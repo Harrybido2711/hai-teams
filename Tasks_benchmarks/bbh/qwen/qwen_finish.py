@@ -7,9 +7,16 @@ import json
 import time
 import csv
 
-load_dotenv()
+# Every path below is resolved against THIS FILE, not against the working directory: the runner
+# lives in <bbh>/qwen/ while the 20 task JSONs live in <bbh>/. A copy that resolved
+# "boolean_expressions.json" against the cwd is exactly what wrote kimi/kimi_outlog — 20 splits,
+# every one "No such file or directory", and an empty results file at the end.
+MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
+BBH_ROOT = os.path.dirname(MODEL_DIR)
+
+load_dotenv(os.path.join(BBH_ROOT, ".env"))
 api_key = os.getenv('TOGETHER_API_KEY')
-client = Together(api_key=api_key, timeout=4800)
+client = Together(api_key=api_key)
 
 # generate the model's response
 def get_model_response(question):
@@ -26,18 +33,20 @@ def get_model_response(question):
         # create the response
         try:
             completion = client.chat.completions.create(
-                model="google/gemma-4-31B-it", 
+                model="Qwen/Qwen3.5-9B", 
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0,
-                max_tokens=12000,
+                max_tokens=12500,
                 stream=False
             )
             response = completion.choices[0].message.content.strip()
             if response != "":
                 return response
+            time.sleep(5)
         except Exception as e:
             print("Error:", e)
-            return ""
+            return None
+
         return ""
     
 # get the model's answer
@@ -89,33 +98,17 @@ def update_row(question, gold_answer, response, score, split):
         new_score = score_response(new_response, gold_answer, question)
         return new_response, new_score
     
+    time.sleep(1)
     return response, int(score)
 
-splits = ["boolean_expressions",
-          "causal_judgement",
-          "date_understanding",
-          "dyck_languages",
-          "formal_fallacies",
-          "geometric_shapes",
-          "logical_deduction_five_objects",
-          "logical_deduction_seven_objects",
-          "logical_deduction_three_objects",
-          "multistep_arithmetic_two",
-          "navigate",
-          "object_counting",
-          "penguins_in_a_table",
-          "reasoning_about_colored_objects",
-          "temporal_sequences",
-          "tracking_shuffled_objects_five_objects",
-          "tracking_shuffled_objects_seven_objects",
-          "tracking_shuffled_objects_three_objects",
+splits = ["reasoning_about_colored_objects",
           "web_of_lies",
           "word_sorting"]
 
 overall_results = []
 
 for split in splits:
-    csv_path = f"gemma_{split}.csv"
+    csv_path = os.path.join(MODEL_DIR, f"qwen_{split}.csv")
     if not os.path.exists(csv_path):
         print(f"Missing: {csv_path}")
         continue
@@ -132,5 +125,5 @@ for split in splits:
     print(f"{split}: {avg:.3f}")
 
 overall_df = pd.DataFrame(overall_results)
-overall_df.to_csv("gemma_overall_results.csv", index=False)
-print("\nDone. gemma_overall_results.csv updated.")
+overall_df.to_csv(os.path.join(MODEL_DIR, "qwen_overall_results.csv"), index=False)
+print("\nDone. qwen_overall_results.csv updated.")

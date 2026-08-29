@@ -7,7 +7,14 @@ import json
 import time
 
 # load in the api key and set up the client
-load_dotenv()
+# Every path below is resolved against THIS FILE, not against the working directory: the runner
+# lives in <bbh>/gemma/ while the 20 task JSONs live in <bbh>/. A copy that resolved
+# "boolean_expressions.json" against the cwd is exactly what wrote kimi/kimi_outlog — 20 splits,
+# every one "No such file or directory", and an empty results file at the end.
+MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
+BBH_ROOT = os.path.dirname(MODEL_DIR)
+
+load_dotenv(os.path.join(BBH_ROOT, ".env"))
 api_key = os.getenv('TOGETHER_API_KEY')
 client = Together(api_key=api_key)
 
@@ -93,7 +100,7 @@ splits = ["tracking_shuffled_objects_seven_objects",
 # iterate over each of the splits
 for split in splits:
     try: 
-        with open(f'{split}.json', 'r') as file:
+        with open(os.path.join(BBH_ROOT, f'{split}.json'), 'r') as file:
             data = json.load(file)
 
         dataset = data["examples"]
@@ -122,7 +129,7 @@ for split in splits:
         results_df = pd.DataFrame(results)
 
         # save the results on this split
-        results_df.to_csv(f"gemma_{split}.csv", index=False)
+        results_df.to_csv(os.path.join(MODEL_DIR, f"gemma_{split}.csv"), index=False)
         # append the average score on this split to the overall results
         avg = results_df["score"].mean()
         overall_results.append({"dataset": split, "average_score": round(avg, 3)})
@@ -132,8 +139,8 @@ for split in splits:
         print("Happened on split:", split)
         # save the overall results
         overall_df = pd.DataFrame(overall_results)
-        overall_df.to_csv("gemma_overall_results.csv", index=False)
+        overall_df.to_csv(os.path.join(MODEL_DIR, "gemma_overall_results.csv"), index=False)
 
 # save the overall results
 overall_df = pd.DataFrame(overall_results)
-overall_df.to_csv("gemma_overall_results.csv", index=False)
+overall_df.to_csv(os.path.join(MODEL_DIR, "gemma_overall_results.csv"), index=False)

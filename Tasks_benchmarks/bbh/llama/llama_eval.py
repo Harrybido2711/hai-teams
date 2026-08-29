@@ -1,14 +1,21 @@
 import pandas as pd
-from openai import OpenAI
+from together import Together
 import re
 from dotenv import load_dotenv
 import os
 import json
 
 # load in the api key and set up the client
-load_dotenv()
-api_key = os.getenv('DEEPSEEK_API_KEY')
-client = OpenAI(api_key=api_key, timeout=7200, base_url="https://api.deepseek.com")
+# Every path below is resolved against THIS FILE, not against the working directory: the runner
+# lives in <bbh>/llama/ while the 20 task JSONs live in <bbh>/. A copy that resolved
+# "boolean_expressions.json" against the cwd is exactly what wrote kimi/kimi_outlog — 20 splits,
+# every one "No such file or directory", and an empty results file at the end.
+MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
+BBH_ROOT = os.path.dirname(MODEL_DIR)
+
+load_dotenv(os.path.join(BBH_ROOT, ".env"))
+api_key = os.getenv('LLAMA_API_KEY')
+client = Together(api_key=api_key)
 
 # generate the model's response
 def get_model_response(question):
@@ -24,7 +31,7 @@ def get_model_response(question):
     # create the response
     try:
         completion = client.chat.completions.create(
-            model="deepseek-reasoner", 
+            model="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8", 
             messages=[{"role": "user", "content": prompt}],
             temperature=0,
             stream=False
@@ -48,7 +55,22 @@ def score_response(model_response, gold_answer):
 
 # start with an empty list for the overall scores and the list of splits to evaluate
 overall_results = []
-splits = ["logical_deduction_seven_objects",
+splits = ["boolean_expressions",
+          "causal_judgement",
+          "date_understanding",
+          "dyck_languages",
+          "formal_fallacies",
+          "geometric_shapes",
+          "logical_deduction_five_objects",
+          "logical_deduction_seven_objects",
+          "logical_deduction_three_objects",
+          "multistep_arithmetic_two",
+          "navigate",
+          "object_counting",
+          "penguins_in_a_table",
+          "reasoning_about_colored_objects",
+          "temporal_sequences",
+          "tracking_shuffled_objects_five_objects",
           "tracking_shuffled_objects_seven_objects",
           "tracking_shuffled_objects_three_objects",
           "web_of_lies",
@@ -57,7 +79,7 @@ splits = ["logical_deduction_seven_objects",
 # iterate over each of the splits
 for split in splits:
     try: 
-        with open(f'{split}.json', 'r') as file:
+        with open(os.path.join(BBH_ROOT, f'{split}.json'), 'r') as file:
             data = json.load(file)
 
         dataset = data["examples"]
@@ -82,7 +104,7 @@ for split in splits:
         results_df = pd.DataFrame(results)
 
         # save the results on this split
-        results_df.to_csv(f"deepseek_{split}.csv", index=False)
+        results_df.to_csv(os.path.join(MODEL_DIR, f"llama_{split}.csv"), index=False)
         # append the average score on this split to the overall results
         overall_results.append({
             "dataset": split,
@@ -93,8 +115,8 @@ for split in splits:
         print("Happened on split:", split)
         # save the overall results
         overall_df = pd.DataFrame(overall_results)
-        overall_df.to_csv("deepseek_overall_results.csv", index=False)
+        overall_df.to_csv(os.path.join(MODEL_DIR, "llama_overall_results.csv"), index=False)
 
 # save the overall results
 overall_df = pd.DataFrame(overall_results)
-overall_df.to_csv("deepseek_overall_results.csv", index=False)
+overall_df.to_csv(os.path.join(MODEL_DIR, "llama_overall_results.csv"), index=False)

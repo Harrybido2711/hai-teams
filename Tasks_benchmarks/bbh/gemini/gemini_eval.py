@@ -1,16 +1,21 @@
 import pandas as pd
-from together import Together
+from google import genai
 import re
 from dotenv import load_dotenv
 import os
 import json
-import time
-import csv
 
 # load in the api key and set up the client
-load_dotenv()
-api_key = os.getenv('TOGETHER_API_KEY')
-client = Together(api_key=api_key, timeout=18000)
+# Every path below is resolved against THIS FILE, not against the working directory: the runner
+# lives in <bbh>/gemini/ while the 20 task JSONs live in <bbh>/. A copy that resolved
+# "boolean_expressions.json" against the cwd is exactly what wrote kimi/kimi_outlog — 20 splits,
+# every one "No such file or directory", and an empty results file at the end.
+MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
+BBH_ROOT = os.path.dirname(MODEL_DIR)
+
+load_dotenv(os.path.join(BBH_ROOT, ".env"))
+api_key = os.getenv('GEMINI_API_KEY')
+client = genai.Client(api_key=api_key)
 
 # generate the model's response
 def get_model_response(question):
@@ -25,58 +30,26 @@ def get_model_response(question):
 
     # create the response
     try:
-        completion = client.chat.completions.create(
-            model="Qwen/Qwen3.5-9B", 
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0,
-            max_tokens=8192,
-            stream=False
+        completion = client.models.generate_content(
+            model="gemini-2.5-flash", 
+            contents=prompt
         )
-        return completion.choices[0].message.content.strip()
+        return completion.text.strip()
     except Exception as e:
         print("Error:", e)
         return None
-    
+
 # get the model's answer
 def extract_final_answer(model_output):
     match = re.search(r"Final Answer:\s*(.*)", model_output, re.IGNORECASE)
-    result = match.group(1).strip() if match else model_output.strip()
-    return result.strip("\"'`")
+    return match.group(1).strip() if match else model_output.strip()
 
 # check if the final answer matches the gold
-def score_response(model_response, gold_answer, question=""):
+def score_response(model_response, gold_answer):
     final_answer = extract_final_answer(model_response)
     if final_answer is None:
         return 0
-    # case 1: accurate matching
-    if final_answer.lower().strip() == gold_answer.lower().strip():
-        return 1
-    # case 2.1 gold_answer: (D), final_answer: "B" or "(B)" or "(B) choices"
-    if re.match(r'^\([A-Z]\)$', gold_answer.strip()):
-        m = re.match(r'^\(?([A-Z])\)?', final_answer.strip())
-        if m and f"({m.group(1)})" == gold_answer.strip():
-            return 1
-    # case 2.2 gold_answer: (D), final_answer: "choices" with no Alphabet
-    if question and re.match(r'^\([A-Z]\)$', gold_answer.strip()):
-        options = dict(re.findall(r'\(([A-Z])\)\s*([^\n(]+)', question))
-        gold_letter = gold_answer.strip("()")
-        gold_content = options.get(gold_letter, "").strip()
-        if gold_content and final_answer.lower() == gold_content.lower():
-            return 1
-    # case 3: deal with "barn, damp" vs "barn damp"
-    if final_answer.lower().replace(",", " ").split() == gold_answer.lower().split():
-        return 1
-    # case 4: deal with complete sequence of parenthesis and brackets
-    m = re.search(r'Input:\s*(.+)', question, re.IGNORECASE)
-    if m:
-        partial = m.group(1).strip()
-        full = partial + " " + gold_answer.strip()
-        if final_answer.lower().strip() == full.lower().strip():
-            return 1
-    # case 5: with comma inside "No  ," vs "No"
-    if final_answer.lower().replace(",", " ").split() == gold_answer.lower().replace(",", " ").split():
-        return 1
-    return 0
+    return int(final_answer.lower().strip() == gold_answer.lower().strip())
 
 # start with an empty list for the overall scores and the list of splits to evaluate
 overall_results = []
@@ -104,7 +77,7 @@ splits = ["boolean_expressions",
 # iterate over each of the splits
 for split in splits:
     try: 
-        with open(f'{split}.json', 'r') as file:
+        with open(os.path.join(BBH_ROOT, f'{split}.json'), 'r') as file:
             data = json.load(file)
 
         dataset = data["examples"]
@@ -116,10 +89,7 @@ for split in splits:
             gold = example["target"]
             # generate and score the response
             model_resp = get_model_response(q)
-            score = score_response(model_resp, gold, q)
-
-            if model_resp == "":
-                print("Empty response!\n")
+            score = score_response(model_resp, gold)
 
             # append to the results csv for this split
             results.append({
@@ -132,7 +102,7 @@ for split in splits:
         results_df = pd.DataFrame(results)
 
         # save the results on this split
-        results_df.to_csv(f"qwen_{split}.csv", index=False)
+        results_df.to_csv(os.path.join(MODEL_DIR, f"gemini_{split}.csv"), index=False)
         # append the average score on this split to the overall results
         overall_results.append({
             "dataset": split,
@@ -143,8 +113,8 @@ for split in splits:
         print("Happened on split:", split)
         # save the overall results
         overall_df = pd.DataFrame(overall_results)
-        overall_df.to_csv("qwen_overall_results.csv", index=False)
+        overall_df.to_csv(os.path.join(MODEL_DIR, "gemini_overall_results.csv"), index=False)
 
 # save the overall results
 overall_df = pd.DataFrame(overall_results)
-overall_df.to_csv("qwen_overall_results.csv", index=False)
+overall_df.to_csv(os.path.join(MODEL_DIR, "gemini_overall_results.csv"), index=False)

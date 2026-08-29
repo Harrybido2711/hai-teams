@@ -51,7 +51,7 @@ Always persist the raw response so failures can be inspected.
 > every uid to the done set regardless of whether its response was usable. Prune before resubmitting.
 
 **7. Normalisation — copy the bbh approach.** Generous about how an answer is written, strict about
-what it says. `bbh/xai_eval.py::score_response` is the reference; the extracted version is
+what it says. `bbh/xai/xai_eval.py::score_response` is the reference; the extracted version is
 `neg_eval_core.py::clean_surface`:
 
 ```python

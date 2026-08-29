@@ -7,7 +7,14 @@ import json
 import time
 import csv
 
-load_dotenv()
+# Every path below is resolved against THIS FILE, not against the working directory: the runner
+# lives in <bbh>/gemma/ while the 20 task JSONs live in <bbh>/. A copy that resolved
+# "boolean_expressions.json" against the cwd is exactly what wrote kimi/kimi_outlog — 20 splits,
+# every one "No such file or directory", and an empty results file at the end.
+MODEL_DIR = os.path.dirname(os.path.abspath(__file__))
+BBH_ROOT = os.path.dirname(MODEL_DIR)
+
+load_dotenv(os.path.join(BBH_ROOT, ".env"))
 api_key = os.getenv('TOGETHER_API_KEY')
 client = Together(api_key=api_key, timeout=4800)
 
@@ -115,7 +122,7 @@ splits = ["boolean_expressions",
 overall_results = []
 
 for split in splits:
-    csv_path = f"gemma_{split}.csv"
+    csv_path = os.path.join(MODEL_DIR, f"gemma_{split}.csv")
     if not os.path.exists(csv_path):
         print(f"Missing: {csv_path}")
         continue
@@ -132,5 +139,5 @@ for split in splits:
     print(f"{split}: {avg:.3f}")
 
 overall_df = pd.DataFrame(overall_results)
-overall_df.to_csv("gemma_overall_results.csv", index=False)
+overall_df.to_csv(os.path.join(MODEL_DIR, "gemma_overall_results.csv"), index=False)
 print("\nDone. gemma_overall_results.csv updated.")

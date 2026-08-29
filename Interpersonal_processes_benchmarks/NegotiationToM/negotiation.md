@@ -163,7 +163,7 @@ short `--save-every` for slow models.
 
 ## 5. Conventions that must not drift
 
-- **`deepseek-reasoner`** is the model this project uses, matching `bbh/deepseek_eval.py` and
+- **`deepseek-reasoner`** is the model this project uses, matching `bbh/deepseek/deepseek_eval.py` and
   `EmoBench-master/EMO_Deepseek/`. An uncommitted change to `deepseek-v4-flash` with thinking
   disabled was reverted: nothing motivated it, and it would have discarded 14,138 rows from the
   best-scoring model and broken cross-benchmark comparability. The swap had touched five places,

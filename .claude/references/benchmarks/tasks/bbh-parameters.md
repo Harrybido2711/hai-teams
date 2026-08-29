@@ -17,14 +17,14 @@ Three things needed to read the table correctly:
   one in the main script.
 | Model (exact id in code) | API / SDK | Script | `temperature` | `top_p` | `top_k` | `max_tokens` | `frequency_penalty` | `presence_penalty` | `repetition_penalty` | `seed` | `stop` | `response_format` | `tools` | `tool_choice` | `reasoning` | `reasoning_effort` | `verbosity` | client `timeout` | `stream` |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|---|---|---|---|---|---:|---|
-| `gpt-4o-mini-2024-07-18` | OpenAI Chat Completions | [`openai_eval.py`](../../../../Tasks_benchmarks/bbh/openai_eval.py#L26) | `0` | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | not set |
-| `gemini-2.5-flash` | Google Gen AI `generate_content` | [`gemini_eval.py`](../../../../Tasks_benchmarks/bbh/gemini_eval.py#L26) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | not set |
-| `deepseek-reasoner` | DeepSeek, OpenAI-compatible | [`deepseek_eval.py`](../../../../Tasks_benchmarks/bbh/deepseek_eval.py#L26) | `0` | — | — | — | — | — | — | — | — | — | — | — | — | — | — | `7200` | `False` |
-| `grok-3-mini` | xAI SDK `chat.sample()` | [`xai_eval.py`](../../../../Tasks_benchmarks/bbh/xai_eval.py#L28) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | `3600` | not set |
-| `google/gemma-4-31B-it` | Together Chat Completions | [`gemma_eval.py`](../../../../Tasks_benchmarks/bbh/gemma_eval.py#L28) · [`gemma_finish.py`](../../../../Tasks_benchmarks/bbh/gemma_finish.py#L28) | `0` | — | — | `12500` / **`12000`** | — | — | — | — | — | — | — | — | — | — | — | — / `4800` | `False` |
-| `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | Together Chat Completions | [`llama_eval.py`](../../../../Tasks_benchmarks/bbh/llama_eval.py#L26) | `0` | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | `False` |
-| `Qwen/Qwen3.5-9B` | Together Chat Completions | [`qwen_eval.py`](../../../../Tasks_benchmarks/bbh/qwen_eval.py#L28) · [`qwen_finish.py`](../../../../Tasks_benchmarks/bbh/qwen_finish.py#L28) | `0` | — | — | `8192` / **`12500`** | — | — | — | — | — | — | — | — | — | — | — | `18000` / — | `False` |
-| `kimi-k2.5` | Moonshot, OpenAI-compatible | [`kimi_eval.py`](../../../../Tasks_benchmarks/bbh/kimi_eval.py#L35) | `1` | — | — | — | — | — | — | — | — | — | — | — | — | — | — | `7200` | not set |
+| `gpt-4o-mini-2024-07-18` | OpenAI Chat Completions | [`openai_eval.py`](../../../../Tasks_benchmarks/bbh/openai/openai_eval.py#L34) | `0` | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | not set |
+| `gemini-2.5-flash` | Google Gen AI `generate_content` | [`gemini_eval.py`](../../../../Tasks_benchmarks/bbh/gemini/gemini_eval.py#L34) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | not set |
+| `deepseek-reasoner` | DeepSeek, OpenAI-compatible | [`deepseek_eval.py`](../../../../Tasks_benchmarks/bbh/deepseek/deepseek_eval.py#L34) | `0` | — | — | — | — | — | — | — | — | — | — | — | — | — | — | `7200` | `False` |
+| `grok-3-mini` | xAI SDK `chat.sample()` | [`xai_eval.py`](../../../../Tasks_benchmarks/bbh/xai/xai_eval.py#L35) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | `3600` | not set |
+| `google/gemma-4-31B-it` | Together Chat Completions | [`gemma_eval.py`](../../../../Tasks_benchmarks/bbh/gemma/gemma_eval.py#L36) · [`gemma_finish.py`](../../../../Tasks_benchmarks/bbh/gemma/gemma_finish.py#L36) | `0` | — | — | `12500` / **`12000`** | — | — | — | — | — | — | — | — | — | — | — | — / `4800` | `False` |
+| `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` | Together Chat Completions | [`llama_eval.py`](../../../../Tasks_benchmarks/bbh/llama/llama_eval.py#L34) | `0` | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | `False` |
+| `Qwen/Qwen3.5-9B` | Together Chat Completions | [`qwen_eval.py`](../../../../Tasks_benchmarks/bbh/qwen/qwen_eval.py#L36) · [`qwen_finish.py`](../../../../Tasks_benchmarks/bbh/qwen/qwen_finish.py#L36) | `0` | — | — | `8192` / **`12500`** | — | — | — | — | — | — | — | — | — | — | — | `18000` / — | `False` |
+| `kimi-k2.5` | Moonshot, OpenAI-compatible | [`kimi_eval.py`](../../../../Tasks_benchmarks/bbh/kimi/kimi_eval.py#L43) | `1` | — | — | — | — | — | — | — | — | — | — | — | — | — | — | `7200` | not set |
 
 What the table shows:
 
