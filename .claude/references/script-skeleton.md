@@ -1,8 +1,9 @@
 # Eval script skeleton
 
-<!-- size-budget: 6500 -->
+<!-- size-budget: 8000 -->
 <!-- One job: the runner shape, as a numbered checklist a diff is checked against. It grew when
-     rule 7 stopped being a style note and became the fairness rule, which needs its evidence. -->
+     rule 7 stopped being a style note and became the fairness rule, which needs its evidence,
+     and again when 7b took the sharding pattern from NegotiationToM. -->
 
 The order below is the shape every runner in this project follows; NegotiationToM's six are the
 worked example. Copy the closest existing folder and swap the client rather than starting from this
@@ -79,6 +80,21 @@ here: GPT returned lowercase items 486 times (17% of its values), plus `Wood` fo
 `unknown`/`N/A` for `Not Given`. Check both `"high"` and `"High"` key casings.
 **Normalise model output only, never gold labels** — gold is canonical, and rewriting it changes
 the answer key.
+
+**7b. Sharding — copy NegotiationToM's, including the part that looks trivial.**
+`NEG_GPT/openai_neg_eval.py` + `merge_shards.py` is the reference; bbh and mmlu now follow it.
+Four details carry the weight:
+
+- **`shard_tag` is EMPTY when `total_shards == 1`.** That is what lets sharding be added to a
+  benchmark whose existing results are single untagged files — an unsharded run keeps the exact
+  filename it always wrote, so nothing already on disk is invalidated and no merge is needed.
+- **Tag EVERY artefact, not just the `.jsonl`.** The `.csv` and `_overall.csv` need it too, or
+  shard 1 silently overwrites shard 0's summary while the row files look fine.
+- **Slice after `enumerate`, not before.** `idx` must index the whole task; if each shard
+  re-numbers from 0 the merged file has five rows claiming `idx 0`.
+- **The merge reports a missing shard, merges what exists, and exits non-zero.** Failing outright
+  throws away four good shards for one dead job; failing silently reports a partial number as a
+  whole one. Name the absent file and stamp the row count actually merged.
 
 **8. `evaluate()`.** Per-sample CSV plus an overall CSV. Sanitize model names with
 `.replace(".", "_").replace("/", "-")`.

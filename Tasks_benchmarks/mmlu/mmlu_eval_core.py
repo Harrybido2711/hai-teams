@@ -206,9 +206,10 @@ def subject_dir(model_dir, subject):
     return d
 
 
-def write_subject_results(model_dir, subject, model_id, records, config=None):
+def write_subject_results(model_dir, subject, model_id, records, config=None, tag=""):
     d = subject_dir(model_dir, subject)
-    slug = model_slug(model_id)
+    # every artefact carries the shard tag, or shard 1 overwrites shard 0's summary
+    slug = model_slug(model_id) + tag
     with open(os.path.join(d, f"{slug}.jsonl"), "w") as fh:
         for r in sorted(records, key=lambda x: x["idx"]):
             fh.write(json.dumps(r, ensure_ascii=False) + "\n")
@@ -232,8 +233,8 @@ def write_subject_results(model_dir, subject, model_id, records, config=None):
             "no_marker": missing, "empty_response": blank}
 
 
-def write_overall(model_dir, model_id, summaries):
-    path = os.path.join(model_dir, "results", f"{model_slug(model_id)}_mmlu_overall.csv")
+def write_overall(model_dir, model_id, summaries, tag=""):
+    path = os.path.join(model_dir, "results", f"{model_slug(model_id)}{tag}_mmlu_overall.csv")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", newline="") as fh:
         w = csv.writer(fh)
@@ -252,6 +253,29 @@ def write_overall(model_dir, model_id, summaries):
 
 
 # ---------------------------------------------------------------- the loop
+
+
+def shard_tag(shard, total_shards):
+    """`_shard2of5`, or **empty when total_shards is 1**.
+
+    Copied deliberately from `NegotiationToM/NEG_GPT/openai_neg_eval.py:264`. The empty case is the
+    load-bearing half: it means an unsharded run writes the same filename it always did, so the
+    result files already on disk stay valid and a merge is only needed when one actually sharded.
+    Without the tag every shard overwrites the last (`.claude/INDEX.md`).
+    """
+    return f"_shard{shard}of{total_shards}" if total_shards > 1 else ""
+
+
+def shard_slice(items, shard, total_shards):
+    """Contiguous block split, same arithmetic as `openai_neg_eval.py::shard_slice`.
+
+    Contiguous rather than round-robin so a shard's `idx` values stay in one range — which makes a
+    missing shard obvious as a gap in the merged file rather than scattered holes.
+    """
+    if total_shards <= 1:
+        return list(items)
+    size = (len(items) + total_shards - 1) // total_shards
+    return list(items)[shard * size: min((shard + 1) * size, len(items))]
 
 
 def retry(fn, tries=5, base_sleep=2.0, label=""):
@@ -303,7 +327,7 @@ def load_checkpoint(out_path, config, verbose=True):
 
 def run_subjects(model_dir, model_id, call, subjects=None, sleep_between=0.0, verbose=True,
                  limit=0, config=None, per_row_config=None, save_every=20, resume=True,
-                 workers=1, prompt_version="v2"):
+                 workers=1, prompt_version="v2", shard=0, total_shards=1):
     subjects = subjects or SUBJECTS
     if prompt_version not in PROMPTS:
         raise SystemExit(f"unknown prompt version {prompt_version!r}; known: {sorted(PROMPTS)}")
@@ -315,8 +339,9 @@ def run_subjects(model_dir, model_id, call, subjects=None, sleep_between=0.0, ve
             examples = examples[:limit]
             if verbose:
                 print(f"[{subject}] --limit {limit}: smoke test, not a run", flush=True)
+        tag = shard_tag(shard, total_shards)
         out_path = os.path.join(subject_dir(model_dir, subject),
-                                f"{model_slug(model_id)}.jsonl")
+                                f"{model_slug(model_id)}{tag}.jsonl")
         done = load_checkpoint(out_path, config, verbose) if (resume and not limit) else {}
         records = list(done.values())
         lock = threading.Lock()
@@ -347,7 +372,9 @@ def run_subjects(model_dir, model_id, call, subjects=None, sleep_between=0.0, ve
                     "score": score_response(resp, gold_text, gold_letter, int(ex["answer"])),
                     "config": config_string(row_cfg)}
 
-        todo = [(i, ex) for i, ex in enumerate(examples) if i not in done]
+        # slice AFTER enumerate so idx indexes the full subject, not the slice
+        todo = [(i, ex) for i, ex in shard_slice(list(enumerate(examples)), shard, total_shards)
+                if i not in done]
         if workers > 1:
             with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
                 futs = [pool.submit(one, i, ex) for i, ex in todo]
@@ -368,12 +395,12 @@ def run_subjects(model_dir, model_id, call, subjects=None, sleep_between=0.0, ve
                     if verbose:
                         print(f"  [{subject}] {len(records)}/{len(examples)}", flush=True)
         records.sort(key=lambda r: r["idx"])
-        s = write_subject_results(model_dir, subject, model_id, records, config=config)
+        s = write_subject_results(model_dir, subject, model_id, records, config=config, tag=tag)
         summaries.append(s)
         if verbose:
             print(f"{subject}: {s['average_score']}  (n={s['n']}, no_marker={s['no_marker']}, "
                   f"empty={s['empty_response']})", flush=True)
-        write_overall(model_dir, model_id, summaries)
+        write_overall(model_dir, model_id, summaries, tag=tag)
     return summaries
 
 

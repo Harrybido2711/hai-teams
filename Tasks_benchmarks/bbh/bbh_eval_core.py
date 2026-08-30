@@ -288,10 +288,11 @@ def task_dir(model_dir, task):
     return d
 
 
-def write_task_results(model_dir, task, model_id, records, config=None):
+def write_task_results(model_dir, task, model_id, records, config=None, tag=""):
     """One `.jsonl`, one `.csv` and one `_overall.csv` per sub-task, named after the model."""
     d = task_dir(model_dir, task)
-    slug = model_slug(model_id)
+    # every artefact carries the shard tag, or shard 1 overwrites shard 0's summary
+    slug = model_slug(model_id) + tag
 
     with open(os.path.join(d, f"{slug}.jsonl"), "w") as fh:
         for r in records:
@@ -321,11 +322,11 @@ def write_task_results(model_dir, task, model_id, records, config=None):
     }
 
 
-def write_overall(model_dir, model_id, summaries):
+def write_overall(model_dir, model_id, summaries, tag=""):
     """The model's own roll-up across every task it ran. Not a benchmark score: `n` differs per
     task, so a macro-average over this file is a mean of task means, which is what the workbook
     reports."""
-    path = os.path.join(model_dir, "results", f"{model_slug(model_id)}_bbh_overall.csv")
+    path = os.path.join(model_dir, "results", f"{model_slug(model_id)}{tag}_bbh_overall.csv")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", newline="") as fh:
         w = csv.writer(fh)
@@ -395,7 +396,7 @@ def load_checkpoint(out_path, config, verbose=True):
 
 def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=True, limit=0,
               config=None, per_row_config=None, save_every=20, resume=True, workers=1,
-              prompt_version="v1"):
+              prompt_version="v1", shard=0, total_shards=1):
     """Drive `call(prompt) -> str` over the requested tasks and write results per task.
 
     A failed call yields `""` for that ITEM and the task continues. The old runners let a `None`
@@ -418,7 +419,9 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
             examples = examples[:limit]
             if verbose:
                 print(f"[{task}] --limit {limit}: smoke test, not a run", flush=True)
-        out_path = os.path.join(task_dir(model_dir, task), f"{model_slug(model_id)}.jsonl")
+        tag = shard_tag(shard, total_shards)
+        out_path = os.path.join(task_dir(model_dir, task),
+                                f"{model_slug(model_id)}{tag}.jsonl")
         done = load_checkpoint(out_path, config, verbose) if (resume and not limit) else {}
 
         def flush(recs):
@@ -453,7 +456,10 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
                 "config": config_string(row_cfg),
             }
 
-        todo = [(i, ex) for i, ex in enumerate(examples) if i not in done]
+        # slice AFTER enumerate so idx stays the index into the full task, not into the slice —
+        # otherwise merged shards would all claim idx 0..n and collide
+        todo = [(i, ex) for i, ex in shard_slice(list(enumerate(examples)), shard, total_shards)
+                if i not in done]
         if workers > 1:
             # 5 concurrent request streams is this project's standing limit and a measured fix,
             # not a convention (`.claude/references/quest-cluster.md`). Concurrency does not raise
@@ -469,12 +475,12 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
                             if verbose:
                                 print(f"  [{task}] {len(records)}/{len(examples)}", flush=True)
             records.sort(key=lambda r: r["idx"])
-            s_ = write_task_results(model_dir, task, model_id, records, config=config)
+            s_ = write_task_results(model_dir, task, model_id, records, config=config, tag=tag)
             summaries.append(s_)
             if verbose:
                 print(f"{task}: {s_['average_score']}  (n={s_['n']}, no_marker={s_['no_marker']}, "
                       f"empty={s_['empty_response']})", flush=True)
-            write_overall(model_dir, model_id, summaries)
+            write_overall(model_dir, model_id, summaries, tag=tag)
             continue
 
         for i, ex in enumerate(examples):
@@ -509,13 +515,36 @@ def run_tasks(model_dir, model_id, call, tasks=None, sleep_between=0.0, verbose=
                 if verbose:
                     print(f"  [{task}] {len(records)}/{len(examples)}", flush=True)
         records.sort(key=lambda r: r["idx"])
-        s = write_task_results(model_dir, task, model_id, records, config=config)
+        s = write_task_results(model_dir, task, model_id, records, config=config, tag=tag)
         summaries.append(s)
         if verbose:
             print(f"{task}: {s['average_score']}  (n={s['n']}, no_marker={s['no_marker']}, "
                   f"empty={s['empty_response']})", flush=True)
-        write_overall(model_dir, model_id, summaries)  # survive a wall-clock kill
+        write_overall(model_dir, model_id, summaries, tag=tag)  # survive a wall-clock kill
     return summaries
+
+
+def shard_tag(shard, total_shards):
+    """`_shard2of5`, or **empty when total_shards is 1**.
+
+    Copied deliberately from `NegotiationToM/NEG_GPT/openai_neg_eval.py:264`. The empty case is the
+    load-bearing half: it means an unsharded run writes the same filename it always did, so the
+    result files already on disk stay valid and a merge is only needed when one actually sharded.
+    Without the tag every shard overwrites the last (`.claude/INDEX.md`).
+    """
+    return f"_shard{shard}of{total_shards}" if total_shards > 1 else ""
+
+
+def shard_slice(items, shard, total_shards):
+    """Contiguous block split, same arithmetic as `openai_neg_eval.py::shard_slice`.
+
+    Contiguous rather than round-robin so a shard's `idx` values stay in one range — which makes a
+    missing shard obvious as a gap in the merged file rather than scattered holes.
+    """
+    if total_shards <= 1:
+        return list(items)
+    size = (len(items) + total_shards - 1) // total_shards
+    return list(items)[shard * size: min((shard + 1) * size, len(items))]
 
 
 def retry(fn, tries=5, base_sleep=2.0, label=""):

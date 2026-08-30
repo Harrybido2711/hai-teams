@@ -79,6 +79,10 @@ if __name__ == "__main__":
     ap.add_argument("--prompt", default="v2", choices=["v1", "v2"],
                     help="prompt version; part of the run config, so a resume across a change of "
                          "it is refused rather than silently mixing two prompts")
+    ap.add_argument("--shard", type=int, default=0, help="this shard's index, 0-based")
+    ap.add_argument("--total-shards", dest="total_shards", type=int, default=1,
+                    help="how many shards the work is split across. At 1 the output filename has "
+                         "no shard tag, so an unsharded run keeps the name it always had")
     ap.add_argument("--workers", type=int, default=1,
                     help="concurrent request streams. 5 is this project's standing limit and a "
                          "measured fix, not a convention - see quest-cluster.md")
@@ -105,6 +109,7 @@ if __name__ == "__main__":
     try:
         core.run_subjects(MODEL_DIR, MODEL, call, subjects=subjects, sleep_between=args.sleep,
                           limit=args.limit, workers=args.workers, prompt_version=args.prompt,
+                          shard=args.shard, total_shards=args.total_shards,
                           config=dict(PARAMS, model=MODEL,
                                       reasoning_effort=EXTRA_BODY["reasoning"]["effort"]),
                           per_row_config=lambda: {"backend": getattr(_LOCAL, "provider", None)})

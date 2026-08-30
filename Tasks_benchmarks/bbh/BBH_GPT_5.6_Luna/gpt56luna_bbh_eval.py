@@ -66,6 +66,10 @@ if __name__ == "__main__":
                     help="prompt version. It is part of the run config and is written onto every "
                          "row, so a resume across a change of it is refused rather than silently "
                          "mixing two prompts in one result set")
+    ap.add_argument("--shard", type=int, default=0, help="this shard's index, 0-based")
+    ap.add_argument("--total-shards", dest="total_shards", type=int, default=1,
+                    help="how many shards the work is split across. At 1 the output filename has "
+                         "no shard tag, so an unsharded run keeps the name it always had")
     ap.add_argument("--workers", type=int, default=1,
                     help="concurrent request streams. 5 is this project's standing limit and a "
                          "measured fix, not a convention — see quest-cluster.md. Concurrency does "
@@ -92,5 +96,6 @@ if __name__ == "__main__":
     print("GPT-5.6-Luna: model=%s tasks=%d" % (MODEL, len(tasks)), flush=True)
     # rule 8: the config goes on every row, not only into the job script
     core.run_tasks(MODEL_DIR, MODEL, call, tasks=tasks, sleep_between=args.sleep,
-                   limit=args.limit, workers=args.workers, prompt_version=args.prompt, config=dict(PARAMS, model=MODEL))
+                   limit=args.limit, workers=args.workers, prompt_version=args.prompt,
+                   shard=args.shard, total_shards=args.total_shards, config=dict(PARAMS, model=MODEL))
     print("done ->", os.path.join(MODEL_DIR, "results"), flush=True)
