@@ -7,7 +7,8 @@ General task ability, multiple choice. Accuracy. No LLM judge.
 | | Path |
 |---|---|
 | Local | `Tasks_benchmarks/mmlu` |
-| Quest | not verified — nothing points to a remote copy, but Quest was not checked (out of scope 2026-08-22). Confirm before assuming a remote path |
+| Quest | **`/projects/p32983/Tasks_benchmarks/mmlu`** — this account's own copy, synced 2026-08-30, 29 files verified byte-identical by `md5sum`. Code and data only |
+| Quest — not ours | `/projects/p32983/mmlu` is **`cpz1698`'s**, flat, last touched 2026-06-09. Do not write into it |
 
 ## Layout — rebuilt 2026-08-29 on the EmoBench convention
 

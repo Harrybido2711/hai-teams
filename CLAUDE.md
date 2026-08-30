@@ -66,6 +66,12 @@ already recorded rather than from scratch.
 theirs, not yours. **Do not transfer and do not submit until they say the scripts are done**, however
 ready the code looks. Phases 1, 2 and 5 need no such permission; this one always does.
 
+**A real run executes on Quest. Local execution is for `--limit` smoke tests only** — the user's
+rule, 2026-08-30, set after a full bbh sweep was run locally instead: correct data, but tied to one
+laptop staying awake, invisible to Quest, and the cluster idle throughout. Probing a provider's
+parameter surface and rescoring stored rows offline are still local work — they cost no cluster
+time and make no run.
+
 - *Memory* — `references/quest-cluster.md` for transfers, `md5sum`, SLURM and the two ways the
   pre-submit gate lies; the benchmark's page for its remote path and run order, which are not
   inferable from the local tree.

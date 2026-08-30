@@ -15,7 +15,8 @@ General task ability. Exact match against a `"Final Answer: <answer>"` prompt co
 | | Path |
 |---|---|
 | Local | `Tasks_benchmarks/bbh` |
-| Quest | `/projects/p32983/bbh`, and it belongs to **`cpz1698`, not this account**. The 2026-08-29 restructure is local-only and has not been pushed there; do not transfer into it without asking |
+| Quest | **`/projects/p32983/Tasks_benchmarks/bbh`** — this account's own copy, synced 2026-08-30, 43 files verified byte-identical by `md5sum`. Code and data only: results live locally and in git, because results flow *down* |
+| Quest — not ours | `/projects/p32983/bbh` is **`cpz1698`'s**, flat, last touched 2026-06-09. Do not write into it |
 
 ## Layout — rebuilt 2026-08-29 on the EmoBench convention
 
