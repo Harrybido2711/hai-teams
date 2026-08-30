@@ -177,6 +177,19 @@ working directory at all — `BBH_Kimi/log.txt` records what happened when they 
   `--task boolean_expressions,word_sorting --limit 20` and read `no_marker` in the overall CSV
   before committing 4,833 items: a cap that truncates bills for a response with no answer in it, and
   that is precisely how the Gemini 2.5 rows above became unusable.
+- **Qwen and Gemma's Together-era unusable rows were repaired on DeepInfra, 2026-08-30.** Both
+  needed the OPPOSITE reasoning setting from Together: Qwen's thinking is ON by default there too
+  and needs `reasoning={"enabled": False}`; Gemma's is already off and must be passed nothing.
+  Repaired one whole sub-task at a time (13 for Qwen, 5 for Gemma) so no task mixes providers; the
+  Together versions are archived under each model's `results_archive_together_<ts>/`, not deleted.
+  Gemma reached 0 unusable rows across all 20 tasks. **Qwen did not fully clear**:
+  `dyck_languages` went from 112 unusable to 16, because those 16 are a genuine model failure mode
+  — the model enters a repetition loop (`Final Answer: The sequence is already complete.` repeated
+  until the 12,500-token cap) and never emits the marker at all, so `retry()` correctly does not
+  retry a non-empty response. **Two DeepInfra-repaired tasks scored LOWER than their noisy Together
+  version once the bad rows were removed** — `causal_judgement` 0.615→0.588,
+  `word_sorting` 0.860→0.784 — which is the provider's real level on those tasks, not an artifact.
+  Repair is about clean data, not a guaranteed higher score.
 - **Two runners name an API key that `.env` does not define.** `llama_bbh_eval.py` reads
   `LLAMA_API_KEY` and `kimi_bbh_eval.py` reads `KIMI_API_KEY`; neither is in `.env`, so both pass
   `api_key=None` and the SDK falls back to its own environment variable — Together's works by
