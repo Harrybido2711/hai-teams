@@ -35,10 +35,12 @@ The OpenRouter run of 2026-08-30 wrote all 3,943 rows but 2,188 of them empty: i
 mid-run (HTTP 402, `limit_source: openrouter_credits`) and the four subjects after `Miscellaneous`
 are 100% empty. `MMLU_Gemini_Flash3.5lite_OpenRouter/` is kept **untouched as the record of that
 run**; this folder began as a byte-identical copy of its `results/` and is being completed on the
-native Google AI Studio route, which the user chose on 2026-09-07 knowing the two routes are not
-the same condition. **Every row's `config` column names its route** — carried-over rows carry
-`reasoning_effort=minimal` and `backend=`, new ones `route=google_aistudio` and
-`thinking_budget=128` — so the mix is legible rather than silent. Report it as two routes.
+native Google AI Studio route. It carried the OpenRouter rows for one day and then redid them too,
+so it is now a single configuration: `route=google_aistudio`, `thinking_budget=128`, `seed=42`,
+`max_tokens=8192`, prompt v2, on every one of its 3,943 rows. **`prune_non_google_rows.py` is how
+that was done** — it drops any row whose `config` lacks `route=google_aistudio` and deletes the
+merged files, after which the ordinary 5-shard resume re-asks exactly what it removed. It reports
+and changes nothing without `--apply`.
 
 `MMLU_Llama` has a runner and no subject CSVs at all.
 
@@ -57,7 +59,7 @@ per-subject files — **never from `<vendor>_overall_results.csv`**, which is st
 |---|---|---|---|---|---|
 | OpenAI | `MMLU_GPT_5.6_Luna` | **0.9176** | 0 | `mmlu_lenient_v1` | yes |
 | Deepseek | `MMLU_Deepseek` | **0.9174** | 0 | per-runner `==` | yes |
-| Gemini | `MMLU_Gemini_Flash3.5lite_Google` | **0.9135** | 0 | `mmlu_lenient_v1` | yes — **two routes** |
+| Gemini | `MMLU_Gemini_Flash3.5lite_Google` | **0.9135** | 0 | `mmlu_lenient_v1` | yes |
 | Gemma | `MMLU_Gemma` | **0.9071** | 3 | per-runner `==` | yes |
 | XAI | `MMLU_XAI` | **0.9018** | 0 | per-runner `==` | yes |
 | Qwen | `MMLU_Qwen` | **0.8802** | 20 | per-runner `==` | yes |
@@ -66,8 +68,13 @@ per-subject files — **never from `<vendor>_overall_results.csv`**, which is st
 | — | `MMLU_Llama` | — | — | — | no — never produced rows |
 | — | `MMLU_Gemini_Flash3.5lite_OpenRouter` | 0.607 (unusable) | 2,188 | `mmlu_lenient_v1` | no — the broken run, kept as a record |
 
-**Gemini's column is two routes and is kept out of `Final_Result.xlsx`** — the user's decision,
-2026-09-07. It is a model result in `Results.xlsx` and nothing more until a single-route run exists.
+**Gemini's column is one route and is reported.** The folder began as a copy of the OpenRouter run
+so its 1,755 answered rows would not be paid for twice, which made the column two configurations;
+on 2026-09-07 the user decided to redo those rows here as well. They were pruned by
+`prune_non_google_rows.py` and re-asked — 1,755 calls, exactly the number pruned — so all 3,943 rows
+now carry `route=google_aistudio`. **The macro landed on 0.9135 both before and after, which is a
+coincidence at four decimals and not a sign the rerun did nothing**: `Formal_logic` moved
+0.9365 → 0.9762, `Jurisprudence` 0.9352 → 0.9074, `Marketing` 0.9701 → 0.9573.
 
 **Two scorers are still in play here, and that is the open item.** Only the two newest slots import
 `mmlu_eval_core`; the other seven carry the score their own runner wrote with `==`. Until a uniform

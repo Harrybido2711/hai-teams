@@ -83,10 +83,8 @@ selected model has not been run on that sheet**, and it stays blank until it is.
 makes the two files different in practice: `gemini-2.5-flash` and `gpt-4o-mini-2024-07-18` are
 superseded but are still what the DocVQA and NegotiationToM runners call, so on those sheets the
 `Gemini` and `OpenAI` columns of `Final_Result.xlsx` are **empty**. Nothing is lost — those runs
-keep their columns in `Results.xlsx`. `Emo` and `Big Bench Hard` are filled for both slots, and on
-`MMLU` **`OpenAI` is filled while `Gemini` is deliberately not**: its run is complete but its 3,943
-rows are two routes, so the user decided on 2026-09-07 to keep it a model result in `Results.xlsx`
-rather than a reported one. Closing what is left means re-running it, not editing a header.
+keep their columns in `Results.xlsx`. `Emo`, `Big Bench Hard` and `MMLU` are filled for both slots.
+Closing what is left — `DocVQA` — means re-running it, not editing a header.
 
 One caveat inside that: the `Emo` result for `gpt-5.6-luna` is the **default `medium`** arm.
 The settled effort is `low`, and `results_eLow` has EU (0.650) but no EA, so **no complete EmoBench
@@ -101,8 +99,8 @@ run — 62% truncated before the answer, 0.3455 — kept as a record and not re-
 
 **MMLU is complete for every model that has a runner** — 13 subjects, 3,943 items, verified
 2026-09-07 — with two exceptions that are not gaps: `MMLU_Llama` never produced rows, and Llama was
-never among the six. `OpenAI` (0.9176) and `Gemini` (0.9135) both finished; the Gemini one is two
-routes and stays out of `Final_Result.xlsx`. **DocVQA is now the only sheet the "least filled" line
+never among the six. `OpenAI` (0.9176) and `Gemini` (0.9135) both finished, both on a single route
+and both reported. **DocVQA is now the only sheet the "least filled" line
 above is still about.** MMLU's open item is not coverage but scoring: only its two newest slots
 import the shared matcher, the other seven carry their own runner's `==`, and the uniform rescore is
 offline work (`.claude/references/benchmarks/tasks/mmlu.md`).
