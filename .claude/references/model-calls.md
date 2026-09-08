@@ -10,6 +10,26 @@ Which client, `base_url`, key, model id, and the non-optional parameters. Limits
 Recipes are *measured* — from a runner that has run, or from a probe. A documented shape is a
 hypothesis until one call confirms it.
 
+## Which of the six take an image, and what that decides
+
+**Four do. It is the ceiling on DocVQA, not a gap in it.** Read from each provider's own model
+metadata on 2026-09-08, and confirmed by the repo: DocVQA has runners and results for exactly these
+four, and they send real image bytes (`types.Part.from_bytes(mime_type="image/png")`,
+`data:image/png;base64,…`).
+
+| Slot | Model | Input |
+|---|---|---|
+| Gemini | `gemini-3.5-flash-lite` | text · **image** · video · file · audio |
+| OpenAI | `gpt-5.6-luna` | text · **image** · file |
+| Qwen | `Qwen/Qwen3.5-9B` | text · **image** · video |
+| Gemma | `google/gemma-4-31B-it` | text · **image** · video |
+| Deepseek | `deepseek-reasoner` | **text only** — DeepSeek serves one vision model, `deepseek-v4-flash-vision-exp`, and this is not it |
+| XAI | `grok-3-mini` | **unestablished** — xAI no longer serves this model, so no live source can be asked |
+
+**Do not read the two blanks in DocVQA as work waiting to be done.** Neither model can accept the
+input. Changing that means changing the model, which is a decision about the six, not a rerun —
+note that every grok xAI serves *today* is text+image.
+
 ## `google/gemma-4-31B-it` — DeepInfra
 
 ```python

@@ -122,7 +122,7 @@ from. The extras `Results.xlsx` holds and `Final_Result.xlsx` does not: `Kimi` a
 **A blank cell means no usable number, not a zero.** `Awareness` is blank throughout — no model has
 been scored on it yet. `MMLU`/`Qwen` and `MMLU`/`Gemma` **are no longer blank** — both always had
 all 13 subjects on disk and it was their roll-up CSVs that were empty and partial, which is why the
-sheet is now built from the per-subject files. `DocVQA` has no XAI or Deepseek run at all.
+sheet is now built from the per-subject files. `DocVQA` has no XAI or Deepseek run **and will not under the current six**: it is an image benchmark and those two are text-only, so those blanks are a ceiling rather than a gap (`.claude/references/model-calls.md`).
 
 **`Big Bench Hard` is now scored uniformly, and its numbers were refreshed to match.** Every model
 on that sheet comes from `BBH_*/results/*_bbh_overall.csv` under the one shared lenient matcher

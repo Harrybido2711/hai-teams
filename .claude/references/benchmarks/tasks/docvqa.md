@@ -1,7 +1,11 @@
 # DocVQA — benchmark card
 
-Document visual question answering. Upstream docvqa.org. Scored by **ANLS**, no LLM judge. Two
-providers have results: OpenAI and Gemini.
+Document visual question answering. Upstream docvqa.org. Scored by **ANLS**, no LLM judge.
+
+**Four of the six have results, and four is the ceiling.** `gemini_eval.py`, `openai_eval.py`,
+`qwen_DocVQA/` and `gemma_DocVQA/` — exactly the four models that accept an image
+([model-calls.md](../../model-calls.md)). **XAI and Deepseek are blank here because they are
+text-only, not because the run is outstanding.** Nothing is waiting to be scheduled for them.
 
 ## Paths
 
@@ -17,6 +21,7 @@ DocVQA/
 ├── openai_eval.py · openai_eval_submit_array.sh · openai_eval_run_merge.sh
 ├── merge_openai_results.py · cleanup_shards.py       sharding support
 ├── gemini_eval.py · gemini_eval_script.sh
+├── qwen_DocVQA/qwen_eval.py · gemma_DocVQA/gemma_eval_half{1,2}.py
 ├── docvqa_output/docvqa_validation.json · images/    the data — 3.5 GB, mostly page images
 ├── openai_partial_results/                           shard state from the interrupted run
 ├── OpenAI_tesing/                                    retry probes (sic — the folder is misspelled)

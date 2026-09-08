@@ -12,7 +12,7 @@ the run looks complete while scoring 0.
 | DeepSeek `deepseek-v4-flash` | `openai.OpenAI`, `base_url="https://api.deepseek.com"`, `timeout=7200` | legacy `deepseek-reasoner` retired 2026-07-24; pass `extra_body={"thinking":{"type":"disabled"}}` for this classification benchmark |
 | Gemini `gemini-3.5-flash-lite` **via OpenRouter** | `openai.OpenAI`, `base_url="https://openrouter.ai/api/v1"` | the project's Gemini since 2026-08-23. `extra_body={"reasoning":{"effort":"minimal"}}`; a seed alone does not reproduce, the backend decides (below) |
 | ~~Gemini `gemini-2.5-flash`~~ *(superseded, still in the bbh/NegToM/DocVQA runners)* | `google.genai.Client` | no `system` role in messages; `thinking_budget=0`; do **not** set `max_output_tokens` (256 truncated JSON mid-object) |
-| xAI `grok-3-mini` | `xai_sdk.Client` | no message dicts — `chat.create(model=...)`, `chat.append(xai_system(...))`, `chat.append(xai_user(...))`, `chat.sample()`. It does accept `max_tokens`/`temperature` |
+| xAI `grok-3-mini` | `xai_sdk.Client` | no message dicts — `chat.create(model=...)`, `chat.append(xai_system(...))`, `chat.append(xai_user(...))`, `chat.sample()`. It does accept `max_tokens`/`temperature` | **RETIRED — xAI serves neither this id nor any alias of it, checked 2026-09-08 against `api.x.ai/v1/language-models`; the stored results stay valid but a new run fails. What it serves now: grok-4.3/4.5/4.6/4.20/build-0.1, all text+image.**
 | Qwen `Qwen/Qwen3.5-9B` | `together.Together`, **`timeout=180`** | hybrid model: pass `reasoning={"enabled": False}`; retain `max_tokens=8192` for visible JSON headroom |
 | Gemma `google/gemma-4-31B-it` | `together.Together`, **`timeout=300`** | intermittent empty string at HTTP 200 — retry up to 5× |
 
