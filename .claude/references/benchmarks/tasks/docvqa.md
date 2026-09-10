@@ -1,11 +1,13 @@
 # DocVQA — benchmark card
 
-<!-- size-budget: 6500 -->
+<!-- size-budget: 8000 -->
 <!-- One job — the card for one benchmark — and it is over the nudge because two of its sections
      exist to stop questions being re-asked: where upstream is (there is no vendored repo, and that
      is correct), and why the method is image-only (the challenge's own task definition, plus a
      decision the user made on 2026-09-09 after the alternative was costed). Deleting either is how
-     the same afternoon gets spent twice. -->
+     the same afternoon gets spent twice. Raised again on 2026-09-10 when the benchmark gained
+     a shared core and two runners on it, which put two generations of runner in one folder — the
+     paragraph explaining which is which is what stops a reader copying the wrong one. -->
 
 Document visual question answering. Upstream docvqa.org. Scored by **ANLS**, no LLM judge.
 
@@ -80,11 +82,29 @@ DocVQA/
 ├── merge_openai_results.py · cleanup_shards.py       sharding support
 ├── gemini_eval.py · gemini_eval_script.sh
 ├── qwen_DocVQA/qwen_eval.py · gemma_DocVQA/gemma_eval_half{1,2}.py
+├── docvqa_eval_core.py · merge_docvqa_shards.py      the shared core, added 2026-09-10
+├── DOCVQA_GPT_5.6_Luna/ · DOCVQA_Gemini_Flash3.5lite_Google/
+│   └── <vendor>_docvqa_eval.py · run_docvqa.sh · results/
 ├── docvqa_output/docvqa_validation.json · images/    the data — 3.5 GB, mostly page images
 ├── openai_partial_results/                           shard state from the interrupted run
 ├── OpenAI_tesing/                                    retry probes (sic — the folder is misspelled)
 └── OPENAI_EVAL_NOTES.md
 ```
+
+**Two generations of runner coexist here.** The four that produced results are standalone scripts
+with their own copy of the scorer, their own resume and their own sharding. The two added
+2026-09-10 — `DOCVQA_GPT_5.6_Luna` and `DOCVQA_Gemini_Flash3.5lite_Google`, the current pair —
+import **`docvqa_eval_core.py`** instead, on the shape bbh and MMLU already use. **The core's
+scorer and prompt are copied verbatim from the four**, deliberately: those results stay valid only
+if the new models are judged by the same matcher and asked the same question. Changing anything in
+the core means rescoring all six, not just scoring the new two.
+
+Gemini runs on the **native Google AI Studio route** (`GEMINI_FLASH_LITE_API_KEY`), matching the
+route MMLU's Gemini column was finished on, so that model's config is the same across both
+benchmarks. Two things about that key are worth knowing: Quest's `DocVQA/.env` did not carry it
+until 2026-09-10, and the SDK will silently prefer an ambient `GOOGLE_API_KEY` or `GEMINI_API_KEY`
+over the one you pass — on Quest that would have picked up the 2.5 run's `AIzaSy` key, a different
+quota, so the runner deletes both from the environment before building the client.
 
 ## Expected counts
 
