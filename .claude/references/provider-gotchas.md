@@ -1,4 +1,4 @@
-<!-- size-budget: 6000 -->
+<!-- size-budget: 7000 -->
 <!-- One row per provider plus its failure modes; it grows when a provider is added or
      replaced, which is the file working, not the file sprawling. -->
 # Provider gotchas
@@ -54,6 +54,13 @@ there raises a pydantic **`ValidationError` on every call**.
   `ValidationError` are not transient; retrying them spends the run to learn one fact.
 - On `gemini-3.5-flash-lite`, `thinking_budget=0` is rejected **400 INVALID_ARGUMENT** — thinking
   cannot be switched off.
+- **`MALFORMED_RESPONSE` is a real finish reason and it is deterministic.** On DocVQA,
+  2026-09-10, 5 of 5,349 page images came back HTTP 200 with thought tokens spent (83–267) and
+  **no output part at all**. Re-asking the same five at the same seed reproduces it exactly, so
+  it is a property of those inputs, not a transient — retrying is wasted. Two things follow:
+  google-genai 2.22 does not know the enum (`MALFORMED_RESPONSE is not a valid FinishReason`),
+  so read it as a string; and **an empty string at HTTP 200 raises nothing**, so a retry helper
+  that only logs exceptions leaves no trace of it anywhere.
 - **`thinking_budget` is a request, not a ceiling.** With it set to 128 over a 400-item EmoBench run,
   48 items thought anyway and 25 went past the budget, one to 532 tokens. A six-item probe had shown
   zero and was simply too small to see it. OpenRouter's `reasoning.effort="minimal"` on the *same

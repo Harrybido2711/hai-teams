@@ -230,6 +230,11 @@ def retry(fn, tries=3, base_sleep=2.0, label="", fatal=()):
             print(f"[{label}] attempt {attempt + 1}/{tries} failed: {err[:200]}", flush=True)
         if attempt < tries - 1:
             time.sleep(base_sleep * (2 ** attempt))
+    # An empty string at HTTP 200 raises nothing, so without this line every attempt is silent and
+    # the run's only trace of the failure is a blank cell. gemini-3.5-flash-lite returned exactly
+    # that on 5 of 5,349 images on 2026-09-10 — finish_reason MALFORMED_RESPONSE, thought tokens
+    # spent, no output part — and the logs held not one word about it.
+    print(f"[{label}] gave up after {tries} attempt(s), writing an empty row", flush=True)
     return ""
 
 
