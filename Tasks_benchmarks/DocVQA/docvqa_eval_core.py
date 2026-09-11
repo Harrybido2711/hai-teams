@@ -53,8 +53,10 @@ def _find_env():
 
 ENV_PATH = _find_env()
 
-# Bumped whenever the matcher changes behaviour, and written onto every result row.
-SCORER_VERSION = "docvqa_anls_v1"
+# Bumped whenever the matcher changes behaviour, and written onto every result row. A v1 number
+# cannot be compared with a v2 one without rescoring — v2 added two branches on 2026-09-11, the
+# history is on the benchmark's page.
+SCORER_VERSION = "docvqa_lenient_v2"
 
 # Byte-for-byte what the four finished runners sent. Do not tidy it.
 PROMPT = (
@@ -142,8 +144,43 @@ def anls_score(prediction, gold_answers, threshold=0.5):
     return best
 
 
+def squash(text):
+    """Every space and punctuation mark removed — the written form stripped to its characters.
+
+    `"JAN 17 '68"` and `"jan17'68"` are the same answer written two ways, and so are `DR.W.J.DARBY`
+    and `Dr. W. J. Darby`, `3. 28-2001` and `3-28-2001`. The existing branches normalise spacing OR
+    punctuation; this normalises both at once, which is where those pairs fall through.
+    """
+    return re.sub(r"[^\w]", "", normalize(text))
+
+
+def one_transposition(a, b, floor=8):
+    """True when `a` and `b` differ by exactly one swap of two ADJACENT characters.
+
+    An adjacent swap is the signature of a typing slip, and in this dataset it is usually the GOLD
+    that has it: `Grocrey` for `Grocery`, `laways` for `always`, `Cigfil` for `Cigifl`. It is a
+    different thing from a misreading — `Paul Saliman` for `Paul Saltman` is one substitution, not a
+    swap, and is a wrong answer.
+
+    **`floor` is not decoration.** Without it this branch credits `14` for `41`, which is a genuinely
+    different number; measured over all 32,094 stored rows that was the single false gain it made,
+    and 8 characters removes it while keeping all twelve real ones.
+    """
+    if len(a) != len(b) or a == b or len(a) < floor:
+        return False
+    d = [i for i, (x, y) in enumerate(zip(a, b)) if x != y]
+    return len(d) == 2 and d[1] == d[0] + 1 and a[d[0]] == b[d[1]] and a[d[1]] == b[d[0]]
+
+
 def score_response(model_output, gold_answers):
-    """Exact-match accuracy with four tolerances, verbatim from the finished runners."""
+    """Lenient exact match. Branches are additive and tried in order, so one can only gain rows.
+
+    Six branches. The first four are verbatim from the four standalone runners that produced this
+    benchmark's earlier results; branches 5 and 6 were added on 2026-09-11 and each was measured
+    over every stored row before being kept. **Every branch normalises how an answer is written.
+    None of them tolerates an answer being slightly wrong** — see the page for the fuzzy branch that
+    was measured and rejected for crediting `Paul Saliman` as `Paul Saltman`.
+    """
     fa = extract_final_answer(model_output)
     if not fa:
         return 0
@@ -159,6 +196,13 @@ def score_response(model_output, gold_answers):
         return 1
     fa_norm = normalize(fa)
     if any(fa_norm in normalize(g) or normalize(g) in fa_norm for g in gold_answers):
+        return 1
+    # 5 — spacing and punctuation removed together, +311 rows measured
+    sq = squash(fa)
+    if any(sq == squash(g) for g in gold_answers):
+        return 1
+    # 6 — one adjacent transposition, +12 rows measured, every one of them a typo in the gold
+    if any(one_transposition(sq, squash(g)) for g in gold_answers):
         return 1
     return 0
 

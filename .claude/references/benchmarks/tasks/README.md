@@ -27,7 +27,7 @@ What this folder's benchmarks share, and how they differ from the process benchm
 
 | Benchmark | Page | Unit | Scoring |
 |---|---|---|---|
-| DocVQA | [docvqa.md](docvqa.md) · [docvqa-method.md](docvqa-method.md) | 5,349 validation questions + page images | ANLS, max over each question's answer list — read docvqa-method.md before proposing OCR input or comparing against the paper's baseline |
+| DocVQA | [docvqa.md](docvqa.md) · [docvqa-method.md](docvqa-method.md) · [docvqa-scoring.md](docvqa-scoring.md) | 5,349 validation questions + page images | ANLS (graded, max over each question's answer list) plus a binary column at `docvqa_lenient_v2` — read docvqa-scoring.md before proposing to loosen the matcher, and docvqa-method.md before proposing OCR input |
 | BIG-Bench Hard | [bbh.md](bbh.md) · [bbh-parameters.md](bbh-parameters.md) · [bbh-scoring.md](bbh-scoring.md) | 20 task files, 4,833 items | one lenient matcher, `lenient_v5` — read bbh-scoring.md before comparing any two models, or before trusting a suspiciously low task score |
 | MMLU | [mmlu.md](mmlu.md) | 13 subject files, 3,943 items | accuracy, one lenient matcher — and **two different prompts**, see the page |
 

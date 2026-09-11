@@ -1,10 +1,9 @@
 # DocVQA — benchmark card
 
 <!-- size-budget: 7000 -->
-<!-- One job — the operational card for one benchmark: paths, layout, counts, results, traps. The
-     other job, "why is the method what it is", moved to docvqa-method.md on 2026-09-10 after this
-     file crossed its budget a third time. It is still over the 5 KB nudge because six runners in
-     two generations live in one folder and the paragraph saying which is which is what stops a
+<!-- One job — the operational card: paths, layout, counts, results, traps. Method went to
+     docvqa-method.md and the matcher to docvqa-scoring.md. Over the 5 KB nudge because six runners
+     in two generations share one folder, and the paragraph saying which is which is what stops a
      reader copying the wrong one. -->
 
 Document visual question answering. Upstream docvqa.org. Scored by **ANLS**, no LLM judge.
@@ -82,18 +81,18 @@ not after.
 
 ## Results — all four image-capable models, verified 2026-09-10
 
-5,349 validation questions each. **ANLS is the reported metric**; accuracy is exact match with the
-four tolerances the scorer allows, and is shown because a gap between them says the model was
-right but phrased it differently.
+5,349 validation questions each. **ANLS is the reported metric**; accuracy is the binary column,
+lenient since `docvqa_lenient_v2` on 2026-09-11, and is shown because a gap between the two says
+the model was right but phrased it differently.
 
 | Slot | Model | ANLS | Accuracy | Empty | Among the six |
 |---|---|---|---|---|---|
-| Qwen | `Qwen/Qwen3.5-9B` | **0.9568** | 0.9611 | 3 | yes |
-| Gemini | `gemini-3.5-flash-lite` | **0.9394** | 0.9602 | 5 | yes |
-| Gemma | `google/gemma-4-31B-it` | **0.9293** | 0.9306 | 16 | yes |
-| OpenAI | `gpt-5.6-luna` | **0.8635** | 0.9151 | 0 | yes |
-| — | `gemini-2.5-flash` | 0.9357 | 0.9491 | 3 | no — superseded |
-| — | `gpt-4o-mini-2024-07-18` | 0.8583 | 0.8746 | 0 | no — superseded |
+| Qwen | `Qwen/Qwen3.5-9B` | **0.9568** | 0.9705 | 3 | yes |
+| Gemini | `gemini-3.5-flash-lite` | **0.9394** | 0.9686 | 5 | yes |
+| Gemma | `google/gemma-4-31B-it` | **0.9293** | 0.9405 | 16 | yes |
+| OpenAI | `gpt-5.6-luna` | **0.8635** | 0.9288 | 0 | yes |
+| — | `gemini-2.5-flash` | 0.9357 | 0.9587 | 3 | no — superseded |
+| — | `gpt-4o-mini-2024-07-18` | 0.8583 | 0.8841 | 0 | no — superseded |
 | XAI · Deepseek | — | — | — | — | **cannot run — text-only** |
 
 Both replacements beat the model they replaced, narrowly: Gemini 0.9394 against 0.9357, OpenAI
@@ -113,7 +112,11 @@ sheet.
 
 ## Scoring
 
-**ANLS, and it must take the maximum over the answer list.** Every question carries several
-acceptable answers, so scoring against one of them systematically under-reports. `gemini_eval.py`
-does this correctly: normalised Levenshtein, the standard **0.5 threshold** below which the score is
-zero, and `max` across the gold list.
+**ANLS is the reported metric and it is graded** — a near-miss scores its similarity rather than
+zero, taking the **maximum over each question's answer list** with the official **0.5 threshold**.
+The binary `score` column is a project addition and is at `docvqa_lenient_v2`.
+
+**Both the version history and the fuzzy branch that was measured and refused:
+[docvqa-scoring.md](docvqa-scoring.md).** Read it before proposing that the matcher be loosened —
+three fuzzy variants were measured over all 32,094 stored rows and each one credited misread names,
+phone numbers or dollar amounts.
