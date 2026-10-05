@@ -44,7 +44,7 @@ def rel(p):
 
 
 def doc_files():
-    out = [os.path.join(REPO, f) for f in ("CLAUDE.md", "PLAN.md", "README.md")]
+    out = [os.path.join(REPO, f) for f in ("CLAUDE.md", "AGENTS.md", "PLAN.md", "README.md")]
     out += glob.glob(os.path.join(REPO, ".claude", "**", "*.md"), recursive=True)
     out += glob.glob(os.path.join(REPO, "LLM_as_judge", "*.md"))
     skip = (os.sep + "memory" + os.sep, os.sep + "patches" + os.sep)

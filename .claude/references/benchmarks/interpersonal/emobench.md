@@ -8,7 +8,7 @@ providers have results.
 | | Path |
 |---|---|
 | Local | `Interpersonal_processes_benchmarks/EmoBench` |
-| Quest | `/gpfs/projects/p32983/Interpersonal_processes_benchmarks/EmoBench` — **the remote name is not the local one** |
+| Quest | `/gpfs/projects/p32983/Interpersonal_processes_benchmarks/EmoBench` — moved from the flat `EmoBench-master/` on 2026-08-23; that old name is stale |
 
 ## Layout
 

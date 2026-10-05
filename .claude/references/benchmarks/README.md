@@ -32,11 +32,10 @@ page points at it and does not restate it. Two copies drift.
 Counts marked *verified* were measured from the local tree on 2026-08-22. Anything not established
 is written as not established, never inferred from what a benchmark "probably" does.
 
-**The Quest rows are the weakest field on every page.** Three remote paths are known from
-`quest-cluster.md` — NegotiationToM, EmoBench (remote name `EmoBench-master`) and DocVQA. The other
-seven say *not verified*, because Quest itself was not checked: the current working scope is the
-local tree, and the sync happens once local is settled. Do not upgrade a "not verified" to a "not
-present" without looking.
+**The Quest rows are the weakest field on every page.** Five remote paths are recorded —
+NegotiationToM and EmoBench under `Interpersonal_processes_benchmarks/`, DocVQA, bbh and mmlu under
+`Tasks_benchmarks/`, each on its page. The other five say *not verified*, because Quest itself was
+not checked for them. Do not upgrade a "not verified" to a "not present" without looking.
 
 ## Known gap: the problem log is still single-benchmark
 
@@ -50,7 +49,7 @@ benchmark it concerns, and never read a NegotiationToM entry as a statement abou
 Fill only what has been verified, and delete anything you move out of a generic reference rather than
 leaving a copy behind. The seven fields worth having, in the order they get used:
 
-1. **Paths** — local, and on Quest. The 2026-08-19 reorganisation moved only the local side.
+1. **Paths** — local, and on Quest. Write the Quest one out in full; it is never inferred.
 2. **Layout** — the per-model folders or the flat scripts, the shared code they import, the data.
 3. **Expected counts** — per task, and what a wrong count means. This is the field that catches
    silent bugs.

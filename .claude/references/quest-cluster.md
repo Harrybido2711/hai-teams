@@ -4,19 +4,22 @@
 
 Northwestern's cluster. Key-based SSH to `uwr0681@login.quest.northwestern.edu`
 (`~/.ssh/id_ed25519`); project space `/gpfs/projects/p32983/`. **Each benchmark's remote path is on
-its page in [benchmarks/](benchmarks/README.md)** — the remote layout is flat and did not follow the
-2026-08-19 local reorganisation, so a path inferred from the local tree is wrong. Never ask for or
-use the NetID password. `client_global_hostkeys_prove_confirm ... libcrypto` on connect is cosmetic; filter
-it out.
+its page in [benchmarks/](benchmarks/README.md)** — read it there, never infer it from the local
+tree. Never ask for or use the NetID password. `client_global_hostkeys_prove_confirm ... libcrypto`
+on connect is cosmetic; filter it out.
 
-**Hard boundary:** under `/projects/p32983` touch only directories owned by `uwr0681` —
-`NegotiationToM/`, `EmoBench-master/`, `DocVQA/`. The rest belong to other project members.
+**Hard boundary:** under `/projects/p32983` touch only this account's (`uwr0681`) directories —
+`Interpersonal_processes_benchmarks/` (NegotiationToM, EmoBench) and `Tasks_benchmarks/` (DocVQA,
+bbh, mmlu), moved there 2026-08-23 and 2026-08-30. The flat top-level folders — `bbh`, `mmlu`,
+`LLMs-Planning-main`, the `*_DocVQA` copies, `pythonenvs`, `eval`, `gen-ai-ngt` — belong to other
+accounts. An old flat path such as `/gpfs/projects/p32983/NegotiationToM` is stale.
 
 ## Transferring
 
 Transfer with `ssh quest "cat > $REMOTE/$f" < $LOCAL/$f`, then **verify with `md5sum`**. Never
 assume a transfer landed. **Never overwrite `.env` on Quest** and never copy it out — it exists only
-there; if it goes missing, `cp ../EmoBench-master/.env .env`.
+there; if it goes missing, copy it from a sibling directory of ours on Quest — from NegotiationToM,
+`cp ../EmoBench/.env .env`.
 
 **Transfer every locally modified file as one set, not the one you happened to edit.** The unit of
 a sync is the whole change — everything touched since the last transfer goes up together and is

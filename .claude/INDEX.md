@@ -6,7 +6,8 @@ cluster against six commercial providers, with every reported number taken from 
 — the selected models — while `Tempo_results.xlsx` keeps a column for every model ever run (`PLAN.md`).
 
 Read this file, then only what the task needs. Nothing else is loaded up front — that is the design,
-not an omission.
+not an omission. **Hit a problem, or a task done before?** [`../AGENTS.md`](../AGENTS.md) maps the
+situation to the first move and the file that holds the detail.
 
 ## What the work is
 

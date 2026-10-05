@@ -1,12 +1,11 @@
 # watch-live-runs
 
-Several runs of one benchmark are executing side by side, and the question is two questions at once:
-**is either in trouble**, and **which is cheaper and faster**. Read-only, so it can be run on a timer
-and beside a supervising workflow.
+One run, or several runs of one benchmark side by side, are executing on Quest, and the question is
+**is it in trouble and when will it finish** — plus, with several, **which is cheaper and faster**.
+Any benchmark. Read-only, so it can be run on a timer.
 
-`check-status` answers the first question for one model, and only on NegotiationToM.
-`compare-providers` answers the second by *launching* a fresh pilot. This one measures runs that are
-already going, which is the only way to compare the actual job you are paying for.
+It measures runs that are already going, which is the only way to judge the actual job you are
+paying for. The same checks by hand are in `../references/quest-cluster.md` § Reading the live state.
 
 ## Input
 
@@ -26,7 +25,7 @@ Workflow({scriptPath: ".claude/workflows/watch-live-runs.js", args: {
 }})
 ```
 
-`runs` needs at least two entries — for one, use `check-status`. `priceIn`/`priceOut` are $/M tokens
+`runs` takes one entry or several. `priceIn`/`priceOut` are $/M tokens
 and are optional: **omit them rather than guessing**, and the cost cell reports *not established*
 instead of a number that looks measured.
 
@@ -62,13 +61,13 @@ finding rather than as the misconfiguration it is.
 | Symptom | Cause |
 |---|---|
 | every cost cell says *not established* | `priceIn`/`priceOut` were omitted, or the runner recorded no token counts — the second is the usual one, see below |
-| "args.runs needs at least two entries" | one run was passed; `check-status` is the tool for that |
+| "args.runs needs at least one entry" | `runs` was empty or not an array |
+| a count that is zero or larger than the row count | the observer counted a guessed field name. The prompt makes it print one real row's keys first; a hand check has to do the same |
 | a healthy run reported as stalled | judged from `log.txt` size. **These runners do not flush stdout**, so a 0-byte log is normal all the way through a working run; the workflow's prompts forbid this inference, but a hand check can still make it |
 | the finish-time projection is far out | it assumes the current rate holds, which a run that has started retrying will not do |
 
-**The standing gap this workflow cannot close:** neither EmoBench flash-lite runner records
-per-call `usage` — not prompt tokens, not completion tokens, and not OpenRouter's per-call
-`usage.cost`, which its API returns and the runner discards. Only `thinking_tokens` is kept. So cost
-is *derived* from supplied prices and assumed token counts, and every derived number is labelled as
-such. Fixing this means adding usage capture to the runners — which must not be done mid-run, since
+**The gap this workflow cannot close:** a runner that does not record per-call `usage` — prompt
+tokens, completion tokens, OpenRouter's per-call `usage.cost` — leaves cost to be *derived* from
+supplied prices and assumed token counts, and every derived number is labelled as such. Both
+EmoBench flash-lite runners are like this: they keep only `thinking_tokens`. Fixing this means adding usage capture to the runners — which must not be done mid-run, since
 one result set would then hold two record shapes.

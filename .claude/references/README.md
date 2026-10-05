@@ -28,6 +28,7 @@ and proceeding anyway is the failure this table exists to prevent.
 | Triggered by | Read | Cost |
 |---|---|---|
 | anything at all, before deciding what is true about this repo | [shared-context.md](shared-context.md) | 4 KB — always |
+| something went wrong, or the task has been done before — the fastest first move | [../../AGENTS.md](../../AGENTS.md), keyed by situation where this table is keyed by topic | 11 KB |
 | a named benchmark — its paths, expected counts, tasks, output layout, run order, traps | [benchmarks/](benchmarks/README.md), then that benchmark's group and page | 3 KB + page |
 | `ssh`, transfer, `md5sum`, `sbatch`, `scancel`, `squeue`, shard, array, "pull results", a Quest path | [quest-cluster.md](quest-cluster.md) | 7 KB |
 | a provider name (GPT, Gemini, Gemma, Qwen, Deepseek, grok), client, timeout, empty response, halt marker | [provider-gotchas.md](provider-gotchas.md) | 3 KB |

@@ -11,8 +11,8 @@ What the two share, and what a third benchmark in this folder would be expected 
 - **The same sbatch shape**: `--account=p32983`, `--partition=long`, 8 GB, and the runner invoked with
   `--task all --save-every 20`.
 - **Output split by task** under `results/<task>/`, with a `_overall.csv` beside the per-item rows.
-- **Both directories are ours on Quest** (`NegotiationToM/`, `EmoBench-master/`) — note the remote
-  EmoBench name differs from the local one.
+- **Both directories are ours on Quest**, under `Interpersonal_processes_benchmarks/` with the same
+  names as locally since 2026-08-23. The old flat `NegotiationToM/` and `EmoBench-master/` are stale.
 
 | Benchmark | Page | Tasks | Items | Scoring |
 |---|---|---|---|---|

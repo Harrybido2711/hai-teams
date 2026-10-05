@@ -34,6 +34,7 @@ hai-teams/
 │   └── JUDGE_SUMMARY.md                 its two-page version, for discussion
 ├── .claude/                             INDEX, tools, agents, references, workflows (see below)
 ├── CLAUDE.md                            planner rules only; `.claude/INDEX.md` is the entry point
+├── AGENTS.md                            situation → fastest first move, for Claude and Codex alike
 ├── PLAN.md                              this file
 ├── README.md
 ├── Tempo_results.xlsx                   every model ever run — the wide record
@@ -203,6 +204,7 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 | File                                                   | Authoritative on                                                                                                                              |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | `CLAUDE.md`                                          | planner **rules** only — who decides, the kill-and-resync authorisation, the invariants that hold on every task, and the discipline that keeps the docs usable |
+| `AGENTS.md`                                          | the fast path for any agent, Claude or Codex: situation → first move → the file that holds the detail. An index keyed by symptom; it holds no knowledge of its own |
 | `.claude/INDEX.md`                                   | the entry point: project goal and stage in one page, the terms this project uses in a specific way, and the three files always read first |
 | `.claude/tools/README.md`                            | the dictionary of what can be dispatched — nine workflows and six agents, one row each, with a detail file per workflow |
 | `.claude/references/sync-and-consistency.md`         | the three sync layers — local↔local, local↔Quest, local↔git — what enforces each, and when the Quest one applies at all |

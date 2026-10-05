@@ -1,10 +1,10 @@
 export const meta = {
   name: 'watch-live-runs',
-  description: 'Read-only health check across several runs of one benchmark at once, with a cost and wall-clock comparison between them',
-  whenToUse: 'Two or more jobs of the same benchmark are running side by side and the question is both "is either in trouble" and "which is cheaper/faster". Pass {benchmark, questDir, runs:[{label,dir,jobId}], expected}. Strictly read-only — never submits, cancels, edits or transfers, so it is safe beside a supervising workflow and cheap enough to repeat on a timer. Use check-status for a single model on NegotiationToM; use compare-providers to launch a fresh pilot rather than watch one already running.',
+  description: 'Read-only health check of one or more live runs of one benchmark, with finish time, cost, and a comparison when there are several',
+  whenToUse: 'A job (or several jobs of the same benchmark) is running on Quest and the question is "is it in trouble, and when will it finish" — plus "which is cheaper/faster" when there are several. Any benchmark. Pass {benchmark, questDir, runs:[{label,dir,jobId}], expected}. Strictly read-only — never submits, cancels, edits or transfers, so it is cheap enough to repeat on a timer.',
   phases: [
-    { title: 'Observe', detail: 'one watcher per run: queue, rows, process state, empties, retries' },
-    { title: 'Compare', detail: 'evaluator: health verdict per run, then cost and finish-time table' },
+    { title: 'Observe', detail: 'one observer per run: queue, rows, process state, empties, retries' },
+    { title: 'Judge', detail: 'health verdict per run, finish time and cost; a comparison when there are several' },
   ],
 }
 
@@ -12,7 +12,7 @@ export const meta = {
 // args: {
 //   benchmark:  "EmoBench"                                        required
 //   questDir:   "/gpfs/projects/p32983/..../EmoBench"             required
-//   runs: [                                                       required, 2+
+//   runs: [                                                       required, 1+
 //     { label: "Google",     dir: "EMO_..._Google",     jobId: 3810331,
 //       priceIn: 0.10, priceOut: 0.40 },        // $/M tokens, omit if not established
 //     { label: "OpenRouter", dir: "EMO_..._OpenRouter", jobId: 3810332,
@@ -47,8 +47,8 @@ const SINCE = A.sinceMinutes || 0
 if (!BENCH || !QDIR) {
   return { status: 'cannot-tell', aborted: 'args.benchmark and args.questDir are both required' }
 }
-if (RUNS.length < 2) {
-  return { status: 'cannot-tell', aborted: 'args.runs needs at least two entries; use check-status for a single run' }
+if (RUNS.length < 1) {
+  return { status: 'cannot-tell', aborted: 'args.runs needs at least one entry' }
 }
 for (const r of RUNS) {
   if (!r || !r.label || !r.dir) {
@@ -117,14 +117,17 @@ Collect and report:
    this far: \`hrtimer_nanosleep\` means the process is inside a sleep between calls, which is
    normal for these runners (they sleep 2.0s per item); accumulating CPU time means it is working.
    A process pinned at zero CPU growth across two checks is the thing worth flagging.
-5. **Quality of the rows already written.** From the .jsonl, count:
-   - rows whose model_response is empty
-   - finish_reason values, especially anything containing MAX_TOKENS — that means thinking consumed
-     max_output_tokens and the item was billed for nothing scoreable
-   - thinking_tokens: min, median, max
-   - use_cot and use_cot_source: report the distinct values. More than one value across a run means
-     two conditions are mixed in one result set, which is a finding, not a curiosity.
-   - for OpenRouter-style runs only, the distinct served_by values and their counts.
+5. **Quality of the rows already written.** Field names differ by benchmark and runner, so **print
+   the keys of one real row first** and map them before counting anything — a guessed field name
+   counts nothing, or counts the wrong thing, and looks like a measurement either way. Then, from
+   the .jsonl, count:
+   - rows whose response text is empty
+   - finish-reason values, especially anything containing MAX_TOKENS — that means thinking consumed
+     the output cap and the item was billed for nothing scoreable
+   - thinking tokens, if recorded: min, median, max
+   - any reasoning-visibility flag (e.g. use_cot): report the distinct values. More than one value
+     across a run means two conditions are mixed in one result set, which is a finding.
+   - any served-by / backend field (OpenRouter-style runs): the distinct values and their counts.
 6. **Errors.** grep log.err and log.txt for API error, Retrying, Traceback, rate, quota, 429, 500.
    Report counts and the last two verbatim. Then state explicitly whether the log is buffered, so
    the reader knows whether "no errors" means "none happened" or "none visible yet".
@@ -143,8 +146,8 @@ if (seen.length === 0) {
   return { status: 'cannot-tell', aborted: 'every observer failed; nothing was measured' }
 }
 
-// ---------- 2. Compare ----------
-phase('Compare')
+// ---------- 2. Judge ----------
+phase('Judge')
 
 const priceTable = RUNS.map((r) => `  ${r.label}: ` + (
   r.priceIn === undefined && r.priceOut === undefined
@@ -153,8 +156,8 @@ const priceTable = RUNS.map((r) => `  ${r.label}: ` + (
 )).join('\n')
 
 const comparison = await agent(
-  `Two or more runs of ${BENCH} are executing side by side. Below is what each observer measured.
-Judge each run's health, then compare them on cost and finish time.
+  `${RUNS.length === 1 ? 'One run' : `${RUNS.length} runs, side by side,`} of ${BENCH} ${RUNS.length === 1 ? 'is' : 'are'} executing. Below is what each observer measured.
+Judge each run's health, then its cost and finish time${RUNS.length === 1 ? '' : ', and compare them'}.
 ${READONLY}
 ${BUFFERING}
 
@@ -175,8 +178,10 @@ Produce, in this order:
    projected total wall-clock. State the assumption — a projection from the current rate assumes the
    rate holds, and a run that has hit retries will not hold it.
 
-3. **Cost table.** This is the part to be careful with, because **neither runner records per-call
-   token usage or cost** — only thinking_tokens. So:
+3. **Cost table.** This is the part to be careful with. First say, per run, whether its rows record
+   per-call usage (prompt tokens, completion tokens, a provider cost field) or only thinking tokens —
+   the EmoBench flash-lite runners recorded only thinking tokens. Where usage is recorded, sum it:
+   that is measured. Where it is not:
    - Report thinking tokens per row (median and max) from the observations. That is measured.
    - Where prices were supplied, compute a cost estimate ONLY if the observations contain enough
      token data to do so, and **label every such number "derived, not measured"**, naming what you
@@ -185,7 +190,7 @@ Produce, in this order:
      cell. Do not fill a gap with a plausible number.
    - State plainly, as a recommendation, that comparing cost properly needs the runners to record
      usage per call (prompt tokens, completion tokens, and OpenRouter's per-call usage.cost, which
-     its API returns and this runner currently discards).
+     its API returns and a runner that keeps only thinking tokens discards).
 
 4. **What needs a decision** — anything the planner must act on: a stalled run, MAX_TOKENS empties
    that mean raising the cap, mixed use_cot values in one result set, a provider that switched
@@ -196,7 +201,7 @@ Produce, in this order:
 
 End with one line, exactly:
 STATUS: <trustworthy|partial|untrustworthy|cannot-tell> / <continue|kill|kill-and-archive|prune-and-resume|publish|needs-human>`,
-  { label: 'compare', phase: 'Compare' },
+  { label: 'judge', phase: 'Judge' },
 )
 
 const verdicts = {}

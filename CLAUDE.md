@@ -19,6 +19,10 @@ in this file exist because one of those already happened.
 [`.claude/tools/README.md`](.claude/tools/README.md) for what can be dispatched,
 [`.claude/references/README.md`](.claude/references/README.md) for what to read before acting.
 
+**Something failed, or the task has been done before? [`AGENTS.md`](AGENTS.md) first** — situation →
+first move → the file that holds the detail. Check it before diagnosing from scratch. It is written
+for every agent; Codex loads it automatically.
+
 This file holds **what the job is and the rules it runs under**. Each phase below names the file to
 read and the tool to reach for — it points, it never copies. Anything explaining *how* to do
 something belongs in a reference; anything cataloguing *what exists* belongs in the index. A summary
@@ -70,7 +74,8 @@ ready the code looks. Phases 1, 2 and 5 need no such permission; this one always
 rule, 2026-08-30, set after a full bbh sweep was run locally instead: correct data, but tied to one
 laptop staying awake, invisible to Quest, and the cluster idle throughout. Probing a provider's
 parameter surface and rescoring stored rows offline are still local work — they cost no cluster
-time and make no run.
+time and make no run. **Never run locally to get around a sync that looks awkward** — that was the
+actual failure; solve the sync instead ("不要为了绕过同步而在 local 上跑").
 
 - *Memory* — `references/quest-cluster.md` for transfers, `md5sum`, SLURM and the two ways the
   pre-submit gate lies; the benchmark's page for its remote path and run order, which are not
