@@ -586,6 +586,9 @@ A6 for why removing it would be a silent trap if the dataset is ever updated.
 
 ## 3 · AwareBench
 
+**Not run — the user dropped the 60 judged rows on 2026-10-05 (D5).** This section stays as the
+record of the judge we chose not to run, and of why.
+
 Scope: **60 of 4,075 rows are judged** — the `mission_open-ended` dimension, and nothing else. The
 other 4,015 rows carry an exact-match key on disk. The section below argues that excluding them is a
 decision with a cost attached, not an omission.
@@ -844,6 +847,14 @@ absent, and its own committed CSVs disagree with each other on the same model an
 record is written for it because there is nothing to run. Decided by the user 2026-08-05, pending a
 separate confirmation with the advisor.
 · Source: `AWARENESS_NOTES.md` §0, §4
+
+**D5 · The 60 judged rows are dropped.** Decided by the user on 2026-10-05. It answers
+`JUDGE_SUMMARY.md` §6 question 1 for AwareBench.
+- **Why they were the weakest case:** the rows have no reference and no per-item rubric (B3). The
+  paper's two evaluator prompts put the same responses 28 points apart.
+- **What follows:** AwareBench needs no judge. `mission` becomes a two-term mean, and the headline
+  is no longer the paper's.
+- **Where the consequences live:** `AWARENESS_NOTES.md` §5.0.
 
 ---
 

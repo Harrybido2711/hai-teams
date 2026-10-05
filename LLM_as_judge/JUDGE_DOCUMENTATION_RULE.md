@@ -52,7 +52,7 @@ in order, so a record can be checked against it field by field.
 
 | Needs a record | Needs none |
 |---|---|
-| AWAREBENCH (the 60 `mission_open-ended` rows only), Wonderbread (its judge-scored subtasks), MultiChallenge (all items) | Multi-party Goal Tracking, PlanBench, NegotiationToM, EmoBench, DocVQA, BIG-Bench Hard, MMLU |
+| Wonderbread (its judge-scored subtasks), MultiChallenge (all items) | Multi-party Goal Tracking, PlanBench, NegotiationToM, EmoBench, DocVQA, BIG-Bench Hard, MMLU — and AwareBench since 2026-10-05, when its 60 judged rows were dropped (its old record stays in `JUDGE_RECORD.md` §3) |
 
 **The right-hand column gets no record at all** — there is no judge, so there is nothing about one to
 document. They are listed once, by name and with their scoring code, in the first section of

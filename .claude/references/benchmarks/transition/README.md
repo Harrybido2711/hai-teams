@@ -6,7 +6,7 @@ The only safe generalisation is that **none of them has produced a result yet.**
 
 | Benchmark | Page | Scoring | What stands between here and a number |
 |---|---|---|---|
-| AwareBench | [awarebench.md](awarebench.md) | mostly accuracy; 60 rows LLM-judged | scope is settled and templates exist, but no generation has run |
+| AwareBench | [awarebench.md](awarebench.md) | accuracy; its 60 LLM-judged rows were dropped 2026-10-05 | scope is settled and templates exist, but no generation has run |
 | PlanBench | [planbench.md](planbench.md) | VAL/PDDL validator — no LLM | no runner of ours |
 | mpgt-eval | [mpgt.md](mpgt.md) | human review | no runner of ours |
 

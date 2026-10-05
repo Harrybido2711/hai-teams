@@ -1,7 +1,7 @@
 # AwareBench — benchmark card
 
-Mission analysis, formulation and planning. Upstream `HowieHwong/Awareness-in-LLM`. Partly
-LLM-judged. No generation has run.
+Mission analysis, formulation and planning. Upstream `HowieHwong/Awareness-in-LLM`. No LLM judge
+since 2026-10-05: its only judged rows were dropped. No generation has run.
 
 ## Paths
 
@@ -25,19 +25,20 @@ confirmation with the advisor about whether it is wanted at all.
 
 ## The judge
 
-60 of the 4,075 rows — the `mission_open-ended` subset — are LLM-judged. `LLM_as_judge/JUDGE_RECORD.md`
-§3 is the record, and **three blockers are open**: the judge prompts are not in the repo (A4; they
-must be transcribed from paper Figures 8–10), the 1–5 scale's direction is unset (A6), and the judge's
-decoding settings are unpublished (C1). A run started before A4 is closed is not a faithful
-reproduction.
+**None is run.** The 60 `mission_open-ended` rows were the only LLM-judged rows, and the user dropped
+them on 2026-10-05.
+- **Consequences** (budget, the two-term `mission`, and why the headline is no longer the paper's):
+  `AWARENESS_NOTES.md` §5.0.
+- **The judge we chose not to run:** `LLM_as_judge/JUDGE_RECORD.md` §3.
 
 ## Budget
 
-Per model: **4,075 generation calls + 120 judge calls**.
+Per model: **4,015 generation calls, no judge calls**.
 
 ## What exists, and what does not
 
-`Output_template/` holds the seven result CSVs the run must produce;
+`Output_template/` holds the result CSVs the run must produce, except `*_mission_open-ended.csv`,
+which is no longer produced;
 `awareness_paper_baseline.csv` holds the published numbers to check against. There is **no runner and
 no scoring code** — upstream points at the external `trustllm` package, but every metric is stated in
 the paper §5.1, so a local scorer is straightforward.

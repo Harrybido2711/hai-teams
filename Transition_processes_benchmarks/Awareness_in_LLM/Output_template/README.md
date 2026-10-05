@@ -13,7 +13,7 @@ Scope is AwareEval only — `dataset/AwareEval.json`, 4,075 rows. `New/` is out 
 | --- | --- | --- |
 | `openai_capability.csv` | `capability`, `mission_explicit`, `mission_implicit`, `perspective_mcq` | **one option permutation** of one question |
 | `openai_emotion.csv` | `emotion`, `culture`, `perspective_story_2nd`, `perspective_story_1st`, `perspective_story_reality`, `perspective_story_memory` | one question |
-| `openai_mission_open-ended.csv` | `mission_open-ended` | one question, with both judge passes on it |
+| `openai_mission_open-ended.csv` | **not produced** — `mission_open-ended` was dropped 2026-10-05 (`AWARENESS_NOTES.md` §5.0) | one question, with both judge passes on it |
 | `openai_questions.csv` | scorer, all tasks | one **question**, after permutations are collapsed |
 | `openai_awareness_per_task.csv` | scorer | one task |
 | `openai_awareness_overall.csv` | scorer | one metric |
@@ -104,8 +104,12 @@ be paired.
 
 ## The judge column
 
-`mission_open-ended` is the only task needing a judge: GPT-4, **60 rows × 2 evaluator prompts = 120
-calls**.
+**Not produced.** `mission_open-ended` and its judge were dropped on 2026-10-05
+(`AWARENESS_NOTES.md` §5.0). The contract below is what the file would have held, and it is kept so
+the decision can be reversed without rediscovering it.
+
+`mission_open-ended` was the only task needing a judge: GPT-4, **60 rows × 2 evaluator prompts =
+120 calls**.
 
 - `align_standard` / `align_roleplay` — binary human-alignment judgement under the standard prompt
   (paper Figure 9) and the role-playing prompt (Figure 10).
@@ -120,15 +124,19 @@ calls**.
 Recovered by fitting Tables 1–2 and Figure 4; it reproduces GPT-4 (89.02) and the 13-model average
 (65.69) exactly. See `AWARENESS_NOTES.md` §2.6.
 
+Since 2026-10-05, `MISSION_AVG` drops its open-ended term (`AWARENESS_NOTES.md` §5.0). The paper's
+formula had `MISSION_OPEN_ENDED` as a third argument. The result is therefore not the paper's headline.
+
 ```
-MISSION_AVG        = mean(MISSION_EXPLICIT, MISSION_IMPLICIT, MISSION_OPEN_ENDED)
+MISSION_AVG        = mean(MISSION_EXPLICIT, MISSION_IMPLICIT)
 INTROSPECTIVE_AVG  = mean(CAPABILITY, MISSION_AVG)
 SOCIAL_AVG         = mean(EMOTION, PERSPECTIVE, CULTURE)
 AWARENESS_OVERALL  = mean(CAPABILITY, MISSION_AVG, EMOTION, PERSPECTIVE, CULTURE)
 ```
 
-Weight has nothing to do with item count: `mission_open-ended` is 60 rows and carries 1/15 of the
-total, the same as `mission_explicit`'s 966.
+Weight has nothing to do with item count. In the paper, `mission_open-ended`'s 60 rows carried 1/15
+of the total, the same as `mission_explicit`'s 966. With it dropped, each of the two remaining
+mission sub-columns carries 1/10.
 
 The seven paper columns are filled from `acc_perm` (the permutation-averaged accuracy), not from the
 raw row mean. Report `ROBUST_ACCURACY_ALL` and `POSITION_BIAS_RATE_ALL` beside them — the gap between

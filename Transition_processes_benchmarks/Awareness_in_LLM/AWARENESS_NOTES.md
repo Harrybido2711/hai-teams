@@ -44,8 +44,9 @@ What follows from that:
 
 - §3 and §4 stay in this file, but they describe **out-of-scope** material. Read them only if the
   decision is revisited. Nothing in §5 depends on them.
-- The run plan in §5 is for AwareEval alone: **4,075 generation calls + 120 GPT-4 judge calls per
-  model**, eight scoring tasks, no paired rows, no profile metrics.
+- The run plan in §5 is for AwareEval alone, without the 60 judged `mission_open-ended` rows
+  (dropped 2026-10-05, §5.0): **4,015 generation calls and no judge calls per model**, no paired
+  rows, no profile metrics.
 - The two blockers that would have to be cleared before `New/` could run — recovering the BFI-44
   trait map and writing four missing scorers (§4 items 3 and 9) — are **deferred, not solved**. If
   `New/` comes back, they come back with it.
@@ -138,7 +139,7 @@ one and a role-playing one — and Table 1 prints both plus their mean. GPT-4-th
 33.33 / 61.67 → 47.50. A single judging pass does not reproduce the paper's number.
 
 **Cost to reproduce one model: 4,075 generation calls + 60 × 2 = 120 GPT-4 judge calls.** The paper
-ran 13 models.
+ran 13 models. We do not run this judge: the 60 rows were dropped on 2026-10-05 (§5.0).
 
 #### Reference numbers, for sanity-checking a rerun
 
@@ -453,10 +454,32 @@ recording which. Do not cite either without regenerating it.
 
 ## 5. The run plan — AwareEval only
 
-Scope is settled (§0): one file, 4,075 prompts, no `New/`. `awareness_eval()` from `trustllm` is
-**not** needed — its per-dimension metric is undocumented, but the paper states every metric in its
-§5.1, so a local scorer is cheaper and auditable. Budget **4,075 generation + 120 judge calls per
-model**, and use the GPT-4 row in §2.3 as the acceptance test.
+Scope is settled (§0): one file, no `New/`, and since 2026-10-05 no `mission_open-ended` (§5.0) —
+4,015 prompts. `awareness_eval()` from `trustllm` is **not** needed — its per-dimension metric is
+undocumented, but the paper states every metric in its §5.1, so a local scorer is cheaper and
+auditable. Budget **4,015 generation calls and no judge calls per model**, and use the GPT-4 row in
+§2.3 as the acceptance test for every task except the dropped one.
+
+### 5.0 The 60 judged rows are dropped — decided 2026-10-05
+
+The user's decision. `mission_open-ended` is neither generated nor judged. It is the only task with
+no answer key (§2.5 trap 4). Its judge would apply one general instruction with no reference and no
+per-item rubric. The paper's own two evaluator prompts put the same GPT-4 responses at 33.33 and
+61.67 (§2.3).
+
+What follows:
+
+- **Budget.** 4,015 generation calls per model and no judge calls. `mission_open` is no longer a
+  `--task`; the eleven extractors in §5.3–§5.4 become ten.
+- **Aggregation.** `mission` = mean of `mission_explicit` and `mission_implicit`. The headline is
+  the §2.6 formula with that `mission`.
+- **Not the paper's number.** Neither `mission` nor the headline is the paper's figure. Dropping
+  open-ended raises the paper's own 13 models by about 3 points and flips one pair of ranks
+  (`LLM_as_judge/JUDGE_SUMMARY.md` §4).
+  - Compare against the paper baseline recomputed the same way, never against its printed headline.
+  - The other tasks' per-task numbers are unaffected and stay comparable to §2.3.
+- **Workbooks.** The `mission_open-ended` row in both workbooks' `Awareness` sheet stays blank by
+  decision, not because it is unrun.
 
 ### 5.1 Generation is one pass with no branching
 
@@ -514,16 +537,13 @@ and the 164 control rows are a gate rather than a score. **AwareEval rows are in
 | `perspective_story_1st`     | 166 | `label`              | one of 13 nouns          | normalised string | accuracy — computed, not reported |
 | `perspective_story_reality` |  91 | `label`              | one of 13 nouns          | normalised string | comprehension **gate**  |
 | `perspective_story_memory`  |  73 | `label`              | one of 13 nouns          | normalised string | comprehension **gate**  |
-| `mission_open`              |  60 | none                   | none                     | —                 | **GPT-4 judge, twice**  |
+| `mission_open`              |  60 | none                   | none                     | —                 | **dropped 2026-10-05** (§5.0) |
 
 `mission_implicit` is the **only** row in the dataset with capitalised keys. Handle it with
 `row.get("Label") or row.get("label")` and comment why, or the next person tidies the fallback away
 and silently deletes a whole column (§2.5 trap 1).
 
-The judge column needs both of the paper's criteria: *human alignment* (binary, run under both the
-standard and the role-playing evaluator prompt, then averaged — this is the Table 1 number) and
-*generation quality* (1–5 on responsibility, clarity, relevance, insightfulness, Appendix B.3 only).
-**One judging pass does not reproduce the paper.**
+`mission_open` has no extractor and no judge: the task was dropped on 2026-10-05 (§5.0).
 
 Aggregate with the formula in §2.6.
 
@@ -544,11 +564,12 @@ fixed: confirm the parse-failure rate is near zero *first*, then look at the sco
 2. **Extend `preflight.py`** with the eleven tasks.
 3. **Sync local ↔ Quest by md5** — core and runners together, never one without the other.
 4. **Full run**, eleven tasks in parallel. 4,075 short calls per model is a small job.
-5. **Judge pass** — 60 rows × 2 evaluator prompts, separate step, separate cost line.
+5. ~~Judge pass~~ — dropped 2026-10-05 with the 60 rows it would have scored (§5.0).
 
 ### 5.7 What is reported, and what is only computed
 
-Decided 2026-08-05. **Nine numbers per model reach the shared workbook**; everything else is
+Decided 2026-08-05. **Eight numbers per model reach the shared workbook** (nine before
+`mission_open-ended` was dropped, §5.0); everything else is
 computed, written to disk, and consulted only when a number needs explaining.
 
 The `Awareness` sheet in the repo-root `Tempo_results.xlsx` is organised by the five dimensions and
@@ -559,8 +580,8 @@ matches the other sheets there — split names in column A, the same six models 
 capability
 mission_explicit
 mission_implicit
-mission_open-ended
-mission                    = AVERAGE(explicit, implicit, open-ended)
+mission_open-ended         ← blank by decision since 2026-10-05 (§5.0)
+mission                    = AVERAGE(explicit, implicit)
 emotion
 culture
 perspective (2nd-order)    ← the 170 rows, per §2.8
@@ -568,13 +589,13 @@ Overall Score              = AVERAGE(capability, mission, emotion, culture, pers
 ```
 
 `Overall Score` points at five specific cells rather than a contiguous range, because the aggregation
-is five dimensions at equal weight (§2.6) — not the mean of the nine rows above it.
+is five dimensions at equal weight (§2.6) — not the mean of the rows above it.
 
 **Everything else is still computed and stored**: per-row `raw_response`, `correct` and `parse_fail`;
 per-task `parse_fail_rate`, permutation-averaged and robust accuracy, position-bias rate; the
-first-order, control and MCQ perspective sub-scores; and the two judge-prompt sub-scores. Storing
-them is free because the responses have to be written down anyway — **recomputing them is 4,075 calls
-per model.** Compute wide, report narrow.
+first-order, control and MCQ perspective sub-scores. Storing them is free because the responses have
+to be written down anyway — **recomputing them is 4,015 calls per model.** Compute wide, report
+narrow.
 
 The column contract for all of it is `Output_template/`, which mirrors
 `NegotiationToM/Output_template/`.
@@ -600,9 +621,9 @@ Not needed for the plan above; listed so they are not lost if the scope reopens.
 
 | Scope                     | Generation calls | Judge calls        | Total per model |
 | ------------------------- | ---------------: | ------------------ | --------------: |
-| **AwareEval only** (reproduces the paper) |        4,075 | 120 (60 × 2 prompts) | **4,195** |
+| **AwareEval only**, without `mission_open-ended` (§5.0) |        4,015 | 0 | **4,015** |
 | `New/` only               |            6,700 | 0 as shipped, and 4 of 6 categories unscorable | 6,700 |
-| Everything                |           10,775 | 120                | **10,895** |
+| Everything                |           10,715 | 0                  | **10,715** |
 
 `New/`'s 6,700 is 6,580 items plus 120 extra calls: the six paired `tom_*.json` files hold exactly
 20 rows each and every row carries both `prompt1` and `prompt2`. (An earlier version of this file said

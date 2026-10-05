@@ -7,6 +7,9 @@ all three the code and the paper disagree somewhere.
 
 ## 1. Only 3 of our 10 benchmarks need a judge
 
+**Now two.** On 2026-10-05 the user dropped AwareBench's 60 judged rows (§6 question 1). The row is
+kept below as it was written.
+
 |                 | Benchmark                 | Judged portion                      | Scored instead by                                    |
 | --------------- | ------------------------- | ----------------------------------- | ---------------------------------------------------- |
 | **judge** | Wonderbread               | Question Answering + SOP Generation | —                                                   |
@@ -236,6 +239,12 @@ download (132.7 GB for the full set), of which 90% is video and key frames; a te
 
 **1. Admissibility: does a per-item rubric count as a reference answer?** *(the most upstream
 question — it decides which benchmarks are usable before anything else)*
+
+**Decided 2026-10-05, by the user.**
+- **AwareBench:** its 60 judged rows are dropped. The consequences are in
+  `Transition_processes_benchmarks/Awareness_in_LLM/AWARENESS_NOTES.md` §5.0.
+- **MultiChallenge:** the plan proceeds with it as one of the two judged benchmarks. That treats its
+  per-item rubric as meeting (a).
 
 We propose a two-part test for whether a judged benchmark is usable at all. The authors must have
 provided **(a)** what a correct answer is, per item, and **(b)** how the judge converts an answer into
