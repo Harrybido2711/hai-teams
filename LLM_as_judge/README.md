@@ -1,677 +1,536 @@
-# LLM-as-a-judge: choosing the judge model and building the pipeline
+# LLM-as-a-judge for Wonderbread and MultiChallenge — which judge, and what pipeline
 
-A literature review of ten papers from 2024–2026, written to answer two questions before we replace
-the judges in our three judged benchmarks:
+Two benchmarks in this suite need an LLM judge: **Wonderbread** (QA and SOP Generation) and
+**MultiChallenge**. AwareBench's 60 judged rows were dropped on 2026-10-05
+([AWARENESS_NOTES.md §5.0](../Transition_processes_benchmarks/Awareness_in_LLM/AWARENESS_NOTES.md)).
+Every judge model the two benchmarks shipped with is retired, so a substitute has to be chosen
+([JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) §6, question 2). The user prefers a **light, cheap judge** if
+the evidence allows one.
 
-1. **How should the judge model be chosen?** Should we pick it to suit the benchmark's task, take the
-   top frontier model, or do something else — a fine-tuned judge, a panel, a judge from outside the
-   evaluated families?
-2. **How should the judging pipeline be built?** This covers the prompt, references, output format,
-   decoding, bias controls, and validation against humans.
+This file answers three things:
+1. Which judge model to use (§1).
+2. A general pipeline for any LLM judge (§2).
+3. The concrete pipeline for each of the two benchmarks (§3).
 
-Why the question is live: every judge model the three benchmarks shipped with has been retired, so a
-substitution is forced ([JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) §6, question 2). What each judge is
-shown and how it scores is recorded in [JUDGE_RECORD.md](JUDGE_RECORD.md). The fields any new judge
-must document are in [JUDGE_DOCUMENTATION_RULE.md](JUDGE_DOCUMENTATION_RULE.md). API-level
-mechanics for a GPT judge are in [GPT_LLM_AS_JUDGE_GUIDE.md](GPT_LLM_AS_JUDGE_GUIDE.md). This file
-covers only what the literature says.
+The evidence is ten papers from 2025–2026 (§4). The existing judge documentation is reused, not
+repeated:
+- [JUDGE_RECORD.md](JUDGE_RECORD.md) — what each judge is shown and how it scores, with code
+  citations.
+- [JUDGE_DOCUMENTATION_RULE.md](JUDGE_DOCUMENTATION_RULE.md) — the thirteen fields any judge must
+  record.
+- [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) — the verbatim prompts (Appendices A–C).
+- [GPT_LLM_AS_JUDGE_GUIDE.md](GPT_LLM_AS_JUDGE_GUIDE.md) — API mechanics.
 
 **How this was produced (2026-10-05).**
-- **Selection.** Candidates were chosen for relevance to the two questions and checked on arXiv and
-  Semantic Scholar. Google Scholar indexes all of them through arXiv, but they were not looked up
-  there one by one.
-- **Reading.** Every PDF was read in full. Each number below carries the page it came from, and the
-  headline numbers were re-checked against the PDF text.
-- **Page numbers** are PDF pages. The one exception is Gu et al., which uses the journal's printed
-  numbers; its PDF page is the printed page + 1.
-- **Inference.** Anything that is our inference and not a paper's claim is marked *(our inference)*.
+- **Selection.** Only papers *first released* in 2025 or later. Venue and citations were checked on
+  arXiv and Semantic Scholar; Google Scholar indexes all of them through arXiv, but they were not
+  looked up there one by one.
+- **Reading.** Every PDF was read in full. Each number carries its PDF page, and the headline numbers
+  were re-checked against the PDF text.
+- **Inference.** Anything that is our reasoning rather than a paper's finding is marked
+  *(our inference)*.
+- **Earlier version.** It covered seven papers first released in 2024. It is in commit `0667bc1`.
 
 ---
 
-## Short answers
+## 1. Which judge model
 
-**Q1 — choosing the judge.** None of the ten papers supports "just take the top model", and none
-supports a fine-tuned judge model. What they support is a procedure:
+### The short answer
 
-1. **Shortlist** strong general models. Reasoning models belong on the list when the criterion is
-   correctness.
-2. **Exclude** any model from the same family as a model being judged.
-3. **Validate** each candidate on a human-labelled sample of *each* benchmark, using a
-   chance-corrected agreement metric.
-4. **Pick** the best on that measurement, or pool the best two or three as a cross-family panel.
-
-Three findings drive this:
-- **Judge quality is task-specific.** Bavaresco; Norman: "a poor estimator of its ranking on others".
-- **Judges favour their own outputs.** Panickssery; Verga; Ye.
-- **A judge is reliable only where it can solve the item itself, or is given a correct reference.**
-  Krumdick; Tan.
-
-**Q2 — building the pipeline.**
-1. Give the judge a *verified* reference or per-item rubric wherever one exists, and never one the
-   judge wrote itself.
-2. Build the prompt from the human annotation guidelines, with explicit rules for edge cases.
-3. Hide which model wrote the answer.
-4. Constrain the output to one label or score, and log invalid outputs instead of imputing them.
-5. Swap or shuffle any ordered inputs.
-6. Use temperature 0 with at least 3 replicate runs.
-7. Validate against human labels, reporting raw agreement **and** κ / Scott's π / Krippendorff's α.
-8. Freeze and record the judge, prompt and decoding settings.
-
-The procedure is set out as numbered steps in [§4](#4-synthesis--q2-building-the-pipeline).
-
----
-
-## 1. The ten papers at a glance
-
-Citation counts are from Semantic Scholar, 2026-10-05.
-
-| # | Paper | Venue | Cites | Answers | One-line takeaway |
-|---|---|---|---:|---|---|
-| 1 | Thakur et al., *Judging the Judges: Evaluating Alignment and Vulnerabilities in LLMs-as-Judges* | GEM² workshop @ ACL 2025 | 273 | Q1, Q2 | Only the largest judges approach human agreement. Percent agreement hides weak judges; use Scott's π. |
-| 2 | Bavaresco et al., *LLMs instead of Human Judges? A Large Scale Empirical Study across 20 NLP Evaluation Tasks* | ACL 2025 | 363 | Q1 | No judge is best everywhere. Validate against task-specific human labels. |
-| 3 | Huang et al., *An Empirical Study of LLM-as-a-Judge for LLM Evaluation: Fine-tuned Judge Model is not a General Substitute for GPT-4* | Findings of ACL 2025 | 131 | Q1 | Fine-tuned judges are task-specific classifiers and collapse off their home turf. |
-| 4 | Tan et al., *JudgeBench: A Benchmark for Evaluating LLM-based Judges* | ICLR 2025 | 369 | Q1, Q2 | On hard correctness pairs, reasoning models win. A judge's accuracy tracks whether it can solve the task itself. |
-| 5 | Panickssery et al., *LLM Evaluators Recognize and Favor Their Own Generations* | NeurIPS 2024 | 859 | Q1 | Self-recognition correlates linearly with self-preference. Don't let a model judge itself. |
-| 6 | Verga et al., *Replacing Judges with Juries: Evaluating LLM Generations with a Panel of Diverse Models* (PoLL) | arXiv preprint, 2024 | 368 | Q1 | A panel of three small models from three families beats GPT-4 alone at 1/7 the cost. |
-| 7 | Gu et al., *A Survey on LLM-as-a-Judge* | The Innovation 7(6), 2026 | 1,891 | Q2 | A four-stage framework for building a judge, plus a meta-evaluation of common improvement strategies. |
-| 8 | Ye et al., *Justice or Prejudice? Quantifying Biases in LLM-as-a-Judge* (CALM) | ICLR 2025 | 440 | Q2 | 12 bias types. Telling the judge to avoid a bias does not remove it. |
-| 9 | Krumdick et al., *No Free Labels: Limitations of LLM-as-a-Judge Without Human Grounding* | COLM 2026 | 65 | Q1, Q2 | Without a correct reference, a judge is reliable only on questions it can answer itself. |
-| 10 | Norman et al., *Reliability without Validity: A Systematic, Large-Scale Evaluation of LLM-as-a-Judge Models Across Agreement, Consistency, and Bias* | arXiv preprint, June 2026 | — | Q1, Q2 | 21 current judges and ~541k judgments. Gives a five-step minimum validation protocol. |
-
-**Venue notes.**
-- **#2, #3:** the venue comes from the arXiv comment.
-- **#5, #8:** the venue comes from Semantic Scholar. The PDFs here are arXiv v1 and v2, which print no
-  venue. Numbers are from these versions.
-- **#9:** COLM 2026 is printed in v4 of the PDF.
-- **#10:** too new to have a citation count.
-
----
-
-## 2. Paper by paper
-
-### Part A — choosing the judge
-
-#### 1 · Thakur et al. (2025) — *Judging the Judges* · [PDF](papers/2024_Thakur_Judging-the-Judges_GEM2025.pdf) · [arXiv:2406.12624](https://arxiv.org/abs/2406.12624)
-
-**Setup**
-- **Judges:** 13 in total. 11 are LLMs: Llama-2/3/3.1 at several sizes, Gemma 2B, Mistral 7B,
-  JudgeLM-7B (a fine-tuned judge) and GPT-4 Turbo. The other 2 are lexical baselines: exact match and
-  "contains".
-- **Exam-takers:** 9 models answering 400 TriviaQA questions.
-- **Task:** the judge sees the question, the reference answers and the response, and outputs
-  "correct" or "incorrect". Every answer was also labelled by humans.
-
-**Findings**
-- **Human agreement is near perfect:** Scott's π = 96.2 (p.5).
-- **The best judges are big:** Llama-3 70B (88), Llama-3.1 70B (88) and GPT-4 Turbo (87) (Fig. 1b,
-  p.2). In the abstract's words, "only the best (and largest) models show reasonable alignment with
-  humans, though they still differ with up to 5 points from human-assigned scores".
-- **Percent agreement hides weak judges.**
-  - Llama-3 8B has more than 80% agreement but π = 59 (p.5).
-  - Judges above 90% agreement "may still differ more than 10 points in their assigned score" (p.6).
-- **Ranking is easier than scoring.** Even "contains" ranks the exam-takers at Spearman 0.99
-  (Table 8, p.20). The paper's conclusion: "identifying which models are better should not be equated
-  to assigning them the correct score" (p.6).
-- **Weak spot — under-specified answers.** Recall is 33.9% for GPT-4 and 23.3% for Llama-3 70B
-  (Table 2, p.7).
-- **Leniency.** The share of answers marked correct runs above 0.5: GPT-4 0.69, Llama-3 70B 0.90
-  (p.27). Some judges accept dummy answers such as "Yes" (p.7–8).
-- **Fine-tuned judge.** JudgeLM-7B reaches only π = 65.
-
-**Implication**
-- **Q1:** use the largest, most capable general model when absolute scores matter — and we report
-  absolute scores.
-- **Q2:**
-  - "We recommend computing both percent agreement and Scott's π, paired with qualitative analysis"
-    (p.8).
-  - Write edge-case rules into the prompt (App. G): under-specified counts as incorrect, extra
-    correct detail counts as correct.
-  - Run dummy-answer sanity checks.
-  - Test whether the order of the references changes the verdict.
-
-**Caveat:** short factual QA with very high human agreement. Real judging is harder, as the authors
-note (App. A), and the models are from 2023–24.
-
-#### 2 · Bavaresco et al. (2025) — *LLMs instead of Human Judges?* · [PDF](papers/2024_Bavaresco_LLMs-instead-of-Human-Judges_ACL2025.pdf) · [arXiv:2406.18403](https://arxiv.org/abs/2406.18403)
-
-**Setup**
-- **Judges:** 11, including GPT-4o, Gemini-1.5, Llama-3.1 8B/70B, Mixtral and Command R(+).
-- **Data:** JUDGE-BENCH — 20 human-annotated datasets and more than 70k items, spanning reasoning,
-  planning, toxicity/safety, dialogue, MT, summarisation and instruction following.
-- **Metrics:** Cohen's κ for categorical labels, Spearman ρ for graded ones.
-
-**Findings**
-- **No single best judge.** "no single model demonstrates a clear superiority over others across all
-  properties; instead, different quality dimensions are better assessed by different models" (p.5).
-- **The open–closed gap is small.** Mean κ is 0.28 for GPT-4o and 0.28 for Llama-3.1-70B
-  (Table 1, p.3). Open models beat GPT-4o on some datasets.
-- **Performance depends on the task.**
-  - Instruction following is judged well: LLMBar-natural κ = 0.84 for GPT-4o.
-  - Toxicity and safety are judged worst: DICES-990 κ = −0.24 for GPT-4o (p.3–4). The authors partly
-    blame guardrails.
-- **Machine text is harder to judge.** Every judge agrees with humans better on human-written text
-  than on machine-generated text (p.5).
-- **Prompting tricks are not reliable fixes.** CoT, few-shot and paraphrased prompts "do not
-  consistently improve agreement" (p.5). CoT helped on LLMBar-adversarial and hurt on DICES.
-
-**Implication**
-- **Q1:** choose by measured agreement on *this* task, not by reputation. "we recommend validating
-  LLM judges against task-specific human annotations before deploying them for any particular task"
-  (p.2, p.5).
-- **Q2:**
-  - Use the original human annotation guidelines as the judge prompt.
-  - Constrain the output to a single label, decoded greedily.
-  - Compare against a human upper bound computed from inter-annotator agreement.
-
-**Caveat:** pointwise only, with 2024 judges. Invalid outputs were replaced by a *random* label,
-which is a choice to avoid.
-
-#### 3 · Huang et al. (2025) — *Fine-tuned Judge Model is not a General Substitute for GPT-4* · [PDF](papers/2024_Huang_Fine-tuned-Judge-not-Substitute-for-GPT4_ACLFindings2025.pdf) (local only, see [Files](#7-files)) · [arXiv:2403.02839](https://arxiv.org/abs/2403.02839)
-
-**Setup**
-- **Fine-tuned judges:** JudgeLM-7B, PandaLM-7B, Auto-J-13B and Prometheus-7B/13B.
-- **Compared against:** GPT-3.5, GPT-4 and DeepSeek-V3.
-- **Tests:** each fine-tuned judge is run on the others' test sets, on MT-Bench (multi-turn), on
-  LLMBar-adversarial, and on aspect-specific sets (HaluEval, ToxicChat).
-
-**Findings**
-- **Each fine-tuned judge wins only at home.** Prometheus-13B beats GPT-4 on its own test set (Pearson
-  0.864 vs 0.742) but scores 24.58 on JudgeLM's (Table 2, p.2).
-- **Multi-turn MT-Bench:** the fine-tuned judges score 48.7–55.2 against 66.9 for GPT-4.
-- **LLMBar-adversarial:** the fine-tuned judges score 16.5–46.8 against 64.2–76.6 for GPT-4
-  (Table 4, p.3).
-- **Prompting does not help them.** Aspect-specific prompts, CoT and in-context examples do not
-  improve the fine-tuned judges, and in-context examples hurt JudgeLM (Table 7, p.4).
-- **The core claim:** "the fine-tuned judge model inherently operates as a task-specific classifier"
-  (p.1).
-
-**Implication**
-- **Q1:** do not substitute an off-the-shelf fine-tuned judge (Prometheus, JudgeLM, …) when the
-  evaluation scheme differs from its training data. All three of ours do.
-- **Q2:** prompt engineering only pays off with general models.
-
-**Caveat:** two of the four test sets were labelled by GPT-4, which partly flatters GPT-4.
-
-#### 4 · Tan et al. (2025) — *JudgeBench* · [PDF](papers/2024_Tan_JudgeBench_ICLR2025.pdf) (local only) · [arXiv:2410.12784](https://arxiv.org/abs/2410.12784)
-
-**Setup**
-- **Data:** 350 hard response pairs in knowledge, reasoning, math and code.
-- **How the pairs are built:** a strong model answers the same question several times, and one
-  correct and one incorrect answer are kept. Style and length are therefore matched.
-- **Labels:** objective correctness. No human preference is involved.
-- **Scoring:** each pair is judged twice with the order swapped, and an inconsistent verdict counts
-  as wrong.
-
-**Findings**
-- **Accuracy with the Arena-Hard prompt** (Table 2, p.7):
-
-  | Judge | Accuracy |
-  |---|---:|
-  | o3-mini (high) | 80.86 |
-  | o1-preview | 75.43 |
-  | DeepSeek-R1 | 73.14 |
-  | Claude-3.5-Sonnet | 64.29 |
-  | GPT-4o | 56.57 |
-  | Gemini-1.5-pro | 47.14 |
-
-- **GPT-4o is no better than chance with a vanilla prompt.** It scores 50.86 (p.8).
-- **Fine-tuned judges and debate fall below the "random" line.** Most fine-tuned judges score there,
-  e.g. PandaLM 13.14. The multi-agent debate judge ChatEval scores 34.00 (Table 1, p.7).
-- **Judging tracks solving.** "the ability of the judge to verify the solution pairs is highly
-  correlated with its ability to solve the problem itself" (p.10). This rests on four models.
-- **Prompt matters.** The Arena-Hard prompt, in which the judge answers the question first, beats the
-  vanilla prompt.
-
-**Implication**
-- **Q1:** where a criterion is about correctness, prefer a reasoning model that can do the underlying
-  task.
-- **Q2:**
-  - Swap order and count inconsistency as failure.
-  - Let the judge solve the item before judging it.
-  - Note that reasoning models "may not have respected … the zero temperature" (p.16).
-
-**Caveat:** pairwise and objective tasks only. *(Our inference:)* under its double-trial scoring a
-coin-flipping judge scores about 25%, not 50%, so some "below random" scores reflect order
-inconsistency rather than worse-than-chance discrimination.
-
-#### 5 · Panickssery et al. (2024) — *LLM Evaluators Recognize and Favor Their Own Generations* · [PDF](papers/2024_Panickssery_LLM-Evaluators-Favor-Own-Generations_NeurIPS2024.pdf) · [arXiv:2404.13076](https://arxiv.org/abs/2404.13076)
-
-**Setup**
-- **Models:** GPT-4, GPT-3.5 and Llama-2-7b-chat, each both writing and judging summaries.
-- **Data:** XSUM and CNN/DailyMail summarisation.
-- **Fine-tuning:** used to change how well a model recognises its own text.
-
-**Findings**
-- **Recognition drives preference.** "By fine-tuning LLMs, we discover a linear correlation between
-  self-recognition capability and the strength of self-preference bias" (p.1). The paper shows this
-  in plots and reports no coefficient.
-- **GPT-4 recognises itself out of the box.** "GPT-4 is 73.5% accurate distinguishing itself from
-  two other LLMs and humans" (p.2).
-- **The strongest model has the strongest self-preference.** GPT-4's pairwise self-preference is
-  0.705 on XSUM and 0.912 on CNN (Table 7, p.14).
-- **Source labels move the verdict.** GPT-4's XSUM self-preference is 0.73 with correct labels and
-  0.32 with swapped labels (Table 6, p.13).
-- **Order reverses many preferences.** Swapping the two options reverses 25% of GPT-4's preferences
-  and 89% of Llama's (p.4).
-
-**Implication**
-- **Q1:** a judge should not score its own outputs, and the most capable judge is the most exposed.
-- **Q2:**
-  - Hide authorship and normalise formatting.
-  - Average both orderings.
-
-**Caveat:** only identical generator/judge pairs are tested, not same-family pairs. No human quality
-baseline. Summarisation only.
-
-#### 6 · Verga et al. (2024) — *Replacing Judges with Juries* (PoLL) · [PDF](papers/2024_Verga_Replacing-Judges-with-Juries_PoLL.pdf) (local only) · [arXiv:2404.18796](https://arxiv.org/abs/2404.18796)
-
-**Setup**
-- **Panel:** "three models being drawn from three disparate model families (Command R, Haiku, and
-  GPT-3.5)" (p.3).
-- **Aggregation:** max voting on binary QA; average pooling on 1–5 scores.
-- **Compared against:** a single GPT-4 judge.
-- **Data:** KILT QA (NQ, TriviaQA, HotpotQA), multi-hop QA, and Chatbot Arena Hard.
-
-**Findings**
-- **Agreement with humans on QA** (Table 1, p.4):
-
-  | Judge | κ |
-  |---|---|
-  | PoLL | 0.763 / 0.906 / 0.867 |
-  | GPT-4 | 0.627 / 0.841 / 0.830 |
-
-  - Haiku alone beats PoLL on HotpotQA. The authors' reading: "there is not a single 'best' judge
-    across all settings, while PoLL performs well consistently" (p.6).
-- **Ranking on Arena Hard.** Kendall τ is 0.778 for PoLL against 0.667 for GPT-4 (Table 2).
-- **Bias and spread.** "the highest positive delta for each individual model being scored occurs when
-  it is judged by itself". PoLL's score spread has SD 2.2, against 6.1 for GPT-3.5 (p.5).
-- **Prompt fragility.** GPT-4's κ ranges from 0.518 to 0.725 across prompts. The prompt tuned for
-  GPT-4 *hurt* the other judges: GPT-3.5 fell from 0.729 to 0.509 (Table 4, p.10).
-- **Cost.** The panel is "seven to eight times less expensive than running a single GPT-4 judge"
-  (p.6).
-
-**Implication**
-- **Q1:** a cross-family panel is a credible alternative to one big judge, and it dilutes
-  self-preference.
-- **Q2:**
-  - Draw few-shot examples from human-labelled items, including hard negatives.
-  - Validate the *prompt and judge as a pair*, since a prompt tuned to one judge can hurt another.
-  - Report κ.
-
-**Caveat:**
-- The QA task is "essentially a fuzzy string matching exercise" (p.5).
-- One panel composition only, and Command R is the authors' own model.
-- Not peer-reviewed.
-
-### Part B — building the pipeline
-
-#### 7 · Gu et al. (2026) — *A Survey on LLM-as-a-Judge* · [PDF](LLM_as_judge.pdf) · [arXiv:2411.15594](https://arxiv.org/abs/2411.15594)
-
-**Definitions (p.2)**
-- A judge is E ← P_LLM(x ⊕ C).
-  - E is the evaluation: a score, choice, label or sentence.
-  - x is the object judged, and C is the context, usually a prompt template.
-- A *reliable* judge adds R ← f_R(P_LLM, x, C). Here f_R is "a series of constraints and validation
-  methods": bias mitigation, variability control and adversarial robustness.
-
-**The four-stage framework (Fig. 2A, p.4)**
-1. **In-context learning.**
-   - Input design: single, pairwise or batch.
-   - Prompt format: a score (1–3, 1–5, 1–10, 0–100), yes/no, pairwise, or multiple choice.
-2. **Model selection.**
-   - A general LLM. Caveat: weak instruction following or reasoning "may significantly affect" the
-     judge.
-   - A fine-tuned judge. It "often" wins on its own test set but generalises poorly (p.4–5).
-3. **Post-processing.**
-   - Options: token extraction, constrained decoding to JSON, logit normalisation, sentence
-     selection.
-   - Rule-based extraction is "brittle", with "silent errors" (Box 5, p.7).
-4. **The evaluation pipeline itself.**
-   - Closed models raise cost and give "low reproducibility due to potential changes in models behind
-     the API" (p.6).
-
-**Findings**
-- **"Quick practice" loop (p.7).**
-  - Decide what to evaluate and how humans evaluate it.
-  - Write the prompt with scoring dimensions, relative comparison and examples.
-  - Choose "a large-scale model with strong reasoning and instruction-following abilities".
-  - Standardise the output.
-  - Retest.
-- **Their meta-evaluation** (Table 1, p.15; LLMEval2 and EvalBiasBench):
-  - Alignment with humans: o3-mini 61.66, GPT-4-turbo 61.54, Qwen2.5-7B 56.54, Llama3-8B 50.72.
-  - Position consistency: GPT-4-turbo 80.31 vs Llama3-8B 38.85.
-  - Their reading: "there was not much of a difference in alignment with humans among different LLMs".
-- **Improvement strategies mostly disappoint** (Tables 2–3, p.16–17).
-  - Asking for an explanation alongside the score *lowered* GPT-3.5's position consistency from 68.78
-    to 48.97.
-  - Self-validation had "minimal effectiveness".
-  - A majority vote over 5 runs gave modest gains; mean-of-5 and best-of-5 gave none.
-- **Panel composition matters.** Swapping one panel member raised position consistency from 32.28 to
-  70.98 (p.16).
-- **On self-judging:** "we should avoid using the same model as the evaluator", and anonymise model
-  names (p.14).
-
-**Implication**
-- **Q2:** the framework above is the skeleton for §4. The concrete advice:
-  - run a small meta-evaluation before choosing the model (p.16);
-  - aggregate by majority vote, not by mean;
-  - don't co-generate explanation and score by default;
-  - set acceptance thresholds for your own context (p.13);
-  - watch for "evaluation drift" across model versions (p.22).
-
-**Caveat:**
-- The experiment is small and pairwise only, with dated judges and no Claude model.
-- Bias subsets are 24–34 items.
-- The prose contradicts the tables in places: the "large margin" claim on p.15 is not borne out by
-  Table 1.
-
-#### 8 · Ye et al. (2025) — *Justice or Prejudice?* (CALM) · [PDF](papers/2024_Ye_Justice-or-Prejudice_CALM_ICLR2025.pdf) (local only) · [arXiv:2410.02736](https://arxiv.org/abs/2410.02736)
-
-**Setup**
-- **12 bias types:** position, verbosity, compassion-fade (model names shown), bandwagon,
-  distraction, fallacy-oversight, authority, sentiment, diversity (identity), chain-of-thought,
-  self-enhancement, refinement-aware.
-- **Method:** each bias is injected by perturbing an answer, and the paper measures whether the
-  verdict survives (the robustness rate, RR).
-- **Judges:** 6 — GPT-3.5, GPT-4-Turbo, GPT-4o, Claude-3.5-Sonnet, GLM-4 and Qwen2-72B.
-
-**Findings**
-- **Position bias.** RR ranges from 0.566 (ChatGPT) to 0.832 (Claude-3.5) (Table 4, p.8). With 3–4
-  options, "most models scor[e] below 0.5".
-- **Which biases are worst** *(our calculation from Table 4)*. Averaged over the six judges:
-  bandwagon ≈ 0.69, sentiment ≈ 0.69, position ≈ 0.76. Verbosity is mild at ≈ 0.92.
-- **The newest model is not always safest.** "avoid assuming that the most advanced model will always
-  be the most reliable" (p.7).
-- **Subjective data is worse.** Biases are stronger on subjective alignment data than on fact data.
-- **Self-enhancement.** Qwen2 gives its own answer 7.64 and others' identical answer 6.58 (Table 5,
-  p.9). Quote: "the importance of using separate models for answer generation and evaluation" (p.8).
-- **Some bias is invisible in the rationale.** Refinement-aware bias raises scores without ever being
-  mentioned in the judge's explanation (p.10). Reading the explanations does not reveal it.
-- **Instructions alone do not remove bias** *(our observation)*. Their baseline prompt already told
-  the judge to avoid position, length and name bias (Fig. 13, p.25), and position RR was still
-  0.566–0.832.
-
-**Implication**
-- **Q1:** choose by measured robustness on the biases that matter for the task, and separate the
-  judge from the models being judged.
-- **Q2:**
-  - Randomise order.
-  - Strip model names and identity cues.
-  - Prefer a reference where one exists. Quote: "without a reference answer, it can be challenging
-    for LLM judges to provide an objective score" (p.5).
-  - Audit the prompt template for bias before use.
-
-**Caveat:**
-- No human ground truth.
-- Temperature 0.7.
-- The perturbations were written by models that are also judges.
-
-#### 9 · Krumdick et al. (2026) — *No Free Labels* · [PDF](papers/2025_Krumdick_No-Free-Labels_COLM2026.pdf) · [arXiv:2503.05061](https://arxiv.org/abs/2503.05061)
-
-**Setup**
-- **Data:** BFF-Bench, 160 finance questions, plus the MT-Bench math/reasoning items. 1,200 responses
-  each carry 3 expert labels.
-- **Judges:** GPT-4o, Llama 3.3 70B, Phi-4, Qwen 2.5 7B and Yi 1.5 34B.
-- **References given to the judge:** none; Self (the judge's own answer); Human; Wrong (a human answer
-  edited to be incorrect); Random (from another question).
-
-**Findings**
-- **The central result.** LLM-as-a-judge agrees well with humans only when "the LLM Judge (1) can
-  already answer the underlying question or (2) is provided with a correct reference. Having
-  confidence in a judge model requires meeting at least one of these two conditions" (p.9).
-- **GPT-4o, pairwise κ** (Table 4, p.8):
-
-  | Reference given | Questions GPT-4o answers wrongly | Questions it answers correctly |
-  |---|---:|---:|
-  | None | 0.30 | 0.78 |
-  | Self | 0.16 | 0.86 |
-  | Human | **0.83** | 0.92 |
-
-- **What matters is that the reference is correct** (Table 3, p.7):
-
-  | Reference | κ |
-  |---|---:|
-  | Human | 0.69 |
-  | Verified GPT-4o | 0.61 |
-  | Random | 0.50 |
-  | None | 0.46 |
-  | Wrong | 0.21 |
-
-  - A slightly wrong reference can be worse than none.
-- **A small judge with a reference beats a big one without.** Qwen 2.5 7B with a human reference
-  reaches κ 0.63, against 0.47 for GPT-4o with none (Table 6, p.23).
-- **A judge's own reference makes self-preference worse** (p.10).
-- **References themselves need checking.** 37.5% of MT-Bench's GPT-4 reference answers were wrong
-  (p.4).
-- **Juries and decoding settings do not change the picture.**
-  - A 5-judge jury does not escape the limit: κ is 0.07 with no reference and 0.51 with a human
-    reference, on the questions the majority got wrong (p.27–28).
-  - Temperature and CoT made no significant difference.
-- **The pattern holds for current frontier judges.** Opus 4.7, GPT-5.4 and Gemini 3.1 show it too,
-  against proxy labels (Table 12, p.29).
-
-**Implication**
-- **Q1:** judge size matters far less once verified references exist. Without them, the judge must be
-  able to solve the items.
-- **Q2:** "we strongly recommend practitioners (at minimum) verify their reference responses" (p.10).
-  Never use the judge's own answer as the reference.
-
-**Caveat:** one domain, finance, plus math, where answers are clearly right or wrong. Subjective
-quality was not studied.
-
-#### 10 · Norman et al. (2026) — *Reliability without Validity* · [PDF](papers/2026_Norman_Reliability-without-Validity.pdf) · [arXiv:2606.19544](https://arxiv.org/abs/2606.19544)
-
-**Setup**
-- **Judges:** 21 from 9 providers, current as of April 2026. They include GPT-4o/4.1/5.4, Gemini
-  2.5/3.1 Pro, Claude Haiku 4.5/Sonnet 4.6/Opus 4.6, DeepSeek V3.2, Kimi K2.5, GLM-5 and Qwen 3 8B.
-- **Data:** MT-Bench (expert preference), JudgeBench (correctness) and RewardBench.
-- **Scale:** about 541,000 judgments.
-- **Settings:** temperature 0, with thinking suppressed.
-
-**Findings**
-- **Exact match overstates agreement.** On MT-Bench, exact match exceeds Cohen's κ by 33.8–41.3 points
-  for every judge. Quote: "a judge reporting "85% agreement" on MT-Bench has κ ≈ 0.48" (p.5).
-- **Rankings do not transfer.**
-  - Judge rankings shift by up to 14 positions between benchmarks (abstract; the body says 15 in
-    places).
-  - Only Gemini 3.1 Pro and Claude Opus 4.6 stay in the top 3 on all three benchmarks (p.5).
-- **Stability is not validity.** Qwen 3 8B has test–retest 0.992 but position bias 0.192.
-  Quote: "Reporting test-retest alone stands to present a misleading picture" (p.6).
-- **Family differences on JudgeBench.**
-  - The three Anthropic judges average κ = 0.770 on JudgeBench, with mean position bias 0.020.
-  - The OpenAI flagships average 0.467; GPT-4o is at 0.309 and GPT-5.4 at 0.606.
-  - Kimi K2.5 has position bias 0.004 and κ 0.720 at a fraction of the cost (p.7).
-- **A data-loader trap.** RewardBench's default loader puts every chosen answer in position A, which
-  makes κ 0 for every judge until positions are randomised per item (p.21).
-- **The Minimum Viable Validation Protocol** (p.8, verbatim headings):
-  1. **Chance-correct.** Report Cohen's κ or Krippendorff's α as the headline number.
-  2. **Swap positions.** Report |P(A wins) − 0.5| from AB+BA runs.
-  3. **Replicate.** At least 3 runs at temperature 0, with caching disabled.
-  4. **Cross-validate.** At least 2 benchmarks, spanning preference-style and correctness-style labels.
-  5. **Audit the paradox.** If test–retest exceeds 0.95, check that position bias is below 0.10
-     before claiming reliability.
-
-**Implication**
-- **Q1:** a leaderboard on a different construct is not evidence for our task. Validate on data whose
-  label structure matches ours.
-- **Q2:** the protocol above.
-
-**Caveat:**
-- A preprint, with several internal number inconsistencies.
-- Pairwise only.
-- Thinking was suppressed.
-- No confidence intervals.
-
----
-
-## 3. Synthesis — Q1: choosing the judge model
-
-| Option | Evidence for | Evidence against | Verdict |
+| Role | Model (OpenRouter id) | Price in / out per M tokens | Why |
 |---|---|---|---|
-| **The top general model** | Only the largest judges approach humans (Thakur). General models beat fine-tuned ones (Huang). The survey's "quick practice" (Gu p.7). | No judge is best everywhere (Bavaresco). GPT-4 was among the weakest on KILT QA (Verga). "avoid assuming that the most advanced model will always be the most reliable" (Ye). Rankings shift by up to 14 places (Norman). | **Necessary, not sufficient.** It defines the shortlist, not the choice. |
-| **A reasoning model** | o3-mini 80.86 against GPT-4o 56.57 on hard correctness pairs (Tan). | Gains on human-alignment tasks are "not as pronounced as expected" (Gu p.17). Temperature 0 may not be honoured (Tan p.16). | **Prefer it for correctness-type criteria**: soundness, rubric satisfaction. |
-| **Chosen by task, validated on our data** | The explicit recommendation of Bavaresco and Gu (p.16). Rankings do not transfer (Norman). Reliability depends on the items and on references (Krumdick). | Costs human labelling. | **The core of the procedure.** |
-| **A fine-tuned judge** (Prometheus, JudgeLM, Auto-J) | Privacy and a fixed version (Gu). | Collapses off its home distribution (Huang). Below random on hard pairs (Tan). JudgeLM π = 65 (Thakur). | **Don't.** |
-| **A panel of judges from different families** | Higher κ, 7–8× cheaper, less self-bias (Verga). Majority vote helps a little (Gu). | Does not fix a missing reference (Krumdick). Composition swings results from 32 to 71 (Gu p.16). Debate-style multi-agent judging scored 34 (Tan). | **A good complement.** Choose members by validation, not by name. |
-| **A judge outside the evaluated families** | Self-preference (Panickssery). Self-enhancement (Ye). The self-delta finding (Verga). Gu p.14. | "only a stopgap" when evaluating the very best models (Gu p.14). | **A hard constraint wherever possible.** |
+| **Default light judge** | Claude Haiku 4.5 (`anthropic/claude-haiku-4.5`) | $1 / $5 | Outside every evaluated family. Measured in both a 21-judge pairwise study (Norman) and a rubric-based study (Pombal). Stable (test–retest 0.935). Anthropic judges had the lowest position bias of any provider. |
+| **Cheaper challenger** | Kimi K2.5 (`moonshotai/kimi-k2.5`) | $0.45 / $2.25 | Outside every evaluated family. Best JudgeBench κ of any judge at ≤ $1/M input (0.720), position bias 0.004 (Norman). No rubric-based evidence, and its training lineage is undisclosed (see below). |
+| **Escalation / reference** | Claude Sonnet 5.5 (`anthropic/claude-sonnet-5.5`) | $2 / $10 | Use it if the light judges fail validation. Sonnet was far less lenient than Haiku on failed rubric items (false PASS 0.03 vs 0.12, Pombal). The MultiChallenge authors also tried a Claude 3.5 Sonnet judge and reported "the same conclusions". |
 
-**What this means for our model set *(our inference)*.**
-- **The families we evaluate** are listed in [PLAN.md](../PLAN.md): Google (Gemini, Gemma), OpenAI,
-  xAI, Alibaba (Qwen) and DeepSeek.
-- **Anthropic and Moonshot (Kimi) are both outside that set.** In Norman et al., the most recent
-  multi-provider comparison here:
-  - Anthropic judges had the highest JudgeBench κ and the lowest position bias.
-  - Claude Opus 4.6 was one of two judges in the top 3 on every benchmark.
-  - Kimi K2.5 was close behind at much lower cost.
-- **A shortlist this review would justify:**
-  - a current Claude model as the primary judge;
-  - a second out-of-family model, such as Kimi, as a cross-check or second panel member.
-  - Both are validated on our own human-labelled samples before either is adopted.
-- **A Google or OpenAI judge** — Gemini 3.1 Pro scored well — would be judging its own family on every
-  sheet.
-- **Disclosure.** This review was written with Claude (Anthropic). The recommendation follows from the
-  family-exclusion argument and Norman's numbers. It should be settled by the validation step in §4,
-  not taken on trust.
+**Excluded:** every model from a family we evaluate.
+- **Which families:** Google (Gemini, Gemma), OpenAI (including GPT-oss), Alibaba Qwen, DeepSeek, and
+  xAI (still in `Tempo_results.xlsx`).
+- **Why:** a judge over-credits outputs from its own model *and its own family*, even on fully
+  objective rubric items (Pombal; Li).
+- **What this rules out:** the MultiChallenge authors' own March-2026 judge, Gemini 2.5 Pro. It would
+  be grading two of our five models' siblings.
 
----
+**How to choose among the three: run a bake-off, then pick the cheapest that passes.** This is
+PaperBench's rule: they chose o3-mini over o1 because it scored F1 0.83 against 0.84 "at one-tenth of
+the cost" (p.17–18).
+1. Run all three candidates on our own human-labelled validation set (§3).
+2. Discard any candidate that misses the acceptance bar.
+3. Of the rest, take the cheapest whose κ is not meaningfully below the best — inside its
+   bootstrap CI.
 
-## 4. Synthesis — Q2: building the pipeline
+Running both benchmarks on the same judge is simpler, but each benchmark is validated separately and
+may end up with a different winner.
 
-Each step cites the papers it rests on. Steps 1–6 build the judge; steps 7–8 decide whether to trust
-it.
+**Disclosure.** This review was written with Claude (Anthropic), and two of the three candidates are
+Claude models. They are on the list because of the family-exclusion rule and the numbers below.
+**The bake-off decides — not this table.**
 
-1. **Fix what is measured.**
-   - Write down the criteria, the scale and its *direction*, and who wrote the references.
-   - Ask how humans would judge it (Gu's "thinking" stage).
-   - The fields to record are in [JUDGE_DOCUMENTATION_RULE.md](JUDGE_DOCUMENTATION_RULE.md).
-2. **Ground the judge.**
-   - Give it a verified reference answer or a per-item rubric wherever one exists (Krumdick; Ye p.5).
-   - Never give it a reference the judge or another LLM wrote unchecked (Krumdick p.10).
-   - Audit the references: 37.5% of MT-Bench's were wrong (Krumdick p.4).
-3. **Write the prompt.**
-   - Start from the human annotation guidelines (Bavaresco; Thakur).
-   - Add explicit edge-case rules, e.g. under-specified = incorrect (Thakur App. G).
-   - Use one criterion per call (Gu, criteria decomposition).
-   - Draw few-shot examples from human-labelled items, including hard negatives (Verga).
-   - Validate the *prompt and judge as a pair*: a prompt tuned for one judge can hurt another
-     (Verga, Table 4).
-4. **Hide authorship.**
-   - Strip model names and normalise formatting (Panickssery; Ye, compassion-fade; Gu p.14).
-5. **Constrain the output.**
-   - A single label or score in a fixed format, or structured/JSON output (Gu, post-processing;
-     Bavaresco).
-   - Log invalid outputs and refusals as their own category. Never impute them (Bavaresco imputed
-     randomly; Tan retried once).
-   - Don't ask for an explanation with the score by default (Gu p.16).
-   - If you use CoT, measure it: it helped on adversarial items and hurt on safety (Bavaresco).
-6. **Remove order effects.**
-   - Swap or shuffle any ordered input — candidates, or a list of reference steps — and count
-     disagreement as inconsistency (Tan; Panickssery; Thakur; Norman).
-7. **Choose decoding and replication.**
-   - Temperature 0 with at least 3 replicate runs, and test–retest reported (Norman).
-   - Alternatively, a majority vote over 5 runs (Gu p.16; Krumdick). Majority, never mean or
-     best-of.
-   - Record the setting when a reasoning model will not honour temperature 0 (Tan p.16).
-8. **Validate before trusting a number.**
-   - Use a human-labelled sample from *each* benchmark (Bavaresco; Gu p.16; Norman).
-   - Report raw agreement **and** a chance-corrected statistic — Cohen's κ, Scott's π or
-     Krippendorff's α — with confidence intervals (Thakur; Norman).
-   - Compare against inter-annotator agreement as the human upper bound (Bavaresco).
-   - Check that the label distribution is not degenerate before trusting κ (Norman p.7, p.21).
-   - Measure leniency, the share judged positive (Thakur).
-   - Run dummy-answer sanity checks (Thakur).
-   - Audit the biases relevant to the task (Ye).
-   - Then **freeze** the model snapshot, prompt and parser, and record them, because hosted models
-     drift (Gu p.22).
+### Why a light judge is defensible here — and the one risk to measure
 
----
+**For it:**
+1. **The decisions are narrow.**
+   - MultiChallenge asks one human-written YES/NO question per item.
+   - Wonderbread QA asks for a 1–3 score per criterion, with a human reference on two of the four.
+   - SOP Generation asks a line-match question.
+   - Light judges become competitive exactly when evaluation is broken into instance-specific
+     binary questions (RocketEval). The MultiChallenge authors built the rubric for this reason:
+     their rubric judge reached 93.95% agreement with humans, against 37.33% for a judge given the
+     whole conversation (Sirdeshmukh, Table 4).
+2. **A correct reference lets a small judge beat a big one.** Qwen 2.5 7B with a human reference
+   scored κ 0.63, against 0.47 for GPT-4o without one (Krumdick, Table 6).
+3. **Mid-tier can match frontier.** Gemini 2.5 Flash with a CoT+rubric prompt reached 71.0% / κ 0.549
+   at about $0.001 per call. The best frontier configuration (Claude Sonnet 4) reached 69.5% at about
+   $0.015 (Soumik). The gap is not statistically significant; the cost gap is 15×.
 
-## 5. Applied to our three judged benchmarks *(our inference)*
+**Against it — the specific risk is false PASS:**
+- **Smaller judges are more lenient.** They mark failed rubric items as satisfied more often:
+  - HealthBench: Haiku 0.12 vs Sonnet 0.03 (Pombal, Table 26).
+  - Qwen-4B 0.44 vs Qwen-235B 0.09, on the same benchmark.
+  - IFEval: 8 of 12 judges passed more than half of the constraints that responses actually failed.
+    Haiku was at 0.40 and Sonnet at 0.37 (Table 25).
+- **Why it matters for MultiChallenge.** Humans passed only about 23% of responses *(our arithmetic
+  from Sirdeshmukh, Table 2)*, so false PASS inflates every score.
+- **Cheapest is not enough on its own.** GPT-4o-mini scored F1 0.59, close to random, while the cheap
+  *reasoning* model o3-mini scored 0.83 (PaperBench, Table 3).
 
-The judge setups themselves are in [JUDGE_RECORD.md](JUDGE_RECORD.md); only the literature's bearing
-on each is noted here.
+The bake-off therefore measures the **false-PASS rate per evaluated family**, not just agreement. It
+also includes Haiku with a small reasoning budget as a fourth configuration, capped per
+[model-parameters.md](../.claude/references/model-parameters.md).
 
-- **Wonderbread QA** (1–3 per criterion; a human reference for two of four criteria).
-  - "Completeness" is exactly Thakur's under-specified-answer weak spot, where recall was 23–34%. The
-    validation sample should deliberately include incomplete answers.
-  - Clarity and compactness have no reference, so they sit in the zone Ye and Krumdick flag as most
-    exposed to style and sentiment bias.
-  - The SOP-Generation judge matches one line against an indexed list, so test whether shuffling the
-    list order changes its verdict.
-- **MultiChallenge** (binary YES/NO against a human-written per-item rubric).
-  - The rubric plays the role of Krumdick's "correct reference", which is what makes a judge
-    trustworthy. The residual risks are rubric errors and leniency (Thakur).
-  - Binary labels with a lopsided pass rate can make κ unstable. Check the balance first (Norman).
-- **AwareBench** (60 rows; binary; no reference).
-  - This is the worst case in the literature: reference-free, subjective and value-adjacent. It is
-    where Bavaresco found judges near or below κ = 0, and where neither of Krumdick's two conditions
-    can be met.
-  - The published 28-point swing between two evaluator prompts ([JUDGE_SUMMARY.md](JUDGE_SUMMARY.md)
-    §6) is what Ye and Gu would predict.
-  - Sixty rows is small enough to label every row by hand. Do that before any judge number is
-    reported.
+**Two risks we cannot rule out from the literature:**
+- **Training lineage.** Preference Leakage shows a judge favours models it shares training data with.
+  "Inheritance" relatedness scored 19.3–22.3% average leakage, more than same-family (8.9%) (Li,
+  Table 2). Kimi, and Claude, do not disclose their training data. *(Our inference)* The per-family
+  false-PASS check in validation is the empirical guard: a judge that is soft on one family shows it
+  there.
+- **Thinking was suppressed in Norman.** Every judge there ran with reasoning off. Whether reasoning
+  helps our judges is measured in the bake-off, not assumed.
+
+### What it costs
+
+Light versus frontier is a difference of tens of dollars, not hundreds.
+- **What cost covers:** one full judging pass over **all five evaluated models**, at OpenRouter list
+  prices. Batch routes halve these.
+- **Token estimates (our assumptions):**
+  - MultiChallenge: ~830 input + 150 output per call. A final response is assumed at ~700 tokens;
+    ours are not generated yet.
+  - Wonderbread QA: ~900 input (the prompt with its few-shots is ~740) + a bare-number output.
+  - SOP Generation: ~950 input + ~20 output per call, at 19 calls per demo (the median in the
+    authors' shipped results) × 162 gold demos. That demo count depends on
+    [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) §6 question 4.
+
+| Judge | MultiChallenge (1,365 calls) | Wonderbread QA (2,400) | SOP Generation (~15,400) | Total per pass | × 3 replicates |
+|---|---:|---:|---:|---:|---:|
+| Kimi K2.5 | ~$1.0 | ~$1.0 | ~$7 | **~$9** | ~$28 |
+| Claude Haiku 4.5 | ~$2.2 | ~$2.2 | ~$16 | **~$21** | ~$62 |
+| Claude Sonnet 5.5 | ~$4.3 | ~$4.4 | ~$33 | **~$41** | ~$124 |
+
+**The real cost is human labelling for validation (§3), not API calls.** SOP Generation is the only
+place where a light judge's price matters, because of its call volume.
 
 ---
 
-## 6. Further reading
+## 2. A general pipeline for an LLM judge
 
-These were not downloaded or read in full; each summary comes from the abstract.
+Eight stages. Each one names the rule this project already has, and the paper that supports it.
 
-- **Jung et al., *Trust or Escalate: LLM Judges with Provable Guarantees for Human Agreement*** —
-  ICLR 2025, [arXiv:2407.18370](https://arxiv.org/abs/2407.18370).
-  - Cascaded selective evaluation: a cheap judge first, escalating to a stronger one only when
-    confidence is low, with a provable human-agreement guarantee.
-  - A further Q1 option.
-- **Li et al., *Preference Leakage: A Contamination Problem in LLM-as-a-judge*** — ICLR 2026,
-  [arXiv:2502.01534](https://arxiv.org/abs/2502.01534).
-  - Judges favour models related to them — the same model, an inheritance relationship, or the
-    **same family** — and this is "harder to detect" than other biases.
-  - Extends Panickssery from same-model to same-family.
-- **Dorner et al., *Limits to scalable evaluation at the frontier: LLM as Judge won't beat twice the
-  data*** — ICLR 2025, [arXiv:2410.13341](https://arxiv.org/abs/2410.13341).
-  - When the judge is no more accurate than the evaluated model, no debiasing method can cut the
-    required ground-truth labels by more than half.
-- **Shi et al., *Judging the Judges: A Systematic Study of Position Bias in LLM-as-a-Judge*** —
-  AACL-IJCNLP 2025, [arXiv:2406.07791](https://arxiv.org/abs/2406.07791).
-  - 15 judges and over 150k instances.
-  - Position bias is not random, varies by judge and task, and grows as the quality gap between
-    answers shrinks.
-- **Yamauchi et al., *An Empirical Study of LLM-as-a-Judge: How Design Choices Impact Evaluation
-  Reliability*** — 2025, [arXiv:2506.13639](https://arxiv.org/abs/2506.13639).
-  - Explicit evaluation criteria are critical.
-  - Non-deterministic sampling improved alignment with humans.
-  - CoT adds little when the criteria are clear.
+| # | Stage | What to do | Already in this repo | Evidence |
+|---|---|---|---|---|
+| 1 | **Specify** | State the criterion, the scale and its *direction*, what the judge is shown, and how scores combine — before choosing a model. | The 13 fields of [JUDGE_DOCUMENTATION_RULE.md](JUDGE_DOCUMENTATION_RULE.md) | Guerdan: an underspecified task makes validation pick the wrong judge |
+| 2 | **Decompose** | Turn holistic judging into narrow per-item questions — binary where possible — one call each. Never collapse many items into one verdict. | MultiChallenge already has this shape; Wonderbread QA calls each criterion separately | Rubric judge 93.95% vs holistic 37.33% (Sirdeshmukh). Collapsing a rubric tree inflated a score from 0.25 to 0.93 (PaperBench, Fig. 6). RocketEval |
+| 3 | **Ground** | Give the judge a verified reference or rubric wherever one exists. Never one an LLM wrote unchecked. | Wonderbread's `Human Label`; MultiChallenge's `TARGET_QUESTION` | Krumdick: a correct reference closes the gap between small and large judges; a wrong one is worse than none |
+| 4 | **Shortlist** | Exclude every family under evaluation. Shortlist light candidates plus one stronger reference. | §1 above | Pombal; Li; Norman |
+| 5 | **Prompt and output** | Keep the upstream prompt verbatim, so the judge model is the only thing that changes. Fix bugs, not wording. Hide model identity. Use structured output or a strict parser, and count parse failures and refusals as their own category. | C2 rule: "never silently score a parse failure as zero" ([JUDGE_RECORD.md](JUDGE_RECORD.md)) | Soumik: style bias is the largest bias and varies by family. Pombal: show one rubric at a time |
+| 6 | **Decode and replicate** | Temperature 0 where the model honours it. ≥ 3 replicates with test–retest reported. Pin the model snapshot. | Wonderbread D3: pass temperature 0 to Judge 2 | Norman's validation protocol (§4) |
+| 7 | **Validate** | Use a human-labelled sample from *each* benchmark, with ≥ 2 raters on at least a subset. | — | See below |
+| 8 | **Run and record** | Checkpoint per row. A judge error is its own count, never a failed item. Declare the substitute judge, fill the record's fields for it, and state that numbers are not comparable to the paper's. | Wonderbread C1; MultiChallenge D2; "Substituting a different judge model" in [JUDGE_RECORD.md](JUDGE_RECORD.md) | Gu: evaluation drift across model versions |
+
+**What stage 7 reports:**
+- Raw agreement **and** a chance-corrected statistic — κ or Krippendorff's α — with bootstrap CIs.
+- The trivial baseline: always-FAIL or always-majority.
+- False-PASS and false-FAIL rates, per evaluated family.
+- An acceptance bar fixed *before* the results are seen.
+
+**Evidence for stage 7:**
+- At 85% raw agreement, κ was only about 0.48 (Norman).
+- A wrong validation metric picked a judge 31% worse (Guerdan).
+- The per-family false-PASS rate comes from Pombal.
+
+---
+
+## 3. The pipeline for each benchmark
+
+### 3.1 MultiChallenge
+
+What the judge does today ([JUDGE_RECORD.md](JUDGE_RECORD.md) §2):
+- **Input:** one call per (item, attempt). The judge sees the final response and the item's rubric
+  question only. The prompt is [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) Appendix C, including
+  "Be VERY STRICT!".
+- **Output:** a structured `{reasoning, verdict ∈ YES/NO}`.
+- **Scoring:** an item passes on `verdict == PASS_CRITERIA`. Attempts combine as any-pass, and the
+  headline is a macro mean over the four axes.
+
+| Step | Decision |
+|---|---|
+| **Judge input** | Keep the final response plus rubric only — no conversation (D5). This is the condition the authors validated at 93.95%. Adding context is the condition that scored 37.33% (Sirdeshmukh, Table 4). |
+| **Harness repairs** (already decided) | D1: drop the `max_tokens` kwarg that crashes the judge. D2: exclude `axis == 'NA'` and report `judge_error_count`. Pre-count generation failures (the `FAIL THIS QUESTION` string). Keep the `PASS_CRITERIA` comparison (D6). |
+| **Judge swap** | Replace the hard-coded `gpt-4o-2024-08-06` with the chosen judge through OpenRouter's OpenAI-compatible client. Structured output is not supported on every route. *Verify* it for the chosen model; otherwise use JSON plus a strict parse into `{YES, NO}` with a parse-fail counter. |
+| **Decoding** | Temperature 0. Run 3 judge replicates per response, take the majority verdict, and report the flip rate. This deviates from upstream's single call; declare it. |
+| **Validation set** | Hand-label ~200 (response, rubric) pairs from *our* models' responses, stratified by axis and by evaluated model. Two raters on at least 60, to get the human–human ceiling. Raters see the same input as the judge. *(Size is our inference — see Guerdan and Norman.)* |
+| **Acceptance bar** (proposed — adjust before running) | Agreement ≥ 90% overall and per axis (the authors' frontier judge: 92.3–94.9% per axis). κ reported, and clearly above the always-FAIL baseline. *(Humans passed about 23% of responses, so always-FAIL already scores about 77% agreement.)* No evaluated family's false-PASS rate above 1.5× the lowest. |
+| **Cost** | About $1–4 per pass over five models (§1). |
+
+**Open decision for the user.** In March 2026 the authors revised 54 tasks to "reduce ambiguity" and
+moved their judge to Gemini 2.5 Pro, reporting judge–human agreement up more than 5 points (Scale,
+*MultiChallenge Update*, 2026-03-23).
+- **What we have:** our vendored copy is the February 2025 commit.
+- **Option 1 — the revised tasks:** better rubrics, but the numbers are not comparable to the paper.
+- **Option 2 — the vendored set:** comparable to the paper, but the rubrics are known to be
+  ambiguous.
+- **Either way,** the Gemini judge is excluded (§1).
+
+### 3.2 Wonderbread — Question Answering
+
+What the judge does today ([JUDGE_RECORD.md](JUDGE_RECORD.md) §1, Judge 1):
+- **Volume:** 120 items × 4 criteria, one call each — 480 per model.
+- **Prompt:** verbatim in [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) Appendix A, with three few-shot
+  examples.
+- **Reference:** the human reference goes to completeness and soundness only.
+- **Output:** a bare number, **1 = best, 3 = worst**.
+
+| Step | Decision |
+|---|---|
+| **Judge input** | Unchanged: the reference for two criteria, none for the other two. Clarity and compactness have no reference, so they are the criteria most exposed to style bias (Soumik) and to leniency (Pombal). Watch them in validation. |
+| **Output handling** (already decided) | Strict parse to {1, 2, 3} plus a `parse_fail` counter (C2). Keep the direction 1 = best and label it in every table (A6). |
+| **Run safety** (already decided) | Checkpoint per row: upstream writes its CSV only after the loop, so one error loses everything (C1). Cap the rate-limit retry. |
+| **Decoding** | Temperature 0 (already upstream). 3 replicates per (item, criterion), with the median score as the result. Report disagreements. |
+| **Validation set — a head start** | The 30-item human-vs-GPT-4 sample is already on disk, giving 120 human scores. Re-judge those exact responses with each candidate. GPT-4 reached 86.7–96.7% exact agreement and Spearman 0.80–0.89 per criterion (record A3). |
+| **…and its limit** | n = 30, one rating per item, raters undescribed. Guerdan shows one forced-choice rating per item cannot reliably pick a judge when a criterion is ambiguous. Add ~50 items from *our* models' responses, scored by two raters, and allow "either of two scores is reasonable" where they disagree. |
+| **Acceptance bar** (proposed) | Per criterion, exact agreement on the 30-item set no more than 5 points below GPT-4's. Quadratic-weighted κ reported with CI on the extended set. |
+| **Cost** | About $1–4 per pass over five models. |
+
+### 3.3 Wonderbread — SOP Generation
+
+What the judge does today ([JUDGE_RECORD.md](JUDGE_RECORD.md) §1, Judge 2):
+- **Decision:** for each line of one SOP, return the index of the matching line in the other SOP,
+  or −1. This runs in both directions.
+- **Volume:** p + g calls per demonstration.
+- **Prompt:** [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) Appendix B, in JSON mode.
+- **Score:** precision, recall and ordering are tallies of these decisions.
+
+| Step | Decision |
+|---|---|
+| **Why it matters most for cost** | Around 3,100 calls per model — six times QA. This is where a light judge's price actually matters (§1). |
+| **Settings** (already decided) | Pass temperature 0, since upstream defaults to 1.0 (D3). Clear `sop_cache` per configuration, because otherwise an edited prompt silently returns old completions (C2). Keep JSON mode and its one regeneration on malformed output. |
+| **Known scorer trap** | `preprocess_sop` strips everything up to the first `.` in each line (B4), which reshapes both what is matched and the denominators. Decide whether to keep upstream behaviour (comparable) or fix it (correct), and declare which. |
+| **Validation set** | There is no human comparison upstream (A3). Label ~150 line-match decisions from ~10 demos with two raters, deliberately including lines that should *not* match. Report false-match rate (the leniency risk, Pombal) and miss rate. Where a line plausibly matches two lines, record both as acceptable (Guerdan's response sets). |
+| **Acceptance bar** | Set before running. There is no published figure to anchor on. |
+| **Scope dependency** | Text-only or multimodal generation is [JUDGE_SUMMARY.md](JUDGE_SUMMARY.md) §6 question 4. The judge is text-only either way. |
+
+SOP Improvement is out of scope: its scorer does not execute (record D1).
+
+---
+
+## 4. The ten papers
+
+Citation counts are from Semantic Scholar, 2026-10-05. Page numbers are PDF pages.
+
+| # | Paper | Venue | Cites | What it settles for us |
+|---|---|---|---:|---|
+| 1 | Sirdeshmukh et al., *MultiChallenge* | Findings of ACL 2025 | 191 | Why the judge sees only the response and rubric; the 93.95% bar |
+| 2 | Wei et al., *RocketEval* | ICLR 2025 | 44 | Light judges work on checklist-style binary questions |
+| 3 | Starace et al., *PaperBench* | ICML 2025 (per Semantic Scholar; the PDF prints "Pre-print") | 307 | Validate, then pick the cheapest judge that is not worse |
+| 4 | Guerdan et al., *Validating LLM-as-a-Judge Systems under Rating Indeterminacy* | NeurIPS 2025 | 31 | How validation itself can pick the wrong judge |
+| 5 | Li et al., *Preference Leakage* | ICLR 2026 | 151 | Same-family and shared-training-data judges are biased |
+| 6 | Krumdick et al., *No Free Labels* | COLM 2026 | 65 | References make small judges reliable |
+| 7 | Pombal et al., *Self-Preference Bias in Rubric-Based Evaluation* | COLM 2026 | 12 | Self- and family-preference in binary rubric judging; leniency of light judges |
+| 8 | Soumik, *Judging the Judges: Bias Mitigation Strategies* | TMLR 2026 | 6 | Mid-tier plus a structured prompt matches frontier at 15× lower cost |
+| 9 | Norman et al., *Reliability without Validity* | arXiv preprint, June 2026 | 21 | 21 current judges with prices; a minimum validation protocol |
+| 10 | Gu et al., *A Survey on LLM-as-a-Judge* | The Innovation 7(6), 2026 | 1,891 | The framework behind §2 |
+
+#### 1 · Sirdeshmukh et al. (2025) — *MultiChallenge* · [PDF](papers/2025_Sirdeshmukh_MultiChallenge_ACLFindings2025.pdf) · [arXiv:2501.17399](https://arxiv.org/abs/2501.17399)
+
+**Setup.** Six frontier models' responses on all 273 items were labelled by human raters, with two
+reviewer layers (p.6). The judge was GPT-4o, with Claude 3.5 Sonnet also tried.
+
+**Findings**
+- **Why a rubric.** A judge given the full conversation "yields low alignment with human raters"
+  (p.4). Each item therefore gets a human-written YES/NO question that "requires only the final model
+  response as context" (p.5).
+- **Agreement.** The rubric judge scores 93.95% overall and 92.26–94.85% per axis. The full-context
+  judge scores 37.33% (Table 4, p.7).
+- **Rankings.** Judge and human scores rank all six models identically (Tables 2–3).
+- **Judge model.** Claude gave "the same conclusions" as GPT-4o (p.6–7). No per-judge numbers and no
+  light judge were reported.
+
+**Caveats**
+- Agreement is raw percent, with no κ. Humans passed about 23% of responses, so always-FAIL already
+  scores about 77% *(our arithmetic from Table 2)*.
+- Items whose rubric was too hard for a frontier judge were excluded from the release (p.9).
+- The full-context baseline also lacked the rubric, so the paper does not show whether the extra
+  context or the missing rubric caused the drop.
+
+#### 2 · Wei et al. (2025) — *RocketEval* · [PDF](papers/2025_Wei_RocketEval_ICLR2025.pdf) · [arXiv:2503.05142](https://arxiv.org/abs/2503.05142)
+
+**Setup.** 13 open judges from 0.5B to 12B, compared with GPT-4o.
+- GPT-4o writes 5–10 binary checklist questions per query (p.6).
+- The light judge answers each one separately.
+- The score uses p(Yes)/(p(Yes)+p(No)) from token probabilities, not the decoded word.
+
+**Findings**
+- **Diagnosis.** Light judges fail at "comprehension and analysis" of complex responses, not at
+  answering narrow questions (p.5).
+- **Model ranking.** Gemma-2-2B reaches Spearman 0.965 with human-derived rankings, comparable to
+  GPT-4o's 0.979. Under plain CoT it scored 0.818 (Table 3, p.9). The cost reduction is more than
+  50-fold.
+- **No supervision needed at 2B and up.** The unsupervised score matches the supervised one for
+  judges of about 2B and larger. It fails for 1B models.
+
+**Caveat**
+- Parity is in *ranking models*, not in per-item agreement. Gemma-2-2B's instance agreement is 57.9%
+  against GPT-4o's 66.6% (Table 2).
+- The ranked models were chosen to be well separated.
+- Logprob access is needed to copy the scoring method.
+
+#### 3 · Starace et al. (2025) — *PaperBench* · [PDF](papers/2025_Starace_PaperBench_ICML2025.pdf) · [arXiv:2504.01848](https://arxiv.org/abs/2504.01848)
+
+**Setup.** 8,316 binary rubric leaves. JudgeEval is built from human-graded leaves of five partial
+replications (p.6).
+
+**Findings**
+- **Judge comparison** (Table 3, p.6):
+
+  | Judge | F1 | Cost per paper |
+  |---|---:|---:|
+  | GPT-4o-mini | 0.59 | $8 |
+  | GPT-4o | 0.73 | $120 |
+  | o1-mini | 0.78 | $72 |
+  | **o3-mini** | **0.83** | **$66** |
+  | o1 | 0.84 | $830 |
+
+- **The choice.** They chose o3-mini as "the most cost-effective" (p.6), noting that o1's edge "may
+  be due to noise and remains futile given the much higher costs" (p.18).
+- **Atomic grading matters.** Grading collapsed subtrees inflated one submission's score from 0.25 to
+  0.93 (Fig. 6, p.19).
+
+**Caveat**
+- The JudgeEval size and the labellers are not stated.
+- An OpenAI judge graded OpenAI agents, and self-preference was not examined.
+
+#### 4 · Guerdan et al. (2025) — *Rating Indeterminacy* · [PDF](papers/2025_Guerdan_Rating-Indeterminacy_NeurIPS2025.pdf) · [arXiv:2503.05965](https://arxiv.org/abs/2503.05965)
+
+**Setup.** 9 judges on 11 rating tasks — toxicity, NLI, SummEval and others.
+
+**Findings**
+- **Rating indeterminacy.** When criteria "admit multiple valid interpretations", forced-choice
+  validation picks the wrong judge.
+- **Example.** On toxicity, Claude 3.5 Sonnet ranked first under forced choice but has "31% worse
+  consistency with human decisions than GPT o3-Mini" (p.3).
+- **What helps.** Fully specify the task (e.g., an explicit rule for borderline cases), or collect
+  "select all that could apply" ratings on a validation subset.
+  - About 100 paired items suffice (p.10).
+  - "very few ratings per item (e.g., 1-3)" lead to poor judge selection (p.61).
+
+**Caveat**
+- The human response sets are simulated.
+- The 31% figure is a single example.
+
+#### 5 · Li et al. (2026) — *Preference Leakage* · [PDF](papers/2025_Li_Preference-Leakage_ICLR2026.pdf) · [arXiv:2502.01534](https://arxiv.org/abs/2502.01534)
+
+**Setup.** Students are fine-tuned on data from GPT-4o, Gemini-1.5 or LLaMA-3.3, and then judged by
+those same models, pairwise, on Arena-Hard and AlpacaEval.
+
+**Findings — average preference-leakage score by relatedness** (Table 2, p.7):
+
+| Relatedness | Leakage |
+|---|---:|
+| Same model | 23.6% |
+| Inheritance | 19.3–22.3% |
+| Same family, same series | 8.9% |
+| Same family, different series | 2.8% |
+
+- **Hard to detect.** Judges recognise their related students at about chance (Table 5).
+- **Subjective questions leak more.** Mathematics 7.7, Programming 31.4 (Fig. 3).
+- **The one mitigation that worked.** Contextual calibration on a held-out set, 17.8 → 7.3 (Table 7).
+
+**Caveat**
+- Pairwise only, with 2024 judges.
+- The family rows have no significance test.
+
+#### 6 · Krumdick et al. (2026) — *No Free Labels* · [PDF](papers/2025_Krumdick_No-Free-Labels_COLM2026.pdf) · [arXiv:2503.05061](https://arxiv.org/abs/2503.05061)
+
+**Setup.** Five judges, from Qwen 2.5 7B to GPT-4o. Three expert labels per response on finance and
+math questions. References given: none, the judge's own, or a human one.
+
+**Findings**
+- **The two conditions for a trustworthy judge.** Agreement is high only if the judge "(1) can
+  already answer the underlying question or (2) is provided with a correct reference" (p.9).
+- **Single-grading κ, no reference → human reference** (Table 6, p.23):
+
+  | Judge | No reference | Human reference |
+  |---|---:|---:|
+  | Qwen 2.5 7B | 0.24 | 0.63 |
+  | Phi 4 | 0.27 | 0.72 |
+  | Llama 3.3 70B | 0.42 | 0.78 |
+  | GPT-4o | 0.47 | 0.68 |
+
+- **The headline claim.** "providing a human reference to a relatively small model … can yield
+  better judgments than using a larger model without human references" (p.7).
+- **What does not help.** The judge's own reference makes self-preference worse (p.10). A 5-judge
+  jury does not escape the no-reference limit (Table 10).
+
+**Caveat**
+- Correctness tasks only.
+- Experts graded against the reference, which favours judges that are given one.
+
+#### 7 · Pombal et al. (2026) — *Self-Preference Bias in Rubric-Based Evaluation* · [PDF](papers/2026_Pombal_Self-Preference-in-Rubric-Evaluation_COLM2026.pdf) · [arXiv:2604.06996](https://arxiv.org/abs/2604.06996)
+
+**Setup.**
+- **Judges:** 12, each also a generator — Gemma 3, Llama 4, Qwen 3, GPT-5, GPT-oss-120B, Claude
+  Sonnet 4.5 and Haiku 4.5.
+- **Data:** IFEval and LiveCodeBench, which have programmatic ground truth, and HealthBench.
+- **Format:** binary per-rubric verdicts.
+
+**Findings**
+- **Self-preference survives objective rubrics.** Judges "can be more than 50% more likely to
+  incorrectly mark [a failed rubric] as satisfied when the output is their own". GPT-5 was 20× more
+  likely on LiveCodeBench (p.1, p.5).
+- **It extends to the family.** On LiveCodeBench the family ratio is 11.91 for GPT-5 and 8.95 for
+  GPT-oss (Table 5).
+- **Size and leniency.** Smaller judges are more lenient in absolute terms. HealthBench false PASS
+  on other families' failed rubrics (Table 26):
+
+  | Smaller judge | False PASS | Larger judge | False PASS |
+  |---|---:|---|---:|
+  | Haiku | 0.12 | Sonnet | 0.03 |
+  | Qwen-4B | 0.44 | Qwen-235B | 0.09 |
+  | Gemma-4B | 0.48 | Gemma-27B | 0.34 |
+- **Haiku's own self-preference** ratios are 1.15 / 1.71 / 0.90 on the three benchmarks (Table 1).
+- **What helps and what does not.**
+  - Ensembles lower self-preference without removing it.
+  - More reasoning raises accuracy but not fairness (p.19).
+  - One rubric at a time shows slightly *more* self-preference than all at once (p.6).
+
+**Caveat**
+- No human labels.
+- The HealthBench reference is a vote of five of the judges.
+
+#### 8 · Soumik (2026) — *Judging the Judges: Bias Mitigation Strategies* · [PDF](papers/2026_Soumik_Bias-Mitigation-Strategies_TMLR2026.pdf) · [arXiv:2604.23178](https://arxiv.org/abs/2604.23178)
+
+**Setup.** Five judges: Gemini 2.5 Pro and Flash, Claude Sonnet 4, GPT-4o and Llama 3.3 70B. Nine
+debiasing strategies. MT-Bench (400 items), LLMBar (200) and a controlled set — all pairwise.
+
+**Findings**
+- **The headline.** Gemini 2.5 Flash with a 2-call CoT+rubric prompt reached the highest agreement,
+  71.0% / κ 0.549, at about $0.001 per evaluation — "roughly 15× cheaper" than Claude Sonnet 4's best
+  (p.1).
+- **Style is the largest bias.** Four of five judges preferred markdown 73–97% of the time; humans did
+  57% (p.21).
+- **Position swap can hurt.** It cost GPT-4o 11.1 points on LLMBar, where one answer is clearly
+  better (p.9).
+
+**Caveat**
+- The Flash-over-Sonnet gap sits inside overlapping CIs.
+- Single author, pairwise only.
+- Two of the nine strategies have no results in the PDF.
+
+#### 9 · Norman et al. (2026) — *Reliability without Validity* · [PDF](papers/2026_Norman_Reliability-without-Validity.pdf) · [arXiv:2606.19544](https://arxiv.org/abs/2606.19544)
+
+**Setup.** 21 judges from 9 providers. MT-Bench, JudgeBench and RewardBench. About 541,000 judgments
+at temperature 0, with reasoning suppressed.
+
+**Findings**
+- **Raw agreement overstates.** Exact match exceeds κ by 33.8–41.3 points on MT-Bench: "a judge
+  reporting '85% agreement' … has κ ≈ 0.48" (p.5).
+- **Rankings do not transfer.** Judge rankings move by up to 14–15 places between benchmarks.
+- **Light, out-of-family judges** (Tables 2–3, 6):
+
+  | Judge | JudgeBench κ | RewardBench κ | Position bias | Test–retest (MT-Bench) |
+  |---|---:|---:|---:|---:|
+  | Kimi K2.5 | 0.720 | 0.873 | 0.004 | 0.917 |
+  | MiniMax M2.7 | 0.715 | 0.834 | 0.020 | 0.888 — the least stable |
+  | Claude Haiku 4.5 | 0.653 | 0.873 | 0.041 | 0.935 |
+  | GLM-5 | 0.596 | 0.838 | 0.052 | 0.934 |
+  | Llama 3.3 70B | 0.283 | 0.769 | 0.057 | 0.954 |
+
+  - The three Anthropic judges average κ 0.770 on JudgeBench, with position bias 0.020.
+- **The Minimum Viable Validation Protocol** (p.8):
+  1. Report κ or α as the headline.
+  2. Measure position bias.
+  3. Run ≥ 3 replicates at temperature 0, with caching off.
+  4. Validate on ≥ 2 benchmarks of different label types.
+  5. If test–retest exceeds 0.95, check that position bias is below 0.10.
+
+**Caveat**
+- Preprint, with several internal number inconsistencies.
+- Pairwise only.
+- List prices only.
+
+#### 10 · Gu et al. (2026) — *A Survey on LLM-as-a-Judge* · [PDF](LLM_as_judge.pdf) · [arXiv:2411.15594](https://arxiv.org/abs/2411.15594)
+
+The journal version (The Innovation, January 2026) of the field's most-cited survey. Kept as the
+framework, not as evidence.
+
+**What it contributes**
+- **The four building stages:** prompt design, model selection, post-processing, and the evaluation
+  pipeline (Fig. 2A, p.4).
+- **The "quick practice" loop** (p.7).
+- **A meta-evaluation:**
+  - Asking for an explanation alongside the score lowered position consistency.
+  - A majority vote over 5 runs helped modestly; mean and best-of did not (Tables 2–3, p.16–17).
+- **Rules adopted in §2:** avoid same-model judging and anonymise model names (p.14). Watch for
+  evaluation drift across model versions (p.22).
+
+**Caveat:** the survey's prose contradicts its own tables in places.
+
+---
+
+## 5. Further reading — 2025 and later, not downloaded
+
+These summaries come from the abstracts only.
+
 - **Salinas et al., *Tuning LLM Judge Design Decisions for 1/1000 of the Cost*** — ICML 2025,
-  [arXiv:2501.17178](https://arxiv.org/abs/2501.17178).
-  - Searches judge hyperparameters (model, prompt, decoding) jointly.
-  - Finds open-weight judges that are competitive.
-- **Han et al., *Judge's Verdict*** — 2025 preprint,
-  [arXiv:2510.09738](https://arxiv.org/abs/2510.09738).
-  - 54 LLMs scored against humans on judging the accuracy of RAG and agentic answers, with a
-    κ-based tiering.
-- **Feng et al., *Are We on the Right Way to Assessing LLM-as-a-Judge?* (Sage)** — 2025 preprint,
-  [arXiv:2512.16041](https://arxiv.org/abs/2512.16041).
-  - Measures judges without human labels, using preference stability and transitivity.
+  [arXiv:2501.17178](https://arxiv.org/abs/2501.17178). Searches judge model, prompt and decoding
+  jointly, and finds competitive open-weight judges.
+- **Xie et al., *Small Language Models as Judges for Rubric-Based Reinforcement Learning*** —
+  Findings of EMNLP 2026, [arXiv:2608.30005](https://arxiv.org/abs/2608.30005). Rubric
+  criterion-level judging with models down to 1.7B.
+- **Rao et al., *JEV vs. LLMs as Rubric Judges*** — 2026,
+  [arXiv:2609.29769](https://arxiv.org/abs/2609.29769).
+  - Compares flash-tier LLM judges and a classifier, holistic versus one criterion at a time, on nine
+    human-labelled panels.
+  - The classifier is ahead on binary checklist criteria and behind on ordinal ones.
+- **Hong et al., *From Rubrics to Reliable Scores (Rulers)*** — EMNLP 2026,
+  [arXiv:2601.08654](https://arxiv.org/abs/2601.08654). Locked rubrics, evidence-grounded verdicts,
+  and calibration to human score boundaries. Relevant to Wonderbread's 1–3 scale.
+- **Yu et al., *Mitigating Rubric Interference in LLM Judges*** — 2026,
+  [arXiv:2608.14684](https://arxiv.org/abs/2608.14684). Judging several rubrics in one call shifts
+  each verdict, which supports one call per criterion.
+- **Lail et al., *On Cost-Effective LLM-as-a-Judge Improvement Techniques*** — ICML 2026 workshop,
+  [arXiv:2604.13717](https://arxiv.org/abs/2604.13717). Ensembling, criteria injection and adaptive
+  escalation to a stronger model.
+- **Arora et al., *HealthBench*** — OpenAI 2025,
+  [arXiv:2505.08775](https://arxiv.org/abs/2505.08775). Physician-written per-conversation rubrics
+  graded by a model judge — the closest large-scale analogue to MultiChallenge's design.
 
 ---
 
-## 7. Files
+## 6. Files
 
-Licences were checked on each paper's arXiv abstract page, 2026-10-05.
-
-**Committed** (open licences):
+Licences were checked on each paper's arXiv abstract page or in the ACL Anthology, 2026-10-05.
 
 | PDF | Licence |
 |---|---|
-| [LLM_as_judge.pdf](LLM_as_judge.pdf) (Gu et al., journal version) | CC BY-NC-ND |
-| [papers/2024_Thakur_…](papers/2024_Thakur_Judging-the-Judges_GEM2025.pdf) | CC0 |
-| [papers/2024_Bavaresco_…](papers/2024_Bavaresco_LLMs-instead-of-Human-Judges_ACL2025.pdf) | CC BY 4.0 |
-| [papers/2024_Panickssery_…](papers/2024_Panickssery_LLM-Evaluators-Favor-Own-Generations_NeurIPS2024.pdf) | CC BY 4.0 |
-| [papers/2025_Krumdick_…](papers/2025_Krumdick_No-Free-Labels_COLM2026.pdf) | CC BY-NC-SA 4.0 |
-| [papers/2026_Norman_…](papers/2026_Norman_Reliability-without-Validity.pdf) | CC BY 4.0 |
+| [MultiChallenge](papers/2025_Sirdeshmukh_MultiChallenge_ACLFindings2025.pdf) | CC BY 4.0 (ACL Anthology version) |
+| [RocketEval](papers/2025_Wei_RocketEval_ICLR2025.pdf) | CC BY-NC-SA 4.0 |
+| [PaperBench](papers/2025_Starace_PaperBench_ICML2025.pdf) | CC BY 4.0 |
+| [Rating Indeterminacy](papers/2025_Guerdan_Rating-Indeterminacy_NeurIPS2025.pdf) | CC BY 4.0 |
+| [Preference Leakage](papers/2025_Li_Preference-Leakage_ICLR2026.pdf) | CC BY 4.0 |
+| [No Free Labels](papers/2025_Krumdick_No-Free-Labels_COLM2026.pdf) | CC BY-NC-SA 4.0 |
+| [Self-Preference in Rubric Evaluation](papers/2026_Pombal_Self-Preference-in-Rubric-Evaluation_COLM2026.pdf) | CC BY 4.0 |
+| [Bias Mitigation Strategies](papers/2026_Soumik_Bias-Mitigation-Strategies_TMLR2026.pdf) | CC BY 4.0 |
+| [Reliability without Validity](papers/2026_Norman_Reliability-without-Validity.pdf) | CC BY 4.0 |
+| [Survey (journal version)](LLM_as_judge.pdf) | CC BY-NC-ND |
 
-**Local only:**
-- **Which:** Huang, Tan, Verga and Ye.
-- **Why:** they carry arXiv's default non-exclusive licence, which grants no right to redistribute,
-  and both remotes of this repo are public. They are listed in [papers/.gitignore](papers/.gitignore).
-- **On a fresh clone:** re-download them from the arXiv links above.
+All ten are committed. The filename year is the year of first release; the venue follows it.
