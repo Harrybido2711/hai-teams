@@ -11,6 +11,7 @@ stay in sync as the project moves — prefer them over anything remembered from 
 | `.claude/references/benchmarks/<group>/<name>.md` | **Everything specific to one benchmark** — its Quest path, layout, expected counts, output paths, run order and its own traps. Read the page for the benchmark you are working on, and its group page with it; a number from another page is not transferable |
 | `.claude/references/benchmarks/README.md` | The index of all ten pages, and what a page is required to establish before its numbers are used |
 | `LLM_as_judge/JUDGE_RECORD.md` | Which benchmarks need an LLM judge, and the full record for the three that do |
+| `LLM_as_judge/README.md` | What the 2024–2026 literature says when you are choosing a replacement judge model or designing a judge's prompt, references and validation — ten papers, page-cited, PDFs in `LLM_as_judge/papers/` |
 | `PLAN.md` | Repo map: what each folder is, provider coverage, and the state of each run |
 
 A benchmark's own `*_script.md` / `*_SCRIPT.md` is authoritative on what a task *means*, but their

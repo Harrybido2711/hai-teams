@@ -30,6 +30,8 @@ hai-teams/
 ├── Random_stuff/                        1,032 files · 75M — parked, not part of the taxonomy
 │   ├── SQA Release 1.0/ · TruthfulQA-main/ · sycophancy-eval-main/
 ├── LLM_as_judge/                        judge methodology, not a benchmark
+│   ├── README.md                        literature review: choosing the judge model, building the pipeline
+│   ├── papers/                          the review's PDFs (four are local-only, see its .gitignore)
 │   ├── JUDGE_RECORD.md                  the filled record for all three judged benchmarks
 │   └── JUDGE_SUMMARY.md                 its two-page version, for discussion
 ├── .claude/                             INDEX, tools, agents, references, workflows (see below)
@@ -214,6 +216,7 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 | `LLM_as_judge/JUDGE_RECORD.md`                       | the filled record — every judge in the suite: what it is, what it is shown, what its numbers mean, and which seven benchmarks need no record |
 | `LLM_as_judge/JUDGE_SUMMARY.md`                      | the two-page version of that record: the findings, the cost per model, and the open decisions                                                 |
 | `LLM_as_judge/GPT_LLM_AS_JUDGE_GUIDE.md`             | how to*build* a judge with GPT — pairwise setup, structured output, position bias                                                          |
+| `LLM_as_judge/README.md`                             | what ten 2024–2026 papers say about choosing a judge model and building a judge pipeline; the PDFs are in `LLM_as_judge/papers/`             |
 | `Interpersonal_.../NegotiationToM/negotiation.md`    | current NegotiationToM results, dataset traps, reasoning-token cost, silent-failure catalogue                                                 |
 | `Interpersonal_.../NegotiationToM/ISSUES.md`         | problems already hit, what was rejected, what shipped                                                                                         |
 | `Interpersonal_.../NegotiationToM/DATA_NOTES.md`     | cutoff tiling, the`"None"` sentinel, expected row counts                                                                                    |
