@@ -484,8 +484,8 @@ So: one `aware_eval_core.py` holding the right-hand replacements, plus a ~100-li
 
 ### 5.3 Split `--task` eleven ways
 
-Generation does not need the split, but scoring does, and it buys per-task SLURM jobs under
-`run-fast`, output files that line up with the paper's columns, and a per-task parse-failure count:
+Generation does not need the split, but scoring does, and it buys per-task SLURM job arrays
+(`submit-run` step 1), output files that line up with the paper's columns, and a per-task parse-failure count:
 
 ```
 capability(600)              mission_explicit(966)         mission_implicit(327)

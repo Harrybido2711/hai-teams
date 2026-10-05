@@ -32,7 +32,7 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 - **Working scope right now (2026-08-22): the local tree.** Quest is not being checked or synced;
   the transfer happens once local is settled. That does not relax any rule about *how* a sync is
   done when it happens — it means the sync has not happened yet.
-- **Running now:** nothing is assumed. Check, don't remember — `check-status`, or `squeue -u uwr0681`.
+- **Running now:** nothing is assumed. Check, don't remember — `monitor-run`, or `squeue -u uwr0681`.
 - **All ten benchmarks have a knowledge-base page**; three of them have no runner at all, so work
   there starts at phase 1 or 2 rather than 3.
 - **Two runners comply with the model-parameter rule; every other one does not.** bbh's
@@ -50,7 +50,7 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 |---|---|
 | **kill-and-resync** | standing authorisation to `scancel` a known-bad job, fix locally, overwrite on Quest with `md5sum` confirmation, resubmit — without asking first |
 | **sync check** | proving every code file on Quest matches local before a submit. A `PreToolUse` hook runs it automatically and **fails open**, so a stale path silently protects nothing. Contract and the two ways the check lies: `references/quest-cluster.md` |
-| **gate** | a workflow phase that is allowed to refuse — `fix-broken-run` returns without submitting when the reviewer says no. Why they are built that way: `tools/create-workflow.md` |
+| **gate** | a workflow phase that is allowed to refuse — `fix-run` and `launch-run` return without submitting when the reviewer says no, `finish-run` without recording until the user confirms. Why they are built that way: `tools/create-workflow.md` |
 | **`STATUS:` line** | the fixed vocabulary every agent ends its report with, so a dispatch can be branched on without re-reading prose. `references/handoffs.md` |
 | **pilot** | a small fraction of the data run first and reviewed before the full run commits hours to a config. The script name is on the benchmark's page |
 | **shard tag** | `{model}_shard{N}of{M}.jsonl` in an output filename. Without it every shard overwrites the last |

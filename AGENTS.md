@@ -27,14 +27,16 @@ row is what to fix.
 ## Situation → first move → detail
 
 Bare filenames below are in `.claude/references/`; `CLAUDE.md` and `PLAN.md` are at the repo root.
+**Bold** names are skills — `.claude/skills/<name>/SKILL.md`, a numbered procedure any agent can
+follow, Codex included. A workflow named beside one runs that whole stretch in Claude Code.
 
 ### Starting
 
 | Situation | First move | Detail |
 |---|---|---|
 | "Where is the project, what is left to run?" | read `PLAN.md` § Two workbooks and § Open work; `ssh quest squeue -u uwr0681` for what is live. Never answer from memory | `PLAN.md` |
-| A benchmark nobody has analysed | read the code before the paper; write its page from the template **and** its group-index row in one edit; mark anything unestablished as such | `benchmarks/README.md` |
-| A new model on an existing benchmark | `--model <id>` and `--brief <benchmark>`; copy the closest existing model folder and swap the client; import the scorer from the benchmark's shared core | `model-calls.md`, `model-parameters.md`, `script-skeleton.md` |
+| A benchmark nobody has analysed | read the code before the paper; write its page from the template **and** its group-index row in one edit; mark anything unestablished as such | **`analyse-benchmark`**; `benchmarks/README.md` |
+| A new model on an existing benchmark | `--model <id>` and `--brief <benchmark>`; copy the closest existing model folder and swap the client; import the scorer from the benchmark's shared core | **`write-runner`** · workflow `new-runner`; `model-calls.md`, `model-parameters.md`, `script-skeleton.md` |
 | A model page lists a parameter | probe one real call before the run. A refused *value* is not a refused *parameter* — never drop a cap because its name appeared in an error | `model-parameters.md` rules 6–7 |
 | Should the model show its reasoning? | the benchmark's own upstream README decides, resolved at run time. Hidden reasoning is capped regardless | `model-parameters.md` rules 1, 3 |
 
@@ -42,11 +44,11 @@ Bare filenames below are in `.claude/references/`; `CLAUDE.md` and `PLAN.md` are
 
 | Situation | First move | Detail |
 |---|---|---|
-| Scripts look ready | **stop and hand them to the user.** After their OK: local `--limit` pilot → transfer *every* modified file as one set → `md5sum` both sides, printing both list lengths → `sbatch` | `quest-cluster.md` § Transferring |
+| Scripts look ready | **stop and hand them to the user.** After their OK: local `--limit` pilot → transfer *every* modified file as one set → `md5sum` both sides, printing both list lengths → `sbatch` | **`quest-sync`**, **`submit-run`** · workflow `launch-run`; `quest-cluster.md` § Transferring |
 | Which Quest directory? | the Paths table on the benchmark's page. Ours live under `Interpersonal_processes_benchmarks/` and `Tasks_benchmarks/`; flat top-level folders belong to other accounts | `quest-cluster.md` |
 | `ssh quest` → `Host key verification failed` | the alias is missing from `~/.ssh/config`; reinstall it, check with `ssh quest hostname` | Claude memory `quest-access`; `quest-cluster.md` |
-| The pre-submit hook says *in sync* | for anything but NegotiationToM it compared the wrong files. Compare by hand per the page | `quest-cluster.md` § The pre-submit gate |
-| A manual md5 compare says *in sync* | print both list lengths. zsh does not split `$FILES`; `join` needs input sorted by filename | `quest-cluster.md` |
+| The pre-submit hook says *in sync* | for anything but NegotiationToM it compared the wrong files. Compare by hand per the page | **`quest-sync`**; `quest-cluster.md` § The pre-submit gate |
+| A manual md5 compare says *in sync* | print both list lengths. zsh does not split `$FILES`; `join` needs input sorted by filename | **`quest-sync`** step 2; `quest-cluster.md` |
 | How many shards? | 5. Lower the per-item sleep before adding shards; keep ≥ ~25 items a shard | `quest-cluster.md` § SLURM |
 | `.env` missing on Quest | copy it from a sibling benchmark directory of ours on Quest. Never copy it off Quest | `quest-cluster.md` |
 
@@ -54,7 +56,7 @@ Bare filenames below are in `.claude/references/`; `CLAUDE.md` and `PLAN.md` are
 
 | Situation | First move | Detail |
 |---|---|---|
-| "How is it going?" | halt markers → rows in the `.jsonl` and its mtime → `squeue`/`sacct`. **Rows written, never job state; never log size** (stdout is unflushed). Claude Code: the `watch-live-runs` workflow does this read-only | `quest-cluster.md` § Reading the live state |
+| "How is it going?" | halt markers → rows in the `.jsonl` and its mtime → `squeue`/`sacct`. **Rows written, never job state; never log size** (stdout is unflushed). | **`check-run`** · workflow `monitor-run`; `quest-cluster.md` § Reading the live state |
 | RUNNING, rows not growing | a call is hung. `srun --jobid=<id> --overlap` and read `/proc/<pid>/wchan`. `timeout=` is not a guard; the SIGALRM watchdog is | `provider-gotchas.md` § Timeouts |
 | `COMPLETED 0:0` | not evidence. Count the non-empty response rate and null predictions | `shared-context.md` § Counting rows |
 | A halt marker exists | it names the cause and whether to prune before resubmitting — quote it | `quest-cluster.md` |
@@ -64,7 +66,7 @@ Bare filenames below are in `.claude/references/`; `CLAUDE.md` and `PLAN.md` are
 
 | Situation | First move | Detail |
 |---|---|---|
-| A job is writing bad data | **standing authorisation, do not ask:** `scancel` → fix locally → transfer the whole change set, verify `md5sum` → decide resume / prune / archive and say which → resubmit | `CLAUDE.md`; `quest-cluster.md` § Replacing the code |
+| A job is writing bad data | **standing authorisation, do not ask:** `scancel` → fix locally → transfer the whole change set, verify `md5sum` → decide resume / prune / archive and say which → resubmit | **`kill-and-resync`** · workflow `fix-run`; `CLAUDE.md`; `quest-cluster.md` § Replacing the code |
 | Fixed locally, job still wrong | the live process imported the old modules. Cancel *before* transferring | `quest-cluster.md` |
 | HTTP 200, empty body | that provider's row in the gotchas table; empties are retried, never scored as zero | `provider-gotchas.md`; `script-skeleton.md` §4 |
 | The same error on every call (`ValidationError`, `INVALID_ARGUMENT`, `Extra inputs`) | a permanent config error — make it fatal. Check the SDK version Quest's interpreter has, not yours | `provider-gotchas.md` § google-genai |
@@ -72,15 +74,16 @@ Bare filenames below are in `.claude/references/`; `CLAUDE.md` and `PLAN.md` are
 | Billing / quota / "credits" wording | the shared `halt_on_billing` classifier — never a hand-written string test | `provider-gotchas.md` § Classifying a refusal |
 | 429, TPM, requests per day | shards and sleep; requests-per-day is the limit that bit hardest | `quest-cluster.md` § SLURM; `Tasks_benchmarks/DocVQA/OPENAI_EVAL_NOTES.md` |
 | A provider refuses the health-check probe | probe with the real prompt builders (`NegotiationToM/preflight.py` is the pattern) | `provider-gotchas.md` |
-| A resumed run "finished" in seconds | stale checkpoint. After any prompt or decoding change, archive (timestamped), never resume | `script-skeleton.md` §6 |
-| Empty rows never get retried | resume marks every uid done, empty or not. Prune them first (`NegotiationToM/prune_failed_rows.py`) | `script-skeleton.md` §6 |
+| A resumed run "finished" in seconds | stale checkpoint. After any prompt or decoding change, archive (timestamped), never resume | **`submit-run`** step 2; `script-skeleton.md` §6 |
+| Empty rows never get retried | resume marks every uid done, empty or not. Prune them first (`NegotiationToM/prune_failed_rows.py`) | **`submit-run`** step 2; `script-skeleton.md` §6 |
 | A sharded summary holds one category | untagged shard outputs overwrote each other | `script-skeleton.md` §7b |
 
 ### Scores
 
 | Situation | First move | Detail |
 |---|---|---|
-| Scores low, or split by output format | strict scorer. One lenient matcher per benchmark, imported from its core; **rescore the stored rows offline** — no rerun needed | `script-skeleton.md` §7 |
+| Scores low, or split by output format | strict scorer. One lenient matcher per benchmark, imported from its core; **rescore the stored rows offline** — no rerun needed | **`rescore-offline`**; `script-skeleton.md` §7 |
+| A pilot or run has finished — can its numbers be believed? | one real row's schema → counts against the page → empties and off-label predictions → one configuration → recompute the score | **`audit-results`** · workflow `finish-run` |
 | The CSV shows more ids than rows | newlines inside responses. Count from the `.jsonl` | `shared-context.md` |
 | A count of zero, or larger than the row count | a guessed field name, or shards and merged file counted together. Print one real row's keys first | Habits below |
 | A score you cannot read | check the denominator: `{task}_scored_rows`, and the exclusions on the page | the benchmark's page |
@@ -89,11 +92,11 @@ Bare filenames below are in `.claude/references/`; `CLAUDE.md` and `PLAN.md` are
 
 | Situation | First move | Detail |
 |---|---|---|
-| A model finished a whole benchmark | wait for the user's confirmation. Then **one** edit: the page, both workbooks, the `Provenance` row — rebuilt from the per-task files on disk | `sync-and-consistency.md` § Layer 4; `PLAN.md` § Two workbooks |
+| A model finished a whole benchmark | wait for the user's confirmation. Then **one** edit: the page, both workbooks, the `Provenance` row — rebuilt from the per-task files on disk | **`record-results`** · workflow `finish-run`; `sync-and-consistency.md` § Layer 4; `PLAN.md` § Two workbooks |
 | A selected model has not run a sheet | its cell stays blank. Never borrow the number of the model that used to hold the slot | `PLAN.md` § Two workbooks |
 | The commit is blocked by the doc check | read the finding first, then fix it or declare it with a reason | `doc-check.md` |
 | "Have we hit this before?" | grep the benchmark's own notes (named on its page), `Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md` (false alarms at the end), `provider-gotchas.md` | — |
-| A task is done | the sync pass: `check_docs.py` → stage **explicit paths** → commit → push `origin` and `backup`; plus `md5sum` on Quest if code that lives there changed. Never `git add -A`; never push `upstream` | `CLAUDE.md` § Every task ends with a sync pass |
+| A task is done | the sync pass: `check_docs.py` → stage **explicit paths** → commit → push `origin` and `backup`; plus `md5sum` on Quest if code that lives there changed. Never `git add -A`; never push `upstream` | **`sync-pass`** |
 
 ## Habits — each one cost a session
 
@@ -129,9 +132,14 @@ A lesson left in a transcript dies with the session. Write it where the next age
 
 ## Tools, by agent
 
-- **Claude Code** — what can be dispatched is listed in [`.claude/tools/README.md`](.claude/tools/README.md).
-  Wide reading goes to the built-in `Explore` agent with the `check_docs.py` command, not a file list.
-  What a session cost: `python3 .claude/scripts/token_report.py --top 15`.
-- **Codex** — no subagents and no `Workflow` tool. Use [`.claude/agents/reviewer.md`](.claude/agents/reviewer.md)
-  as the checklist for a separate review pass over the diff before anything reaches Quest; the
-  hand-run form of the monitoring workflow is `quest-cluster.md` § Reading the live state.
+Skills are the steps, agents the roles, workflows the baselines that compose them —
+[`.claude/tools/README.md`](.claude/tools/README.md) lists all three.
+
+- **Claude Code** — invoke a skill by name; run a workflow by path, or read it, adapt it to the task
+  and pass it inline (its detail page's *Adapting* section says what may change). Wide reading goes
+  to `Explore` or `summarizer` with the `check_docs.py` command, not a file list. What a session
+  cost: `python3 .claude/scripts/token_report.py --top 15`.
+- **Codex** — no subagents and no `Workflow` tool, and none is needed: a skill is a plain numbered
+  procedure, and a workflow's *Phases* table (`.claude/tools/<workflow>.md`) is the order to run its
+  skills in by hand. Where a phase names an agent, follow `.claude/agents/<agent>.md` as a checklist
+  in a separate pass — for `reviewer` above all, before anything reaches Quest.

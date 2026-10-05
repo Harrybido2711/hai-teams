@@ -97,13 +97,32 @@ def check_structure():
             out.append(("structure", rel(js), "no row in tools/README.md"))
         if not os.path.exists(os.path.join(tools, name + ".md")):
             out.append(("structure", rel(js), "no detail file tools/%s.md" % name))
-    want = ["Input", "Output", "Preflight", "When it fails"]
-    for md in sorted(glob.glob(os.path.join(tools, "*.md"))):
-        if os.path.basename(md) == "README.md":
+    # A workflow's page is its baseline: which agent runs each phase and which skill it follows,
+    # and what may change when it is adapted to a task. create-workflow.md is not a workflow page.
+    want = ["Phases", "Input", "Output", "Adapting", "When it fails"]
+    for js in sorted(glob.glob(os.path.join(REPO, ".claude", "workflows", "*.js"))):
+        md = os.path.join(tools, os.path.basename(js)[:-3] + ".md")
+        if not os.path.exists(md):
             continue
         got = re.findall(r"^## (.+)$", open(md).read(), re.M)
         if got != want:
             out.append(("structure", rel(md), "sections are %s, want %s" % (got, want)))
+    # A skill is one reusable step: its frontmatter name is its folder, it has the four sections,
+    # and tools/README.md lists it — Claude Code finds it by name, Codex and subagents by the index.
+    want = ["Steps", "Done when", "Never", "Detail"]
+    for md in sorted(glob.glob(os.path.join(REPO, ".claude", "skills", "*", "SKILL.md"))):
+        name = os.path.basename(os.path.dirname(md))
+        text = open(md).read()
+        front = re.match(r"---\n(.*?)\n---\n", text, re.S)
+        if not front or not re.search(r"^name: %s$" % re.escape(name), front.group(1), re.M):
+            out.append(("structure", rel(md), "frontmatter name is not '%s'" % name))
+        if not front or not re.search(r"^description: \S", front.group(1), re.M):
+            out.append(("structure", rel(md), "frontmatter has no description"))
+        got = re.findall(r"^## (.+)$", text, re.M)
+        if got != want:
+            out.append(("structure", rel(md), "sections are %s, want %s" % (got, want)))
+        if "`%s`" % name not in body:
+            out.append(("structure", rel(md), "no row in tools/README.md"))
     return out
 
 

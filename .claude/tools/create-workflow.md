@@ -1,11 +1,18 @@
 # create-workflow
 
-Writing a new saved workflow, or editing one. Not a script — the constraints the `Workflow` tool
-enforces, each of which cost a launch to discover.
+Adapting a baseline workflow to a task, editing one, or — rarely — adding one. Not a script — the
+constraints the `Workflow` tool enforces, each of which cost a launch to discover.
 
-**Improving an existing workflow is editing its file, not writing a new one.** When a run exposes
-something a workflow should have caught, add the check there rather than remembering to do it by
-hand.
+**The five workflows are baselines, not the only allowed shapes.** For a one-off variation, read the
+script, change it for the task (its detail page's *Adapting* section says what may change and what
+must not), and pass it inline as `script`. Edit the committed file only when the change should hold
+next time too — when a run exposes something a workflow should have caught, add the check there.
+**A new workflow is the last resort:** a new procedure is a new skill, and the baselines compose it.
+
+**How a baseline is built.** Each phase names its agent with `agentType` and the skill file that
+agent follows (`.claude/skills/<name>/SKILL.md`). The script holds no benchmark-specific path, count
+or task name — agents read them from the benchmark's page — which is what lets one baseline serve all
+ten benchmarks.
 
 ## Input
 
@@ -36,9 +43,14 @@ the agents already name.
 - **Every prompt carries the hard rules.** State what its agents must not do — no provider API
   calls, no `sbatch`/`scancel` outside the phase that owns it, no edits outside the target. A
   reviewer once wrote four probe scripts and spent real quota because its prompt did not forbid it.
-- **The gate must be able to say no.** `fix-broken-run` returns without submitting when the reviewer
-  refuses. A verification phase that cannot block is a formality.
-- **Register it** in `README.md` in this directory, and write its detail file here. A tool nothing
+- **The gate must be able to say no.** `fix-run` returns without submitting when the reviewer
+  refuses; `finish-run` returns without recording until the user confirms. A verification phase
+  that cannot block is a formality.
+- **Test the control flow before the first real launch.** Load the script with stub `agent()`s that
+  return each schema's passing values, then flip one gate at a time to its failing value: every
+  path should end where the detail page says, and no prompt should contain `undefined`.
+- **Register it** in `README.md` in this directory, with a detail file here whose sections are
+  Phases / Input / Output / Adapting / When it fails — the doc check enforces both. A tool nothing
   routes to is never used.
 
 ## When it fails

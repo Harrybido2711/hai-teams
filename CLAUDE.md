@@ -28,6 +28,11 @@ read and the tool to reach for — it points, it never copies. Anything explaini
 something belongs in a reference; anything cataloguing *what exists* belongs in the index. A summary
 of either, pasted back here, is the thing that made this file 11 KB once before.
 
+Tools come in three layers ([`.claude/tools/README.md`](.claude/tools/README.md)): **skills are the
+steps, agents the roles, workflows the baselines** that say which agent runs each phase and which
+skill it follows. Adapt a baseline to the task rather than writing a new workflow; turn a procedure
+into a skill once it repeats.
+
 ## What this project asks of you
 
 Five things, in the order work moves through them. `.claude/INDEX.md` routes each to what it needs.
@@ -51,8 +56,8 @@ finding, and an unestablished field is written as unestablished.
 - *Memory* — read `references/benchmarks/README.md` for the page template and what is already
   covered, plus the benchmark's own committed notes named on its group page. Write a new page under
   `references/benchmarks/<group>/`, **and its row in the group index in the same edit**.
-- *Tools* — `summarizer` when the answer needs a lot of reading and none of it belongs in context;
-  `Explore` to locate files. No executor: nothing is being changed yet.
+- *Tools* — the `analyse-benchmark` skill; `summarizer` when the answer needs a lot of reading and
+  none of it belongs in context; `Explore` to locate files. No executor: nothing is being changed yet.
 
 **2 · Write the per-model scripts and the template answer.** One runner per model, built from what is
 already recorded rather than from scratch.
@@ -62,9 +67,10 @@ already recorded rather than from scratch.
   `base_url`, key, model id; `references/model-parameters.md` for the thinking and output limits
   **every** runner must set; `references/provider-gotchas.md` for that client's failure modes; the benchmark's
   page for counts, task names and output naming.
-- *Tools* — `executor` once the change is decided, given the decision and not the problem;
-  `reviewer` before it goes anywhere; the `verify-change` workflow when the change is meant to
-  prevent a class of failure and has not yet been proven wrong.
+- *Tools* — the `new-runner` workflow (brief → write → review → commit; it stops before Quest), or
+  by hand the `write-runner` skill, with `executor` given the decision and not the problem, and
+  `reviewer` before it goes anywhere. For a change meant to prevent a class of failure, give
+  `reviewer` the guarantee to attack, not the edit.
 
 **3 · Upload to Quest and run — but not before the user has verified the scripts.** Verification is
 theirs, not yours. **Do not transfer and do not submit until they say the scripts are done**, however
@@ -80,18 +86,19 @@ actual failure; solve the sync instead ("不要为了绕过同步而在 local �
 - *Memory* — `references/quest-cluster.md` for transfers, `md5sum`, SLURM and the two ways the
   pre-submit gate lies; the benchmark's page for its remote path and run order, which are not
   inferable from the local tree.
-- *Tools* — `run-model` is the default and owns both sync directions; `run-fast` when it must finish
-  today; `scale-shards` when the right parallelism is the open question; `executor` for a single
-  decided submit.
+- *Tools* — the `launch-run` workflow, which refuses without the user's verification; by hand, the
+  `quest-sync` then `submit-run` skills. More parallelism is per-task arrays at the same shard count,
+  not more shards.
 
-**4 · Monitor the run.** Dispatch the agents, and turn a procedure into a workflow once it repeats —
+**4 · Monitor the run.** Dispatch the agents, and turn a procedure into a skill once it repeats —
 a check you had to remember to run is a check that will be skipped.
 
 - *Memory* — `references/handoffs.md` for what a dispatch must carry and the `STATUS:` vocabulary
   each agent returns; the benchmark's page for the counts to judge progress against.
-- *Tools* — `check-status` first: read-only, two agents, cheap enough to repeat and safe beside a
-  running supervisor. `watcher` for raw state, `evaluator` for whether the numbers can be believed,
-  `fix-broken-run` when it has to be killed. `tracker` writes the outcome to the problem log.
+- *Tools* — `monitor-run` first: read-only, any benchmark, one run or several, cheap enough to
+  repeat. `fix-run` when the data is bad and the fix is decided (the `kill-and-resync` skill by
+  hand); `finish-run` when it has finished — it stops for the user before anything is recorded.
+  `tracker` writes the outcome to the problem log.
 
 **5 · Keep everything in sync.** Not a phase — the thing that runs through the other four. The
 obligation is the next section; `references/sync-and-consistency.md` is the four layers and when

@@ -129,8 +129,9 @@ been rechecked:
   **Keep at least ~25 items a shard.**
 
 So: **5 stays the default.** Going higher is a measured decision per benchmark — establish RPD first,
-and prefer `scale-shards`, which climbs a ladder and keeps the highest rung that stayed healthy,
-over reasoning from a headline number. 22 jobs have run concurrently here without trouble, so Quest
+and climb a ladder (5 → 10 → 20), judging each rung before the next and keeping the highest that
+stayed healthy, rather than reasoning from a headline number. Climb, never descend: a rate limiter
+shaped by recent traffic lets one oversized burst depress every rung measured after it. 22 jobs have run concurrently here without trouble, so Quest
 is not what will stop you.
 
 **Before adding shards, look at the sleep.** These runners `time.sleep(2.0)` between items, which is

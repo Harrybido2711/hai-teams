@@ -65,8 +65,8 @@ A full run is **14,138 rows**: desire 4,760 + belief 4,760 + intention **4,618**
 - `All_EM` in the low single-digit percents is **expected**, not a defect: it ANDs all 5–6 rows of a
   dialogue, and intention gets no partial credit there even though its F1 does.
 
-These are the defaults `check-status` and the supervising workflows assume. For any other benchmark
-they are wrong and must be passed explicitly.
+These are NegotiationToM's counts only. The workflows read each benchmark's counts from its own
+page; never pass these for another one.
 
 ## Results — six runs complete, verified 2026-10-05
 

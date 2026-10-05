@@ -208,7 +208,7 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 | `CLAUDE.md`                                          | planner **rules** only — who decides, the kill-and-resync authorisation, the invariants that hold on every task, and the discipline that keeps the docs usable |
 | `AGENTS.md`                                          | the fast path for any agent, Claude or Codex: situation → first move → the file that holds the detail. An index keyed by symptom; it holds no knowledge of its own |
 | `.claude/INDEX.md`                                   | the entry point: project goal and stage in one page, the terms this project uses in a specific way, and the three files always read first |
-| `.claude/tools/README.md`                            | the dictionary of what can be dispatched — nine workflows and six agents, one row each, with a detail file per workflow |
+| `.claude/tools/README.md`                            | the dictionary of what can be dispatched — five baseline workflows, eleven skills and six agents, one row each, with a detail file per workflow |
 | `.claude/references/sync-and-consistency.md`         | the three sync layers — local↔local, local↔Quest, local↔git — what enforces each, and when the Quest one applies at all |
 | `.claude/references/doc-check.md`                    | what every consistency-check finding means and how to clear it — read this when a commit is blocked |
 | `.claude/references/benchmarks/<group>/<name>.md`    | per-benchmark operating detail: Quest path, layout, verified counts, output naming, run order, its own traps — one page for each of the ten, plus a group page for what a process folder's benchmarks share. The rest of `.claude/` is benchmark-agnostic on purpose |
@@ -234,15 +234,18 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 │                 script-skeleton · handoffs · shared-context · external-patterns
 │   └── benchmarks/  one page per benchmark, grouped by process folder — transition · action
 │                     interpersonal · tasks. Everything true of one benchmark and not the others
-├── agents/       watcher · evaluator · executor · reviewer · tracker · summarizer
-├── workflows/    run-model · run-fast · fix-broken-run · verify-change · scale-shards
-│                 compare-providers · check-status · harvest-patterns
+├── skills/       the steps — analyse-benchmark · write-runner · quest-sync · submit-run
+│                 check-run · kill-and-resync · pull-results · audit-results · rescore-offline
+│                 record-results · sync-pass
+├── agents/       the roles — watcher · evaluator · executor · reviewer · tracker · summarizer
+├── workflows/    the baselines — new-runner · launch-run · monitor-run · fix-run · finish-run
 └── memory/       gitignored — personal environment only
 ```
 
 Three layers, each with one job: `CLAUDE.md` states rules, `INDEX.md` orients, the two READMEs route.
 A README lists and points; it never explains. The main session is the planner; no subagent can
-dispatch another. Workflows are committed so they outlive the session that wrote them.
+dispatch another. Workflows are committed baselines — each phase names its agent and the skill it
+follows, and none holds a benchmark-specific path — so they are adapted to a task, not multiplied.
 
 ## Conventions worth not rediscovering
 

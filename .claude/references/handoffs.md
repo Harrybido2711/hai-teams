@@ -16,6 +16,9 @@ The planner passes **what to accomplish** and **where**. The agent decides **how
    no provider API may be called directly; who owns `sbatch`/`scancel` in this task. A reviewer once
    wrote four probe scripts and spent real quota because its prompt did not forbid it.
 4. **The output shape** — the status token below, plus whatever fields the caller will branch on.
+4b. **The skill to follow, when one covers the task** — `.claude/skills/<name>/SKILL.md`. The agent
+   brings the role and its judgement; the skill brings the steps and what "done" means. A dispatch
+   that names one does not have to spell the procedure out, and cannot leave a step out by accident.
 5. **What to do when blocked.** The default is: stop and report with the concrete blocker. Guessing
    is never the fallback.
 6. **How to retrieve, not which files to read.** Say

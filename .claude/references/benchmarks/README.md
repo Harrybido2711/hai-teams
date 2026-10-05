@@ -39,7 +39,7 @@ not checked for them. Do not upgrade a "not verified" to a "not present" without
 
 ## Known gap: the problem log is still single-benchmark
 
-`tracker`, and the `run-model` / `fix-broken-run` / `verify-change` workflows, all write to
+`tracker` — and so the `fix-run` and `finish-run` workflows, which end with it — writes to
 `Interpersonal_processes_benchmarks/NegotiationToM/ISSUES.md` by name. A problem hit while working on
 any other benchmark has nowhere of its own to go. Until that changes, say in the entry which
 benchmark it concerns, and never read a NegotiationToM entry as a statement about the suite.
