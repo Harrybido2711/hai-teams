@@ -40,7 +40,7 @@ and proceeding anyway is the failure this table exists to prevent.
 | whether a change needs a Quest sync, or what the three sync layers oblige | [sync-and-consistency.md](sync-and-consistency.md) | 4 KB |
 | a commit blocked by the doc check, two copies of a fact, "what does this change touch" | [doc-check.md](doc-check.md) | 3 KB |
 | dispatching a subagent or reading its report — what to pass, `STATUS:` values, vague instructions | [handoffs.md](handoffs.md) | 4 KB |
-| what can be dispatched at all — the workflow and agent list | [../tools/README.md](../tools/README.md) | 3 KB |
+| what can be dispatched at all — the workflows, skills and agents | [../tools/README.md](../tools/README.md) | 6 KB |
 | borrowing a pattern from outside, or "was this screened and rejected" | [external-patterns.md](external-patterns.md) | **28 KB** — the most expensive here; for a sweep only |
 
 Sizes are a cost hint for deciding what to open, not a checksum; they drift as the files grow.

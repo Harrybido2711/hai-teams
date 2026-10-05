@@ -44,10 +44,11 @@ follow, Codex included. A workflow named beside one runs that whole stretch in C
 
 | Situation | First move | Detail |
 |---|---|---|
+| "Are local, GitHub and Quest in sync?" | `python3 .claude/scripts/sync_audit.py --fetch` — git refs, then code (md5) and results (size) for every benchmark with a Quest path. Read-only. A finding is not always a fault: a renamed folder or merged shards explain themselves | **`quest-sync`**, **`pull-results`** |
 | Scripts look ready | **stop and hand them to the user.** After their OK: local `--limit` pilot → transfer *every* modified file as one set → `md5sum` both sides, printing both list lengths → `sbatch` | **`quest-sync`**, **`submit-run`** · workflow `launch-run`; `quest-cluster.md` § Transferring |
 | Which Quest directory? | the Paths table on the benchmark's page. Ours live under `Interpersonal_processes_benchmarks/` and `Tasks_benchmarks/`; flat top-level folders belong to other accounts | `quest-cluster.md` |
 | `ssh quest` → `Host key verification failed` | the alias is missing from `~/.ssh/config`; reinstall it, check with `ssh quest hostname` | Claude memory `quest-access`; `quest-cluster.md` |
-| The pre-submit hook says *in sync* | for anything but NegotiationToM it compared the wrong files. Compare by hand per the page | **`quest-sync`**; `quest-cluster.md` § The pre-submit gate |
+| The pre-submit hook says *in sync* | for anything but NegotiationToM it compared the wrong files. Run `sync_audit.py <benchmark>` | **`quest-sync`**; `quest-cluster.md` § The pre-submit gate |
 | A manual md5 compare says *in sync* | print both list lengths. zsh does not split `$FILES`; `join` needs input sorted by filename | **`quest-sync`** step 2; `quest-cluster.md` |
 | How many shards? | 5. Lower the per-item sleep before adding shards; keep ≥ ~25 items a shard | `quest-cluster.md` § SLURM |
 | `.env` missing on Quest | copy it from a sibling benchmark directory of ours on Quest. Never copy it off Quest | `quest-cluster.md` |

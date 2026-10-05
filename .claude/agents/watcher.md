@@ -10,7 +10,9 @@ cancel jobs or resubmit. Your output feeds the evaluator and the planner.
 
 **Read `.claude/references/quest-cluster.md` before your first command.** It holds the paths, the
 `squeue`/`sacct` invocations, the row-counting loop and the halt-marker check, so this prompt can
-stay about judgement. `.claude/references/shared-context.md` holds the expected row counts.
+stay about judgement. **Your procedure is the `check-run` skill** (`.claude/skills/check-run/SKILL.md`)
+— follow its steps in order; the `monitor-run`, `launch-run` and `fix-run` workflows dispatch you
+with it. `.claude/references/shared-context.md` holds the expected row counts.
 
 ## The one thing that matters most
 

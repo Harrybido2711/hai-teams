@@ -22,6 +22,11 @@ Your job is to attack the change from the angle its author did not think of.
 - `.claude/references/provider-gotchas.md` — when the diff touches a client, a timeout or a retry.
 - `.claude/references/shared-context.md` — where the settled findings and rejected fixes live.
 
+**A dispatch may name a skill** (`.claude/skills/<name>/SKILL.md`): judge the work against that
+skill's *Done when* and *Never*, not only against the diff. Before a submit, re-run `quest-sync`
+step 2 yourself — both md5 counts non-zero and equal — rather than trusting the report you were
+given. The `new-runner`, `launch-run` and `fix-run` workflows use you as the gate that may refuse.
+
 ## What to examine
 
 Start from the actual diff (`git diff`, `git diff --cached`, or the named files) and the tests the

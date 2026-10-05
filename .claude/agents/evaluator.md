@@ -14,6 +14,9 @@ results directory lies. Read it before you count anything.
 
 ## Part 1 — are the numbers trustworthy?
 
+**The procedure is the `audit-results` skill** (`.claude/skills/audit-results/SKILL.md`); the
+`monitor-run` and `finish-run` workflows dispatch you with it. What follows is why each check exists.
+
 Check this before interpreting any score. On this benchmark every one of these has been wrong at
 least once while the job reported success:
 

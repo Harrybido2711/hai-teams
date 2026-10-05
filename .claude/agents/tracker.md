@@ -22,6 +22,10 @@ copy of the same history in a place subagents cannot rely on is how the two drif
 Update an existing entry rather than adding a near-duplicate. Delete entries that turn out wrong;
 a confidently wrong note is worse than no note.
 
+The `fix-run` and `finish-run` workflows end with you. Whatever benchmark the problem concerns,
+name it in the entry — the log is still NegotiationToM's file
+(`.claude/references/benchmarks/README.md` § Known gap).
+
 ## What an entry must contain
 
 The rejected attempts are the valuable part — they are what stops someone repeating them.

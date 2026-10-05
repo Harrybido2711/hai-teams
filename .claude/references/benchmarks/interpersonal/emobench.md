@@ -45,6 +45,12 @@ log.txt · log.err                         (the sbatch scripts write these fixed
 The log filenames are fixed rather than per-shard: a second job in the same folder overwrites the
 first one's log.
 
+**Not every `results*` folder is a result.** In `EMO_Gemini_Flash3.5lite_Google/`, `results/EU` is an
+incomplete 180-of-200-row run from 2026-08-22 (pulled from Quest 2026-10-05 so it does not live only
+there), `results_archive_*` are superseded, and the sweep arms are `results_sw{A–E}`. On Quest,
+`EMO_Gemini/` is the pre-rename copy of `EMO_Gemini_Flash2.5/`, byte-identical. Which folder a
+reported number came from is on the workbooks' `Provenance` sheet.
+
 ## Run order
 
 `sbatch run_emobench.sh` per model folder. The script pins the model on the command line and runs

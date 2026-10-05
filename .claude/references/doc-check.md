@@ -16,7 +16,7 @@ commit had landed. Run the check, read it, then commit.
 |---|---|---|
 | `link` | a relative link points at nothing — usually a file was moved or renamed | repoint the link, or move the file back. Never delete the link to silence it |
 | `orphan` | a file in `references/` or `tools/` that no index links to | add its routing row, phrased as a condition an agent can recognise — or delete the file |
-| `structure` | a workflow with no row or no detail file, or a detail file whose four sections drifted | add the row and the page in the same edit; keep the sections Input / Output / Preflight / When it fails |
+| `structure` | a workflow or skill with no row in `tools/README.md`, a workflow with no detail file, a skill whose frontmatter `name` is not its folder, or sections that drifted | add the row and the page in the same edit; a workflow page keeps Phases / Input / Output / Adapting / When it fails, a skill Steps / Done when / Never / Detail |
 | `benchmarks` | a page exists that the benchmark index does not list | add it to the index table |
 | `models` | a model a runner submits is missing from `model-parameters.md` (what limits to set) or from `model-calls.md` / `provider-gotchas.md` (which client reaches it) | write the missing half. Only models beside an `#SBATCH` script count — vendored upstream code has its own `--model` flags |
 | `size` *(advisory — prints as `note`, never fails)* | past this file's budget: `<!-- size-budget: N -->`, or ~5 KB if it declares none | split it if it has two jobs; raise its budget if it is legitimately one long thing. Ignoring it is also allowed |

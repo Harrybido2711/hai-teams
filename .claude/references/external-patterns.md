@@ -2,6 +2,9 @@
 
 <!-- size-budget: 30000 -->
 
+**A historical log.** Workflow names in it (`run-model`, `check-status`, `harvest-patterns` …) predate the
+2026-10-05 rebuild and no longer exist; the current tools are in [../tools/README.md](../tools/README.md).
+
 Findings from periodic sweeps of outside repositories — other agentic-coding tool suites, ML
 pipeline/orchestration frameworks, SLURM job-submission libraries — screened for patterns that
 might improve hai-teams' agent architecture or its SLURM/eval pipeline. Each sweep is a dated

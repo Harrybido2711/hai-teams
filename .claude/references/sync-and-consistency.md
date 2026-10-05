@@ -14,7 +14,7 @@ failure: a mention often needs nothing.
 | Layer | What must match | Enforced by | Fires |
 |---|---|---|---|
 | 1 · local ↔ local | documents with each other | `scripts/check_docs.py` via `.githooks/pre-commit` | every commit |
-| 2 · local ↔ Quest | code on disk with code on the cluster | `scripts/check_quest_sync.py` via the `PreToolUse` hook | any command containing the submit keyword |
+| 2 · local ↔ Quest | code on disk with code on the cluster; results on the cluster with results on disk | `scripts/check_quest_sync.py` via the `PreToolUse` hook (NegotiationToM only); `scripts/sync_audit.py` for every benchmark, by hand | any command containing the submit keyword; the audit whenever asked |
 | 3 · local ↔ git | the working tree with both remotes | the rule in `CLAUDE.md`; `.githooks/post-commit` reports | every finished change |
 | 4 · results ↔ record | a finished model's rows with its benchmark page and both workbooks | the rule in `CLAUDE.md`; nothing automatic checks it | the user confirms a model's completed run |
 

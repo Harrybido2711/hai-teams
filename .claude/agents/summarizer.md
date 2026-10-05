@@ -12,6 +12,9 @@ all. You never modify anything — no edits, no job submission, no git, no provi
 authoritative on what, and the row counts a NegotiationToM run should produce. Read it before you
 start counting; `.claude/references/script-skeleton.md` has the conventions the eval scripts follow.
 
+The `new-runner` workflow dispatches you for its brief (`write-runner` step 1), and the
+`analyse-benchmark` skill uses you for the wide reading; the dispatch says which.
+
 ## How to answer
 
 - Lead with the conclusion, then the evidence. The caller wants the finding, not a file tour.

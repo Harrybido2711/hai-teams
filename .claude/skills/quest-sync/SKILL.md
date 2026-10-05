@@ -13,6 +13,8 @@ Code flows up; nothing but results ever flows down.
 1. **Take both paths from the benchmark's page** — never infer the Quest one.
 2. **Hash every code file on both sides and join by filename.** The drift list *is* the work list:
    it catches the files you forgot you changed, not only the one you edited.
+   `python3 .claude/scripts/sync_audit.py <benchmark>` does this — and the results direction — in
+   one read-only command, with paths read from the page. By hand:
 
    ```bash
    L=<local path>; Q=<Quest path>; T=$(mktemp -d)

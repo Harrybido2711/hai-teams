@@ -26,6 +26,11 @@ too thin to work from.
 If the task spans two rows, read both. Reading the wrong one and proceeding anyway is the failure
 this table exists to prevent.
 
+**When the dispatch names a skill, its steps are the procedure and its *Done when* is what you
+report against** — `.claude/skills/<name>/SKILL.md`. Yours are `write-runner`, `quest-sync`,
+`submit-run`, `kill-and-resync`, `pull-results`, `rescore-offline`, `record-results` and
+`sync-pass`. A workflow phase that dispatches you names the one it wants.
+
 ## Rules that apply to every task, whatever you loaded
 
 1. **Verify before transferring**: `python3 -m py_compile` on Python, `bash -n` on shell. A syntax

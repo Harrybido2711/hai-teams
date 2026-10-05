@@ -29,9 +29,12 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 
 ## Where the project is
 
-- **Working scope right now (2026-08-22): the local tree.** Quest is not being checked or synced;
-  the transfer happens once local is settled. That does not relax any rule about *how* a sync is
-  done when it happens — it means the sync has not happened yet.
+- **Sync state — audited 2026-10-05.** Local, `origin` and `backup` agree. On Quest, the code of all
+  five benchmarks with a Quest copy equals git, and every result that existed only on Quest has been
+  pulled down. The one gap is NegotiationToM's uncommitted local work from 2026-09-11 — the luna and
+  flash-lite runners and a parameter negotiator in `neg_eval_core.py` — unverified, so neither in
+  git nor on Quest. **Re-run `python3 .claude/scripts/sync_audit.py --fetch` rather than trusting
+  this line.**
 - **Running now:** nothing is assumed. Check, don't remember — `monitor-run`, or `squeue -u uwr0681`.
 - **All ten benchmarks have a knowledge-base page**; three of them have no runner at all, so work
   there starts at phase 1 or 2 rather than 3.
@@ -59,17 +62,23 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 
 ## Last major change
 
-**2026-08-19** — benchmarks reorganised into the four team-process folders (`269bbfe`), local only.
-That divergence is what blinded the pre-submit gate, which found zero files and exited 2 while still
-looking wired up.
+**2026-10-05** — the tool layer was rebuilt (`b73ca66`). **Skills are the steps** (eleven, in
+`.claude/skills/`), **agents the roles** (the same six), **workflows the baselines** — five
+(`new-runner`, `launch-run`, `monitor-run`, `fix-run`, `finish-run`), each phase naming its agent and
+its skill, adapted to the task rather than multiplied. **The nine earlier workflow names no longer
+exist** — `run-model`, `run-fast`, `fix-broken-run`, `check-status`, `verify-change`,
+`scale-shards`, `compare-providers`, `harvest-patterns`, `watch-live-runs`. Anything naming them is
+stale, except `references/external-patterns.md`, which is history. Same day: `AGENTS.md` (situation
+→ first move, for Claude and Codex), memory cut to personal preferences only, and
+`scripts/sync_audit.py` for the three-way check.
 
-**2026-08-23** — the divergence closed for **the three directories this account owns**. On Quest,
-`DocVQA` → `Tasks_benchmarks/DocVQA`, `EmoBench-master` → `Interpersonal_processes_benchmarks/EmoBench`,
-`NegotiationToM` → `Interpersonal_processes_benchmarks/NegotiationToM`. **The rest of
-`/projects/p32983` belongs to other accounts** — `bbh`, `mmlu`, `LLMs-Planning-main`, both
-`*_DocVQA` copies and `pythonenvs` are `cpz1698`'s, `eval` is `wxw6517`'s, `gen-ai-ngt` is
-`gdg0095`'s. They stay flat at the top level and must not be moved. Any Quest path remembered from
-before this date is stale.
+**2026-08-19 / 08-23** — benchmarks regrouped into the four team-process folders (`269bbfe`), first
+locally, then on Quest for this account's directories, which now sit under
+`Interpersonal_processes_benchmarks/` and `Tasks_benchmarks/`. **The rest of `/projects/p32983`
+belongs to other accounts** — `bbh`, `mmlu`, `LLMs-Planning-main`, both `*_DocVQA` copies and
+`pythonenvs` are `cpz1698`'s, `eval` is `wxw6517`'s, `gen-ai-ngt` is `gdg0095`'s — and stays flat.
+A Quest path remembered from before 2026-08-23 is stale; the local-only move is what once blinded
+the pre-submit gate.
 
 **2026-08-22** — agent-facing docs split three ways: this file (orientation), `references/`
 (knowledge), `tools/` (what to dispatch). `CLAUDE.md` holds rules only.
