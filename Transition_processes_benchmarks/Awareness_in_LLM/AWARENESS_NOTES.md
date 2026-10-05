@@ -551,7 +551,7 @@ fixed: confirm the parse-failure rate is near zero *first*, then look at the sco
 Decided 2026-08-05. **Nine numbers per model reach the shared workbook**; everything else is
 computed, written to disk, and consulted only when a number needs explaining.
 
-The `Awareness` sheet in the repo-root `Results.xlsx` is organised by the five dimensions and
+The `Awareness` sheet in the repo-root `Tempo_results.xlsx` is organised by the five dimensions and
 matches the other sheets there — split names in column A, the same six models in B–G
 (Gemini, OpenAI, XAI, Qwen, Gemma, Deepseek), scores as 0–1 decimals:
 

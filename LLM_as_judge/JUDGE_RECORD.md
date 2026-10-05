@@ -369,7 +369,7 @@ Same rubric, same benchmark, opposite polarity; the two also disagree on the cri
 includes *Faithfulness to Demonstration*, the second drops it). A number produced under one and read
 under the other inverts every conclusion. The live path is `eval_rubric.py`'s — higher is better —
 but since that path does not execute (D1), **no direction can be treated as established**; whichever
-scorer we write must state its own and say so in `Results.xlsx`.
+scorer we write must state its own and say so in `Tempo_results.xlsx`.
 
 **D3 · Judge 1 is deterministic, Judge 2 is not.** QA passes `temperature=0.0` explicitly;
 `fetch_openai_json_completion` passes no temperature, so SOP-Generation entailment runs at the API
@@ -531,7 +531,7 @@ from the raw CSV without changing the score path.
 `openai==1.53.0`, `pydantic==2.10.6`, `python-dotenv==1.0.1`, `tqdm==4.66.2`, `transformers==4.44.1`,
 `torch==2.5.1`. Access via the OpenAI API with `OPENAI_API_KEY` from a `.env` at repo root. **Read on
 2026-08-19; never executed here.** No MultiChallenge run has been submitted from this repo and no
-number from it is in `Results.xlsx`.
+number from it is in `Tempo_results.xlsx`.
 · Source: `requirements.txt`, `README.md` setup section, `PLAN.md` (benchmark index)
 
 ### MultiChallenge — discrepancies and decisions
@@ -861,5 +861,5 @@ which is why rule 1 puts code first:
    direction is its own field is not hypothetical.
 
 None would have been visible from the papers, and all three change what a number means. No
-`Results.xlsx` cell currently depends on this record — it was written before the runs, which is the
+`Tempo_results.xlsx` cell currently depends on this record — it was written before the runs, which is the
 point.

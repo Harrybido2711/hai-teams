@@ -82,8 +82,8 @@ rescore is run, a small gap between two columns may be the scorer rather than th
 condition the one-scorer rule exists to remove, and bbh moved by 0.19–0.64 when it was fixed there.
 The rescore is offline work: the responses are all on disk.
 
-Per-subject cells live in the workbooks, `Results.xlsx` for all nine columns and `Final_Result.xlsx`
-for the five of the six it carries, each with its sources on the `Provenance` sheet.
+Per-subject cells live in the workbooks, `Tempo_results.xlsx` for all nine columns and `Final_result.xlsx`
+for the selected models, each with its sources on the `Provenance` sheet.
 
 ## Two prompts, and they are not interchangeable
 

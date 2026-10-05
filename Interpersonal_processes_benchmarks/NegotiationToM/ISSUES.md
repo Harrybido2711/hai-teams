@@ -419,7 +419,7 @@ was every model in this project until now.
 
 ---
 
-### Gemma full run finished clean but belief is not usable as published   2026-08-05  open
+### Gemma full run finished clean but belief is not usable as published   2026-08-05  superseded 2026-10-05
 
 **Symptom** — Gemma's full run (jobs 8625800/8625801/8625810, previous entry) landed with exact row
 counts and 0 empty responses, but the post-run audit marked it `usable=false`. Headline
@@ -479,6 +479,14 @@ counts from "Intention rows paired with the wrong utterance" and "`\"None\"` cou
 answer" above); slot-level precision/recall for `Not Given` computed from gold vs. predicted counts on
 the same merged files. Re-check once a belief-only reasoning-on rerun exists: compare its `Belief_EM`
 against 0.6177 rather than against this run's 0.5007.
+
+**Superseded by decision, 2026-10-05** — the "must not be published" above was written before
+Gemma's settled config was fixed. Since then thinking off has been Gemma's config on every sheet
+(DeepInfra serves the checkpoint with thinking off; `.claude/references/model-calls.md`), so this run
+*is* the settled config, reached on a different route. The user reported it as is: all five metrics
+are in `Final_result.xlsx`, with the belief sensitivity measured here stated on the `Provenance` sheet.
+The measurement stands; only the publication rule changed. A reasoning-on belief rerun is no longer
+owed — it would measure a config the project does not report.
 
 ---
 

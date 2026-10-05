@@ -4,8 +4,8 @@ What this repo holds: a benchmark suite for evaluating LLMs against the **team-p
 (transition / action / interpersonal processes, plus general task ability). Each benchmark is a
 vendored copy of an upstream project plus this project's own runners; the runs execute on the
 **Quest** SLURM cluster against six commercial providers, and the reported numbers converge in
-`Final_Result.xlsx` — with `Results.xlsx` holding the wider record of every model ever run (see
-[Two workbooks](#two-workbooks-results-is-wide-final_result-is-what-is-reported)).
+`Final_result.xlsx` — with `Tempo_results.xlsx` holding the wider record of every model ever run (see
+[Two workbooks](#two-workbooks-tempo_results-is-wide-final_result-is-what-is-reported)).
 
 Last verified against the working tree on 2026-08-19, after the reorganisation in `269bbfe`.
 
@@ -36,27 +36,35 @@ hai-teams/
 ├── CLAUDE.md                            planner rules only; `.claude/INDEX.md` is the entry point
 ├── PLAN.md                              this file
 ├── README.md
-├── Results.xlsx                         every model ever run — the wide record
-├── Final_Result.xlsx                    the six selected models — what gets reported
+├── Tempo_results.xlsx                   every model ever run — the wide record
+├── Final_result.xlsx                    the selected models (five since 2026-10-05) — what gets reported
 └── quest_pull.log                       gitignored
 ```
 
 The four category folders are **not** arbitrary grouping: they are the rows of the tracker that
 drives this project, so a benchmark's folder states which team process it is evidence for.
 
-## Two workbooks: Results is wide, Final_Result is what is reported
+## Two workbooks: Tempo_results is wide, Final_result is what is reported
 
-Stated by the user, 2026-08-29. Both workbooks carry the same five sheets — `Big Bench Hard`,
-`MMLU`, `DocVQA`, `Emo`, `Awareness` — and differ only in which model columns they are allowed to
-hold.
+Stated by the user, 2026-08-29; the user renamed the files on 2026-10-05 (`Results.xlsx` →
+`Tempo_results.xlsx`, `Final_Result.xlsx` → `Final_result.xlsx`). Both workbooks carry the same six
+sheets — `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo`, `NegotiationToM`, `Awareness` — and differ only
+in which model columns they are allowed to hold.
 
-- **`Results.xlsx` records every model that has appeared in an experiment**, including ones that
+- **`Tempo_results.xlsx` records every model that has appeared in an experiment**, including ones that
   were tried and then dropped, and the two that were *replaced*. Its `Emo` sheet is the visible
   case: eight columns, the six slots plus `gemini-2.5-flash` and `gpt-4o-mini` in their own right. A
   leftover column is not a retracted result, the same way a leftover CSV is not — see
   `.claude/references/benchmarks/tasks/bbh.md`.
-- **`Final_Result.xlsx` records only the six selected models** — one per vendor slot, named below —
-  and it is the workbook a reported number is taken from.
+- **`Final_result.xlsx` records only the selected models** — one per vendor slot, named below —
+  and it is the workbook a reported number is taken from. **Five since 2026-10-05: XAI is out.**
+
+**XAI was removed from `Final_result.xlsx` on 2026-10-05 — provisionally.** The user's decision,
+made after a discussion with their mentor, and it may be revisited. Every XAI column was dropped from
+every sheet of `Final_result.xlsx`; nothing was deleted, because `grok-3-mini` keeps its column on
+every sheet of `Tempo_results.xlsx`. Restoring it is a column copy, not a re-run. The rest of this
+repo still says "the six" in many places; read that as the six vendor slots, of which five are
+currently reported.
 
 ### The six, by name
 
@@ -68,33 +76,35 @@ the warning under the table.
 | --- | --- | --- | --- |
 | Gemini | `gemini-3.5-flash-lite` | OpenRouter (`google/gemini-3.5-flash-lite`) | `references/model-calls.md` |
 | OpenAI | `gpt-5.6-luna` | OpenAI platform, `reasoning_effort="low"` | `references/model-calls.md` |
-| XAI | `grok-3-mini` | xAI | `references/model-parameters.md` |
+| XAI — **not in `Final_result.xlsx` since 2026-10-05, provisional** | `grok-3-mini` | xAI | `references/model-parameters.md` |
 | Qwen | `Qwen/Qwen3.5-9B` | Together, `reasoning={"enabled": False}` | `references/model-parameters.md` |
 | Gemma | `google/gemma-4-31B-it` | DeepInfra | `references/model-calls.md` |
 | Deepseek | `deepseek-reasoner` | DeepSeek | `references/model-calls.md` |
 
-**Row 2 of every sheet names the model behind each column.** In `Final_Result.xlsx` it is `Model` —
-one settled model id per slot, the same six on every sheet. In `Results.xlsx` it is `Model / config`,
+**Row 2 of every sheet names the model behind each column.** In `Final_result.xlsx` it is `Model` —
+one settled model id per slot, the same five on every sheet. In `Tempo_results.xlsx` it is `Model / config`,
 because there a slot can hold a different model on one sheet than on another, and the config that
 produced the number is part of what the number means.
 
-**`Final_Result.xlsx` never borrows a number from a model that is not selected. A blank means the
+**`Final_result.xlsx` never borrows a number from a model that is not selected. A blank means the
 selected model has not been run on that sheet**, and it stays blank until it is. That rule is what
 makes the two files different in practice: `gemini-2.5-flash` and `gpt-4o-mini-2024-07-18` are
-superseded but are still what the DocVQA and NegotiationToM runners call, so on those sheets the
-`Gemini` and `OpenAI` columns of `Final_Result.xlsx` are **empty**. Nothing is lost — those runs
-keep their columns in `Results.xlsx`. `Emo`, `Big Bench Hard`, `MMLU` and `DocVQA` are all filled
-for both slots. Nothing is left to close by re-running: `Awareness` has never been run for anyone,
-and DocVQA's remaining two blanks are a modality ceiling.
+superseded but are still what `NEG_Gemini` and `NEG_GPT` call, so on the `NegotiationToM` sheet the
+`Gemini` and `OpenAI` columns of `Final_result.xlsx` are **empty**. Nothing is lost — those runs
+keep their columns in `Tempo_results.xlsx`. `Emo`, `Big Bench Hard`, `MMLU` and `DocVQA` are all
+filled for both slots. **NegotiationToM's two blanks are the one gap a run closes**: the runners
+`NEG_GPT_5.6_Luna` and `NEG_Gemini_Flash3.5lite_OpenRouter` were written 2026-09-11 and have not
+been piloted. `Awareness` has never been run for anyone, and DocVQA's Deepseek blank is a modality
+ceiling.
 
 One caveat inside that: the `Emo` result for `gpt-5.6-luna` is the **default `medium`** arm.
 The settled effort is `low`, and `results_eLow` has EU (0.650) but no EA, so **no complete EmoBench
 score exists at the settled config** — one EA run at `effort=low` closes it.
 
-**bbh is complete for all six** — `BBH_Gemini_Flash3.5lite_OpenRouter` (0.9375) and
+**bbh is complete for all six slots** — `BBH_Gemini_Flash3.5lite_OpenRouter` (0.9375) and
 `BBH_GPT_5.6_Luna` (0.9349), added 2026-08-29, have their full 20 tasks, so the Gemini and OpenAI
-columns of `Final_Result.xlsx` are filled on that sheet and no longer belong to the superseded
-models. Those two keep columns of their own in `Results.xlsx`, and `gemini-2.5-flash`'s is a broken
+columns of `Final_result.xlsx` are filled on that sheet and no longer belong to the superseded
+models. Those two keep columns of their own in `Tempo_results.xlsx`, and `gemini-2.5-flash`'s is a broken
 run — 62% truncated before the answer, 0.3455 — kept as a record and not re-run
 (`.claude/references/benchmarks/tasks/bbh.md`).
 
@@ -105,29 +115,30 @@ and both reported.
 
 **DocVQA is complete too, as of 2026-09-10** — `gpt-5.6-luna` (ANLS 0.8635) and
 `gemini-3.5-flash-lite` (0.9394) ran on the four-column ceiling that benchmark has, so every sheet
-that *can* be filled for the current pair now is. **`Awareness` is the only unrun sheet left**, and
-it is unrun for every model. MMLU's open item is not coverage but scoring: only its two newest slots
+that *can* be filled for the current pair was, apart from NegotiationToM, which was added to the
+workbooks on 2026-10-05. **`Awareness` is the only sheet unrun for every model.** MMLU's open item is not coverage but scoring: only its two newest slots
 import the shared matcher, the other seven carry their own runner's `==`, and the uniform rescore is
 offline work (`.claude/references/benchmarks/tasks/mmlu.md`).
 
 `kimi-k2.5` and `meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8` were run on bbh only (llama also
 on MMLU) and were never among the six.
 
-So running a new model adds a column to `Results.xlsx` and **does not** earn one in
-`Final_Result.xlsx` unless that model is one of the six. Numbers still land in `Results.xlsx` first;
-`Final_Result.xlsx` is the selection made from it, not a separate measurement.
+So running a new model adds a column to `Tempo_results.xlsx` and **does not** earn one in
+`Final_result.xlsx` unless that model is one of the six. Numbers still land in `Tempo_results.xlsx` first;
+`Final_result.xlsx` is the selection made from it, not a separate measurement.
 
 Both were rebuilt on 2026-08-29 from the result files on disk, and each carries a **`Provenance`
 sheet** naming the source file behind every column and the reason behind every blank. Read that sheet
 before trusting or extending a number; it is the part of the workbook that says where a cell came
-from. The extras `Results.xlsx` holds and `Final_Result.xlsx` does not: `Kimi` and `Llama` on
-`Big Bench Hard`, `Llama` on `MMLU`, and the superseded `Gemini-2.5-Flash` and `GPT-4o-mini` on
-`Emo`.
+from. The extras `Tempo_results.xlsx` holds and `Final_result.xlsx` does not: `XAI` on every sheet
+(since 2026-10-05), `Kimi` and `Llama` on `Big Bench Hard`, `Llama` on `MMLU`, and the superseded
+`Gemini-2.5-Flash` and `GPT-4o-mini` on `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo` and
+`NegotiationToM`.
 
 **A blank cell means no usable number, not a zero.** `Awareness` is blank throughout — no model has
 been scored on it yet. `MMLU`/`Qwen` and `MMLU`/`Gemma` **are no longer blank** — both always had
 all 13 subjects on disk and it was their roll-up CSVs that were empty and partial, which is why the
-sheet is now built from the per-subject files. `DocVQA` has no XAI or Deepseek run **and will not under the current six**: it is an image benchmark and those two are text-only, so those blanks are a ceiling rather than a gap (`.claude/references/model-calls.md`).
+sheet is now built from the per-subject files. `DocVQA` has no XAI or Deepseek run **and will not under the current six**: it is an image benchmark and those two are text-only, so those blanks are a ceiling rather than a gap (`.claude/references/model-calls.md`). `NegotiationToM`'s `Gemma` column is filled but carries a belief caveat — thinking off costs that task ~12.7 points — stated on the `Provenance` sheet.
 
 **`Big Bench Hard` is now scored uniformly, and its numbers were refreshed to match.** Every model
 on that sheet comes from `BBH_*/results/*_bbh_overall.csv` under the one shared lenient matcher
@@ -135,7 +146,7 @@ on that sheet comes from `BBH_*/results/*_bbh_overall.csv` under the one shared 
 strict-vs-lenient caveat is gone. The refresh moved one column a long way: `gemini-2.5-flash` fell
 from the 0.9122 the workbook used to carry to **0.3387**, because 3,002 of its 4,833 stored responses
 never emitted `Final Answer:` — a broken run no scorer can rescue, and the run behind the old number
-is not on disk. It is kept in `Results.xlsx` as a record; the model is superseded and will not be
+is not on disk. It is kept in `Tempo_results.xlsx` as a record; the model is superseded and will not be
 redone.
 
 ## Benchmark index

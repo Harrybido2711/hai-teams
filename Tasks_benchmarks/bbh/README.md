@@ -155,12 +155,12 @@ working directory at all — `BBH_Kimi/log.txt` records what happened when they 
 
 - **Gemini's results on disk are a broken run.** 3,002 of its 4,833 responses (62%) stop
   mid-reasoning and never reach `Final Answer:`. Its `BBH_Gemini_Flash2.5` numbers are ~0.34 where
-  `Final_Result.xlsx` reports ~0.93 for the Gemini column, and the lenient rescore does **not**
+  `Final_result.xlsx` reports ~0.93 for the Gemini column, and the lenient rescore does **not**
   close that gap — the data itself is truncated. The workbook's Gemini column came from a run that
   is not in this folder. Gemini needs re-running, not rescoring. No output cap is set in the runner,
   so raising one is not the fix.
 - **The other five reported models reproduce the workbook exactly.** Rescoring what is on disk
-  matches `Final_Result.xlsx` in 102 of 120 cells; all 18 misses are Gemini. So the workbook already
+  matches `Final_result.xlsx` in 102 of 120 cells; all 18 misses are Gemini. So the workbook already
   held the lenient numbers — this benchmark's *code and stored score columns* were what had not
   caught up.
 - **Four slots for two vendors, and only the older pair has results.** `BBH_Gemini_Flash2.5`

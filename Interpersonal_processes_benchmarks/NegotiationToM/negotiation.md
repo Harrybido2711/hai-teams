@@ -11,6 +11,13 @@ is kept rather than the original quietly replaced.
 
 ## 1. Results so far
 
+> **Superseded 2026-10-05.** All six runs on disk are now complete and clean: 14,138 rows each,
+> 0 empty responses — Gemini's and Grok's current shards included. Current numbers for every model
+> are on the benchmark card (`.claude/references/benchmarks/interpersonal/negotiationtom.md`) and in
+> both workbooks. The table and decomposition below are the earlier two-model state, kept as written;
+> its `All_EM` values (0.0025, 0.0496) differ from what the current merge gives the same two runs
+> (0.0034, 0.0534), and the cause of that difference has not been traced.
+
 Only two full runs are trustworthy. Gemini and Grok completed with the right row counts but had
 1,963 and 12,040 rows returned empty by quota and credit exhaustion, and an empty response scores
 as a wrong answer.

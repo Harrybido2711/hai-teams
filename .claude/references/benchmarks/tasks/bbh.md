@@ -64,10 +64,10 @@ Every slot is at the full 20 tasks / 4,833 rows except Kimi. Macro is the mean o
 Qwen's 17 unusable rows are all in `dyck_languages` and are scored wrong, not dropped; that task
 reads 0.696. It is what the DeepInfra repair of 2026-08-30 left of 256.
 
-**Per-task cells live in the workbooks, not here** — `Final_Result.xlsx` § Big Bench Hard for the
-six, `Results.xlsx` for all ten, each with the sources on its `Provenance` sheet. Both were
-refreshed from these files on 2026-09-07: 76 cells changed in `Results.xlsx`, 0 in
-`Final_Result.xlsx`, which already matched.
+**Per-task cells live in the workbooks, not here** — `Final_result.xlsx` § Big Bench Hard for the
+selected models, `Tempo_results.xlsx` for all ten, each with the sources on its `Provenance` sheet. Both were
+refreshed from these files on 2026-09-07: 76 cells changed in `Tempo_results.xlsx`, 0 in
+`Final_result.xlsx`, which already matched.
 
 **bbh ran locally, not on Quest** — `sacct` has no bbh job. Quest holds the code and data only.
 
@@ -86,15 +86,15 @@ The rule of thumb worth carrying out of it: **a task at exactly 0.000 with `no_m
 - **`BBH_Gemini_Flash2.5` is a broken run, not a low score.** 62% of its 4,833 responses (3,002)
   stop mid-reasoning and never emit `Final Answer:`, so no scorer can rescue them and 0.3455 is what
   it is. It is **not** re-run: the Gemini slot is now `gemini-3.5-flash-lite`, which is complete.
-  The row keeps its own column in `Results.xlsx` and appears nowhere in `Final_Result.xlsx`.
+  The row keeps its own column in `Tempo_results.xlsx` and appears nowhere in `Final_result.xlsx`.
 - **The slot-level `results/*_bbh_overall.csv` is stale for Gemma and Qwen.** The DeepInfra repair
   of 2026-08-30 re-ran only the affected tasks and overwrote each roll-up with just those —
   `MACRO_AVG_over_5_tasks` = 0.879 for Gemma, `over_13_tasks` = 0.9146 for Qwen, against the true
   0.9684 and 0.9339. **Aggregate the per-task files instead**; that is what both workbooks now do.
-- **`Final_Result.xlsx` reproduces the per-task files exactly** — all 126 six-slot cells, 0 blanks,
-  checked 2026-09-07. `Results.xlsx` did not, and was refreshed from them.
+- **`Final_result.xlsx` reproduces the per-task files exactly** — all 126 six-slot cells, 0 blanks,
+  checked 2026-09-07. `Tempo_results.xlsx` did not, and was refreshed from them.
 - **`kimi-k2.5` and `Llama-4-Maverick` are not among the six.** bbh is the only benchmark either ran
-  on; Kimi has 10 of 20 tasks. `PLAN.md` and `Final_Result.xlsx` are the coverage claim, never
+  on; Kimi has 10 of 20 tasks. `PLAN.md` and `Final_result.xlsx` are the coverage claim, never
   `ls`.
 - **`_superseded/` in `BBH_Gemma` and `BBH_Kimi`** holds older duplicates in the pre-restructure
   format, parked rather than deleted. Never read a number out of one.

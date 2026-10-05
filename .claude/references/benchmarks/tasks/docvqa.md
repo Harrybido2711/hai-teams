@@ -12,7 +12,7 @@ Document visual question answering. Upstream docvqa.org. Scored by **ANLS**, no 
 image ([model-calls.md](../../model-calls.md)). **XAI and Deepseek are blank here because they are
 text-only, not because the run is outstanding**; nothing is waiting to be scheduled for them. Six
 runners produced those four columns: the current Gemini and OpenAI pair, added 2026-09-10, plus
-Qwen and Gemma, and the two superseded models whose columns are kept in `Results.xlsx` only.
+Qwen and Gemma, and the two superseded models whose columns are kept in `Tempo_results.xlsx` only.
 
 ## Paths
 
@@ -106,8 +106,8 @@ than rounded away because a future run that hits the same thing should recognise
 **Do not compare these with the paper's 0.665.** That baseline reads serialised OCR; these read the
 page. Different input, different era.
 
-Per-model cells live in the workbooks — `Final_Result.xlsx` for the four of the six that can run
-it, `Results.xlsx` for those plus the superseded pair — each with its sources on the `Provenance`
+Per-model cells live in the workbooks — `Final_result.xlsx` for the selected models that can run
+it, `Tempo_results.xlsx` for those plus the superseded pair — each with its sources on the `Provenance`
 sheet.
 
 ## Scoring

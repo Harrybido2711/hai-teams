@@ -1,5 +1,9 @@
 # NegotiationToM — benchmark card
 
+<!-- size-budget: 7500 -->
+<!-- One job — the operational card. Over the 5 KB nudge since 2026-10-05, when the results table
+     arrived: eight runs in two generations plus a Gemma caveat that changes how one cell is read. -->
+
 Conflict management, under interpersonal processes. Upstream `HKUST-KnowComp/NegotiationToM`. No LLM
 judge — scored by exact match and micro/macro F1. Six providers have results. This is the benchmark
 the generic references were originally written around, so anything here that reads like a universal
@@ -63,6 +67,30 @@ A full run is **14,138 rows**: desire 4,760 + belief 4,760 + intention **4,618**
 
 These are the defaults `check-status` and the supervising workflows assume. For any other benchmark
 they are wrong and must be passed explicitly.
+
+## Results — six runs complete, verified 2026-10-05
+
+Recomputed from the per-shard `.jsonl` and equal to every `NEG_*/results/<slug>_negotiation_overall.csv`.
+Every run: 14,138 rows, **0 empty responses**, 0 duplicate uids.
+
+| Slot | Folder · model | Desire | Belief | Micro F1 | Macro F1 | All_EM | In `Final_result` |
+|---|---|---|---|---|---|---|---|
+| Deepseek | `NEG_Deepseek` · `deepseek-reasoner` | 0.6234 | **0.6197** | 0.4980 | 0.4742 | 0.0534 | yes |
+| Gemma | `NEG_Gemma` · `gemma-4-31B-it`, reasoning off | **0.6494** | 0.5007 | 0.5345 | 0.5064 | **0.0773** | yes — belief caveat |
+| Qwen | `NEG_Qwen` · `Qwen3.5-9B`, reasoning off | 0.5888 | 0.5374 | 0.4860 | 0.3992 | 0.0408 | yes |
+| XAI | `NEG_XAI` · `grok-3-mini` | 0.5393 | 0.5510 | **0.5382** | **0.5366** | 0.0702 | no — XAI out since 2026-10-05 |
+| — | `NEG_Gemini` · `gemini-2.5-flash` | 0.5315 | 0.5593 | 0.5369 | 0.5133 | 0.0647 | no — superseded |
+| — | `NEG_GPT` · `gpt-4o-mini` | 0.5046 | 0.4522 | 0.4194 | 0.3376 | 0.0034 | no — superseded |
+
+**The current Gemini and OpenAI slots have not run.** `NEG_Gemini_Flash3.5lite_OpenRouter` and
+`NEG_GPT_5.6_Luna` are written but unpiloted, so those two `Final_result.xlsx` cells are blank.
+
+**Gemma's belief is a thinking-off number.** Paired on 463 uids against an archived reasoning-on
+pilot, belief was 0.6177 on and 0.4903 off (McNemar p=1.2e-08). Off is Gemma's settled config on
+every sheet, so the user reported it as is on 2026-10-05; the caveat is on the `Provenance` sheet
+and in `ISSUES.md`. Qwen is off too and has not been measured for the same effect.
+
+Per-metric cells and their sources live in the two workbooks' `NegotiationToM` sheets.
 
 ## Output, logs and markers
 

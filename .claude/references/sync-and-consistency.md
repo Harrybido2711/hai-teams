@@ -60,14 +60,14 @@ exited.
    the headline score, and the unusable-row counts (`no_marker`, `empty`) that say whether the score
    can be read at face value. Per-task cells stay in the workbooks; the page holds the summary and
    the caveats.
-2. **`Results.xlsx`** — always. Every model that has run gets a column here, selected or not.
-3. **`Final_Result.xlsx`** — only if the model is one of the six. A model that is not selected never
+2. **`Tempo_results.xlsx`** — always. Every model that has run gets a column here, selected or not.
+3. **`Final_result.xlsx`** — only if the model is selected — `PLAN.md` names which. A model that is not selected never
    earns a cell here, and a blank stays blank until the *selected* model runs.
 
 **Rebuild the cells from the result files on disk, never from another summary.** Aggregate the
 per-task output, not a roll-up written by a previous run: bbh's slot-level `*_bbh_overall.csv` was
 overwritten by a repair that re-ran five of twenty tasks, and reading it put Gemma into
-`Results.xlsx` 0.089 low. The benchmark's page names its own authoritative file.
+`Tempo_results.xlsx` 0.089 low. The benchmark's page names its own authoritative file.
 
 **Update the `Provenance` row in the same edit.** A number whose source row still describes the
 previous run is worse than a blank, because nobody doubts it. Say the source file, the scorer tag,

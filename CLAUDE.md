@@ -7,8 +7,8 @@ A benchmark suite measuring whether LLMs can do the things a **team-process taxo
 (monitoring progress, coordination), *interpersonal* processes (conflict, affect) — with general task
 ability alongside them as a baseline. Ten benchmarks, each a vendored upstream repo plus this
 project's own per-model runners. Runs execute on Northwestern's **Quest** SLURM cluster against eight
-commercial models. Every model that runs gets a column in `Results.xlsx`; the six selected models
-are what `Final_Result.xlsx` holds, and that is where a reported number is taken from. `PLAN.md` has
+commercial models. Every model that runs gets a column in `Tempo_results.xlsx`; the selected models
+are what `Final_result.xlsx` holds, and that is where a reported number is taken from. `PLAN.md` has
 the split.
 
 The work is empirical and the failures are quiet: a job that reports success while writing empty
@@ -142,7 +142,7 @@ A change that touches only local files — documentation, notes, a script that n
 **Layer 4 waits for the user, always.** A finished run is not a result until they say it is — the
 same gate as phase 3, for the same reason: whether the numbers can be believed is their call, not
 yours. Once they confirm it, that model reaches the record in **one** edit — the benchmark's own
-page, `Results.xlsx`, and `Final_Result.xlsx` if it is one of the six — because a model recorded in
+page, `Tempo_results.xlsx`, and `Final_result.xlsx` if it is one of the selected models — because a model recorded in
 one of the three and not the others is exactly the drift the pass exists to catch. The user's rule,
 2026-09-07.
 

@@ -3,7 +3,7 @@
 A judge-scored number is not reproducible unless the judge itself is documented. Accuracy against a
 gold label can be re-derived from the data; a GPT score cannot be re-derived from anything except the
 exact model, the exact prompt, and the exact aggregation. This file defines the record that every
-judge-scored benchmark in this repo must carry before its numbers enter `Results.xlsx`.
+judge-scored benchmark in this repo must carry before its numbers enter `Tempo_results.xlsx`.
 
 It is a **rule and a template**, not a filled-in survey. The thirteen required fields are quoted
 verbatim in the next section and expanded after it. The filled record is
