@@ -11,11 +11,13 @@
 
 # One arm of the reasoning-effort sweep. EFFORT and TAG come from --export.
 # seed is pinned on every arm so a score difference is the parameter, not the sampler.
+# TASK defaults to EU, the half the sweep compared; TASK=EA completes an arm into a full score
+# under the same cap and tag, so both halves of results_<tag>/ share one configuration.
 module purge
 
 /projects/p32983/pythonenvs/hai-teams/bin/python -u gpt56luna_emo_eval.py \
     --model gpt-5.6-luna \
-    --task EU \
+    --task "${TASK:-EU}" \
     --seed 42 \
     --save-every 25 \
     --reasoning-effort "$EFFORT" \
