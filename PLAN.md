@@ -216,7 +216,7 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 | `LLM_as_judge/JUDGE_RECORD.md`                       | the filled record — every judge in the suite: what it is, what it is shown, what its numbers mean, and which seven benchmarks need no record |
 | `LLM_as_judge/JUDGE_SUMMARY.md`                      | the two-page version of that record: the findings, the cost per model, and the open decisions                                                 |
 | `LLM_as_judge/GPT_LLM_AS_JUDGE_GUIDE.md`             | how to*build* a judge with GPT — pairwise setup, structured output, position bias                                                          |
-| `LLM_as_judge/README.md`                             | which judge model Wonderbread and MultiChallenge should use and the pipeline for each, from ten 2025–2026 papers; the PDFs are in `LLM_as_judge/papers/` |
+| `LLM_as_judge/README.md`                             | which judge model Wonderbread and MultiChallenge should use and the pipeline for each, from fifteen papers at 2026 top venues; the PDFs are in `LLM_as_judge/papers/` |
 | `Interpersonal_.../NegotiationToM/negotiation.md`    | current NegotiationToM results, dataset traps, reasoning-token cost, silent-failure catalogue                                                 |
 | `Interpersonal_.../NegotiationToM/ISSUES.md`         | problems already hit, what was rejected, what shipped                                                                                         |
 | `Interpersonal_.../NegotiationToM/DATA_NOTES.md`     | cutoff tiling, the`"None"` sentinel, expected row counts                                                                                    |
