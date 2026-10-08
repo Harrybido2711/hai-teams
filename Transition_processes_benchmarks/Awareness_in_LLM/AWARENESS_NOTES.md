@@ -293,8 +293,10 @@ What follows:
 
 - **Run all 4,075.** The orderings are a free position-bias control — the very thing `New/` was
   praised for adding by hand — and the calls are cheap.
-- **Dedup, then collapse.** 4,075 rows → **4,035** after exact dedup → **2,227** questions. Without
-  the dedup those 15 questions carry double weight.
+- **Dedup, then collapse.** 4,075 rows → **4,035** after exact dedup → **2,300** questions (2,240
+  without the dropped open-ended 60). Without the dedup those 15 questions carry double weight. An
+  earlier 2,227 grouped the story controls by question text alone; `Output_template/README.md` says
+  why that was wrong.
 - **The paper's exact numbers are not reproducible.** It scored one ordering per question and never
   says which. Label any paper-facing column approximate, and say why.
 - Two counts stay unexplained, neither of them ours: `mission_implicit` collapses to 99 distinct

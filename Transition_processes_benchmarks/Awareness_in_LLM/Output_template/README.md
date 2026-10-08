@@ -1,8 +1,9 @@
 # Output_template — the column contract for AwareEval results
 
-Modelled on `NegotiationToM/Output_template/`. The `openai_` prefix is just the example model slug;
-a real run writes `<model_slug>_<name>.csv` into `results/<task>/`, exactly as
-`neg_eval_core.output_paths()` already does.
+Modelled on `NegotiationToM/Output_template/`. The `openai_` prefix is just the example model slug.
+A real run is written by `aware_eval_core.py`: each task's rows go to
+`AWARE_<Model>/results/<task>/<model_slug>.jsonl` (the checkpoint, every field), and the files below
+to `AWARE_<Model>/results/<model_slug>_<name>.csv`, rebuilt from those rows by `--score-only`.
 
 Scope is AwareEval only — `dataset/AwareEval.json`, 4,075 rows. `New/` is out of scope
 (see `AWARENESS_NOTES.md` §0).
@@ -28,7 +29,8 @@ not the task. A scorer branches on `task`, not on the filename.
 ```
 
 `question_id` is `q` plus a zero-padded index over the task's unique questions, sorted by question
-text — deterministic, so a resumed run regenerates the same uid for the same row. `_p<perm_id>` is
+text — for the four story tasks by question text *and story*, since several stories ask the same
+question with different answers — deterministic, so a resumed run regenerates the same uid for the same row. `_p<perm_id>` is
 present only for the four permuted tasks. Resume skips any uid already in the checkpoint, so the
 question_id assignment must never depend on shard boundaries or on row order in the source file.
 
@@ -67,7 +69,11 @@ cheap. Scoring then does two things in order:
 1. **Exact-duplicate dedup**, on `(task, prompt, ordered choices, label)`. 4,075 → **4,035**. Some
    questions ship the same permutation twice (10 in `mission_implicit`, 1 in `capability`, 4 rows in
    `perspective_mcq`); without this they carry double weight.
-2. **Collapse to `openai_questions.csv`**, 4,035 → **2,227** questions:
+2. **Collapse to `openai_questions.csv`**, 4,035 → **2,300** questions (**2,240** without the dropped
+   `mission_open-ended`, which is what a run produces). The first version of this file said 2,227: it
+   grouped the story tasks by question text alone, which merged distinct items from different stories
+   — "Where is the broccoli really?" is asked of several — into fake permutations of one question.
+   Corrected 2026-10-08.
 
 ```
 acc_q      = n_correct / n_perm            # 0, 1/3, 2/3, 1 for a 3-permutation question

@@ -36,8 +36,8 @@ page, and carrying one across benchmarks is the mistake that split is there to p
   git nor on Quest. **Re-run `python3 .claude/scripts/sync_audit.py --fetch` rather than trusting
   this line.**
 - **Running now:** nothing is assumed. Check, don't remember — `monitor-run`, or `squeue -u uwr0681`.
-- **All ten benchmarks have a knowledge-base page**; three of them have no runner at all, so work
-  there starts at phase 1 or 2 rather than 3.
+- **All ten benchmarks have a knowledge-base page**; four of them — PlanBench, mpgt, Wonderbread,
+  MultiChallenge — have no runner at all, so work there starts at phase 1 or 2 rather than 3.
 - **Two runners comply with the model-parameter rule; every other one does not.** bbh's
   `BBH_GPT_5.6_Luna` and `BBH_Gemini_Flash3.5lite_OpenRouter` (added 2026-08-29) negotiate their
   surface and set a cap; their caps are chosen rather than measured, but both have since run all

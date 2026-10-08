@@ -132,7 +132,8 @@ OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"), base_url="https://api.deepseek.com
   would classify a queued call as a hang.
 - **The answer sometimes arrives in `reasoning_content` with `content` empty.** A runner reading only
   `message.content` scores those as failures. Fall back explicitly, and log when it fires.
-- **`deepseek-reasoner` is an alias, not a model id.** What it resolves to can change under you;
+- **`deepseek-reasoner` is an alias, not a model id** — `deepseek-flash` on 2026-10-08 (AwareBench
+  smoke). What it resolves to can change under you;
   record the resolved identity with the results.
 
 No reasoning knob — the levers are in [model-parameters.md](model-parameters.md).

@@ -156,7 +156,7 @@ redone.
 
 | Folder                                             | Benchmark      | Team process                               | Upstream                      | LLM judge?                                           | Result files present for                                       |
 | -------------------------------------------------- | -------------- | ------------------------------------------ | ----------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
-| `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | no — its 60 judged rows were dropped 2026-10-05 | none yet; output templates and the paper baseline are in place |
+| `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | no — its 60 judged rows were dropped 2026-10-05 | none yet; runners for the five selected models, smoke-tested 2026-10-08 |
 | `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval      | goal specification                         | AddleseeHQ/mpgt-eval          | no — human review                                   | none yet (vendored 2026-08-19)                                 |
 | `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | none yet                                                       |
 | `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | none yet (vendored 2026-08-19)                                 |
@@ -268,10 +268,12 @@ follows, and none holds a benchmark-specific path — so they are adapted to a t
    judge needs nothing: its 60 judged rows were dropped on 2026-10-05. Choosing the replacement
    judge for the remaining two is `LLM_as_judge/README.md`.
 2. **AwareBench run.** Scope is decided (AwareEval, not `New/`, and without the 60
-   `mission_open-ended` rows) and the output templates are written, but no generation has run.
-   Budget per model: 4,015 generation calls, no judge calls.
-3. **Three benchmarks have no runner.** Multi-party Goal Tracking, Wonderbread and MultiChallenge are
-   vendored but have no per-provider harness, no SLURM script, and no results.
+   `mission_open-ended` rows). A shared core and runners for the five selected models were written
+   and smoke-tested on 2026-10-08; they wait for the user's verification before anything goes to
+   Quest. Budget per model: 4,015 generation calls, no judge calls.
+   `.claude/references/benchmarks/transition/awarebench.md`.
+3. **Four benchmarks have no runner.** PlanBench, Multi-party Goal Tracking, Wonderbread and
+   MultiChallenge are vendored but have no per-provider harness, no SLURM script, and no results.
 4. **Provider coverage is uneven.** DocVQA has two providers where bbh and mmlu have seven; whether
    that gap is closed is a scope decision, not an oversight to fix silently.
 5. **The pre-submit Quest gate covers one benchmark.** `check_quest_sync.py` hardcodes
