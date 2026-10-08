@@ -1,3 +1,5 @@
+<!-- size-budget: 6000 -->
+<!-- One job: the criteria, the per-row fields that feed them, and their traps. -->
 # Evaluation criteria beyond accuracy
 
 Six criteria every model is judged on alongside its accuracy, on every benchmark. Adopted by the
@@ -5,10 +7,11 @@ user 2026-10-08. They exist because accuracy alone cannot separate two models th
 differ tenfold in cost, or one that is right on average but gives a different answer each time it
 is asked.
 
-**State on 2026-10-08: not implemented anywhere.** No runner writes the per-row fields below.
-NegotiationToM's core keeps run-level totals in its in-memory `STATS` (tokens, call latencies,
-truncations), but no result row carries them. Rows already on disk therefore **cannot** produce
-criteria 1–3 per item. A run made before a runner was updated says so; it does not get an estimate.
+**State on 2026-10-08: one runner.** `EMO_GPT_5.6_Luna/gpt56luna_emo_eval.py` writes every field
+below, smoke-tested and reviewed, not yet run on Quest. No other runner does. NegotiationToM's core
+keeps run-level totals in its in-memory `STATS` (tokens, call latencies, truncations), but no
+result row carries them. Rows already on disk therefore **cannot** produce criteria 1–3 per item. A
+run made before a runner was updated says so; it does not get an estimate.
 
 ## The six
 
@@ -40,6 +43,12 @@ recovered afterwards.
 
 - **Never count tokens from `raw_response`.** Hidden reasoning tokens are billed and are not in it,
   so a tokenizer count undercounts a reasoning model's cost several-fold.
+- **`n_attempts` and `latency_s` are wrong while the SDK retries by itself** — the values look
+  plausible and nothing is logged. Client setting: [script-skeleton.md](script-skeleton.md) §4.
+- **`parse_ok` needs a non-empty string**, not just a present key: `{"answer": null}` is no prediction.
+- **The response's model id is not proof of identity.** `gpt-5.6-luna` echoes the alias in
+  `resp.model` and returns no `system_fingerprint`, so neither can show the model behind it changed
+  between two halves of one score. Record both anyway; do not cite them as that proof.
 - **Token counts do not compare across families** — each uses its own tokenizer. Compare tokens
   within a family; compare across families in dollars and seconds.
 - **Throughput comes from `wall_seconds`, never from summed call latencies** — the reason is in the

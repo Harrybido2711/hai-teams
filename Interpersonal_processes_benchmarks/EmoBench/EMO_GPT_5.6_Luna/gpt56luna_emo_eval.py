@@ -26,7 +26,11 @@ What is specific to this runner, and why:
   5. **seed is pinned** where accepted — rule 6. Without one, 22.5% of EmoBench items changed
      between two runs of the same Gemini config, which is larger than any score gap we interpret.
   6. **Usage is recorded per call**: prompt, completion and reasoning tokens. Cost could not be
-     compared between two routes here until the tokens were metered rather than derived.
+     compared between two routes here until the tokens were metered rather than derived. Every row
+     also carries the per-row fields of references/evaluation-criteria.md — completion_tokens,
+     reasoning_tokens, latency_s, n_attempts, parse_ok — beside the older output_tokens and
+     thinking_tokens, which stay so rows written before 2026-10-08 still aggregate with new ones —
+     and response_model / system_fingerprint, what the provider says served the call.
 
 Visible reasoning is not decided in this file. It is read from EmoBench's own README at start-up
 (reasoning_visibility.resolve), which today answers False. --use-cot / --no-use-cot override it, and
@@ -56,7 +60,10 @@ import reasoning_visibility  # noqa: E402 — needs ROOT on the path first
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     sys.exit("OPENAI_API_KEY is not set in EmoBench/.env")
-client = OpenAI(api_key=api_key, timeout=300)
+# max_retries=0: the SDK otherwise retries 429/5xx/timeouts twice inside one create(), silently,
+# so a row's n_attempts would undercount its calls and its latency_s would include the back-off.
+# call_api's loop is the only retry layer.
+client = OpenAI(api_key=api_key, timeout=300, max_retries=0)
 LETTERS = string.ascii_uppercase
 
 # Measured on this model, not copied from the Gemini runners. "minimal" is rejected outright; the
@@ -71,8 +78,14 @@ REASONING_EFFORT = "low"
 EFFORT_FALLBACKS = ("low", "medium", "none")   # preference order if a value is refused
 RESULTS_TAG = ""               # set from --tag; keeps a sweep arm out of the baseline directory
 
-AUTH_MARKERS = ("invalid_api_key", "Incorrect API key", "Unauthorized", "401",
+# No bare "401": it matched request ids like "req_9c401fe2" inside ordinary 5xx messages, and with
+# the SDK's retries off every 5xx reaches this test. A 401 is caught by its status code instead.
+AUTH_MARKERS = ("invalid_api_key", "Incorrect API key", "Unauthorized",
                 "insufficient_quota", "billing")
+
+
+def _is_auth_failure(e):
+    return getattr(e, "status_code", None) == 401 or any(m in str(e) for m in AUTH_MARKERS)
 # Permanent request-shape failures. Retrying these three times per item across 400 items is how a
 # run spends hours proving the same thing over and over.
 FATAL_MARKERS = ("model_not_found", "does not exist", "invalid_request_error",
@@ -129,6 +142,11 @@ def parse_json(text):
         return None
 
 
+def _is_answer(v):
+    """parse_ok's test. A null, list or number is no prediction: the scorer would compare "NONE"."""
+    return isinstance(v, str) and bool(v.strip())
+
+
 def _results_dir(task):
     name = "results" + (("_" + RESULTS_TAG) if RESULTS_TAG else "")
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), name, task)
@@ -150,12 +168,14 @@ def negotiate(model, wanted):
     params, notes = dict(wanted), []
     for _ in range(len(wanted) + 2):
         try:
-            client.chat.completions.create(
+            # The probe writes no row, so it keeps the SDK's own retries: a transient 5xx here
+            # would otherwise end the job before the first item.
+            client.with_options(max_retries=2).chat.completions.create(
                 model=model, messages=[{"role": "user", "content": "Reply with: ok"}], **params)
             return params, notes
         except Exception as e:
             err = str(e)
-            if any(m in err for m in AUTH_MARKERS):
+            if _is_auth_failure(e):
                 sys.exit(f"Authentication or quota failure, not retried: {e}")
             offender = next((k for k in params if f"'{k}'" in err), None)
             if offender is None:
@@ -190,28 +210,45 @@ def negotiate(model, wanted):
 
 # ── API call ──────────────────────────────────────────────────────────────────
 
-def call_api(sys_prompt, user_prompt, model, params, max_retries=3):
-    """Returns (text, finish_reason, reasoning_tokens, reasoning_text, usage)."""
+def _empty_usage(n_attempts):
+    return {"prompt_tokens": None, "output_tokens": None, "thinking_tokens": None,
+            "completion_tokens": None, "reasoning_tokens": None, "latency_s": None,
+            "n_attempts": n_attempts, "call_cost": None,
+            "response_model": None, "system_fingerprint": None}
+
+
+def call_api(sys_prompt, user_prompt, model, params, max_retries=5):
+    """Returns (text, finish_reason, reasoning_tokens, reasoning_text, usage).
+
+    5 attempts, not 3, because the SDK's own two retries are switched off on the client above."""
     for attempt in range(max_retries):
         try:
+            # The successful call alone: back-off sleeps and the pacing sleep below are outside it.
+            t0 = time.monotonic()
             resp = client.chat.completions.create(
                 model=model,
                 messages=[{"role": "system", "content": sys_prompt},
                           {"role": "user", "content": user_prompt}],
                 **params,
             )
+            latency = round(time.monotonic() - t0, 3)
             choice = resp.choices[0]
             text = (choice.message.content or "").strip()
             thought = getattr(choice.message, "reasoning", None) or ""
             finish = str(choice.finish_reason or "")
 
             reasoning = None
-            usage = {"prompt_tokens": None, "output_tokens": None, "thinking_tokens": None,
-                     "call_cost": None}
+            usage = _empty_usage(attempt + 1)
+            usage["latency_s"] = latency
+            # What actually served the row. Halves of one score can be weeks apart, and an alias
+            # re-pointed in between is otherwise invisible in the data.
+            usage["response_model"] = getattr(resp, "model", None)
+            usage["system_fingerprint"] = getattr(resp, "system_fingerprint", None)
             try:
                 u = resp.usage
                 usage["prompt_tokens"] = u.prompt_tokens
                 usage["output_tokens"] = u.completion_tokens
+                usage["completion_tokens"] = u.completion_tokens
                 try:
                     reasoning = u.completion_tokens_details.reasoning_tokens
                 except Exception:
@@ -219,6 +256,8 @@ def call_api(sys_prompt, user_prompt, model, params, max_retries=3):
                 # 0 rather than None when nothing was thought, so the column stays summable across
                 # models; the native Gemini runner writes None and the two would not aggregate.
                 usage["thinking_tokens"] = reasoning if reasoning is not None else 0
+                # The criteria field keeps "not reported" apart from "reported zero".
+                usage["reasoning_tokens"] = reasoning
             except Exception:
                 pass
 
@@ -234,7 +273,7 @@ def call_api(sys_prompt, user_prompt, model, params, max_retries=3):
 
         except Exception as e:
             err = str(e)
-            if any(m in err for m in AUTH_MARKERS):
+            if _is_auth_failure(e):
                 sys.exit(f"Authentication or quota failure, not retried: {e}")
             if any(m in err for m in FATAL_MARKERS):
                 sys.exit(
@@ -249,8 +288,7 @@ def call_api(sys_prompt, user_prompt, model, params, max_retries=3):
                 wait = max(wait + 1, 1)
             print(f"Retrying in {wait:.1f}s...", flush=True)
             time.sleep(wait)
-    return None, "", None, "", {"prompt_tokens": None, "output_tokens": None,
-                                "thinking_tokens": None, "call_cost": None}
+    return None, "", None, "", _empty_usage(max_retries)
 
 
 # ── evaluation + CSV output — identical to the other runners ──────────────────
@@ -362,7 +400,13 @@ def run_task(task, model, save_every, params, negotiated, use_cot, cot_source, l
             "thinking_tokens": usage.get("thinking_tokens"),
             "prompt_tokens": usage.get("prompt_tokens"),
             "output_tokens": usage.get("output_tokens"),
+            "completion_tokens": usage.get("completion_tokens"),
+            "reasoning_tokens": usage.get("reasoning_tokens"),
+            "latency_s": usage.get("latency_s"),
+            "n_attempts": usage.get("n_attempts"),
             "call_cost": usage.get("call_cost"),
+            "response_model": usage.get("response_model"),
+            "system_fingerprint": usage.get("system_fingerprint"),
             # The condition travels with the data: what was sent, and what the model would not take.
             "params": json.dumps(params),
             "negotiated": ";".join(negotiated) if negotiated else "",
@@ -386,6 +430,8 @@ def run_task(task, model, save_every, params, negotiated, use_cot, cot_source, l
                 "cause_label": LETTERS[sample["cause_choices"].index(sample["cause_label"])],
                 "cause_answer": (parsed or {}).get("answer_q2", ""),
             }
+            # A prediction is both answers: the scorer needs q1 and q2, so one alone is not parsed.
+            res["parse_ok"] = _is_answer(res["emo_answer"]) and _is_answer(res["cause_answer"])
         else:
             res = {
                 **common,
@@ -394,6 +440,7 @@ def run_task(task, model, save_every, params, negotiated, use_cot, cot_source, l
                 "label": LETTERS[sample["choices"].index(sample["label"])],
                 "answer": (parsed or {}).get("answer", ""),
             }
+            res["parse_ok"] = _is_answer(res["answer"])
 
         results.append(res)
         done_ids.add(qid)

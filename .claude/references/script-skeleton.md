@@ -1,6 +1,6 @@
 # Eval script skeleton
 
-<!-- size-budget: 8000 -->
+<!-- size-budget: 8500 -->
 <!-- One job: the runner shape, as a numbered checklist a diff is checked against. It grew when
      rule 7 stopped being a style note and became the fairness rule, which needs its evidence,
      and again when 7b took the sharding pattern from NegotiationToM. -->
@@ -40,6 +40,13 @@ failure.
 - `time.sleep(2.0)` after every success
 - **log the exception** in every `except` block. Without it a `TypeError` from a bad call signature
   is retried as if it were a network fault, then scores 0, with nothing in the SLURM log
+- **the `openai` SDK retries on its own** — 429, 5xx, connection errors and timeouts, twice by
+  default, inside one `create()` and with nothing logged. Every client built on it (OpenAI, and the
+  `base_url` routes to Together, DeepInfra, OpenRouter, DeepSeek, xAI) hides those calls from this
+  loop, so a row's `n_attempts` undercounts and its `latency_s` includes the back-off. A runner
+  that records them builds the client with `max_retries=0` and allows 5 attempts here instead.
+  Shown against a mock server on openai 2.6.1, 2026-10-08. Whether `google-genai` retries
+  internally is unestablished
 
 **5. `call_and_parse()` — second retry layer.** If `parse_json()` returns `None` on a *non-empty*
 response, re-issue the call, up to 3 times. Call sites use this, not bare `call_api` + `parse_json`.
