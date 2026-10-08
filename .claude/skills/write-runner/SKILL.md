@@ -21,7 +21,8 @@ Ends **before** Quest: the user verifies the scripts, not you.
    their own, moving it into the core is the first change.
 5. **Check the diff against the skeleton:** empty responses retried, every `except` logs and calls
    `halt_on_billing` first, a timeout that derives from `BaseException`, checkpoint keyed by a stable
-   uid, a shard tag on every artefact, `PYTHONUNBUFFERED=1` in the sbatch script.
+   uid, the per-row usage fields on every row, a shard tag on every artefact,
+   `PYTHONUNBUFFERED=1` in the sbatch script.
 6. **Compile and smoke-test locally:** `python3 -m py_compile`, `bash -n`, then the runner with
    `--limit 3` (or the page's equivalent). Open the rows: non-empty response, parsed prediction,
    scored. Each parameter you set has now been accepted by one real call.

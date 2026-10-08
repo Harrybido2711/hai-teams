@@ -46,7 +46,9 @@ response, re-issue the call, up to 3 times. Call sites use this, not bare `call_
 
 **6. Checkpoint / resume.** `.jsonl` keyed by a stable UID (`qid`, or
 `"<dialogue_id>_<agent>_<task>"`). On start, load completed UIDs and skip them. `--save-every 20`.
-Always persist the raw response so failures can be inspected.
+Always persist the raw response so failures can be inspected, and the per-row usage fields
+in [evaluation-criteria.md](evaluation-criteria.md) § Per-row fields — tokens, latency,
+`finish_reason`, attempts. A field not written during the run cannot be recovered afterwards.
 
 > **Check for stale checkpoints before every full run.** Resume skips any UID already present, so
 > leftovers from an older code version make a run "succeed" in seconds while emitting old, wrong
@@ -114,5 +116,6 @@ These are settled; a change that breaks one is wrong unless it argues otherwise 
 | A timeout exception derives from `BaseException` | `except Exception` in each runner would swallow it |
 | Job scripts `export PYTHONUNBUFFERED=1` | or the log is empty while the job runs |
 | Shard outputs carry a shard tag | untagged `_overall.csv` files overwrite each other |
+| Every row carries the per-row usage fields of [evaluation-criteria.md](evaluation-criteria.md) | cost per correct answer, latency and stability are per-item; a run-level total in memory gives none of them |
 | Model-specific prompt tweaks stay in that model's runner | the shared builders must serve every model identically |
 | Row totals and exclusions match the benchmark's page, not another benchmark's | `benchmarks/<group>/<name>.md` holds the counts; a total that "looks about right" is how a returning bug survives review |

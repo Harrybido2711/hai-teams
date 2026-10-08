@@ -21,7 +21,9 @@ Run by `evaluator` · used by `monitor-run` and `finish-run`. Reads only.
 5. **The score:** it comes from the shared core's lenient matcher; the denominator is the
    `{task}_scored_rows` the page's exclusions predict. Recompute the headline from the per-task files
    and compare with the `_overall.csv`.
-6. **Verdict,** with the number that would have to change for the verdict to change.
+6. **Beyond accuracy.** Report criteria 1, 2, 3 and 6 of `evaluation-criteria.md` from the
+   per-row fields. Rows without the fields are reported as lacking them, never estimated.
+7. **Verdict,** with the number that would have to change for the verdict to change.
 
 ## Done when
 
@@ -36,4 +38,5 @@ and a recommendation that stops a run says what happens to its checkpoint.
 ## Detail
 
 [shared-context.md](../../references/shared-context.md) § Counting rows ·
-[script-skeleton.md](../../references/script-skeleton.md) §7 · the benchmark's page
+[script-skeleton.md](../../references/script-skeleton.md) §7 ·
+[evaluation-criteria.md](../../references/evaluation-criteria.md) · the benchmark's page
