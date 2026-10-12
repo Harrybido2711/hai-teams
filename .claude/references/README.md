@@ -35,6 +35,7 @@ and proceeding anyway is the failure this table exists to prevent.
 | **writing a runner for a model** — which client, `base_url`, key, model id, non-optional parameters | [model-calls.md](model-calls.md) — the invocation recipe, measured where we have run it | 5 KB |
 | **writing or changing any runner** — the decoding, thinking and output limits it must set, and the settled per-model configs | [model-parameters.md](model-parameters.md) | 6 KB |
 | **comparing models on anything but accuracy** — cost, tokens, latency, stability, robustness, reliability; which per-row fields a runner must persist; choosing which models to keep | [evaluation-criteria.md](evaluation-criteria.md) | 5 KB |
+| **running or analysing stability / robustness** — repeats, perturbations, `--tag` / `--subsample` / `--perturb`, `run_criteria.sh`, how flips are counted | [criteria-runs.md](criteria-runs.md) | 6 KB |
 | a reasoning bill that looks too high, or how a cap backfires | [reasoning-cost.md](reasoning-cost.md) | 3 KB |
 | the model offers **no thinking or output parameter**, so the cap goes in the prompt | [prompt-ceiling.md](prompt-ceiling.md) | 1 KB |
 | writing or changing an eval script — retries, checkpoints, resume, scoring, a shared core | [script-skeleton.md](script-skeleton.md) | 5 KB |

@@ -60,6 +60,8 @@ reported number came from is on the workbooks' `Provenance` sheet.
 `sbatch run_emobench.sh` per model folder. The script pins the model on the command line and runs
 `--task all --save-every 20` under `--partition=long`, `--time=24:00:00`, 8 GB.
 
+Stability and robustness runs (`run_criteria.sh`, `results_<tag>/`): [criteria-runs.md](../../criteria-runs.md).
+
 ## Reasoning: upstream has a flag for it
 
 `--use_cot` (upstream `src/main.py:32`, documented in its README) is a **supported condition, not a

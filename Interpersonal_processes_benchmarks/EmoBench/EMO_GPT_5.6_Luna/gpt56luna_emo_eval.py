@@ -508,6 +508,9 @@ if __name__ == "__main__":
     # Checked before the probe call, so a rejected command spends nothing and writes nothing.
     if args.tag and not re.fullmatch(r"[A-Za-z0-9_-]+", args.tag):
         parser.error("--tag must be a plain name")
+    if args.tag in ("default", "eLow", "eNone") or args.tag.startswith("sw"):
+        if args.perturb:
+            parser.error(f"--tag {args.tag} is an August sweep arm; criteria runs use rep<N>/perturb-*")
     # The tag names what the rows ARE: a perturbed run cannot be filed as a repeat or the reverse.
     if bool(args.perturb) != args.tag.startswith("perturb-") or (
             args.perturb and args.tag != f"perturb-{args.perturb}"):
@@ -538,15 +541,33 @@ if __name__ == "__main__":
     if "seed" not in params:
         print("WARNING: no seed accepted — this run is not reproducible (rule 6).", flush=True)
 
-    if RESULTS_TAG:
-        # What produced the rows, beside them, so a tagged directory audits without its command line.
+    if criteria_perturb.CRITERIA_TAG.fullmatch(RESULTS_TAG):
+        # What produced the rows, beside them, so a tagged directory audits without its command
+        # line — and a resumed tag must have started under the same configuration: resume keeps
+        # every qid already written, so a changed seed or wording would leave two in one folder.
         tag_root = os.path.dirname(_results_dir("EU"))
-        os.makedirs(tag_root, exist_ok=True)
-        with open(os.path.join(tag_root, "run_config.json"), "w") as handle:
-            json.dump({"tag": RESULTS_TAG, "model": args.model, "params": params,
-                       "negotiated": negotiated, "perturb": args.perturb,
-                       "perturb_seed": args.perturb_seed, "use_cot": args.use_cot,
-                       "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, handle, indent=2)
+        config = {"tag": RESULTS_TAG, "model": args.model, "params": params,
+                  "negotiated": negotiated, "perturb": args.perturb,
+                  "perturb_seed": args.perturb_seed, "use_cot": args.use_cot,
+                  "perturb_text_md5": criteria_perturb.text_md5()}
+        config_path = os.path.join(tag_root, "run_config.json")
+        if os.path.exists(config_path):
+            with open(config_path, encoding="utf-8") as handle:
+                stored = json.load(handle)
+            changed = sorted(k for k in config if k != "tag" and stored.get(k) != config[k])
+            if changed:
+                sys.exit(f"results_{RESULTS_TAG} was started with a different {', '.join(changed)}; "
+                         "archive it before rerunning.")
+            print(f"[{RESULTS_TAG}] resuming under the configuration it started with", flush=True)
+        else:
+            slug = args.model.replace(".", "_").replace("/", "-")     # run_task's model_name
+            if any(os.path.exists(os.path.join(tag_root, t, f"{slug}_en.jsonl")) for t in ("EU", "EA")):
+                sys.exit(f"results_{RESULTS_TAG} holds rows but no run_config.json, so what produced "
+                         "them is unknown; archive it before rerunning.")
+            os.makedirs(tag_root, exist_ok=True)
+            with open(config_path, "w") as handle:
+                json.dump({**config, "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, handle,
+                          indent=2)
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:

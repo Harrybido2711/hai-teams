@@ -12,7 +12,9 @@ Only text this project controls moves:
                the question stems and the JSON answer format are left verbatim, so a flip is a
                changed answer rather than a parse failure.
 """
+import hashlib
 import random
+import re
 
 PERTURBATIONS = ("shuffle", "paraphrase")
 
@@ -24,13 +26,22 @@ PARAPHRASE_SYS_EN = (
     "You will read a short scenario, followed by a question and several answer options.\n"
     "Put yourself in the position of the person the scenario is about and think through what "
     "happened to them.\n"
-    "Then choose the option that best captures how that person sees the situation or how they "
-    "would feel.\n"
+    "Then pick the option that best matches that person's point of view or the emotional "
+    "response they would have.\n"
     "\n"
     "# Output\n"
 )
 
 CHOICE_LISTS = {"EA": ("choices",), "EU": ("emotion_choices", "cause_choices")}
+
+# Tags a criteria run may carry. Other tags (the August sweep arms: eLow, eNone, default, sw*) keep
+# their old behaviour; only these get the start-up configuration check.
+CRITERIA_TAG = re.compile(r"rep[1-9][0-9]*|perturb-(shuffle|paraphrase)|smoke-[A-Za-z0-9_-]+")
+
+
+def text_md5():
+    """Fingerprint of everything a perturbation can put in a prompt."""
+    return hashlib.md5(repr((PARAPHRASE_SYS_EN, CHOICE_LISTS)).encode()).hexdigest()
 
 
 def shuffled(values, seed, *key):
@@ -38,6 +49,8 @@ def shuffled(values, seed, *key):
     every model: the seed is the perturbation seed plus the item's own identity, never a counter."""
     rng = random.Random("|".join([str(seed), *map(str, key)]))
     order = list(values)
+    if len(set(order)) < 2:
+        return order                      # nothing to reorder; looping would never end
     while order == list(values):
         rng.shuffle(order)
     return order

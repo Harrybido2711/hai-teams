@@ -2,6 +2,7 @@
 
 import argparse
 import collections
+import glob
 import hashlib
 import json
 import os
@@ -362,7 +363,16 @@ def is_billing_failure(error):
 # run_cli fills this in so the halt paths can name the model and put their marker in the model's own
 # folder. Without it `note_outcome` — which has no arguments — could only exit silently, leaving the
 # two abort paths with different evidence.
-_RUN_CONTEXT = {"model": "unknown", "script_dir": "."}
+_RUN_CONTEXT = {"model": "unknown", "script_dir": ".", "tag": None}
+HALT_MARKERS = ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt")
+
+
+def _marker_name(base):
+    """A tagged run's markers carry its tag. Criteria runs share a model folder with the full run;
+    an untagged marker from one would read as the other halting, and each run's start-up clearing
+    would delete the other's evidence."""
+    tag = _RUN_CONTEXT["tag"]
+    return base.replace(".txt", f"_{tag}.txt") if tag else base
 
 
 def set_run_context(model, script_dir):
@@ -376,7 +386,7 @@ def clear_stale_halt_markers(script_dir):
     A marker that is never cleared claims a halt that no longer applies, and the next operator (or
     watcher) reads it as current.
     """
-    for name in ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt"):
+    for name in map(_marker_name, HALT_MARKERS):
         path = os.path.join(script_dir, name)
         if os.path.exists(path):
             try:
@@ -403,7 +413,7 @@ def _prune_advice():
 def _halt(kind, marker_name, detail, advice):
     """Write the marker, say why on both streams, then exit. Shared by every abort path."""
     model = _RUN_CONTEXT["model"]
-    marker = os.path.join(_RUN_CONTEXT["script_dir"], marker_name)
+    marker = os.path.join(_RUN_CONTEXT["script_dir"], _marker_name(marker_name))
     stamp = time.strftime("%Y-%m-%d %H:%M:%S")
     try:
         with open(marker, "w") as fh:
@@ -853,11 +863,20 @@ PARAPHRASE = {
 }
 
 
+def perturb_text_md5():
+    """Fingerprint of everything a perturbation can put in a prompt, so a resumed tag can tell
+    whether the wording or the label set changed since it started."""
+    text = repr((PARAPHRASE, ITEMS, INTENT_LABELS, ANSWER_FORMAT))
+    return hashlib.md5(text.encode()).hexdigest()
+
+
 def _shuffled(values, *key):
     """A seeded reordering that always differs from the original, stable across runs and models:
     the seed is the perturbation seed plus the item's own text, never a counter."""
     rng = random.Random("|".join([str(PERTURB["seed"]), *map(str, key)]))
     order = list(values)
+    if len(set(order)) < 2:
+        return order                      # nothing to reorder; looping would never end
     while order == list(values):
         rng.shuffle(order)
     return order
@@ -1423,11 +1442,15 @@ def parse_cli(default_model, script_file):
         parser.error("--shard must be in [0, --total-shards)")
     if args.pilot and not 0 < args.pilot_frac <= 1:
         parser.error("--pilot-frac must be in (0, 1]")
-    if args.tag is not None and (not re.fullmatch(r"[A-Za-z0-9_-]+", args.tag)
-                                 or args.tag == "pilot"):
-        parser.error("--tag must be a plain name and not 'pilot'")
+    # An allow-list, not a deny-list: "shard0of5", "full" or "desire" would name another run's
+    # record files or land inside the main results/<task>/ folders.
+    if args.tag is not None and not re.fullmatch(
+            r"rep[1-9][0-9]*|perturb-(shuffle|paraphrase)|smoke-[A-Za-z0-9_-]+", args.tag):
+        parser.error("--tag must be rep<N>, perturb-shuffle, perturb-paraphrase or smoke-<name>")
     if (args.subsample or args.perturb) and not args.tag:
         parser.error("--subsample and --perturb need --tag: they must never write the main results")
+    if args.tag and not args.subsample:
+        parser.error("--tag needs --subsample: a tagged run without one is a full run misfiled")
     if args.tag and args.pilot:
         parser.error("--tag and --pilot are different subsets; use one")
     # The tag names what the rows ARE, so a perturbed run cannot be filed as a repeat or the
@@ -1435,6 +1458,22 @@ def parse_cli(default_model, script_file):
     if bool(args.perturb) != bool(args.tag and args.tag.startswith("perturb-")) or (
             args.perturb and args.tag != f"perturb-{args.perturb}"):
         parser.error("--perturb X requires --tag perturb-X, and a perturb-* tag requires --perturb")
+    if args.subsample:
+        # Here, not in run_cli: by then a runner has already probed and written its record file.
+        try:
+            with open(args.subsample, encoding="utf-8") as handle:
+                wanted = json.load(handle)["dialogue_ids"]
+            with open(args.data, encoding="utf-8") as handle:
+                known = {sample["dialogue_id"] for sample in json.load(handle)}
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            parser.error(f"--subsample {args.subsample}: {type(error).__name__}: {error}")
+        missing = [d for d in wanted if d not in known]
+        if not wanted or missing or len(set(wanted)) != len(wanted):
+            parser.error(f"--subsample {args.subsample}: {len(wanted)} ids, {len(missing)} not in the "
+                         f"data, {len(wanted) - len(set(wanted))} duplicated")
+    # Every marker this run writes or clears carries its tag, including a halt during a runner's
+    # probe call, which happens before run_cli.
+    _RUN_CONTEXT["tag"] = args.tag
 
     return args
 
@@ -1486,12 +1525,30 @@ def run_cli(call_api, default_model, script_file):
             with open(args.subsample, "rb") as handle:
                 subsample_md5 = hashlib.md5(handle.read()).hexdigest()
         tag_dir = os.path.join(script_dir, "results", args.tag)
-        os.makedirs(tag_dir, exist_ok=True)
-        with open(os.path.join(tag_dir, "run_config.json"), "w") as handle:
-            json.dump({"tag": args.tag, "model": args.model, "perturb": args.perturb,
-                       "perturb_seed": args.perturb_seed, "subsample": args.subsample,
-                       "subsample_md5": subsample_md5, "n_dialogues": len(data),
-                       "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, handle, indent=2)
+        config = {"tag": args.tag, "model": args.model, "perturb": args.perturb,
+                  "perturb_seed": args.perturb_seed, "subsample": args.subsample,
+                  "subsample_md5": subsample_md5, "n_dialogues": len(data),
+                  "perturb_text_md5": perturb_text_md5()}
+        config_path = os.path.join(tag_dir, "run_config.json")
+        # Resume keeps every uid already written, so a tag resumed under a different subsample,
+        # seed or perturbation wording would hold two configurations and nothing would say so.
+        if os.path.exists(config_path):
+            with open(config_path, encoding="utf-8") as handle:
+                stored = json.load(handle)
+            changed = sorted(k for k in ("model", "perturb", "perturb_seed", "subsample_md5",
+                                         "perturb_text_md5") if stored.get(k) != config[k])
+            if changed:
+                raise SystemExit(f"results/{args.tag} was started with a different {', '.join(changed)}"
+                                 f"; archive it (results_archive_<what>_<UTC>) before rerunning.")
+            print(f"[{args.tag}] resuming under the configuration it started with", flush=True)
+        else:
+            if glob.glob(os.path.join(tag_dir, "**", "*.jsonl"), recursive=True):
+                raise SystemExit(f"results/{args.tag} holds rows but no run_config.json, so what "
+                                 "produced them is unknown; archive it before rerunning.")
+            os.makedirs(tag_dir, exist_ok=True)
+            with open(config_path, "w") as handle:
+                json.dump({**config, "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, handle,
+                          indent=2)
 
     # Name the run before any call can fail, so every halt path can write its marker into this
     # model's own folder, and drop any marker left by a previous run rather than inheriting it.
