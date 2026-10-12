@@ -173,7 +173,7 @@ whatever the queue says.
 **Halt markers are the cheapest signal there is** — check them before grepping any log:
 
 ```bash
-ls <BENCH>_*/BILLING_HALT.txt <BENCH>_*/QUOTA_HALT.txt <BENCH>_*/FAILURE_HALT.txt 2>/dev/null
+ls <BENCH>_*/*_HALT.txt 2>/dev/null     # a criteria run's carry its tag: rep1_BILLING_HALT.txt
 ```
 
 `BILLING_HALT` needs a human to top the account up; `QUOTA_HALT` clears when the provider's daily

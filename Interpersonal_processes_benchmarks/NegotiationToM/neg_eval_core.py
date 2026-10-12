@@ -370,9 +370,10 @@ HALT_MARKERS = ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt")
 def _marker_name(base):
     """A tagged run's markers carry its tag. Criteria runs share a model folder with the full run;
     an untagged marker from one would read as the other halting, and each run's start-up clearing
-    would delete the other's evidence."""
+    would delete the other's evidence. The tag goes in FRONT (rep1_BILLING_HALT.txt) so every
+    marker still ends in _HALT.txt — the glob check-run and the references use."""
     tag = _RUN_CONTEXT["tag"]
-    return base.replace(".txt", f"_{tag}.txt") if tag else base
+    return f"{tag}_{base}" if tag else base
 
 
 def set_run_context(model, script_dir):
@@ -863,11 +864,19 @@ PARAPHRASE = {
 }
 
 
-def perturb_text_md5():
-    """Fingerprint of everything a perturbation can put in a prompt, so a resumed tag can tell
-    whether the wording or the label set changed since it started."""
-    text = repr((PARAPHRASE, ITEMS, INTENT_LABELS, ANSWER_FORMAT))
-    return hashlib.md5(text.encode()).hexdigest()
+_FINGERPRINT_DIALOGUE = ["agent_1: Hello! I could use extra firewood for the cold nights.",
+                         "agent_2: Hi there! I mostly need food, so maybe we can trade."]
+
+
+def prompt_fingerprint():
+    """md5 of the prompts the current PERTURB setting renders for a fixed toy dialogue, all three
+    tasks. Hashing the rendered text rather than the constants covers what a resume must not mix —
+    an edit to the unperturbed wording inside the builders, or to the label set — and ignores what
+    it may: a rep's prompt does not move when only the paraphrase text is edited."""
+    d = _FINGERPRINT_DIALOGUE
+    messages = [desire_messages(d, "agent_1"), belief_messages(d, "agent_1", "agent_2"),
+                intention_messages(d, d[-1])]
+    return hashlib.md5(json.dumps(messages, sort_keys=True).encode()).hexdigest()
 
 
 def _shuffled(values, *key):
@@ -1471,11 +1480,42 @@ def parse_cli(default_model, script_file):
         if not wanted or missing or len(set(wanted)) != len(wanted):
             parser.error(f"--subsample {args.subsample}: {len(wanted)} ids, {len(missing)} not in the "
                          f"data, {len(wanted) - len(set(wanted))} duplicated")
+    if args.tag and args.total_shards > 1:
+        # Shards of one tag write _shardNofM checkpoints beside each other with the same uids, and
+        # an analysis globbing results/<tag>/<task>/ would count them twice. 300 rows need none.
+        parser.error("a tagged run is not sharded")
     # Every marker this run writes or clears carries its tag, including a halt during a runner's
     # probe call, which happens before run_cli.
     _RUN_CONTEXT["tag"] = args.tag
-
+    PERTURB["name"], PERTURB["seed"] = args.perturb, args.perturb_seed
+    if args.tag:
+        _check_tag_config(parser, args, os.path.join(script_dir, "results", args.tag))
     return args
+
+
+def _check_tag_config(parser, args, tag_dir):
+    """A tag resumes only under the configuration it started with. Resume keeps every uid already
+    written, so a different subsample, seed, model or prompt text would leave two configurations in
+    one folder with nothing to say so. Checked here, before a runner probes and rewrites its
+    negotiated_params_<tag>.json — a refused resume must not replace the record of the rows it
+    protects. The config is kept on args for run_cli to write on a first start."""
+    with open(args.subsample, "rb") as handle:
+        subsample_md5 = hashlib.md5(handle.read()).hexdigest()
+    args.tag_config = {"tag": args.tag, "model": args.model, "perturb": args.perturb,
+                       "perturb_seed": args.perturb_seed, "subsample": args.subsample,
+                       "subsample_md5": subsample_md5, "prompt_fingerprint": prompt_fingerprint()}
+    config_path = os.path.join(tag_dir, "run_config.json")
+    if os.path.exists(config_path):
+        with open(config_path, encoding="utf-8") as handle:
+            stored = json.load(handle)
+        changed = sorted(k for k in ("model", "perturb", "perturb_seed", "subsample_md5",
+                                     "prompt_fingerprint") if stored.get(k) != args.tag_config[k])
+        if changed:
+            parser.error(f"results/{args.tag} was started with a different {', '.join(changed)}; "
+                         "archive it (results_archive_<what>_<UTC>) before rerunning")
+    elif glob.glob(os.path.join(tag_dir, "**", "*.jsonl"), recursive=True):
+        parser.error(f"results/{args.tag} holds rows but no run_config.json, so what produced "
+                     "them is unknown; archive it before rerunning")
 
 
 def run_tag_of(args):
@@ -1516,39 +1556,18 @@ def run_cli(call_api, default_model, script_file):
         data = [by_id[d] for d in wanted]
         print(f"[subsample] {len(data)}/{n_full} dialogues from {args.subsample}")
 
-    PERTURB["name"], PERTURB["seed"] = args.perturb, args.perturb_seed
     if args.tag:
-        # What produced the rows, beside them: the subsample's hash and the perturbation, so a
-        # tagged directory can be audited without the command line that made it.
-        subsample_md5 = None
-        if args.subsample:
-            with open(args.subsample, "rb") as handle:
-                subsample_md5 = hashlib.md5(handle.read()).hexdigest()
+        # What produced the rows, beside them, so a tagged directory audits without the command
+        # line that made it. parse_cli has already refused a resume under a different config.
         tag_dir = os.path.join(script_dir, "results", args.tag)
-        config = {"tag": args.tag, "model": args.model, "perturb": args.perturb,
-                  "perturb_seed": args.perturb_seed, "subsample": args.subsample,
-                  "subsample_md5": subsample_md5, "n_dialogues": len(data),
-                  "perturb_text_md5": perturb_text_md5()}
         config_path = os.path.join(tag_dir, "run_config.json")
-        # Resume keeps every uid already written, so a tag resumed under a different subsample,
-        # seed or perturbation wording would hold two configurations and nothing would say so.
         if os.path.exists(config_path):
-            with open(config_path, encoding="utf-8") as handle:
-                stored = json.load(handle)
-            changed = sorted(k for k in ("model", "perturb", "perturb_seed", "subsample_md5",
-                                         "perturb_text_md5") if stored.get(k) != config[k])
-            if changed:
-                raise SystemExit(f"results/{args.tag} was started with a different {', '.join(changed)}"
-                                 f"; archive it (results_archive_<what>_<UTC>) before rerunning.")
             print(f"[{args.tag}] resuming under the configuration it started with", flush=True)
         else:
-            if glob.glob(os.path.join(tag_dir, "**", "*.jsonl"), recursive=True):
-                raise SystemExit(f"results/{args.tag} holds rows but no run_config.json, so what "
-                                 "produced them is unknown; archive it before rerunning.")
             os.makedirs(tag_dir, exist_ok=True)
             with open(config_path, "w") as handle:
-                json.dump({**config, "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, handle,
-                          indent=2)
+                json.dump({**args.tag_config, "n_dialogues": len(data),
+                           "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, handle, indent=2)
 
     # Name the run before any call can fail, so every halt path can write its marker into this
     # model's own folder, and drop any marker left by a previous run rather than inheriting it.

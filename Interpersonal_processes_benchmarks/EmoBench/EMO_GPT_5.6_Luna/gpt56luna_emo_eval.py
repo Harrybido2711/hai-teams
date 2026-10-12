@@ -37,6 +37,7 @@ Visible reasoning is not decided in this file. It is read from EmoBench's own RE
 how it was decided is written onto every row.
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -151,6 +152,16 @@ def parse_json(text):
 def _is_answer(v):
     """parse_ok's test. A null, list or number is no prediction: the scorer would compare "NONE"."""
     return isinstance(v, str) and bool(v.strip())
+
+
+def prompt_fingerprint(use_cot):
+    """md5 of what the current PERTURB setting renders: both system prompts, plus — under shuffle —
+    the reordering of a fixed list, so an edit to the wording OR the shuffle algorithm is caught
+    when a tag resumes, and a rep's resume is not blocked by an edit to the paraphrase alone."""
+    parts = [build_system_prompt(task, use_cot) for task in ("EU", "EA")]
+    if PERTURB["name"] == "shuffle":
+        parts.append(criteria_perturb.shuffled(list("ABCDEF"), PERTURB["seed"], "fingerprint"))
+    return hashlib.md5(json.dumps(parts).encode()).hexdigest()
 
 
 def _choice_text(choices, letter):
@@ -549,7 +560,7 @@ if __name__ == "__main__":
         config = {"tag": RESULTS_TAG, "model": args.model, "params": params,
                   "negotiated": negotiated, "perturb": args.perturb,
                   "perturb_seed": args.perturb_seed, "use_cot": args.use_cot,
-                  "perturb_text_md5": criteria_perturb.text_md5()}
+                  "prompt_fingerprint": prompt_fingerprint(args.use_cot)}
         config_path = os.path.join(tag_root, "run_config.json")
         if os.path.exists(config_path):
             with open(config_path, encoding="utf-8") as handle:

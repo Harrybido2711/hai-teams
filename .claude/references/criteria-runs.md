@@ -45,10 +45,12 @@ their own. This is how they are designed, run and turned into numbers.
   `perturb-paraphrase`, `smoke-<name>`) and need `--subsample`; the command line, including the
   subsample's ids, is validated in `parse_cli` before the probe call, so a rejected command spends
   nothing and writes nothing. A tag resumes only under the configuration its `run_config.json`
-  recorded (model, perturbation, seed, subsample md5, perturbation-text md5); otherwise archive it.
-  A tag holding rows but no `run_config.json` is refused for the same reason.
-- **Halt markers carry the tag** (`BILLING_HALT_rep1.txt`), so a criteria run never clears or fakes
-  the main run's marker in the same folder.
+  recorded (model, perturbation, seed, subsample md5, and a fingerprint of the prompts it renders);
+  otherwise archive it. A tag holding rows but no `run_config.json` is refused for the same reason,
+  and a tagged run is never sharded. NegotiationToM checks all of this in `parse_cli`, before the
+  probe; EmoBench after it, since its config includes the negotiated parameters.
+- **Halt markers carry the tag in front** (`rep1_BILLING_HALT.txt`), so a criteria run never clears
+  or fakes the main run's marker in the same folder, and every marker still matches `*_HALT.txt`.
 - **Sequence:** a model's criteria array goes after its main run in that folder has finished — the
   same key's rate limit — and only once its config is settled: a model with no pilot yet has no
   config the reported number will use.

@@ -57,7 +57,7 @@ def merge_task(results_root, task, model_slug, total_shards, allow_partial=False
     if expected is not None and len(rows) != expected:
         raise RuntimeError(
             f"{task}: merged {len(rows)} rows but expected {expected}. A shard stopped early — "
-            f"check NEG_*/BILLING_HALT.txt, QUOTA_HALT.txt and FAILURE_HALT.txt for the reason, "
+            f"check NEG_*/*_HALT.txt (BILLING, QUOTA, FAILURE) for the reason, "
             f"resume the run, and merge again. Refusing to publish a partial result as a complete "
             f"one. Pass --allow-partial if a short merge is genuinely what you want."
         )

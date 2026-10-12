@@ -12,7 +12,6 @@ Only text this project controls moves:
                the question stems and the JSON answer format are left verbatim, so a flip is a
                changed answer rather than a parse failure.
 """
-import hashlib
 import random
 import re
 
@@ -37,11 +36,6 @@ CHOICE_LISTS = {"EA": ("choices",), "EU": ("emotion_choices", "cause_choices")}
 # Tags a criteria run may carry. Other tags (the August sweep arms: eLow, eNone, default, sw*) keep
 # their old behaviour; only these get the start-up configuration check.
 CRITERIA_TAG = re.compile(r"rep[1-9][0-9]*|perturb-(shuffle|paraphrase)|smoke-[A-Za-z0-9_-]+")
-
-
-def text_md5():
-    """Fingerprint of everything a perturbation can put in a prompt."""
-    return hashlib.md5(repr((PARAPHRASE_SYS_EN, CHOICE_LISTS)).encode()).hexdigest()
 
 
 def shuffled(values, seed, *key):

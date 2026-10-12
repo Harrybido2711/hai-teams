@@ -98,7 +98,8 @@ Per-metric cells and their sources live in the two workbooks' `NegotiationToM` s
 results/pilot/<task>/*.jsonl                pilot
 results/<task>/<model>_shard{N}of{M}.jsonl  full run — the shard tag is mandatory
 log_pilot.txt · log_shard%a.txt · .err
-NEG_*/{BILLING,QUOTA,FAILURE}_HALT.txt      check these before grepping any log
+NEG_*/*_HALT.txt                            check these before grepping any log; a criteria
+                                            run's are prefixed with its tag (rep1_BILLING_HALT.txt)
 ```
 
 Tasks are `desire`, `belief`, `intention`.
