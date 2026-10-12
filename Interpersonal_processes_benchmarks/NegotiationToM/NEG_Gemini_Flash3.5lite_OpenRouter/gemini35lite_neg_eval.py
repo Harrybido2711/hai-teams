@@ -149,8 +149,16 @@ if __name__ == "__main__":
         print("  WARNING: seed was dropped — this run is NOT reproducible "
               "(model-parameters.md rule 8)", flush=True)
     os.makedirs(os.path.join(SCRIPT_DIR, "results"), exist_ok=True)
-    with open(os.path.join(SCRIPT_DIR, "results", f"negotiated_params_{RUN_TAG[0]}.json"),
-              "w") as handle:
+    params_path = os.path.join(SCRIPT_DIR, "results", f"negotiated_params_{RUN_TAG[0]}.json")
+    if args.tag and os.path.exists(params_path):
+        # A tag resumes only on the parameters its first start accepted: a provider that has
+        # since stopped honouring seed would otherwise mix seeded and unseeded rows in one tag.
+        with open(params_path, encoding="utf-8") as handle:
+            first = json.load(handle).get("accepted")
+        if first != PARAMS:
+            raise SystemExit(f"results/{args.tag} started with {first}, the provider now "
+                             f"accepts {PARAMS}; archive the tag before rerunning.")
+    with open(params_path, "w") as handle:
         json.dump({"model": model, "asked": WANTED, "accepted": PARAMS,
                    "extra_body": EXTRA_BODY, "notes": notes}, handle, indent=2)
 

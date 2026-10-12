@@ -842,7 +842,7 @@ def format_dialogue(turns):
     return "\n".join(turns)
 
 
-# Criteria 5 (robustness), .claude/references/evaluation-criteria.md. run_cli sets PERTURB for a
+# Criteria 5 (robustness), .claude/references/evaluation-criteria.md. parse_cli sets PERTURB for a
 # --perturb run; with it unset every prompt below is byte-identical to the unperturbed one, which
 # is what lets a perturbed run be compared row for row with rep1. Only this project's own wording
 # moves — never the dialogue — and the JSON answer format stays verbatim, so a flip is a changed

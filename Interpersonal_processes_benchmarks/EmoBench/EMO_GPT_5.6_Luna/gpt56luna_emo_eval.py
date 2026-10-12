@@ -160,7 +160,10 @@ def prompt_fingerprint(use_cot):
     when a tag resumes, and a rep's resume is not blocked by an edit to the paraphrase alone."""
     parts = [build_system_prompt(task, use_cot) for task in ("EU", "EA")]
     if PERTURB["name"] == "shuffle":
-        parts.append(criteria_perturb.shuffled(list("ABCDEF"), PERTURB["seed"], "fingerprint"))
+        # shuffle_sample on fixed samples, so which lists move and how they are keyed are covered.
+        toy = {"qid": "fingerprint", "choices": list("ABCD"),
+               "emotion_choices": list("ABCDEF"), "cause_choices": list("ABCD")}
+        parts += [criteria_perturb.shuffle_sample(toy, task, PERTURB["seed"]) for task in ("EU", "EA")]
     return hashlib.md5(json.dumps(parts).encode()).hexdigest()
 
 
