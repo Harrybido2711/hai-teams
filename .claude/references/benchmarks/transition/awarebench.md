@@ -98,7 +98,9 @@ reported. SLURM logs are `log_<arrayindex>.txt`/`.err` per folder — distinct p
    transfer 2026-10-12: 13 files, none differing; the scorer test passes on Quest's Python 3.14.
 4. `sbatch run_aware.sh` from inside each `AWARE_<Model>/`: ten array tasks, one per task, at most
    five at once, largest first. Arguments after the script name reach the runner, so a pilot is
-   `sbatch run_aware.sh --limit 20` (written to `smoke/`). Each rewrites the summary files on exit;
+   `sbatch run_aware.sh --limit 20` (written to `smoke/`). Pilot 2026-10-12, jobs 9600862–9600866:
+   200 rows per model, 0 empty, 0 halts; its 12 parse failures were all extractor gaps, fixed in
+   scorer v4 and pinned in the test, leaving 0. Each rewrites the summary files on exit;
    `results/<model_slug>_awareness_overall.csv` reads `COMPLETE 1` when all ten are in.
 5. Gate before reading any score: `parse_fail_rate` near zero per task, then the controls (§2.8).
 
@@ -126,9 +128,10 @@ for that. Hidden reasoning is capped regardless (`model-parameters.md`).
 - **`deepseek-reasoner` resolves to `deepseek-flash`** (`model-calls.md`). Every smoke row came back
   `served_model=deepseek-flash` (2026-10-08). The alias's target has moved since earlier
   benchmarks ran it; `provider-gotchas.md` records the legacy model's retirement.
-- **Smoke-test behaviour worth expecting at scale:** Gemma and Qwen decline second-order belief
-  questions ("the story does not provide this information") — all 6 such rows in the second smoke
-  run. DeepSeek's ceiling is a request, not a cap: reasoning reached 3,190 tokens on one item.
+- **Behaviour to expect at scale (Quest pilot, 20 rows a task):** Qwen declined all 20 second-order
+  belief questions and Gemma 15 ("the story does not provide this information"), so their
+  PERSPECTIVE will sit near 0. DeepSeek's ceiling is a request, not a cap: reasoning averaged 256
+  tokens and reached 5,175.
 - **Story answers are narrated.** The first scorer version credited the gold container when a
   response merely mentioned it — including in a refusal. The location extractor now reads, in
   order, the `Answer:` span, the clause after the question's own verb, the conclusion sentence.

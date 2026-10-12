@@ -86,8 +86,37 @@ SYNTHETIC = [
     ("culture", None, "Correct - though not true for everyone.", "correct"),
 ]
 
-# Real responses from the 2026-10-08 smoke test: (task, model, uid, expected pred, response)
+# Real responses from the 2026-10-08 smoke test and the 2026-10-12 Quest pilot:
+# (task, model, uid, expected pred, response)
 SMOKE = [
+    ('perspective_story_2nd', 'Gemini_Flash3.5lite_OpenRouter', 'perspective_story_2nd_q0019', 'bottle',
+     'Based on the sequence of events in the story:\n\n1. The suit starts in the **bottle**.\n2. Amelia enters the office. \n3. Amelia exits the office. \n4. Carter (who was already in the office) moves the suit to the bathtub, but Amelia is no longer in the office to witness this movement.\n\nTherefore, Amelia still believes the suit is where it was when she was last in the office and aware of it. \n\nAmelia thinks that Carter searches for the suit in the **bottle**.'),
+    ('emotion', 'Gemini_Flash3.5lite_OpenRouter', 'emotion_q0017', '3',
+     "Based on the context of the story, Alex put effort into planning a surprise, and even though his wife found out, he is still trying to keep the fun and suspense alive by pretending he doesn't know. However, his initial excitement about pulling off a genuine surprise is likely dampened, leading to a sense of disappointment that the secret is out, mixed with awkwardness. \n\nLooking at the provided options:\n(1) Excited; (2) Confused; (3) Disappointed; (4) Joyful\n\nThe most fitting emotion for realizing your surprise party is no longer a surprise while you try to act normal is **Disappointed**.\n\n(3) Disappointed"),
+    ('perspective_story_1st', 'Gemma_DeepInfra', 'perspective_story_1st_q0013', 'DECLINED',
+     'Based on the information provided in the story, there is no mention of Amelia looking for the radish or knowing where it is. Therefore, the story does not provide an answer to where she would look for it.'),
+    ('perspective_story_2nd', 'Gemma_DeepInfra', 'perspective_story_2nd_q0016', 'bucket',
+     'Based on the story provided, Alexander thinks the pants are still in the **bucket** (in the back yard).\n\n**Reasoning:** Alexander saw that the pants were in the bucket before he exited the back yard. He was not present when Logan moved the pants to the bathtub, so he has no reason to believe they have been moved.'),
+    ('perspective_story_2nd', 'Gemma_DeepInfra', 'perspective_story_2nd_q0019', 'bottle',
+     'Based on the story provided, Amelia thinks the suit is still **in the bottle**.\n\nThis is because she exited the office before Carter moved the suit to the bathtub, so she is unaware that its location has changed.'),
+    ('perspective_story_memory', 'Qwen', 'perspective_story_memory_q0004', 'crate',
+     'Based on the story provided, the sentence "The beans is in the crate" appears immediately after the characters enter the laundry. Since no prior location for the beans is mentioned, this is the initial state described in the narrative.\n\nThe beans were in the **crate**.'),
+    ('perspective_story_memory', 'Qwen', 'perspective_story_memory_q0006', 'bottle',
+     'Based on the story provided, the sentence "The cap is in the bottle" appears early in the text, before any actions involving moving the cap take place. Since the story describes William moving the cap to the crate later on, the initial location mentioned establishes where the cap was at the start.\n\nThe cap was in the **bottle**.'),
+    ('perspective_story_memory', 'Qwen', 'perspective_story_memory_q0008', 'bathtub',
+     'Based on the story provided, the cap was in the **bathtub** at the beginning.\n\nThe text explicitly states: "The cap is in the bathtub" before mentioning that Jayden moved it to the envelope.'),
+    ('perspective_story_memory', 'Qwen', 'perspective_story_memory_q0010', 'drawer',
+     'Based on the story provided, the celery was in the **drawer** at the beginning.\n\nThe text explicitly states: "The celery is in the drawer" before mentioning that Elizabeth moved it to the bucket.'),
+    ('perspective_story_memory', 'Qwen', 'perspective_story_memory_q0012', 'pantry',
+     'Based on the story provided, the corn was in the **pantry** at the beginning.\n\nThe text explicitly states, "The corn is in the pantry," before any characters move it. It is only later that Aria moves the corn to the bottle.'),
+    ('perspective_story_memory', 'Qwen', 'perspective_story_memory_q0015', 'bucket',
+     'Based on the story provided, the dress was **in the bucket** at the beginning.\n\nThe text explicitly states, "The dress is in the bucket," before mentioning that Mila later moved it to the bathtub.'),
+    ('perspective_story_memory', 'Qwen', 'perspective_story_memory_q0016', 'cupboard',
+     'Based on the story provided, the eggplant was **in the cupboard** at the beginning.\n\nThe text explicitly states: "The eggplant is in the cupboard." Later in the story, Isabella moves it to the crate, but its initial location was the cupboard.'),
+    ('perspective_story_memory', 'Qwen', 'perspective_story_memory_q0018', 'box',
+     'Based on the story provided, the sentence "The gloves is in the box" appears as the first statement regarding the location of the gloves after Olivia and Hunter enter the den. Since no prior action is described that moves the gloves before this point, we can infer this is their initial position in the narrative.\n\nThe gloves were in the **box**.'),
+    ('perspective_story_memory', 'Qwen', 'perspective_story_memory_q0020', 'bottle',
+     'Based on the story provided, the grapes were **in the bottle** at the beginning.\n\nThe text explicitly states: "The grapes is in the bottle." Later, Oliver moves them to the envelope, but their initial location was the bottle.'),
     ('perspective_story_1st', 'GPT_5.6_Luna', 'perspective_story_1st_q0003', 'bottle',
      'Aiden will look in the **bottle**, since he did not see Avery move the beans to the treasure chest.'),
     ('perspective_story_reality', 'Qwen', 'perspective_story_reality_q0001', 'bottle',
@@ -115,6 +144,10 @@ SMOKE = [
 ]
 
 
+# options for the emotion rows above, which the prompt carries and the response does not
+SMOKE_OPTIONS = {'emotion_q0017': {'1': 'Excited', '2': 'Confused', '3': 'Disappointed', '4': 'Joyful'}}
+
+
 def check(task, aux, response):
     row = {"task": task, "gold": "\x00"}
     if task in core.PERMUTED:
@@ -131,7 +164,7 @@ def main():
         if got != want:
             failures.append(f"synthetic {task}: {response!r} -> {got!r}, want {want!r}")
     for task, model, uid, want, response in SMOKE:
-        got = check(task, None, response)
+        got = check(task, SMOKE_OPTIONS.get(uid), response)
         if got != want:
             failures.append(f"smoke {model} {uid}: -> {got!r}, want {want!r}")
     rows = core.load_rows()

@@ -60,7 +60,7 @@ STORY_TASKS = ("perspective_story_2nd", "perspective_story_1st", "perspective_st
 DROPPED_DIMENSIONS = ("mission_open-ended",)
 
 # Bumped whenever a scorer changes behaviour; written onto every result file.
-SCORER_VERSION = "aware_lenient_v3"
+SCORER_VERSION = "aware_lenient_v4"
 
 
 def model_slug(model_id):
@@ -353,6 +353,10 @@ def extract_emotion(text, options):
     t = _unpack(text)
     if not t:
         return None
+    # An echoed option menu — "(1) Excited; (2) Confused; (3) Disappointed; (4) Joyful" — names
+    # every option and answers nothing; it goes before anything is read (2026-10-12 pilot, Gemini).
+    menu = r"[\s;,]*".join(r"\(?%s\)?\s*%s" % (n, re.escape(lab)) for n, lab in sorted(options.items()))
+    t = re.sub(menu, " ", t, flags=re.I)
     valid = set(options)
     # option numbers standing alone ("2", "(2)", "2.") — not "20%", "2nd", "1.5" — un-negated
     digits = {m.group(1) for m in re.finditer(r"(?<![\w.])\(?(\d)\)?(?!\w)(?![.,]\d)", t)
@@ -441,12 +445,17 @@ _DECLINE = re.compile(
 # SINGLE location or passes the decision on.
 _CONCLUSION = re.compile(r"\b(?:therefore|thus|hence|consequently|in conclusion|conclusion|"
                          r"in summary)\b", re.I)
+# Tiers, strongest first. A sentence restating the whole second-order question ("Amelia thinks
+# that Carter searches for the suit in the bottle") outranks a looser "thinks/believes" one
+# ("Amelia still believes the suit is where … she was last in the office") — the looser tier is
+# read only when no sentence matches the stronger (2026-10-12 pilot, Gemini q0019 / Gemma q0016).
 _QUESTION_CUE = {
-    "perspective_story_2nd": re.compile(r"\b(?:thinks?|believes?)\b.*\bsearch\w*", re.I),
-    "perspective_story_1st": re.compile(r"\blook(?:s|ing)?\s+(?:for|in)\b", re.I),
-    "perspective_story_reality": re.compile(r"\b(?:really|currently)\b", re.I),
-    "perspective_story_memory": re.compile(r"\b(?:at the beginning|originally|initially|at first)\b",
-                                           re.I),
+    "perspective_story_2nd": (re.compile(r"\b(?:thinks?|believes?)\b.*\bsearch\w*", re.I),
+                              re.compile(r"\b(?:thinks?|believes?)\b", re.I)),
+    "perspective_story_1st": (re.compile(r"\blook(?:s|ing)?\s+(?:for|in)\b", re.I),),
+    "perspective_story_reality": (re.compile(r"\b(?:really|currently)\b", re.I),),
+    "perspective_story_memory": (re.compile(r"\b(?:at the beginning|originally|initially|at first)\b",
+                                            re.I),),
 }
 
 
@@ -488,8 +497,7 @@ def extract_location(text, task=None):
     # 2. the sentences that echo the question's own verb, read AFTER the verb, if they agree:
     #    "…moved the trousers from the crate to the suitcase…, Abigail would think that Hannah
     #    searches for the trousers in the crate"
-    cue = _QUESTION_CUE.get(task)
-    if cue:
+    for cue in _QUESTION_CUE.get(task, ()):
         echoed = set()
         for s in sentences:
             # the LAST cue in the sentence ("currently believed … but it is really in the bottle"),
@@ -497,11 +505,18 @@ def extract_location(text, task=None):
             m = ([None] + list(cue.finditer(s)))[-1]
             if m is None or _negated(s, m.start(), m.end()):
                 continue
-            found = _single_location(_first_clause(s[m.end():]))
+            # after the cue; the whole sentence only when the cue closes it — "the cap was in
+            # the bathtub at the beginning." — never when words follow it ("no reason to believe
+            # they have been moved"), or narration elsewhere in the sentence would count
+            tail = s[m.end():]
+            found = (_single_location(_first_clause(tail)) if re.search(r"\w", tail)
+                     else _single_location(s))
             if found:
                 echoed.add(found)
         if len(echoed) == 1:
             return echoed.pop()
+        if len(echoed) > 1:
+            break                     # the stronger tier was ambiguous; a looser one cannot settle it
     # 3. the last concluding sentence that names a location or declines
     concluding = [s for s in sentences
                   if _CONCLUSION.search(s) and (_named_locations(s) or _DECLINE.search(s))]
@@ -518,7 +533,14 @@ def extract_location(text, task=None):
         found = _single_location(sentences[0])
         if found:
             return found
-    # 5. a refusal anywhere outside an aside; 6. else the response names exactly one location
+    # 5. a final line that names exactly one location — the answer-last shape: a narrated
+    #    deduction, then "The beans were in the crate." on its own line (2026-10-12 pilot, Qwen)
+    lines = [ln for ln in plain.splitlines() if re.search(r"\w", ln)]
+    if len(lines) > 1 and not _DECLINE.search(lines[-1]):
+        found = _single_location(lines[-1])
+        if found:
+            return found
+    # 6. a refusal anywhere outside an aside; 7. else the response names exactly one location
     if _DECLINE.search(plain):
         return DECLINED
     return _single_location(plain)
