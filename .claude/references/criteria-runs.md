@@ -56,6 +56,9 @@ their own. This is how they are designed, run and turned into numbers.
 
 ## Analysing it
 
+`python3 .claude/scripts/criteria_report.py neg|emo <model folder>` applies every rule below and
+writes `<model folder>/criteria_summary.json`; it refuses to compute when the seven tags differ.
+
 - **Pair rows by uid** (NegotiationToM) or by (task, qid) (EmoBench). Before computing anything,
   assert all seven tags hold the same key set and the counts above. Nothing in the runners asserts it.
 - **Compare content, never letters.** NegotiationToM desire/belief: the tuple of
