@@ -1,0 +1,30 @@
+negotiating parameter surface for gpt-5.6-luna ...
+  accepted: {'max_completion_tokens': 8192, 'reasoning_effort': 'low', 'seed': 42}
+[pulse] 1 calls, 0/1 hung (0%), trunc 0, empty 0, err 0, mean 3.0s, effective 3.0s/row -> 19.75 rows/min, tokens p99~49, latency p90 3s p99 3s max 3s (ceiling 200s)
+[pulse] 167 calls, 0/167 hung (0%), trunc 0, empty 0, err 0, mean 3.6s, effective 3.6s/row -> 16.53 rows/min, tokens p99~343, latency p90 5s p99 7s max 8s (ceiling 200s)
+[pulse] 304 calls, 0/304 hung (0%), trunc 0, empty 0, err 0, mean 4.0s, effective 4.0s/row -> 15.10 rows/min, tokens p99~361, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 459 calls, 0/459 hung (0%), trunc 0, empty 0, err 0, mean 3.9s, effective 3.9s/row -> 15.20 rows/min, tokens p99~374, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 615 calls, 0/615 hung (0%), trunc 0, empty 0, err 0, mean 3.9s, effective 3.9s/row -> 15.28 rows/min, tokens p99~384, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 767 calls, 0/767 hung (0%), trunc 0, empty 0, err 0, mean 3.9s, effective 3.9s/row -> 15.26 rows/min, tokens p99~423, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 929 calls, 0/929 hung (0%), trunc 0, empty 0, err 0, mean 3.9s, effective 3.9s/row -> 15.41 rows/min, tokens p99~423, latency p90 5s p99 7s max 48s (ceiling 200s)
+[desire] excluded 27/952 unannotated rows from the metrics
+[pulse] 1099 calls, 0/1099 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.63 rows/min, tokens p99~404, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 1256 calls, 0/1256 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.64 rows/min, tokens p99~404, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 1412 calls, 0/1412 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.63 rows/min, tokens p99~426, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 1566 calls, 0/1566 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.61 rows/min, tokens p99~427, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 1716 calls, 0/1716 hung (0%), trunc 0, empty 0, err 0, mean 3.9s, effective 3.9s/row -> 15.54 rows/min, tokens p99~438, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 1884 calls, 0/1884 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.64 rows/min, tokens p99~438, latency p90 5s p99 7s max 48s (ceiling 200s)
+[belief] excluded 27/952 unannotated rows from the metrics
+[pulse] 2054 calls, 0/2054 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.75 rows/min, tokens p99~431, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 2218 calls, 0/2218 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.79 rows/min, tokens p99~426, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 2389 calls, 0/2389 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.87 rows/min, tokens p99~426, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 2560 calls, 0/2560 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.95 rows/min, tokens p99~423, latency p90 5s p99 7s max 48s (ceiling 200s)
+[pulse] 2724 calls, 0/2724 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.97 rows/min, tokens p99~416, latency p90 5s p99 7s max 48s (ceiling 200s)
+
+[gpt-5.6-luna] shard 0 finished in 176.9 min
+
+[budget]  measured, for the next run's max_tokens and call timeout
+          output tokens    : median 89  p90 213  p99 415  max 537  (n=2828)
+          suggested max_tokens : 622  (p99 x 1.5)
+          truncated at the cap : 0 of 2828 checked (measured — the tail above is real)
+          call latency (s) : median 3.5  p90 4.8  p99 6.8  max 47.6  (n=2828)

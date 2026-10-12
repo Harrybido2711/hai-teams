@@ -1,0 +1,51 @@
+negotiating parameter surface for google/gemini-3.5-flash-lite ...
+  accepted: {'max_tokens': 8192, 'seed': 42}
+[pilot] 238/2380 dialogues (10.0%), seed=42
+[pulse] 1 calls, 0/1 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.07 rows/min, tokens p99~15, latency p90 3s p99 3s max 3s (ceiling 200s)
+[pulse] 229 calls, 0/229 hung (0%), trunc 0, empty 0, err 0, mean 2.6s, effective 2.6s/row -> 22.75 rows/min, tokens p99~17, latency p90 3s p99 3s max 3s (ceiling 200s)
+[pulse] 452 calls, 0/452 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.52 rows/min, tokens p99~17, latency p90 3s p99 3s max 8s (ceiling 200s)
+[desire] excluded 13/476 unannotated rows from the metrics
+[pulse] 680 calls, 0/680 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.60 rows/min, tokens p99~19, latency p90 3s p99 3s max 8s (ceiling 200s)
+[pulse] 908 calls, 0/908 hung (0%), trunc 0, empty 0, err 0, mean 2.6s, effective 2.6s/row -> 22.65 rows/min, tokens p99~17, latency p90 3s p99 3s max 8s (ceiling 200s)
+[belief] excluded 13/476 unannotated rows from the metrics
+[pulse] 1134 calls, 0/1134 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.63 rows/min, tokens p99~19, latency p90 3s p99 3s max 8s (ceiling 200s)
+[pulse] 1360 calls, 0/1360 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.61 rows/min, tokens p99~20, latency p90 3s p99 3s max 8s (ceiling 200s)
+
+====================================================================
+ PILOT REPORT — google/gemini-3.5-flash-lite
+====================================================================
+
+[sample]  238 / 2380 dialogues (10.0%), seed-fixed so every model sees the same subset
+
+[health]  successful calls : 1416
+          empty responses  : 0
+          API errors       : 0
+          JSON parse fails : 0
+          failure rate     : 0.0%  (looks healthy)
+
+[scores]
+          Desire_EM          0.6350
+          Desire_EM_all      0.6176
+          desire_scored_rows 463.0000
+          Belief_EM          0.6134
+          Belief_EM_all      0.5966
+          belief_scored_rows 463.0000
+          Intent_Micro_F1    0.5087
+          Intent_Macro_F1    0.4417
+          intention_scored_rows 464.0000
+
+[cost]    elapsed          : 62.6 min for 1416 calls
+          projected full   : 10.4 h single-threaded, 2.1 h across 5 shards
+          tokens           : 402,405 in / 19,183 out (1416 API responses reported usage)
+          output/response  : 13.5 tokens average
+          projected full   : 4,024,050 in / 191,830 out
+          projected cost   : add 'google/gemini-3.5-flash-lite' to PRICE_PER_1M to get a figure
+
+[budget]  measured, for the next run's max_tokens and call timeout
+          output tokens    : median 14  p90 16  p99 20  max 24  (n=1416)
+          suggested max_tokens : 30  (p99 x 1.5)
+          truncated at the cap : 0 of 1416 checked (measured — the tail above is real)
+          call latency (s) : median 2.6  p90 2.8  p99 3.1  max 8.3  (n=1416)
+====================================================================
+
+backends: {'Google': 1416}
