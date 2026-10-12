@@ -130,10 +130,12 @@ for that. Hidden reasoning is capped regardless (`model-parameters.md`).
 - **DeepSeek is called by its real id, `deepseek-flash`** (user, 2026-10-12). `deepseek-reasoner`,
   which the other benchmarks call, is an alias that now answers as the same model; which model
   answered their earlier runs is not recorded (`model-calls.md`).
-- **Behaviour to expect at scale (Quest pilot, 20 rows a task):** Qwen declined all 20 second-order
-  belief questions and Gemma 15 ("the story does not provide this information"), so their
-  PERSPECTIVE will sit near 0. DeepSeek's ceiling is a request, not a cap: reasoning averaged 256
-  tokens and reached 5,175.
+- **PERSPECTIVE tracks reasoning as much as theory of mind (full run, 2026-10-12).** Qwen declined
+  all 170 second-order questions ("the answer cannot be determined from the story" — read in full,
+  none hides an answer) while scoring 0.80–1.00 on the other story tasks; Gemma declined 124. Both
+  run with no reasoning, as does Gemini. DeepSeek, the top score, spent 1,465 reasoning tokens on
+  an average second-order item (Luna 179, the other three 0): its "think briefly" ceiling is a
+  request it does not keep on hard items. Without PERSPECTIVE, Gemma leads and Qwen is not last.
 - **Story answers are narrated.** The first scorer version credited the gold container when a
   response merely mentioned it — including in a refusal. The location extractor now reads, in
   order, the `Answer:` span, the clause after the question's own verb, the conclusion sentence.
