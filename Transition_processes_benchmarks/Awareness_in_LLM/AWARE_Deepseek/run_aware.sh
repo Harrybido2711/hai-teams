@@ -19,7 +19,7 @@
 # run is whole when results/<model>_awareness_overall.csv says COMPLETE 1. Arguments after the
 # script name reach the runner: a pilot is `<submit> run_aware.sh --limit 20`, written to smoke/,
 # never results/. Rebuild the summary by hand with:
-#   python deepseek_aware_eval.py --model deepseek-reasoner --score-only
+#   python deepseek_aware_eval.py --model deepseek-flash --score-only
 
 module purge
 export PYTHONUNBUFFERED=1
@@ -28,5 +28,5 @@ TASKS=(mission_explicit perspective_mcq capability culture mission_implicit emot
        perspective_story_2nd perspective_story_1st perspective_story_reality perspective_story_memory)
 
 /projects/p32983/pythonenvs/hai-teams/bin/python deepseek_aware_eval.py \
-    --model deepseek-reasoner \
+    --model deepseek-flash \
     --task "${TASKS[$SLURM_ARRAY_TASK_ID]}" "$@"

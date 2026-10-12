@@ -39,7 +39,7 @@ plus parameters) and `run_aware.sh`. Keys come from the benchmark-root `.env` (g
 | Gemini | `AWARE_Gemini_Flash3.5lite_OpenRouter` | `google/gemini-3.5-flash-lite` | `reasoning.effort="minimal"` (fixed), `max_tokens=2048`, `seed=42` |
 | Gemma | `AWARE_Gemma_DeepInfra` | `google/gemma-4-31B-it` | **no reasoning parameter**, `temperature=0`, `max_tokens=2048`, `seed=42` |
 | Qwen | `AWARE_Qwen` | `Qwen/Qwen3.5-9B` | `reasoning={"enabled": False}` (fixed), `temperature=0`, `max_tokens=2048`, `seed=42` |
-| Deepseek | `AWARE_Deepseek` | `deepseek-reasoner` | prompt ceiling as a system message, `temperature=0`, `max_tokens=8192`, `seed=42` |
+| Deepseek | `AWARE_Deepseek` | `deepseek-flash` | prompt ceiling as a system message, `temperature=0`, `max_tokens=8192`, `seed=42` |
 
 The settled configs behind the first two are `model-parameters.md` § Settled; the 2048 caps are
 those measured on EmoBench, whose items have the same shape. Every runner negotiates its surface at
@@ -125,9 +125,9 @@ for that. Hidden reasoning is capped regardless (`model-parameters.md`).
 - **Group story controls by (question, story), not question text.** Several stories ask "Where is
   the broccoli really?" with different answers; grouping by text alone gave 163/48/46 and made
   distinct items look like permutations of one question. Corrected 2026-10-08.
-- **`deepseek-reasoner` resolves to `deepseek-flash`** (`model-calls.md`). Every smoke row came back
-  `served_model=deepseek-flash` (2026-10-08). The alias's target has moved since earlier
-  benchmarks ran it; `provider-gotchas.md` records the legacy model's retirement.
+- **DeepSeek is called by its real id, `deepseek-flash`** (user, 2026-10-12). `deepseek-reasoner`,
+  which the other benchmarks call, is an alias that now answers as the same model; which model
+  answered their earlier runs is not recorded (`model-calls.md`).
 - **Behaviour to expect at scale (Quest pilot, 20 rows a task):** Qwen declined all 20 second-order
   belief questions and Gemma 15 ("the story does not provide this information"), so their
   PERSPECTIVE will sit near 0. DeepSeek's ceiling is a request, not a cap: reasoning averaged 256
