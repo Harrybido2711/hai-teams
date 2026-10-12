@@ -33,13 +33,13 @@ their own. This is how they are designed, run and turned into numbers.
 
 ## Running it
 
-| | NegotiationToM | EmoBench |
-|---|---|---|
-| Subsample | `criteria_subsample.json` — first 150 of the pilot's seed-42 order; 300/300/295 rows (294/294/295 scored), 126 distinct negotiations | all 400 English items |
-| Flags | `--subsample criteria_subsample.json --tag rep<N>` or `--tag perturb-X --perturb X` | `--tag rep<N>` or `--tag perturb-X --perturb X` |
-| Output | `NEG_<Model>/results/<tag>/<task>/<slug>.jsonl`, `run_config.json`; params `results/negotiated_params_<tag>.json` | `EMO_<Model>/results_<tag>/<EU\|EA>/`, `run_config.json` |
-| Perturbation code | `neg_eval_core.py` (`PERTURB`, `PARAPHRASE`) | `criteria_perturb.py`, imported by each runner |
-| Job | `sbatch run_criteria.sh` in the model folder: array 0–6 = rep1–5, shuffle, paraphrase | same |
+| | NegotiationToM | EmoBench | AwareBench |
+|---|---|---|---|
+| Subsample | `criteria_subsample.json` — first 150 of the pilot's seed-42 order; 300/300/295 rows (294/294/295 scored), 126 distinct negotiations | all 400 English items | `subsample_uids.json` — seed 20261012, 30 rows per task, 300; whole questions for the permuted tasks |
+| Flags | `--subsample criteria_subsample.json --tag rep<N>` or `--tag perturb-X --perturb X` | `--tag rep<N>` or `--tag perturb-X --perturb X` | `--rep K` (1–5); no perturbation runs — shuffle comes from the full run's own orderings, paraphrase is undefined |
+| Output | `NEG_<Model>/results/<tag>/<task>/<slug>.jsonl`, `run_config.json`; params `results/negotiated_params_<tag>.json` | `EMO_<Model>/results_<tag>/<EU\|EA>/`, `run_config.json` | `AWARE_<Model>/results_rep<K>/<task>/<slug>.jsonl`; params `results_rep<K>/<slug>_negotiated_params.json`, refused before the first call unless equal to the full run's |
+| Perturbation code | `neg_eval_core.py` (`PERTURB`, `PARAPHRASE`) | `criteria_perturb.py`, imported by each runner | — |
+| Job | `sbatch run_criteria.sh` in the model folder: array 0–6 = rep1–5, shuffle, paraphrase | same | `sbatch run_aware_reps.sh`: array 1–5 |
 
 - **Guards.** NegotiationToM tags are an allow-list (`rep<N>`, `perturb-shuffle`,
   `perturb-paraphrase`, `smoke-<name>`) and need `--subsample`; the command line, including the
@@ -60,6 +60,9 @@ their own. This is how they are designed, run and turned into numbers.
 
 `python3 .claude/scripts/criteria_report.py neg|emo <model folder>` applies every rule below and
 writes `<model folder>/criteria_summary.json`; it refuses to compute when the seven tags differ.
+AwareBench has its own, `Awareness_in_LLM/aware_criteria.py` → `criteria_awareness.csv`, under the
+same rules; its excess flips pair each question's orderings ≥1 against ordering 0, clustered by
+question.
 
 - **Pair rows by uid** (NegotiationToM) or by (task, qid) (EmoBench). Before computing anything,
   assert all seven tags hold the same key set and the counts above. Nothing in the runners asserts it.
