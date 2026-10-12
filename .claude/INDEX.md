@@ -29,9 +29,11 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 
 ## Where the project is
 
-- **Sync state — audited 2026-10-12.** Local, `origin` and `backup` agree. NegotiationToM's pending
-  work (luna and flash-lite runners, per-row usage in `neg_eval_core.py`) went to Quest and into git
-  on 2026-10-12: 49 code files each side, none differing. AwareBench has no Quest copy yet. EmoBench
+- **Sync state — audited 2026-10-12.** Local, `origin` and `backup` agree. NegotiationToM's luna and
+  flash-lite runners and the per-row usage in `neg_eval_core.py` went to Quest and into git on
+  2026-10-12, then their review fixes (`0813b65`): 49 code files each side, none differing, and
+  Quest's `NegotiationToM/.env` now holds `OPENAI_API_KEY` and `OPENROUTER_API_KEY` (backup
+  `.env.bak.20261012122040` beside it). AwareBench went to Quest the same day (`6fafdc5`). EmoBench
   has two code files on Quest only (`EMO_Gemini/gemini_emo_eval.py`, `run_emobench.sh`) — reported,
   not pulled. **Re-run `python3 .claude/scripts/sync_audit.py --fetch` rather than trusting this
   line.**
