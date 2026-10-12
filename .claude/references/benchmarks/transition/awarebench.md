@@ -143,8 +143,9 @@ for that. Hidden reasoning is capped regardless (`model-parameters.md`).
   "Therefore … is: B", "(1) Surprised"), which the one-answer rule rejects. Of the other four
   models' 7, three name a container and its room ("in the basket in the pantry"), three are Qwen
   stating the location and then narrating every move, and one spells `back_yard` as "backyard".
-  About 12 of Gemini's would score correct; up to 1.2 points move on a story task. A fix is a
-  rescore, not a rerun.
+  About 12 of Gemini's and 6 of the others' would score correct: at most 1.2 points on a task that
+  enters `AWARENESS_OVERALL` (Gemini `mission_implicit`), 3.3 on a control (Qwen `reality`). A fix
+  is a rescore, not a rerun.
 - **OpenRouter's credit exhaustion is not classified as billing.** Its 402s read "would exceed your
   available credits given your current in-flight requests" and "requires more credits … can only
   afford N" — neither in `BILLING_SIGNATURES` — so Gemini wrote empty rows until `FAILURE_HALT`
