@@ -1,3 +1,4 @@
+<!-- size-budget: 6000 -->
 # EmoBench — benchmark card
 
 Affect management. Upstream `Sahandfer/EmoBench`. No LLM judge — multiple-choice accuracy. Six
@@ -47,7 +48,10 @@ first one's log.
 
 **Not every `results*` folder is a result.** In `EMO_Gemini_Flash3.5lite_Google/`, `results/EU` is an
 incomplete 180-of-200-row run from 2026-08-22 (pulled from Quest 2026-10-05 so it does not live only
-there), `results_archive_*` are superseded, and the sweep arms are `results_sw{A–E}`. On Quest,
+there), `results_archive_*` are superseded, and the sweep arms are `results_sw{A–E}`. In
+`EMO_GPT_5.6_Luna/`, `results/` is the reported run at the settled `low` (2026-10-12, 400 rows);
+`results_default` is the `medium` arm, kept as its own Tempo column, and `results_eLow` /
+`results_eNone` are the August EU-only sweep arms. On Quest,
 `EMO_Gemini/` is the pre-rename copy of `EMO_Gemini_Flash2.5/`, byte-identical. Which folder a
 reported number came from is on the workbooks' `Provenance` sheet.
 

@@ -100,9 +100,10 @@ filled for both slots. **NegotiationToM's two blanks are the one gap a run close
 been piloted. `Awareness` ran for all five on 2026-10-12 and is blank until the user confirms that
 run, and DocVQA's Deepseek blank is a modality ceiling.
 
-One caveat inside that: the `Emo` result for `gpt-5.6-luna` is the **default `medium`** arm.
-The settled effort is `low`, and `results_eLow` has EU (0.650) but no EA, so **no complete EmoBench
-score exists at the settled config** — one EA run at `effort=low` closes it.
+The `Emo` result for `gpt-5.6-luna` is at the settled `low` since 2026-10-12 (`results/`, EU 0.690,
+EA 0.685, overall 0.6875). The earlier default-`medium` arm (0.71) keeps its own column,
+`GPT-5.6-Luna-medium`, in `Tempo_results.xlsx`: on EA it scored higher (p=0.008), and the user kept
+`low` so luna runs one config on every benchmark (`.claude/references/model-parameters.md`).
 
 **bbh is complete for all six slots** — `BBH_Gemini_Flash3.5lite_OpenRouter` (0.9375) and
 `BBH_GPT_5.6_Luna` (0.9349), added 2026-08-29, have their full 20 tasks, so the Gemini and OpenAI
