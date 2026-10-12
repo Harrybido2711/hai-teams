@@ -1,6 +1,6 @@
 # AwareBench — benchmark card
 
-<!-- size-budget: 12500 -->
+<!-- size-budget: 13000 -->
 <!-- One benchmark, eight template fields, and the traps the 2026-10-08 runner build measured.
      The deep analysis stays in AWARENESS_NOTES.md; this page indexes it and holds the operating facts. -->
 
@@ -121,6 +121,16 @@ reported. SLURM logs are `log_<arrayindex>.txt`/`.err` per folder — distinct p
    2026-10-12, jobs 9617440–9617445; Gemini stopped when OpenRouter credit ran out and finished as
    resume job 9645112. Every row carries the per-row fields of `evaluation-criteria.md`.
 5. Gate before reading any score: `parse_fail_rate` near zero per task, then the controls (§2.8).
+6. Criteria 4–5 (`criteria-runs.md`): `run_aware_reps.sh` in each `AWARE_<Model>/`, an array 1–5,
+   each task one repeat of the committed `subsample_uids.json` (300 rows, 30 per task, whole
+   questions for permuted tasks) at the full run's config, into `results_rep<K>/`. Not the full
+   run's checkpoint, never its summaries; whole when the log ends "300/300 subsample rows, whole".
+   A repeat refuses to start unless its negotiated config equals `results/<slug>_negotiated_params.json`,
+   and its halt markers are tagged (`rep<K>_*_HALT.txt`). Then `python aware_criteria.py` →
+   `criteria_awareness.csv`: criteria 1–3, 6 and the shuffle flip from the full run, 4 and the
+   noise-corrected 5 from the repeats, every row re-scored; an unusable repeat is reported
+   `excluded` with its reason. Which workbook takes it is the user's open choice (2026-10-12). A
+   model's repeats wait while another job holds the same API key.
 
 ## Showing reasoning
 

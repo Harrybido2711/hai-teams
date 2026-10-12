@@ -31,6 +31,10 @@ import time
 AWARE_ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(AWARE_ROOT, "dataset", "AwareEval.json")
 ENV_PATH = os.path.join(AWARE_ROOT, ".env")
+# The repeat runs behind stability and robustness (evaluation-criteria.md) use one fixed subsample,
+# built once by build_subsample() and committed, so every model and every repeat asks the same rows.
+SUBSAMPLE_PATH = os.path.join(AWARE_ROOT, "subsample_uids.json")
+N_REPS = 5
 
 # task -> (rows on disk, rows after exact dedup, questions after the permutation collapse).
 # Measured from dataset/AwareEval.json on 2026-10-08. A run whose counts differ has a bug in
@@ -217,6 +221,43 @@ def load_rows(prompt_mode="repaired"):
             r["idx"] = idx
         out[task] = rows
     return out
+
+
+def build_subsample(seed=20261012, per_task=30):
+    """The repeat-run subsample: about `per_task` rows from every task, ~300 in all. A permuted task
+    contributes whole questions — every ordering of each one drawn — so the shuffle flip rate and the
+    rep1-vs-rep2 noise floor are measured on the same rows. Run once; the file is committed and never
+    redrawn, or two models' repeats would not be paired."""
+    rng = random.Random(seed)
+    rows = load_rows()
+    uids, counts = {}, {}
+    for task in TASKS:
+        if task in PERMUTED:
+            by_q = collections.defaultdict(list)
+            for r in rows[task]:
+                by_q[r["question_id"]].append(r["uid"])
+            qids = sorted(by_q)
+            rng.shuffle(qids)
+            picked = []
+            for qid in qids:
+                if len(picked) >= per_task:
+                    break
+                picked += by_q[qid]
+        else:
+            picked = rng.sample([r["uid"] for r in rows[task]], per_task)
+        uids[task] = sorted(picked)
+        counts[task] = len(picked)
+    return {"seed": seed, "per_task": per_task, "built": time.strftime("%Y-%m-%d"),
+            "method": "whole questions for permuted tasks, rows otherwise; random.Random(seed)",
+            "counts": counts, "total": sum(counts.values()), "uids": uids}
+
+
+def load_subsample():
+    if not os.path.exists(SUBSAMPLE_PATH):
+        raise SystemExit(f"{SUBSAMPLE_PATH} is missing: a repeat run needs the committed subsample")
+    with open(SUBSAMPLE_PATH) as fh:
+        sub = json.load(fh)
+    return {task: set(u) for task, u in sub["uids"].items()}
 
 
 # ---------------------------------------------------------------- the one scorer
@@ -622,11 +663,16 @@ def is_fatal_request(error):
 
 STATS = {"ok": 0, "empty": 0, "errors": 0, "timeouts": 0, "failed_rows": 0}
 HALT_MARKERS = ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt")
+# A repeat's markers carry its tag in front (rep1_BILLING_HALT.txt, as criteria-runs.md does for
+# NegotiationToM and EmoBench): untagged, a repeat starting up would delete the full run's marker or
+# another repeat's, and a marker in the folder could not say which run it belongs to. Every marker
+# still matches *_HALT.txt.
+MARKER_PREFIX = ""
 
 
 def _halt(kind, marker_name, detail, model, model_dir):
     """Write a marker an agent can find without reading logs, say why on both streams, exit."""
-    marker = os.path.join(model_dir, marker_name)
+    marker = os.path.join(model_dir, MARKER_PREFIX + marker_name)
     stamp = time.strftime("%Y-%m-%d %H:%M:%S")
     spoiled = STATS["empty"] + STATS["errors"] + STATS["timeouts"]
     advice = ("Rows written empty are retried on resume (load_checkpoint skips only non-empty "
@@ -652,10 +698,10 @@ def halt_on_billing(error, model, model_dir):
 
 def clear_stale_halt_markers(model_dir):
     for name in HALT_MARKERS:
-        path = os.path.join(model_dir, name)
+        path = os.path.join(model_dir, MARKER_PREFIX + name)
         if os.path.exists(path):
             os.remove(path)
-            print(f"[startup] cleared stale {name}", flush=True)
+            print(f"[startup] cleared stale {MARKER_PREFIX + name}", flush=True)
 
 
 # Consecutive failures catch a provider that stops serving; the rolling window catches one that
@@ -887,14 +933,15 @@ def shard_slice(rows, shard, total_shards):
     return list(rows)[shard * size: min((shard + 1) * size, len(rows))]
 
 
-def results_dir(model_dir, smoke=False):
+def results_dir(model_dir, smoke=False, rep=0):
     # A --limit run writes to smoke/, never results/: a smoke row left in results/ would be
-    # resumed past by the real run and reported as part of it.
-    return os.path.join(model_dir, "smoke" if smoke else "results")
+    # resumed past by the real run and reported as part of it. A repeat writes to results_rep<k>/,
+    # its own checkpoint: written into results/, resume would skip every uid the main run holds.
+    return os.path.join(model_dir, ("smoke" if smoke else "results") + (f"_rep{rep}" if rep else ""))
 
 
-def task_path(model_dir, task, model, tag="", smoke=False):
-    d = os.path.join(results_dir(model_dir, smoke), task)
+def task_path(model_dir, task, model, tag="", smoke=False, rep=0):
+    d = os.path.join(results_dir(model_dir, smoke, rep), task)
     os.makedirs(d, exist_ok=True)
     return os.path.join(d, f"{model_slug(model)}{tag}.jsonl")
 
@@ -948,14 +995,18 @@ def load_checkpoint(path, config):
 
 
 def run_tasks(model_dir, model, once, tasks, config, shard=0, total_shards=1, limit=0,
-              save_every=20, sleep=2.0):
+              save_every=20, sleep=2.0, rep=0):
     all_rows = load_rows(config["prompt"])
+    subsample = load_subsample() if rep else None
     smoke = bool(limit)
     tag = shard_tag(shard, total_shards)
     for task in tasks:
-        rows = all_rows[task][:limit] if limit else all_rows[task]
+        rows = all_rows[task]
+        if rep:
+            rows = [r for r in rows if r["uid"] in subsample[task]]
+        rows = rows[:limit] if limit else rows
         rows = shard_slice(rows, shard, total_shards)
-        path = task_path(model_dir, task, model, tag, smoke)
+        path = task_path(model_dir, task, model, tag, smoke, rep)
         done = {} if smoke else load_checkpoint(path, config)
         records = [done[r["uid"]] for r in rows if r["uid"] in done]
         todo = [r for r in rows if r["uid"] not in done]
@@ -964,8 +1015,10 @@ def run_tasks(model_dir, model, once, tasks, config, shard=0, total_shards=1, li
         for n, row in enumerate(todo, 1):
             text, meta = call_with_retries(once, row["prompt"], model, model_dir)
             pred, correct, parse_fail = score(row, text)
+            # `rep` sits beside the config, not in it: a repeat must run the config that produced
+            # the reported number, and aware_criteria.py checks the two are equal.
             rec = dict(row, raw_response=text, pred=pred, correct=correct, parse_fail=parse_fail,
-                       empty=int(not text), scorer=SCORER_VERSION, config=config,
+                       empty=int(not text), scorer=SCORER_VERSION, config=config, rep=rep,
                        ts=time.strftime("%Y-%m-%dT%H:%M:%S"), **meta)
             records.append(rec)
             if n % save_every == 0:
@@ -1001,14 +1054,14 @@ def _print_task_health(task, records):
 # ---------------------------------------------------------------- aggregation
 
 
-def collect(model_dir, model, smoke=False):
+def collect(model_dir, model, smoke=False, rep=0):
     """Every task's rows for one model, shards merged. Returns (rows_by_task, problems). A missing
     shard is reported and the rest merged — never silently, never by throwing four good shards
     away for one dead job."""
     slug = model_slug(model)
     out, problems = {}, []
     for task in TASKS:
-        d = os.path.join(results_dir(model_dir, smoke), task)
+        d = os.path.join(results_dir(model_dir, smoke, rep), task)
         plain = os.path.join(d, f"{slug}.jsonl")
         sharded = sorted(glob.glob(os.path.join(d, f"{slug}_shard*of*.jsonl")))
         files = ([plain] if os.path.exists(plain) else []) + sharded
@@ -1203,6 +1256,38 @@ def summarise(model_dir, model, smoke=False):
     return per_task, problems
 
 
+def check_rep(model_dir, model, rep, smoke=False):
+    """A repeat's acceptance test, in place of summarise() — whose counts are the full set's. Whole
+    means every subsample uid has a non-empty row and every row shares one config. Returns problems."""
+    subsample = load_subsample()
+    rows_by_task, problems = collect(model_dir, model, smoke, rep)
+    configs, n_rows = set(), 0
+    for task in TASKS:
+        rows = {r["uid"]: r for r in rows_by_task.get(task, [])}
+        n_rows += len(rows)
+        configs |= {json.dumps(r.get("config"), sort_keys=True) for r in rows.values()}
+        extra = set(rows) - subsample[task]
+        missing = [u for u in subsample[task] if not str(rows.get(u, {}).get("raw_response", "")).strip()]
+        if extra:
+            problems.append(f"{task}: {len(extra)} row(s) outside the subsample")
+        if missing and not smoke:
+            problems.append(f"{task}: {len(missing)} of {len(subsample[task])} subsample row(s) "
+                            f"missing or empty")
+        if rows:
+            acc = sum(r["correct"] for r in rows.values()) / len(rows)
+            print(f"  rep{rep} {task:27s} rows={len(rows):3d}/{len(subsample[task])} acc={acc:.4f} "
+                  f"empty={sum(1 for r in rows.values() if not str(r.get('raw_response', '')).strip())}",
+                  flush=True)
+    if len(configs) > 1:
+        problems.append(f"rows ran under {len(configs)} different configs")
+    total = sum(len(u) for u in subsample.values())
+    print(f"\n{model} — rep{rep}{' SMOKE' if smoke else ''}: {n_rows}/{total} subsample rows, "
+          f"{'whole' if not problems else 'NOT whole'}", flush=True)
+    for msg in problems:
+        print(f"  PROBLEM: {msg}", flush=True)
+    return problems
+
+
 # ---------------------------------------------------------------- CLI shared by every runner
 
 
@@ -1210,7 +1295,7 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
             required=None, call_timeout=200, extra_config=None, probe_kwargs=None):
     """`once(prompt, model, params) -> (text, meta)`. Everything model-specific is an argument; the
     run, the scoring and the files are identical for every model."""
-    global HARD_CALL_TIMEOUT
+    global HARD_CALL_TIMEOUT, MARKER_PREFIX
     ap = argparse.ArgumentParser(description=description)
     ap.add_argument("--model", default=default_model,
                     help="model id; it is BOTH what is called and what the result files are named "
@@ -1229,19 +1314,29 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
     ap.add_argument("--sleep", type=float, default=2.0, help="seconds after every successful call")
     ap.add_argument("--score-only", dest="score_only", action="store_true",
                     help="re-score stored rows and rewrite the summary files; makes no calls")
+    ap.add_argument("--rep", type=int, default=0, choices=range(0, N_REPS + 1),
+                    help=f"1..{N_REPS}: a repeat on the committed subsample, written to "
+                         "results_rep<k>/ (stability and robustness); 0 = the full run")
     args = ap.parse_args()
+    smoke = bool(args.limit)
 
     tasks = TASKS if args.task == "all" else [t.strip() for t in args.task.split(",")]
     unknown = [t for t in tasks if t not in TASKS]
     if unknown:
         raise SystemExit(f"unknown task(s) {unknown}; known: {TASKS}")
+    if args.rep:
+        load_subsample()              # fail before negotiating, not after
     if args.score_only:
-        _, problems = summarise(model_dir, args.model, smoke=bool(args.limit))
+        if args.rep:
+            problems = check_rep(model_dir, args.model, args.rep, smoke)
+        else:
+            _, problems = summarise(model_dir, args.model, smoke=smoke)
         if problems:
             raise SystemExit(1)       # a merge with a problem reports it AND exits non-zero (7b)
         return
 
     HARD_CALL_TIMEOUT = int(call_timeout)
+    MARKER_PREFIX = f"rep{args.rep}_" if args.rep else ""
     clear_stale_halt_markers(model_dir)
     print(f"negotiating parameter surface for {args.model} ...", flush=True)
     params, notes = negotiate(client, args.model, wanted, model_dir, fixed=fixed,
@@ -1252,10 +1347,25 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
     # The run config, written onto every row. A resume across any change of it is refused.
     config = json.loads(json.dumps(dict(extra_config or {}, model=args.model, params=params,
                                         fixed=fixed or {}, prompt=args.prompt), sort_keys=True))
-    os.makedirs(results_dir(model_dir, bool(args.limit)), exist_ok=True)
+    if args.rep:
+        # Stability must describe the reported number, so a repeat runs the full run's config or
+        # nothing. Checked here, after negotiation and before the first call: a dropped seed or a
+        # changed parameter would otherwise spend all 300 calls and be thrown out afterwards.
+        ref = os.path.join(results_dir(model_dir), f"{model_slug(args.model)}_negotiated_params.json")
+        if not os.path.exists(ref):
+            raise SystemExit(f"{ref} is missing: a repeat needs the full run's config to match")
+        with open(ref) as fh:
+            full_config = json.load(fh)["config"]
+        if full_config != config:
+            diff = {k: (full_config.get(k), config.get(k)) for k in set(full_config) | set(config)
+                    if full_config.get(k) != config.get(k)}
+            raise SystemExit(f"refusing repeat {args.rep}: its config differs from the full run's "
+                             f"(full run, this repeat): {diff}")
+        print(f"  config equals the full run's ({os.path.basename(ref)})", flush=True)
+    out_dir = results_dir(model_dir, smoke, args.rep)
+    os.makedirs(out_dir, exist_ok=True)
     # Atomic: ten array tasks write this same file at startup.
-    _atomic_write(os.path.join(results_dir(model_dir, bool(args.limit)),
-                               f"{model_slug(args.model)}_negotiated_params.json"),
+    _atomic_write(os.path.join(out_dir, f"{model_slug(args.model)}_negotiated_params.json"),
                   lambda fh: json.dump({"asked": wanted, "accepted": params, "notes": notes,
                                         "config": config}, fh, indent=2))
 
@@ -1263,9 +1373,12 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
     try:
         run_tasks(model_dir, args.model, lambda p: once(p, args.model, params), tasks, config,
                   shard=args.shard, total_shards=args.total_shards, limit=args.limit,
-                  save_every=args.save_every, sleep=args.sleep)
+                  save_every=args.save_every, sleep=args.sleep, rep=args.rep)
     finally:
         print(f"\ncalls: {STATS}  elapsed {time.time() - started:.0f}s", flush=True)
-    _, problems = summarise(model_dir, args.model, smoke=bool(args.limit))
+    if args.rep:
+        problems = check_rep(model_dir, args.model, args.rep, smoke)
+    else:
+        _, problems = summarise(model_dir, args.model, smoke=smoke)
     if problems:
         raise SystemExit(1)
