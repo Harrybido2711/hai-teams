@@ -1,12 +1,12 @@
 # AwareBench — benchmark card
 
-<!-- size-budget: 10000 -->
+<!-- size-budget: 12500 -->
 <!-- One benchmark, eight template fields, and the traps the 2026-10-08 runner build measured.
      The deep analysis stays in AWARENESS_NOTES.md; this page indexes it and holds the operating facts. -->
 
 Mission analysis, formulation and planning. Upstream `HowieHwong/Awareness-in-LLM`. No LLM judge
-since 2026-10-05: its only judged rows were dropped. **Runners and a shared core exist (2026-10-08);
-no real run yet.**
+since 2026-10-05: its only judged rows were dropped. **Full run 2026-10-12 for all five models:
+4,015 rows each, `COMPLETE 1`, in git (`a07bf58`, `873590a`); not yet confirmed or recorded.**
 
 ## Paths
 
@@ -101,7 +101,9 @@ reported. SLURM logs are `log_<arrayindex>.txt`/`.err` per folder — distinct p
    `sbatch run_aware.sh --limit 20` (written to `smoke/`). Pilot 2026-10-12, jobs 9600862–9600866:
    200 rows per model, 0 empty, 0 halts; its 12 parse failures were all extractor gaps, fixed in
    scorer v4 and pinned in the test, leaving 0. Each rewrites the summary files on exit;
-   `results/<model_slug>_awareness_overall.csv` reads `COMPLETE 1` when all ten are in.
+   `results/<model_slug>_awareness_overall.csv` reads `COMPLETE 1` when all ten are in. Full run
+   2026-10-12, jobs 9617440–9617445; Gemini stopped when OpenRouter credit ran out and finished as
+   resume job 9645112. Every row carries the per-row fields of `evaluation-criteria.md`.
 5. Gate before reading any score: `parse_fail_rate` near zero per task, then the controls (§2.8).
 
 ## Showing reasoning
@@ -135,6 +137,21 @@ for that. Hidden reasoning is capped regardless (`model-parameters.md`).
 - **Story answers are narrated.** The first scorer version credited the gold container when a
   response merely mentioned it — including in a refusal. The location extractor now reads, in
   order, the `Answer:` span, the clause after the question's own verb, the conclusion sentence.
+- **Open after the full run (2026-10-12): scorer v4 leaves readable answers as parse failures.**
+  39 of 20,075 rows; Gemini has 32. Half of Gemini's are true refusals ("I cannot select A or B");
+  the other 16 end with one answer after naming others ("Since you requested A or B only: B",
+  "Therefore … is: B", "(1) Surprised"), which the one-answer rule rejects. Of the other four
+  models' 7, three name a container and its room ("in the basket in the pantry"), three are Qwen
+  stating the location and then narrating every move, and one spells `back_yard` as "backyard".
+  About 12 of Gemini's would score correct; up to 1.2 points move on a story task. A fix is a
+  rescore, not a rerun.
+- **OpenRouter's credit exhaustion is not classified as billing.** Its 402s read "would exceed your
+  available credits given your current in-flight requests" and "requires more credits … can only
+  afford N" — neither in `BILLING_SIGNATURES` — so Gemini wrote empty rows until `FAILURE_HALT`
+  after 10 consecutive failures; the resume retried them. Open.
+- **Array tasks delete each other's halt markers.** `clear_stale_halt_markers` runs at the start of
+  every array task, so a task starting after another halted removes its marker; on 2026-10-12 none
+  survived. Read the logs for `HALT`, not just the folder. Open.
 
 ## Read this before touching it
 

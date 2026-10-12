@@ -97,8 +97,8 @@ superseded but are still what `NEG_Gemini` and `NEG_GPT` call, so on the `Negoti
 keep their columns in `Tempo_results.xlsx`. `Emo`, `Big Bench Hard`, `MMLU` and `DocVQA` are all
 filled for both slots. **NegotiationToM's two blanks are the one gap a run closes**: the runners
 `NEG_GPT_5.6_Luna` and `NEG_Gemini_Flash3.5lite_OpenRouter` were written 2026-09-11 and have not
-been piloted. `Awareness` has never been run for anyone, and DocVQA's Deepseek blank is a modality
-ceiling.
+been piloted. `Awareness` ran for all five on 2026-10-12 and is blank until the user confirms that
+run, and DocVQA's Deepseek blank is a modality ceiling.
 
 One caveat inside that: the `Emo` result for `gpt-5.6-luna` is the **default `medium`** arm.
 The settled effort is `low`, and `results_eLow` has EU (0.650) but no EA, so **no complete EmoBench
@@ -119,7 +119,8 @@ and both reported.
 **DocVQA is complete too, as of 2026-09-10** — `gpt-5.6-luna` (ANLS 0.8635) and
 `gemini-3.5-flash-lite` (0.9394) ran on the four-column ceiling that benchmark has, so every sheet
 that *can* be filled for the current pair was, apart from NegotiationToM, which was added to the
-workbooks on 2026-10-05. **`Awareness` is the only sheet unrun for every model.** MMLU's open item is not coverage but scoring: only its two newest slots
+workbooks on 2026-10-05. **`Awareness` is the only sheet with no recorded number**: all five ran on
+2026-10-12, awaiting the user's confirmation. MMLU's open item is not coverage but scoring: only its two newest slots
 import the shared matcher, the other seven carry their own runner's `==`, and the uniform rescore is
 offline work (`.claude/references/benchmarks/tasks/mmlu.md`).
 
@@ -138,8 +139,8 @@ from. The extras `Tempo_results.xlsx` holds and `Final_result.xlsx` does not: `X
 `Gemini-2.5-Flash` and `GPT-4o-mini` on `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo` and
 `NegotiationToM`.
 
-**A blank cell means no usable number, not a zero.** `Awareness` is blank throughout — no model has
-been scored on it yet. `MMLU`/`Qwen` and `MMLU`/`Gemma` **are no longer blank** — both always had
+**A blank cell means no usable number, not a zero.** `Awareness` is blank throughout — its 2026-10-12 run
+is not yet confirmed. `MMLU`/`Qwen` and `MMLU`/`Gemma` **are no longer blank** — both always had
 all 13 subjects on disk and it was their roll-up CSVs that were empty and partial, which is why the
 sheet is now built from the per-subject files. `DocVQA` has no XAI or Deepseek run **and will not under the current six**: it is an image benchmark and those two are text-only, so those blanks are a ceiling rather than a gap (`.claude/references/model-calls.md`). `NegotiationToM`'s `Gemma` column is filled but carries a belief caveat — thinking off costs that task ~12.7 points — stated on the `Provenance` sheet.
 
@@ -156,7 +157,7 @@ redone.
 
 | Folder                                             | Benchmark      | Team process                               | Upstream                      | LLM judge?                                           | Result files present for                                       |
 | -------------------------------------------------- | -------------- | ------------------------------------------ | ----------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
-| `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | no — its 60 judged rows were dropped 2026-10-05 | none yet; runners for the five selected models, smoke-tested 2026-10-08 |
+| `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | no — its 60 judged rows were dropped 2026-10-05 | all five selected models, full run 2026-10-12; not yet confirmed |
 | `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval      | goal specification                         | AddleseeHQ/mpgt-eval          | no — human review                                   | none yet (vendored 2026-08-19)                                 |
 | `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | none yet                                                       |
 | `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | none yet (vendored 2026-08-19)                                 |
@@ -269,9 +270,10 @@ follows, and none holds a benchmark-specific path — so they are adapted to a t
    judge needs nothing: its 60 judged rows were dropped on 2026-10-05. Choosing the replacement
    judge for the remaining two is `LLM_as_judge/README.md`.
 2. **AwareBench run.** Scope is decided (AwareEval, not `New/`, and without the 60
-   `mission_open-ended` rows). A shared core and runners for the five selected models were written
-   and smoke-tested on 2026-10-08; they wait for the user's verification before anything goes to
-   Quest. Budget per model: 4,015 generation calls, no judge calls.
+   `mission_open-ended` rows). All five selected models ran in full on Quest on 2026-10-12 —
+   4,015 rows each, `COMPLETE 1`, pulled into git. Open: a scorer gap that leaves some readable
+   answers as parse failures (decision pending; a rescore, not a rerun), then the user's
+   confirmation before the numbers are recorded.
    `.claude/references/benchmarks/transition/awarebench.md`.
 3. **Four benchmarks have no runner.** PlanBench, Multi-party Goal Tracking, Wonderbread and
    MultiChallenge are vendored but have no per-provider harness, no SLURM script, and no results.
