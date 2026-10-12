@@ -16,6 +16,8 @@ The evidence is **fifteen papers accepted at 2026 top venues** (§4): five at IC
 three at COLM, two at ACL (main track), one at NeurIPS and one at EMNLP (main track). The
 benchmark's own MultiChallenge paper (2025) is kept as a primary source and not counted. The
 existing judge documentation is reused, not repeated:
+- [JUDGE_SELECTION.md](JUDGE_SELECTION.md) — the whole decision as one argument, for presenting it.
+  This file holds the evidence behind it.
 - [JUDGE_RECORD.md](JUDGE_RECORD.md) — what each judge is shown and how it scores, with code
   citations.
 - [JUDGE_DOCUMENTATION_RULE.md](JUDGE_DOCUMENTATION_RULE.md) — the thirteen fields any judge must
