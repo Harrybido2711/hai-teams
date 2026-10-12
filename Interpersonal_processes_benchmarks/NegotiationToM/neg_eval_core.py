@@ -2,6 +2,8 @@
 
 import argparse
 import collections
+import glob
+import hashlib
 import json
 import os
 import random
@@ -361,7 +363,17 @@ def is_billing_failure(error):
 # run_cli fills this in so the halt paths can name the model and put their marker in the model's own
 # folder. Without it `note_outcome` — which has no arguments — could only exit silently, leaving the
 # two abort paths with different evidence.
-_RUN_CONTEXT = {"model": "unknown", "script_dir": "."}
+_RUN_CONTEXT = {"model": "unknown", "script_dir": ".", "tag": None}
+HALT_MARKERS = ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt")
+
+
+def _marker_name(base):
+    """A tagged run's markers carry its tag. Criteria runs share a model folder with the full run;
+    an untagged marker from one would read as the other halting, and each run's start-up clearing
+    would delete the other's evidence. The tag goes in FRONT (rep1_BILLING_HALT.txt) so every
+    marker still ends in _HALT.txt — the glob check-run and the references use."""
+    tag = _RUN_CONTEXT["tag"]
+    return f"{tag}_{base}" if tag else base
 
 
 def set_run_context(model, script_dir):
@@ -375,7 +387,7 @@ def clear_stale_halt_markers(script_dir):
     A marker that is never cleared claims a halt that no longer applies, and the next operator (or
     watcher) reads it as current.
     """
-    for name in ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt"):
+    for name in map(_marker_name, HALT_MARKERS):
         path = os.path.join(script_dir, name)
         if os.path.exists(path):
             try:
@@ -402,7 +414,7 @@ def _prune_advice():
 def _halt(kind, marker_name, detail, advice):
     """Write the marker, say why on both streams, then exit. Shared by every abort path."""
     model = _RUN_CONTEXT["model"]
-    marker = os.path.join(_RUN_CONTEXT["script_dir"], marker_name)
+    marker = os.path.join(_RUN_CONTEXT["script_dir"], _marker_name(marker_name))
     stamp = time.strftime("%Y-%m-%d %H:%M:%S")
     try:
         with open(marker, "w") as fh:
@@ -830,16 +842,71 @@ def format_dialogue(turns):
     return "\n".join(turns)
 
 
+# Criteria 5 (robustness), .claude/references/evaluation-criteria.md. parse_cli sets PERTURB for a
+# --perturb run; with it unset every prompt below is byte-identical to the unperturbed one, which
+# is what lets a perturbed run be compared row for row with rep1. Only this project's own wording
+# moves — never the dialogue — and the JSON answer format stays verbatim, so a flip is a changed
+# answer rather than a parse failure.
+#   shuffle    — the order the three items are named in (desire, belief) and the order of the nine
+#                intent labels (intention). Scoring is by name, so no gold changes.
+#   paraphrase — the instruction sentence(s) reworded, meaning kept.
+PERTURB = {"name": None, "seed": 42}
+ITEMS = ["Food", "Water", "Firewood"]
+ANSWER_FORMAT = ('Return only valid JSON with no markdown: {"high":"<item or Not Given>",'
+                 '"medium":"<item or Not Given>","low":"<item or Not Given>"}')
+PARAPHRASE = {
+    "desire": ("Using only what the dialogue has revealed so far, work out how this agent ranks "
+               "{items} in the negotiation. If a priority has not been revealed yet, answer "
+               "'Not Given'. "),
+    "belief": ("Work out what one negotiator thinks the other negotiator's priorities are among "
+               "{items}. If a priority has not been revealed, answer 'Not Given'. "),
+    "intention": "Identify every intent that the target utterance in this negotiation expresses. ",
+}
+
+
+_FINGERPRINT_DIALOGUE = ["agent_1: Hello! I could use extra firewood for the cold nights.",
+                         "agent_2: Hi there! I mostly need food, so maybe we can trade."]
+
+
+def prompt_fingerprint():
+    """md5 of the prompts the current PERTURB setting renders for a fixed toy dialogue, all three
+    tasks. Hashing the rendered text rather than the constants covers what a resume must not mix —
+    an edit to the unperturbed wording inside the builders, or to the label set — and ignores what
+    it may: a rep's prompt does not move when only the paraphrase text is edited."""
+    d = _FINGERPRINT_DIALOGUE
+    messages = [desire_messages(d, "agent_1"), belief_messages(d, "agent_1", "agent_2"),
+                intention_messages(d, d[-1])]
+    return hashlib.md5(json.dumps(messages, sort_keys=True).encode()).hexdigest()
+
+
+def _shuffled(values, *key):
+    """A seeded reordering that always differs from the original, stable across runs and models:
+    the seed is the perturbation seed plus the item's own text, never a counter."""
+    rng = random.Random("|".join([str(PERTURB["seed"]), *map(str, key)]))
+    order = list(values)
+    if len(set(order)) < 2:
+        return order                      # nothing to reorder; looping would never end
+    while order == list(values):
+        rng.shuffle(order)
+    return order
+
+
+def _items(*key):
+    items = _shuffled(ITEMS, "items", *key) if PERTURB["name"] == "shuffle" else ITEMS
+    return f"{items[0]}, {items[1]}, and {items[2]}"
+
+
 def desire_messages(dialogue, agent):
     # Gold labels are cutoff-aware: a priority the dialogue has not revealed yet is "Not Given",
     # and "None" means the agent expressed no preference at that level. The prompt has to offer
     # both, otherwise the model can never match those labels.
-    system = (
-        "Infer an agent's desires in a negotiation over Food, Water, and Firewood, using only "
-        "what the dialogue so far reveals. Use 'Not Given' when a priority has not been revealed. "
-        "Return only valid JSON with no markdown: {\"high\":\"<item or Not Given>\","
-        '"medium":"<item or Not Given>","low":"<item or Not Given>"}'
-    )
+    items = _items("desire", format_dialogue(dialogue), agent)
+    if PERTURB["name"] == "paraphrase":
+        lead = PARAPHRASE["desire"].format(items=items)
+    else:
+        lead = (f"Infer an agent's desires in a negotiation over {items}, using only what the "
+                "dialogue so far reveals. Use 'Not Given' when a priority has not been revealed. ")
+    system = lead + ANSWER_FORMAT
     user = (
         f"Negotiation dialogue:\n{format_dialogue(dialogue)}\n\n"
         f"What are {agent}'s High, Medium, and Low item preferences?"
@@ -848,12 +915,13 @@ def desire_messages(dialogue, agent):
 
 
 def belief_messages(dialogue, agent, opponent):
-    system = (
-        "Infer one negotiator's belief about the other negotiator's preferences over Food, "
-        "Water, and Firewood. Use 'Not Given' when a priority is not revealed. Return only "
-        'valid JSON with no markdown: {"high":"<item or Not Given>",'
-        '"medium":"<item or Not Given>","low":"<item or Not Given>"}'
-    )
+    items = _items("belief", format_dialogue(dialogue), agent)
+    if PERTURB["name"] == "paraphrase":
+        lead = PARAPHRASE["belief"].format(items=items)
+    else:
+        lead = (f"Infer one negotiator's belief about the other negotiator's preferences over "
+                f"{items}. Use 'Not Given' when a priority is not revealed. ")
+    system = lead + ANSWER_FORMAT
     user = (
         f"Negotiation dialogue:\n{format_dialogue(dialogue)}\n\n"
         f"What does {agent} believe about {opponent}'s High, Medium, and Low preferences?"
@@ -862,11 +930,12 @@ def belief_messages(dialogue, agent, opponent):
 
 
 def intention_messages(dialogue, target):
-    labels = "\n".join(f"- {label}" for label in INTENT_LABELS)
-    system = (
-        "Classify all intents expressed by the target negotiation utterance. Return only valid "
-        'JSON with no markdown: {"intents":["label1","label2"]}'
-    )
+    order = (_shuffled(INTENT_LABELS, "intention", format_dialogue(dialogue), target)
+             if PERTURB["name"] == "shuffle" else INTENT_LABELS)
+    labels = "\n".join(f"- {label}" for label in order)
+    lead = (PARAPHRASE["intention"] if PERTURB["name"] == "paraphrase"
+            else "Classify all intents expressed by the target negotiation utterance. ")
+    system = lead + 'Return only valid JSON with no markdown: {"intents":["label1","label2"]}'
     user = (
         f"Negotiation dialogue:\n{format_dialogue(dialogue)}\n\n"
         f"Target utterance: {target}\n\nChoose one or more labels:\n{labels}"
@@ -1029,9 +1098,11 @@ def _pulse():
           f"effective {per_row:.1f}s/row -> {60 / per_row:.2f} rows/min{tail}", flush=True)
 
 
-def output_paths(script_dir, task, model, shard, total_shards, pilot=False):
-    # Pilot output is kept under results/pilot/ so it can never overwrite a full run.
-    parts = [script_dir, "results"] + (["pilot"] if pilot else []) + [task]
+def output_paths(script_dir, task, model, shard, total_shards, pilot=False, tag=None):
+    # Pilot output is kept under results/pilot/ so it can never overwrite a full run, and a tagged
+    # run (a criteria repeat or perturbation) under results/<tag>/ for the same reason: written into
+    # the main checkpoint, resume would skip every uid already there and the repeat would never run.
+    parts = [script_dir, "results"] + ([tag] if tag else ["pilot"] if pilot else []) + [task]
     out_dir = os.path.join(*parts)
     os.makedirs(out_dir, exist_ok=True)
     tag = f"_shard{shard}of{total_shards}" if total_shards > 1 else ""
@@ -1093,7 +1164,8 @@ def write_task_outputs(task, rows, out_dir, stem):
     )
 
 
-def run_desire(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False):
+def run_desire(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False,
+               tag=None):
     rows = []
     for sample in data:
         for agent, prefix in (("agent_1", "agent1_desire"), ("agent_2", "agent2_desire")):
@@ -1108,7 +1180,8 @@ def run_desire(data, call_api, model, script_dir, shard, total_shards, save_ever
             rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": sample["dialogue"],
                          "agent": agent, "gold_desire": gold_desire})
     rows = shard_slice(rows, shard, total_shards)
-    out_dir, stem, checkpoint = output_paths(script_dir, "desire", model, shard, total_shards, pilot)
+    out_dir, stem, checkpoint = output_paths(script_dir, "desire", model, shard, total_shards,
+                                             pilot, tag)
     done, results = load_checkpoint(checkpoint)
     try:
         for item in rows:
@@ -1130,7 +1203,8 @@ def run_desire(data, call_api, model, script_dir, shard, total_shards, save_ever
     write_task_outputs("desire", results, out_dir, stem)
 
 
-def run_belief(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False):
+def run_belief(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False,
+               tag=None):
     rows = []
     for sample in data:
         for agent, opponent, prefix in (
@@ -1142,7 +1216,8 @@ def run_belief(data, call_api, model, script_dir, shard, total_shards, save_ever
                          "gold_med": sample[prefix + "_medium"],
                          "gold_low": sample[prefix + "_low"]})
     rows = shard_slice(rows, shard, total_shards)
-    out_dir, stem, checkpoint = output_paths(script_dir, "belief", model, shard, total_shards, pilot)
+    out_dir, stem, checkpoint = output_paths(script_dir, "belief", model, shard, total_shards,
+                                             pilot, tag)
     done, results = load_checkpoint(checkpoint)
     try:
         for item in rows:
@@ -1166,7 +1241,8 @@ def run_belief(data, call_api, model, script_dir, shard, total_shards, save_ever
     write_task_outputs("belief", results, out_dir, stem)
 
 
-def run_intention(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False):
+def run_intention(data, call_api, model, script_dir, shard, total_shards, save_every, pilot=False,
+                  tag=None):
     rows = []
     for sample in data:
         turns = sample["dialogue"]
@@ -1183,7 +1259,8 @@ def run_intention(data, call_api, model, script_dir, shard, total_shards, save_e
             rows.append({"dialogue_id": sample["dialogue_id"], "dialogue": turns, "utt_idx": 2,
                          "target": turns[-1], "gold_intent": sample["utterance2_intent"]})
     rows = shard_slice(rows, shard, total_shards)
-    out_dir, stem, checkpoint = output_paths(script_dir, "intention", model, shard, total_shards, pilot)
+    out_dir, stem, checkpoint = output_paths(script_dir, "intention", model, shard, total_shards,
+                                             pilot, tag)
     done, results = load_checkpoint(checkpoint)
     try:
         for item in rows:
@@ -1209,7 +1286,7 @@ def run_intention(data, call_api, model, script_dir, shard, total_shards, save_e
     write_task_outputs("intention", results, out_dir, stem)
 
 
-def pilot_report(model, tasks, script_dir, stem, n_samples, n_full, elapsed):
+def pilot_report(model, tasks, script_dir, stem, n_samples, n_full, elapsed, subdir="pilot"):
     """Print the go/no-go summary for a pilot run: health counters, scores, and projections."""
     line = "=" * 68
     print(f"\n{line}\n PILOT REPORT — {model}\n{line}")
@@ -1232,7 +1309,7 @@ def pilot_report(model, tasks, script_dir, stem, n_samples, n_full, elapsed):
 
     print("\n[scores]")
     for task in tasks:
-        path = os.path.join(script_dir, "results", "pilot", task, stem + "_overall.csv")
+        path = os.path.join(script_dir, "results", subdir, task, stem + "_overall.csv")
         if os.path.exists(path):
             for row in pd.read_csv(path).to_dict("records"):
                 print(f"          {row['metric']:<18} {row['score']:.4f}")
@@ -1342,7 +1419,14 @@ def budget_report():
                   "max_tokens first, and only then lower the timeout")
 
 
-def run_cli(call_api, default_model, script_file):
+def parse_cli(default_model, script_file):
+    """The command line every runner shares, parsed and validated.
+
+    A runner that probes its model or writes a provenance file before run_cli calls this first,
+    so an invocation that will be rejected spends no call and leaves nothing behind. Before this
+    existed, a mistyped criteria command negotiated, wrote results/negotiated_params_full.json —
+    overwriting a real run's record — and only then failed in run_cli's argument check.
+    """
     script_dir = os.path.dirname(os.path.abspath(script_file))
     benchmark_root = os.path.dirname(script_dir)
     parser = argparse.ArgumentParser()
@@ -1356,11 +1440,96 @@ def run_cli(call_api, default_model, script_file):
                         help="run a fraction of the data, write to results/pilot/, print a report")
     parser.add_argument("--pilot-frac", type=float, default=0.10)
     parser.add_argument("--pilot-seed", type=int, default=42)
+    # Criteria 4 and 5 (.claude/references/evaluation-criteria.md): repeats and perturbations run
+    # on a committed subsample and write to results/<tag>/, never into the main checkpoint.
+    parser.add_argument("--tag", help="write to results/<tag>/: rep1..rep5, perturb-<name>, smoke-*")
+    parser.add_argument("--subsample", help="JSON file whose dialogue_ids this run is limited to")
+    parser.add_argument("--perturb", choices=["shuffle", "paraphrase"])
+    parser.add_argument("--perturb-seed", type=int, default=42)
     args = parser.parse_args()
     if not 0 <= args.shard < args.total_shards:
         parser.error("--shard must be in [0, --total-shards)")
     if args.pilot and not 0 < args.pilot_frac <= 1:
         parser.error("--pilot-frac must be in (0, 1]")
+    # An allow-list, not a deny-list: "shard0of5", "full" or "desire" would name another run's
+    # record files or land inside the main results/<task>/ folders.
+    if args.tag is not None and not re.fullmatch(
+            r"rep[1-9][0-9]*|perturb-(shuffle|paraphrase)|smoke-[A-Za-z0-9_-]+", args.tag):
+        parser.error("--tag must be rep<N>, perturb-shuffle, perturb-paraphrase or smoke-<name>")
+    if (args.subsample or args.perturb) and not args.tag:
+        parser.error("--subsample and --perturb need --tag: they must never write the main results")
+    if args.tag and not args.subsample:
+        parser.error("--tag needs --subsample: a tagged run without one is a full run misfiled")
+    if args.tag and args.pilot:
+        parser.error("--tag and --pilot are different subsets; use one")
+    # The tag names what the rows ARE, so a perturbed run cannot be filed as a repeat or the
+    # reverse — the analysis reads the condition from the directory name.
+    if bool(args.perturb) != bool(args.tag and args.tag.startswith("perturb-")) or (
+            args.perturb and args.tag != f"perturb-{args.perturb}"):
+        parser.error("--perturb X requires --tag perturb-X, and a perturb-* tag requires --perturb")
+    if args.subsample:
+        # Here, not in run_cli: by then a runner has already probed and written its record file.
+        try:
+            with open(args.subsample, encoding="utf-8") as handle:
+                wanted = json.load(handle)["dialogue_ids"]
+            with open(args.data, encoding="utf-8") as handle:
+                known = {sample["dialogue_id"] for sample in json.load(handle)}
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            parser.error(f"--subsample {args.subsample}: {type(error).__name__}: {error}")
+        missing = [d for d in wanted if d not in known]
+        if not wanted or missing or len(set(wanted)) != len(wanted):
+            parser.error(f"--subsample {args.subsample}: {len(wanted)} ids, {len(missing)} not in the "
+                         f"data, {len(wanted) - len(set(wanted))} duplicated")
+    if args.tag and args.total_shards > 1:
+        # Shards of one tag write _shardNofM checkpoints beside each other with the same uids, and
+        # an analysis globbing results/<tag>/<task>/ would count them twice. 300 rows need none.
+        parser.error("a tagged run is not sharded")
+    # Every marker this run writes or clears carries its tag, including a halt during a runner's
+    # probe call, which happens before run_cli.
+    _RUN_CONTEXT["tag"] = args.tag
+    PERTURB["name"], PERTURB["seed"] = args.perturb, args.perturb_seed
+    if args.tag:
+        _check_tag_config(parser, args, os.path.join(script_dir, "results", args.tag))
+    return args
+
+
+def _check_tag_config(parser, args, tag_dir):
+    """A tag resumes only under the configuration it started with. Resume keeps every uid already
+    written, so a different subsample, seed, model or prompt text would leave two configurations in
+    one folder with nothing to say so. Checked here, before a runner probes and rewrites its
+    negotiated_params_<tag>.json — a refused resume must not replace the record of the rows it
+    protects. The config is kept on args for run_cli to write on a first start."""
+    with open(args.subsample, "rb") as handle:
+        subsample_md5 = hashlib.md5(handle.read()).hexdigest()
+    args.tag_config = {"tag": args.tag, "model": args.model, "perturb": args.perturb,
+                       "perturb_seed": args.perturb_seed, "subsample": args.subsample,
+                       "subsample_md5": subsample_md5, "prompt_fingerprint": prompt_fingerprint()}
+    config_path = os.path.join(tag_dir, "run_config.json")
+    if os.path.exists(config_path):
+        with open(config_path, encoding="utf-8") as handle:
+            stored = json.load(handle)
+        changed = sorted(k for k in ("model", "perturb", "perturb_seed", "subsample_md5",
+                                     "prompt_fingerprint") if stored.get(k) != args.tag_config[k])
+        if changed:
+            parser.error(f"results/{args.tag} was started with a different {', '.join(changed)}; "
+                         "archive it (results_archive_<what>_<UTC>) before rerunning")
+    elif glob.glob(os.path.join(tag_dir, "**", "*.jsonl"), recursive=True):
+        parser.error(f"results/{args.tag} holds rows but no run_config.json, so what produced "
+                     "them is unknown; archive it before rerunning")
+
+
+def run_tag_of(args):
+    """The name a run's per-run files carry: its tag, "pilot", its shard, or "full"."""
+    if args.tag:
+        return args.tag
+    if args.pilot:
+        return "pilot"
+    return f"shard{args.shard}of{args.total_shards}" if args.total_shards > 1 else "full"
+
+
+def run_cli(call_api, default_model, script_file):
+    script_dir = os.path.dirname(os.path.abspath(script_file))
+    args = parse_cli(default_model, script_file)
 
     with open(args.data, encoding="utf-8") as handle:
         data = json.load(handle)
@@ -1376,6 +1545,30 @@ def run_cli(call_api, default_model, script_file):
         data = [data[i] for i in order[:k]]
         print(f"[pilot] {k}/{n_full} dialogues ({k / n_full * 100:.1f}%), seed={args.pilot_seed}")
 
+    if args.subsample:
+        with open(args.subsample, encoding="utf-8") as handle:
+            wanted = json.load(handle)["dialogue_ids"]
+        by_id = {sample["dialogue_id"]: sample for sample in data}
+        missing = [d for d in wanted if d not in by_id]
+        if missing:
+            raise SystemExit(f"--subsample names {len(missing)} dialogue_ids not in the data, "
+                             f"e.g. {missing[:3]}")
+        data = [by_id[d] for d in wanted]
+        print(f"[subsample] {len(data)}/{n_full} dialogues from {args.subsample}")
+
+    if args.tag:
+        # What produced the rows, beside them, so a tagged directory audits without the command
+        # line that made it. parse_cli has already refused a resume under a different config.
+        tag_dir = os.path.join(script_dir, "results", args.tag)
+        config_path = os.path.join(tag_dir, "run_config.json")
+        if os.path.exists(config_path):
+            print(f"[{args.tag}] resuming under the configuration it started with", flush=True)
+        else:
+            os.makedirs(tag_dir, exist_ok=True)
+            with open(config_path, "w") as handle:
+                json.dump({**args.tag_config, "n_dialogues": len(data),
+                           "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, handle, indent=2)
+
     # Name the run before any call can fail, so every halt path can write its marker into this
     # model's own folder, and drop any marker left by a previous run rather than inheriting it.
     set_run_context(args.model, script_dir)
@@ -1386,14 +1579,15 @@ def run_cli(call_api, default_model, script_file):
     for task in tasks:
         globals()[f"run_{task}"](
             data, call_api, args.model, script_dir, args.shard, args.total_shards,
-            args.save_every, args.pilot,
+            args.save_every, args.pilot, args.tag,
         )
     elapsed = time.time() - started
 
     tag = f"_shard{args.shard}of{args.total_shards}" if args.total_shards > 1 else ""
     stem = model_slug(args.model) + tag
     if args.task == "all":
-        results_root = os.path.join(script_dir, "results", "pilot" if args.pilot else "")
+        results_root = os.path.join(script_dir, "results",
+                                    args.tag or ("pilot" if args.pilot else ""))
         summary = []
         for task in ("desire", "belief", "intention"):
             path = os.path.join(results_root, task, stem + "_overall.csv")
@@ -1402,8 +1596,9 @@ def run_cli(call_api, default_model, script_file):
         summary_path = os.path.join(results_root, stem + "_negotiation_overall.csv")
         pd.DataFrame(summary, columns=["metric", "score"]).to_csv(summary_path, index=False)
 
-    if args.pilot:
-        pilot_report(args.model, tasks, script_dir, stem, len(data), n_full, elapsed)
+    if args.pilot or args.tag:
+        pilot_report(args.model, tasks, script_dir, stem, len(data), n_full, elapsed,
+                     subdir=args.tag or "pilot")
     else:
         # A full run is the largest sample of provider behaviour this benchmark ever takes. Print
         # the same budget block so the next run's max_tokens and timeout can be set from it rather

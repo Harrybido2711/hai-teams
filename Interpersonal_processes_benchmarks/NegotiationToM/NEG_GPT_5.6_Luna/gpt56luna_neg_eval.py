@@ -16,7 +16,6 @@ dropped outright. Never ask for `reasoning_effort="none"` — that is removal, n
 9-11 points (`.claude/references/model-parameters.md`).
 """
 
-import argparse
 import json
 import os
 import sys
@@ -29,9 +28,9 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
 from neg_eval_core import (  # noqa: E402
-    backoff_sleep, enable_row_fields, finish_reason_from, halt_on_billing, negotiate,
+    backoff_sleep, enable_row_fields, finish_reason_from, halt_on_billing, negotiate, parse_cli,
     reasoning_from, record_call, record_empty, record_error, record_usage, retry_delay, run_cli,
-    usage_from,
+    run_tag_of, usage_from,
 )
 
 DEFAULT_MODEL = "gpt-5.6-luna"
@@ -104,19 +103,13 @@ def call_api(messages, model, max_retries=5):
 
 
 if __name__ == "__main__":
-    # Read --model before run_cli parses the full command line, so the probe negotiates against the
-    # model that will actually be called. parse_known_args leaves sys.argv untouched for run_cli.
-    pre = argparse.ArgumentParser(add_help=False)
-    pre.add_argument("--model", default=DEFAULT_MODEL)
-    pre.add_argument("--shard", type=int, default=0)
-    pre.add_argument("--total-shards", type=int, default=1)
-    pre.add_argument("--pilot", action="store_true")
-    known = pre.parse_known_args()[0]
-    model = known.model
+    # The whole command line, parsed and validated before the probe: a rejected command spends no
+    # call and writes no file. The probe negotiates against the model that will be called.
+    args = parse_cli(DEFAULT_MODEL, __file__)
+    model = args.model
     # Every shard negotiates for itself, so each records its own: one untagged file was
     # last-writer-wins and could not show a shard that settled on something different.
-    run_tag = ("pilot" if known.pilot
-               else f"shard{known.shard}of{known.total_shards}" if known.total_shards > 1 else "full")
+    run_tag = run_tag_of(args)
 
     enable_row_fields()
     print(f"negotiating parameter surface for {model} ...", flush=True)
@@ -136,7 +129,16 @@ if __name__ == "__main__":
         print("  WARNING: seed was dropped — this run is NOT reproducible "
               "(model-parameters.md rule 8)", flush=True)
     os.makedirs(os.path.join(SCRIPT_DIR, "results"), exist_ok=True)
-    with open(os.path.join(SCRIPT_DIR, "results", f"negotiated_params_{run_tag}.json"), "w") as handle:
+    params_path = os.path.join(SCRIPT_DIR, "results", f"negotiated_params_{run_tag}.json")
+    if args.tag and os.path.exists(params_path):
+        # A tag resumes only on the parameters its first start accepted: a provider that has
+        # since stopped honouring seed would otherwise mix seeded and unseeded rows in one tag.
+        with open(params_path, encoding="utf-8") as handle:
+            first = json.load(handle).get("accepted")
+        if first != PARAMS:
+            raise SystemExit(f"results/{args.tag} started with {first}, the provider now "
+                             f"accepts {PARAMS}; archive the tag before rerunning.")
+    with open(params_path, "w") as handle:
         json.dump({"model": model, "asked": WANTED, "accepted": PARAMS, "notes": notes},
                   handle, indent=2)
 

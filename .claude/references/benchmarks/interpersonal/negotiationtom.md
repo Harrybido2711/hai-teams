@@ -98,7 +98,8 @@ Per-metric cells and their sources live in the two workbooks' `NegotiationToM` s
 results/pilot/<task>/*.jsonl                pilot
 results/<task>/<model>_shard{N}of{M}.jsonl  full run — the shard tag is mandatory
 log_pilot.txt · log_shard%a.txt · .err
-NEG_*/{BILLING,QUOTA,FAILURE}_HALT.txt      check these before grepping any log
+NEG_*/*_HALT.txt                            check these before grepping any log; a criteria
+                                            run's are prefixed with its tag (rep1_BILLING_HALT.txt)
 ```
 
 Tasks are `desire`, `belief`, `intention`.
@@ -107,6 +108,8 @@ Tasks are `desire`, `belief`, `intention`.
 
 `preflight.py` → `sbatch run_pilot.sh` → review the pilot → `sbatch run_negotiation.sh` →
 `bash run_merge.sh` if sharded.
+Then, for stability and robustness, `sbatch run_criteria.sh` in the same folder once the full run has
+finished — `--subsample criteria_subsample.json`, outputs in `results/<tag>/`: [criteria-runs.md](../../criteria-runs.md).
 
 ## Its own traps
 

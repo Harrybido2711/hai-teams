@@ -87,27 +87,7 @@ selection, and who decided it, is in `PLAN.md`.
 A difference counts only if it survives a paired test on the same items — paired bootstrap, or
 McNemar for right/wrong. Two models whose intervals overlap are not ranked.
 
-## Stability and robustness — the design (user's decisions, 2026-10-12)
-
-- **Config:** each benchmark's repeats use exactly the config that produced the number reported on
-  its sheet, so stability describes that number. Qwen, Gemma and Deepseek have no single config
-  across benchmarks; this sidesteps defining one.
-- **Runs per model per benchmark:** `rep1`…`rep5` unperturbed, plus `perturb-shuffle` and
-  `perturb-paraphrase`, each to its own tagged output on the shared subsample.
-- **Stability (4):** share of items whose answer *content* is identical in all five; pass@1 (mean
-  accuracy over reps), pass^5 (correct in all five), and the min–max accuracy spread.
-- **Robustness (5):** flip rate of each perturbation against `rep1`, **minus the rep1-vs-rep2 flip
-  rate** — a model that varies on its own would otherwise be charged for that variance as
-  fragility. Paired test for both the excess flips and the accuracy change.
-- **What gets perturbed** is only text this project owns: the instruction wrapper, never upstream
-  item text; answer-format instructions stay verbatim so a flip is not a parse failure. Where a
-  benchmark has no options (DocVQA) or no instruction of ours (AwareBench), that perturbation is
-  not defined. AwareBench's data already holds 2–3 option orders per MCQ question, so its shuffle
-  flip rate comes from the normal run at no extra cost.
-- **Phase 1:** EmoBench and NegotiationToM, `gpt-5.6-luna` and `gemini-3.5-flash-lite`. Phase 2:
-  the other three models there, then MMLU, bbh and DocVQA, whose Qwen/Gemma/Deepseek runners are
-  legacy scripts with no tag, no subsample and no per-row fields.
-- **Recorded in** a new `Criteria` sheet in both workbooks — rows benchmark × model, columns the six
-  criteria — under the same rule as accuracy: after the user confirms the run.
+Criteria 4 and 5 need runs of their own — the design the user chose, how they are run and how
+they are analysed: [criteria-runs.md](criteria-runs.md).
 
 **Not yet decided — ask before acting:** the gate thresholds and the weights for any composite score.
