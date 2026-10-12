@@ -29,12 +29,12 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 
 ## Where the project is
 
-- **Sync state — audited 2026-10-05.** Local, `origin` and `backup` agree. On Quest, the code of all
-  five benchmarks with a Quest copy equals git, and every result that existed only on Quest has been
-  pulled down. The one gap is NegotiationToM's uncommitted local work from 2026-09-11 — the luna and
-  flash-lite runners and a parameter negotiator in `neg_eval_core.py` — unverified, so neither in
-  git nor on Quest. **Re-run `python3 .claude/scripts/sync_audit.py --fetch` rather than trusting
-  this line.**
+- **Sync state — audited 2026-10-12.** Local, `origin` and `backup` agree. NegotiationToM's pending
+  work (luna and flash-lite runners, per-row usage in `neg_eval_core.py`) went to Quest and into git
+  on 2026-10-12: 49 code files each side, none differing. AwareBench has no Quest copy yet. EmoBench
+  has two code files on Quest only (`EMO_Gemini/gemini_emo_eval.py`, `run_emobench.sh`) — reported,
+  not pulled. **Re-run `python3 .claude/scripts/sync_audit.py --fetch` rather than trusting this
+  line.**
 - **Running now:** nothing is assumed. Check, don't remember — `monitor-run`, or `squeue -u uwr0681`.
 - **All ten benchmarks have a knowledge-base page**; four of them — PlanBench, mpgt, Wonderbread,
   MultiChallenge — have no runner at all, so work there starts at phase 1 or 2 rather than 3.
