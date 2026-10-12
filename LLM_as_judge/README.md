@@ -58,21 +58,64 @@ existing judge documentation is reused, not repeated:
 Prices and the `temperature` support are from OpenRouter's model list on 2026-10-08.
 
 **Excluded:** every model from a family we evaluate.
-- **Which families:** Google (Gemini, Gemma), OpenAI (including GPT-oss), Alibaba Qwen, DeepSeek, and
-  xAI (still in `Tempo_results.xlsx`).
+- **Which families:** the six vendor slots in [PLAN.md](../PLAN.md):
+  - Google (Gemini, Gemma);
+  - OpenAI (including GPT-oss);
+  - Alibaba Qwen;
+  - DeepSeek;
+  - xAI. It left `Final_result.xlsx` only provisionally and keeps its column in
+    `Tempo_results.xlsx`.
 - **Why:** a judge over-credits outputs from its own model *and its own family*, even on fully
   objective rubric items (Pombal; Li).
 - **What this rules out:** the best judges in several studies. o4-mini topped Audio MultiChallenge
   (κ 0.873); Gemini-3-Pro topped IF-RewardBench; GPT-5.4 and Gemini-3.1 Pro topped RuVerBench. So
   did the MultiChallenge authors' own March-2026 judge, Gemini 2.5 Pro.
+- **Kimi and Llama are not excluded, on one condition.** Both appear in `Tempo_results.xlsx`, but
+  `kimi-k2.5` and Llama-4-Maverick were run on Big Bench Hard only (Llama also on MMLU). Neither is
+  among the six ([PLAN.md](../PLAN.md)), so neither grades its own outputs on a judged benchmark. **If
+  either is ever run on MultiChallenge or Wonderbread, it is excluded as that benchmark's judge.**
 
-**Out-of-family, but not shortlisted, on the evidence:**
-- **GLM.** On constraint-violation detection, GLM-4.6 scored N-F1 0.531 and GLM-4.5-Air 0.393, against
-  0.744 for humans (Wen). Zhipu co-authored and funded that paper. GLM-5.1 did well on deep research
-  (91.5) but fell to 8th on agentic coding (Peng).
-- **Llama.** Llama-3.3-70B scored N-F1 0.335 (Wen). Llama-3.1-8B was at chance on deep research,
-  51.6 (Peng).
-- **Mistral Medium.** κ 0.787, below Haiku 4.5 (Gosai).
+### Every out-of-family model, ranked by evidence
+
+"Papers" counts the fifteen papers in §4 that tested the model as a judge. The ranking weighs four
+things: how many papers, how close their task is to ours, whether they tested the exact version we
+would call, and whether the model is light. Priority is the order to fall back on before the bake-off
+has run. It is **not** the selection rule — that stays "the cheapest that passes", below.
+
+**Tier A — in the bake-off**
+
+| Priority | Model | Papers | Version tested | Why this rank | Gap |
+|---|---|---:|---|---|---|
+| 1 | Claude Haiku 4.5 | 3 — Gosai, Pombal, Lee | the same | The only direct evidence on a MultiChallenge-style rubric task | Leniency: false PASS 0.12 against Sonnet's 0.03 (Pombal) |
+| 2 | Claude Sonnet 5.5 | 5 — Pombal, Sharma, Li J., Peng, Lee | **older**: 4.5 and 4.6 | The most papers, and the strictest | No paper tests 5.5; no `temperature`; the most expensive candidate |
+| 3 | Kimi K2.6 | 1 — Peng | the same | Ties Opus 4.7, cheap | One paper; never tested on a short YES/NO rubric; training lineage undisclosed |
+| 4 | Claude Haiku 5.5 | 0 | — | In only because it costs ~$2 per pass | No evidence at all; no `temperature` |
+
+**Tier B — evidence exists, not recommended as the judge**
+
+| Priority | Model | Papers | Why not |
+|---|---|---:|---|
+| 5 | Claude Opus 4.5 / 4.6 / 4.7 | 4 — Peng, Chang, Li J., Lee | Strong, but not light. Fail-biased on procedure checking: false FAIL 38.2% (Chang). Useful as a reference, not as the judge |
+| 6 | GLM-4.6 / 4.5-Air / 5.1 | 2 — Wen, Peng | Inconsistent results:<br>• On violation detection, GLM-4.6 scored N-F1 0.531 and GLM-4.5-Air 0.393, against 0.744 for humans (Wen).<br>• GLM-5.1 did well on deep research (91.5) but fell to 8th on agentic coding (Peng).<br>• Zhipu co-authored and funded Wen. |
+| 7 | Mistral Medium | 1 — Gosai | κ 0.787, below Haiku 4.5, and no offsetting advantage |
+| — | Seed 2.0 Pro, MiMo v2.5 Pro | 1 — Peng | Mid-table. OpenRouter availability and price not checked |
+
+**Tier C — the evidence says don't**
+
+| Model | Papers | Why not |
+|---|---:|---|
+| Llama 3.1 / 3.3 / 4 | 5 — Wen, Peng, Roytburg, Li J., Krumdick | Many papers, consistently weak:<br>• Llama-3.1-8B was at chance on deep research, 51.6 (Peng).<br>• Llama-3.3-70B scored N-F1 0.335 (Wen), and showed the largest residual self-preference (Roytburg).<br>• The one strong number needs a human reference: κ 0.78 with one, 0.42 without (Krumdick). |
+
+**No evidence:** MiniMax and Cohere. The only paper that tested MiniMax (Norman) is a preprint and was
+dropped (§6).
+
+**What the ranking shows** *(our inference)*:
+- **No paper compares all four Tier A candidates on the same task.** The evidence is assembled from
+  several papers, which is why the bake-off decides.
+- **More papers is not better evidence.** Llama has more papers than Kimi, all of them unfavourable.
+  Opus has four, but it is not a light judge.
+- **The version matters.** The Haiku 4.5 and Kimi K2.6 evidence is for the exact model we would call;
+  the Sonnet and Opus evidence is for earlier versions.
 
 **How to choose: run a bake-off, then pick the cheapest that passes** *(our rule)*.
 1. **Run all five configurations** on our own human-labelled set (§2 stage 7, §3):
@@ -89,8 +132,18 @@ Prices and the `temperature` support are from OpenRouter's model list on 2026-10
 4. **Take the cheapest** whose numbers are not meaningfully worse than the best (McNemar on the
    disagreements).
 
-Running both benchmarks on the same judge is simpler, but each benchmark is validated separately and
-may end up with a different winner.
+**One judge for all three judged tasks, unless it fails one** — proposed 2026-10-12. Fix it before
+the bake-off runs, so the choice cannot follow the results.
+- **Within a benchmark, one judge for every evaluated model — required.** Two judges would make the
+  models' scores incomparable. It is the same principle as CLAUDE.md's "one scorer per benchmark".
+- **Across the three tasks, one judge — preferred.** The three tasks are MultiChallenge, Wonderbread
+  QA and SOP Generation. Take the cheapest candidate that passes all three bars. Only a task where it
+  fails gets its own judge: the cheapest that passes there, declared in that benchmark's record.
+- **Why the tasks can diverge:**
+  - MultiChallenge is hurt by a *lenient* judge (false PASS).
+  - SOP Generation is hurt by a *strict* one, which under-matches and lowers precision and recall.
+  - QA's two unreferenced criteria may fail for every judge. Those criteria are then human-scored or
+    reported as unvalidated — not given another judge.
 
 **Disclosure.** This review was written with Claude (Anthropic), and three of the five configurations
 are Claude models. They are on the list because of the family-exclusion rule and the numbers below.
