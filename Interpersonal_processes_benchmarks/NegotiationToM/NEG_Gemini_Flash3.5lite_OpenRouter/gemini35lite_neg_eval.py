@@ -25,7 +25,6 @@ does not reproduce a row. The response carries `provider`, so this runner tallie
 count beside the results — a score that moved may be a backend change rather than the model.
 """
 
-import argparse
 import atexit
 import collections
 import json
@@ -40,9 +39,9 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
 from neg_eval_core import (  # noqa: E402
-    backoff_sleep, enable_row_fields, finish_reason_from, halt_on_billing, negotiate,
+    backoff_sleep, enable_row_fields, finish_reason_from, halt_on_billing, negotiate, parse_cli,
     reasoning_from, record_call, record_empty, record_error, record_usage, retry_delay, run_cli,
-    usage_from,
+    run_tag_of, usage_from,
 )
 
 DEFAULT_MODEL = "google/gemini-3.5-flash-lite"
@@ -129,19 +128,12 @@ def call_api(messages, model, max_retries=5):
 
 
 if __name__ == "__main__":
-    # Read --model before run_cli parses the full command line, so the probe negotiates against the
-    # model that will actually be called. parse_known_args leaves sys.argv untouched for run_cli.
-    pre = argparse.ArgumentParser(add_help=False)
-    pre.add_argument("--model", default=DEFAULT_MODEL)
-    pre.add_argument("--shard", type=int, default=0)
-    pre.add_argument("--total-shards", type=int, default=1)
-    pre.add_argument("--pilot", action="store_true")
-    known = pre.parse_known_args()[0]
-    model = known.model
+    # The whole command line, parsed and validated before the probe: a rejected command spends no
+    # call and writes no file. The probe negotiates against the model that will be called.
+    args = parse_cli(DEFAULT_MODEL, __file__)
+    model = args.model
     # Every shard negotiates and tallies for itself, so each records its own.
-    RUN_TAG[0] = ("pilot" if known.pilot
-                  else f"shard{known.shard}of{known.total_shards}" if known.total_shards > 1
-                  else "full")
+    RUN_TAG[0] = run_tag_of(args)
 
     enable_row_fields()
     print(f"negotiating parameter surface for {model} ...", flush=True)

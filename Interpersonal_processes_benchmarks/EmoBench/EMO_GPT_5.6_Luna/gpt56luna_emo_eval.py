@@ -56,6 +56,7 @@ load_dotenv(os.path.join(ROOT, ".env"))
 # Nothing in this file decides whether reasoning is shown.
 sys.path.insert(0, ROOT)
 import reasoning_visibility  # noqa: E402 — needs ROOT on the path first
+import criteria_perturb  # noqa: E402 — the robustness perturbations every EmoBench runner shares
 
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
@@ -77,6 +78,9 @@ LETTERS = string.ascii_uppercase
 REASONING_EFFORT = "low"
 EFFORT_FALLBACKS = ("low", "medium", "none")   # preference order if a value is refused
 RESULTS_TAG = ""               # set from --tag; keeps a sweep arm out of the baseline directory
+# Set from --perturb (criteria 5). Unset, every prompt and every gold letter is exactly what an
+# unperturbed run sends and scores, so a perturbed run compares row for row with rep1.
+PERTURB = {"name": None, "seed": 42}
 
 # No bare "401": it matched request ids like "req_9c401fe2" inside ordinary 5xx messages, and with
 # the SDK's retries off every 5xx reaches this test. A 401 is caught by its status code instead.
@@ -112,7 +116,9 @@ def build_system_prompt(task, use_cot):
     if use_cot:
         conditions = response["reasoning"]["en"] + ",\n" + conditions
     fmt = f"\n{statement}\n```json\n    {{\n    {conditions}\n    }}\n```"
-    return prompts["sys"]["en"] + fmt
+    instructions = (criteria_perturb.PARAPHRASE_SYS_EN if PERTURB["name"] == "paraphrase"
+                    else prompts["sys"]["en"])
+    return instructions + fmt
 
 
 def build_user_prompt(task, sample):
@@ -145,6 +151,15 @@ def parse_json(text):
 def _is_answer(v):
     """parse_ok's test. A null, list or number is no prediction: the scorer would compare "NONE"."""
     return isinstance(v, str) and bool(v.strip())
+
+
+def _choice_text(choices, letter):
+    """The option a predicted letter points at, or None. Letters move under a shuffle and content
+    does not, so stability and flip rates compare this rather than the letter."""
+    if not _is_answer(letter):
+        return None
+    index = LETTERS.find(letter.strip().upper())
+    return choices[index] if len(letter.strip()) == 1 and 0 <= index < len(choices) else None
 
 
 def _results_dir(task):
@@ -385,6 +400,9 @@ def run_task(task, model, save_every, params, negotiated, use_cot, cot_source, l
         qid = str(sample["qid"])
         if qid in done_ids:
             continue
+        if PERTURB["name"] == "shuffle":
+            # Before the prompt AND the gold letter are built, so both read the same order.
+            sample = criteria_perturb.shuffle_sample(sample, task, PERTURB["seed"])
 
         user_prompt = build_user_prompt(task, sample)
         raw, finish, thinking, thought, usage = call_api(sys_prompt, user_prompt, model, params)
@@ -432,6 +450,8 @@ def run_task(task, model, save_every, params, negotiated, use_cot, cot_source, l
             }
             # A prediction is both answers: the scorer needs q1 and q2, so one alone is not parsed.
             res["parse_ok"] = _is_answer(res["emo_answer"]) and _is_answer(res["cause_answer"])
+            res["emo_answer_text"] = _choice_text(sample["emotion_choices"], res["emo_answer"])
+            res["cause_answer_text"] = _choice_text(sample["cause_choices"], res["cause_answer"])
         else:
             res = {
                 **common,
@@ -441,6 +461,7 @@ def run_task(task, model, save_every, params, negotiated, use_cot, cot_source, l
                 "answer": (parsed or {}).get("answer", ""),
             }
             res["parse_ok"] = _is_answer(res["answer"])
+            res["answer_text"] = _choice_text(sample["choices"], res["answer"])
 
         results.append(res)
         done_ids.add(qid)
@@ -472,7 +493,11 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=42,
                         help="makes the run reproducible; dropped automatically if unsupported")
     parser.add_argument("--tag", type=str, default="",
-                        help="write to results_<tag>/ instead of results/, for sweeps")
+                        help="write to results_<tag>/ instead of results/, for sweeps and the\n"
+                             "criteria runs rep1..rep5, perturb-<name>")
+    parser.add_argument("--perturb", choices=criteria_perturb.PERTURBATIONS,
+                        help="criteria 5 robustness run; needs --tag perturb-<name>")
+    parser.add_argument("--perturb-seed", type=int, default=42)
     # Deliberately no default. Rule 3: the benchmark decides whether reasoning is shown, so the
     # value is read from EmoBench's own README at run time rather than frozen here.
     parser.add_argument("--use-cot", dest="use_cot", action="store_true", default=None,
@@ -480,8 +505,16 @@ if __name__ == "__main__":
     parser.add_argument("--no-use-cot", dest="use_cot", action="store_false",
                         help="force the non-CoT branch")
     args = parser.parse_args()
+    # Checked before the probe call, so a rejected command spends nothing and writes nothing.
+    if args.tag and not re.fullmatch(r"[A-Za-z0-9_-]+", args.tag):
+        parser.error("--tag must be a plain name")
+    # The tag names what the rows ARE: a perturbed run cannot be filed as a repeat or the reverse.
+    if bool(args.perturb) != args.tag.startswith("perturb-") or (
+            args.perturb and args.tag != f"perturb-{args.perturb}"):
+        parser.error("--perturb X requires --tag perturb-X, and a perturb-* tag requires --perturb")
 
     RESULTS_TAG = args.tag
+    PERTURB["name"], PERTURB["seed"] = args.perturb, args.perturb_seed
 
     # What the benchmark says, or what the operator overrode it with — recorded either way.
     if args.use_cot is None:
@@ -504,6 +537,16 @@ if __name__ == "__main__":
               "(references/prompt-ceiling.md).", flush=True)
     if "seed" not in params:
         print("WARNING: no seed accepted — this run is not reproducible (rule 6).", flush=True)
+
+    if RESULTS_TAG:
+        # What produced the rows, beside them, so a tagged directory audits without its command line.
+        tag_root = os.path.dirname(_results_dir("EU"))
+        os.makedirs(tag_root, exist_ok=True)
+        with open(os.path.join(tag_root, "run_config.json"), "w") as handle:
+            json.dump({"tag": RESULTS_TAG, "model": args.model, "params": params,
+                       "negotiated": negotiated, "perturb": args.perturb,
+                       "perturb_seed": args.perturb_seed, "use_cot": args.use_cot,
+                       "started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, handle, indent=2)
 
     tasks = ["EU", "EA"] if args.task == "all" else [args.task]
     for task in tasks:
