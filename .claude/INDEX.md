@@ -33,7 +33,8 @@ page, and carrying one across benchmarks is the mistake that split is there to p
   flash-lite runners and the per-row usage in `neg_eval_core.py` went to Quest and into git on
   2026-10-12, then their review fixes (`0813b65`): 49 code files each side, none differing, and
   Quest's `NegotiationToM/.env` now holds `OPENAI_API_KEY` and `OPENROUTER_API_KEY` (backup
-  `.env.bak.20261012122040` beside it). AwareBench went to Quest the same day (`6fafdc5`). EmoBench
+  `.env.bak.20261012122040` beside it). AwareBench went to Quest the same day (`6fafdc5`), and its five full
+  runs came back down into git (`a07bf58`, `873590a`), md5-identical to Quest. EmoBench
   has two code files on Quest only (`EMO_Gemini/gemini_emo_eval.py`, `run_emobench.sh`) — reported,
   not pulled. **Re-run `python3 .claude/scripts/sync_audit.py --fetch` rather than trusting this
   line.**

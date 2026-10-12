@@ -83,3 +83,9 @@ normal retry continues.
 Do not hand-roll `if "insufficient_quota" in text` — that narrow test is exactly what let xAI write
 9,378 empty rows, because its wording is "used all available credits or reached its monthly spending
 limit".
+
+**OpenRouter's out-of-credit 402 matches no signature yet** (2026-10-12, AwareBench Gemini): "This
+request would exceed your available credits given your current in-flight requests. Retry after
+in-flight requests settle, or add credits." and "… requires more credits … can only afford N". The
+run stopped only at `FAILURE_HALT`, after 10 consecutive failures. The first wording also invites a
+retry, so whether it should halt at once is undecided.

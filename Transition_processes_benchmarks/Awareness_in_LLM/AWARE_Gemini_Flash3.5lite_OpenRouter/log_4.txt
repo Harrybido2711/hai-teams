@@ -1,0 +1,22 @@
+negotiating parameter surface for google/gemini-3.5-flash-lite ...
+  accepted: {'max_tokens': 2048, 'seed': 42}
+  resume google-gemini-3_5-flash-lite.jsonl: 300 done, 0 empty row(s) to retry
+[mission_implicit] 327 rows in this shard, 27 to call
+  [mission_implicit] 320/327
+  mission_implicit: n=327 acc=0.9297 parse_fail=5 declined=0 empty=0 fallback=0 finish={'stop': 327}
+    pred={'C': 111, 'B': 109, 'A': 102, '<none>': 5} gold={'A': 109, 'B': 109, 'C': 109}
+    completion_tokens median=1 max=211  reasoning_tokens median=0 max=0
+
+calls: {'ok': 27, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 70s
+
+google/gemini-3.5-flash-lite — results: 1731/4015 rows, complete=0, parse_fail_rate=0.0081
+  capability                  rows= 394/600  acc=0.602 parse_fail=0.0128 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 334/966  acc=0.994 parse_fail=0.006 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9226 parse_fail=0.0168 declined=0.0 empty=0 fallback=0
+  emotion                     rows=   0/200  acc= parse_fail= declined= empty=0 fallback=0
+  culture                     rows= 359/522  acc=0.9666 parse_fail=0.0056 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 317/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows=   0/170  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_1st       rows=   0/166  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_reality   rows=   0/91   acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0

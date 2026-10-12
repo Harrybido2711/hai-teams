@@ -1,0 +1,30 @@
+negotiating parameter surface for google/gemini-3.5-flash-lite ...
+  accepted: {'max_tokens': 2048, 'seed': 42}
+[emotion] 200 rows in this shard, 200 to call
+  [emotion] 20/200
+  [emotion] 40/200
+  [emotion] 60/200
+  [emotion] 80/200
+  [emotion] 100/200
+  [emotion] 120/200
+  [emotion] 140/200
+  [emotion] 160/200
+  [emotion] 180/200
+  [emotion] 200/200
+  emotion: n=200 acc=0.9150 parse_fail=2 declined=0 empty=0 fallback=0 finish={'stop': 200}
+    pred={'2': 77, '1': 56, '3': 44, '4': 21, '<none>': 2} gold={'2': 77, '1': 58, '3': 43, '4': 22}
+    completion_tokens median=52.0 max=290  reasoning_tokens median=0.0 max=0
+
+calls: {'ok': 200, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 561s
+
+google/gemini-3.5-flash-lite — results: 2840/4015 rows, complete=0, parse_fail_rate=0.0092
+  capability                  rows= 600/600  acc=0.6338 parse_fail=0.0217 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 574/966  acc=0.9948 parse_fail=0.0052 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9226 parse_fail=0.0168 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.915 parse_fail=0.01 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9674 parse_fail=0.0038 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 557/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows=  40/170  acc=0.425 parse_fail=0.025 declined=0.0 empty=0 fallback=0
+  perspective_story_1st       rows=  20/166  acc=0.75 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_reality   rows=   0/91   acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0

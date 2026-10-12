@@ -1,4 +1,4 @@
-<!-- size-budget: 6000 -->
+<!-- size-budget: 8500 -->
 <!-- One job: the criteria, the per-row fields that feed them, and their traps. -->
 # Evaluation criteria beyond accuracy
 
@@ -7,11 +7,13 @@ user 2026-10-08. They exist because accuracy alone cannot separate two models th
 differ tenfold in cost, or one that is right on average but gives a different answer each time it
 is asked.
 
-**State on 2026-10-12: three runners, none yet run on Quest.** `EMO_GPT_5.6_Luna` writes every
-field below in its own runner. NegotiationToM's core writes them for any runner that calls
-`enable_row_fields()` — today `NEG_GPT_5.6_Luna` and `NEG_Gemini_Flash3.5lite_OpenRouter`; the
-older NEG runners do not opt in, because they leave the SDK's own retries on and their `n_attempts`
-would undercount. No other runner writes them. Rows already on disk therefore **cannot** produce
+**State on 2026-10-12: eight runners.** `EMO_GPT_5.6_Luna` writes every field below in its own
+runner. NegotiationToM's core writes them for any runner that calls `enable_row_fields()` — today
+`NEG_GPT_5.6_Luna` and `NEG_Gemini_Flash3.5lite_OpenRouter`; the older NEG runners do not opt in,
+because they leave the SDK's own retries on and their `n_attempts` would undercount. AwareBench's
+core writes them for all five of its runners, and its full run (2026-10-12) has them on every
+row — the first benchmark where criteria 1–3 and 6 exist for all five models. No other runner
+writes them. Rows already on disk therefore **cannot** produce
 criteria 1–3 per item. A run made before a runner was updated says so; it does not get an estimate.
 
 ## The six

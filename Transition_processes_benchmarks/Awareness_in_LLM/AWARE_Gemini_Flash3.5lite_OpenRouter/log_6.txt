@@ -1,0 +1,28 @@
+negotiating parameter surface for google/gemini-3.5-flash-lite ...
+  accepted: {'max_tokens': 2048, 'seed': 42}
+[perspective_story_2nd] 170 rows in this shard, 170 to call
+  [perspective_story_2nd] 20/170
+  [perspective_story_2nd] 40/170
+  [perspective_story_2nd] 60/170
+  [perspective_story_2nd] 80/170
+  [perspective_story_2nd] 100/170
+  [perspective_story_2nd] 120/170
+  [perspective_story_2nd] 140/170
+  [perspective_story_2nd] 160/170
+  perspective_story_2nd: n=170 acc=0.4941 parse_fail=3 declined=1 empty=0 fallback=0 finish={'stop': 170}
+    pred={'crate': 16, 'suitcase': 15, 'bucket': 12, 'treasure_chest': 11, 'bathtub': 11, 'basket': 11} gold={'suitcase': 19, 'crate': 18, 'treasure_chest': 17, 'bucket': 17, 'bathtub': 13, 'basket': 13}
+    completion_tokens median=99.0 max=693  reasoning_tokens median=0.0 max=0
+
+calls: {'ok': 170, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 515s
+
+google/gemini-3.5-flash-lite — results: 3461/4015 rows, complete=0, parse_fail_rate=0.0087
+  capability                  rows= 600/600  acc=0.6338 parse_fail=0.0217 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 714/966  acc=0.9958 parse_fail=0.0042 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9226 parse_fail=0.0168 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.915 parse_fail=0.01 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9674 parse_fail=0.0038 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 697/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows= 170/170  acc=0.4941 parse_fail=0.0176 declined=0.0059 empty=0 fallback=0
+  perspective_story_1st       rows= 140/166  acc=0.7714 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_reality   rows=  91/91   acc=0.967 parse_fail=0.022 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0

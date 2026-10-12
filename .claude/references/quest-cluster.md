@@ -180,6 +180,9 @@ ls <BENCH>_*/BILLING_HALT.txt <BENCH>_*/QUOTA_HALT.txt <BENCH>_*/FAILURE_HALT.tx
 window resets; `FAILURE_HALT` means the provider was failing outright or intermittently. Each file
 says whether the checkpoint needs pruning before a resubmit — quote that line rather than guessing.
 Markers are cleared at the start of every run, so one that exists is always about the current run.
+**In a per-task array, a missing marker proves nothing**: every array task clears the folder's
+markers when it starts, so a task starting after another halted deletes that marker — on
+2026-10-12 AwareBench Gemini halted and no marker survived. Grep the logs for `HALT` as well.
 
 ## Pulling results down
 
