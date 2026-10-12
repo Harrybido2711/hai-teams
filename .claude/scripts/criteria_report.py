@@ -39,8 +39,8 @@ def load_neg(folder):
 
     def correct(task, row):
         if task == "intention":
-            # The reported metric is F1 over the set, so a row has no "correct" of its own. Exact
-            # bitmask match is the proposed definition (criteria-runs.md: open for the user).
+            # The reported metric is F1 over the set, so a row has no "correct" of its own: exact
+            # bitmask match, the user's definition (criteria-runs.md § Analysing it).
             return int(row["gold_bitmask"] == row["pred_bitmask"])
         return int(bool(row[f"{task}_em"]))
 

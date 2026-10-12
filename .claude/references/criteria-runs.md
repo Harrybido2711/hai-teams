@@ -19,9 +19,9 @@ their own. This is how they are designed, run and turned into numbers.
   rate** — a model that varies on its own would otherwise be charged for that variance as
   fragility. Paired test for both the excess flips and the accuracy change.
 - **What gets perturbed** is the instruction wrapper, never item text, and answer-format
-  instructions stay verbatim so a flip is not a parse failure. NegotiationToM's wrapper is ours;
-  EmoBench's is upstream's `sys.en`, kept separate from every item — confirm with the user before
-  phase 2 if "ours" should mean authored here. Where a benchmark has no options (DocVQA) or no
+  instructions stay verbatim so a flip is not a parse failure. A wrapper counts whoever wrote it, as
+  long as it is separate from every item: NegotiationToM's is ours, EmoBench's is upstream's `sys.en`
+  (the user's ruling, 2026-10-12). Where a benchmark has no options (DocVQA) or no
   wrapper apart from item text (AwareBench), that perturbation is not defined. AwareBench's data
   already holds 2–3 option orders per MCQ question, so its shuffle flip rate comes from the normal
   run at no extra cost.
@@ -73,5 +73,5 @@ writes `<model folder>/criteria_summary.json`; it refuses to compute when the se
   `desire_em` / `belief_em` / `score`.
 - **Cluster paired tests by negotiation** (`dialogue_id.split('-')[0]`): up to three cutoffs of
   one negotiation are in the subsample, and they are not independent.
-- **Open — ask the user:** intention has no per-row "correct" (its metric is F1 over the set), so
-  pass^5 needs one. Proposed: exact bitmask match.
+- **Intention's per-row "correct"** — its reported metric is F1 over the set, so pass^5 needs one:
+  the predicted label set equals the gold set exactly (bitmask match), the user's choice 2026-10-12.
