@@ -13,7 +13,7 @@ no real run yet.**
 | | Path |
 |---|---|
 | Local | `Transition_processes_benchmarks/Awareness_in_LLM` |
-| Quest | **none yet** — checked 2026-10-08: no `Transition_processes_benchmarks/` under `/gpfs/projects/p32983/` and no awareness copy anywhere in it. Where the first transfer creates one is a phase-3 decision, made with the user |
+| Quest | `/gpfs/projects/p32983/Transition_processes_benchmarks/Awareness_in_LLM` — created 2026-10-12 to mirror the local tree; this account's own. `.env` there was copied on Quest from mmlu's, never sent from local |
 
 ## The one thing to know first: this folder holds two benchmarks
 
@@ -94,9 +94,11 @@ reported. SLURM logs are `log_<arrayindex>.txt`/`.err` per folder — distinct p
 
 1. Local smoke: `python <runner> --limit 3` (30 calls). Done 2026-10-08 for all five.
 2. User verifies the scripts — phase 3 does not start before.
-3. Transfer core, runners, job scripts and `.env` as one set; `md5sum` both sides.
+3. Transfer core, test, dataset, runners and job scripts as one set; `md5sum` both sides. First
+   transfer 2026-10-12: 13 files, none differing; the scorer test passes on Quest's Python 3.14.
 4. `sbatch run_aware.sh` from inside each `AWARE_<Model>/`: ten array tasks, one per task, at most
-   five at once, largest first. Each rewrites the summary files on exit;
+   five at once, largest first. Arguments after the script name reach the runner, so a pilot is
+   `sbatch run_aware.sh --limit 20` (written to `smoke/`). Each rewrites the summary files on exit;
    `results/<model_slug>_awareness_overall.csv` reads `COMPLETE 1` when all ten are in.
 5. Gate before reading any score: `parse_fail_rate` near zero per task, then the controls (§2.8).
 

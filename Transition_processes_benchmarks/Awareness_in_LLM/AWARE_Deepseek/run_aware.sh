@@ -16,7 +16,9 @@
 # the throttle never leaves the 966-row task to start last.
 #
 # Submit from inside this folder. Every array task rewrites the summary files when it exits; the
-# run is whole when results/<model>_awareness_overall.csv says COMPLETE 1. Rebuild by hand with:
+# run is whole when results/<model>_awareness_overall.csv says COMPLETE 1. Arguments after the
+# script name reach the runner: a pilot is `<submit> run_aware.sh --limit 20`, written to smoke/,
+# never results/. Rebuild the summary by hand with:
 #   python deepseek_aware_eval.py --model deepseek-reasoner --score-only
 
 module purge
@@ -27,4 +29,4 @@ TASKS=(mission_explicit perspective_mcq capability culture mission_implicit emot
 
 /projects/p32983/pythonenvs/hai-teams/bin/python deepseek_aware_eval.py \
     --model deepseek-reasoner \
-    --task "${TASKS[$SLURM_ARRAY_TASK_ID]}"
+    --task "${TASKS[$SLURM_ARRAY_TASK_ID]}" "$@"
