@@ -98,6 +98,14 @@ max_completion_tokens=2048, reasoning_effort="low", seed=42   # temperature unse
 **p=0.332**, not significant. So switching thinking off costs 9–11 accuracy points to save two cents,
 while `low` takes the entire significant gain at 85% of `medium`'s output tokens.
 
+**On EA that last claim does not hold — measured 2026-10-12, open for the user.** The sweep above is
+EU only. The first full run at the settled config (`EMO_GPT_5.6_Luna/results/`, job 9616726) against
+August's `medium` arm, same 200 EA items: `low` 0.685, `medium` 0.745 — `medium` right on 15 items
+`low` missed, the reverse on 3, **p=0.008**. At `low`, 136 of 200 EA rows spent zero reasoning
+tokens. On EU the same comparison is 0.690 vs 0.675, p=0.648. The config stays `low` until the user
+decides otherwise. Run-to-run noise for scale: `low` on EU twice — August 0.650, October 0.690 —
+p=0.134, so a single EU gap of about 4 points is within what a re-run moves.
+
 **This is where rule 1 gets misread.** The rule bounds *what thinking may spend*; it does not say
 switch thinking off. `none` is removal, not a cap. On `gemini-3.5-flash-lite` the distinction did not
 matter — capping cost nothing measurable — and copying that shape onto this model is exactly how
