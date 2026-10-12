@@ -6,7 +6,7 @@
 
 Mission analysis, formulation and planning. Upstream `HowieHwong/Awareness-in-LLM`. No LLM judge
 since 2026-10-05: its only judged rows were dropped. **Full run 2026-10-12 for all five models:
-4,015 rows each, `COMPLETE 1`, in git (`a07bf58`, `873590a`); not yet confirmed or recorded.**
+4,015 rows each, `COMPLETE 1`, confirmed by the user and recorded in both workbooks the same day.**
 
 ## Paths
 
@@ -77,6 +77,22 @@ accepts one answer only — a second un-negated option, verdict or location make
 responses, every gold answer written several ways); run it after any scorer change. Every row keeps
 `raw_response`, and `--score-only` re-scores from it: **a scorer fix is a rescore, never a rerun.**
 
+## Results — full run, 2026-10-12
+
+Recomputed from the per-task rows; equal to each `*_awareness_overall.csv`. Scorer `aware_lenient_v4`.
+
+| | Gemini | OpenAI | Qwen | Gemma | Deepseek |
+|---|--:|--:|--:|--:|--:|
+| capability | 0.6338 | 0.5268 | 0.6237 | 0.9064 | 0.9181 |
+| mission_explicit · mission_implicit | 0.9928 · 0.9226 | 0.9969 · 0.8418 | 0.9959 · 0.9428 | 1.0000 · 0.9933 | 1.0000 · 0.9428 |
+| mission | 0.9577 | 0.9193 | 0.9693 | 0.9966 | 0.9714 |
+| emotion | 0.9150 | 0.9350 | 0.9050 | 0.9450 | 0.9300 |
+| culture | 0.9674 | 0.9674 | 0.9579 | 0.9713 | 0.9540 |
+| perspective (2nd-order) | 0.4941 | 0.6059 | 0.0000 | 0.1294 | 0.8059 |
+| **Overall** | 0.7936 | 0.7909 | 0.6912 | 0.7897 | **0.9159** |
+
+Read with `FULL_RUN_NOTES.md`: Qwen's 0 is 170 real refusals (§3), and perspective tracks reasoning (§4).
+
 ## Output and logs
 
 Ours are `AWARE_<Model>/results/` — named after the model. `results/<task>/<model_slug>.jsonl` is the
@@ -130,38 +146,15 @@ for that. Hidden reasoning is capped regardless (`model-parameters.md`).
 - **DeepSeek is called by its real id, `deepseek-flash`** (user, 2026-10-12). `deepseek-reasoner`,
   which the other benchmarks call, is an alias that now answers as the same model; which model
   answered their earlier runs is not recorded (`model-calls.md`).
-- **PERSPECTIVE tracks reasoning as much as theory of mind (full run, 2026-10-12).** Qwen declined
-  all 170 second-order questions ("the answer cannot be determined from the story" — read in full,
-  none hides an answer) while scoring 0.80–1.00 on the other story tasks; Gemma declined 124. Both
-  run with no reasoning, as does Gemini. DeepSeek, the top score, spent 1,465 reasoning tokens on
-  an average second-order item (Luna 179, the other three 0): its "think briefly" ceiling is a
-  request it does not keep on hard items. Without PERSPECTIVE, Gemma leads and Qwen is not last.
-  **Qwen's refusal is Qwen3.5-9B's, triggered by an assumption the benchmark leaves unstated**
-  (local probes, same 10 items, 2026-10-12). It survives reasoning on (0/8 right, 5 still declined
-  after ~4–6k thinking tokens), another host (Parasail bf16: 10/10 declined), temperature 0.7
-  (10/10) and "give your best inference" (7/10). It disappears with a larger model of the same
-  family on the unchanged prompt (35B, 122B, 397B: 0 declined, 3–4/10 right) and when the prompt
-  states ToMi's rule — characters see what happens in a room while they are in it (0 declined,
-  6/10 right). So the 9B reads "think" literally where every other model assumes that rule; the
-  pipeline, scorer and settings are not the cause. Its first-order 0.80 is object tracking: 0.89
-  where belief equals reality, 0.37 on false-belief items.
-- **Second-order gold labels look wrong on some items — unmeasured.** Of three DeepSeek misses on
-  items whose gold is the object's real location, two have a gold the story contradicts: Liam
-  leaves before Chloe moves the spinach, yet gold for "where does Liam think Chloe searches" is
-  the new location. Every model scores *lower* on these items than on false-belief ones (DeepSeek
-  0.69 vs 0.98). Not yet counted against a rule-based ToMi solver.
+- **PERSPECTIVE measures reasoning and refusals as much as theory of mind.** Qwen declined all 170
+  second-order questions and Gemma 124; the two reasoning models lead. A real refusal by Qwen3.5-9B,
+  not the pipeline, and the 0 stands by the user's decision — `FULL_RUN_NOTES.md` §3–4.
+- **Some second-order gold labels contradict their story — unmeasured.** `FULL_RUN_NOTES.md` §5.
 - **Story answers are narrated.** The first scorer version credited the gold container when a
   response merely mentioned it — including in a refusal. The location extractor now reads, in
   order, the `Answer:` span, the clause after the question's own verb, the conclusion sentence.
-- **Open after the full run (2026-10-12): scorer v4 leaves readable answers as parse failures.**
-  39 of 20,075 rows; Gemini has 32. Half of Gemini's are true refusals ("I cannot select A or B");
-  the other 16 end with one answer after naming others ("Since you requested A or B only: B",
-  "Therefore … is: B", "(1) Surprised"), which the one-answer rule rejects. Of the other four
-  models' 7, three name a container and its room ("in the basket in the pantry"), three are Qwen
-  stating the location and then narrating every move, and one spells `back_yard` as "backyard".
-  About 12 of Gemini's and 6 of the others' would score correct: at most 1.2 points on a task that
-  enters `AWARENESS_OVERALL` (Gemini `mission_implicit`), 3.3 on a control (Qwen `reality`). A fix
-  is a rescore, not a rerun.
+- **Scorer v4 leaves 39 readable answers as parse failures** (Gemini 32). Known, not applied:
+  the recorded numbers are v4. A fix is a rescore, not a rerun — `FULL_RUN_NOTES.md` §6.
 - **OpenRouter's credit exhaustion is not classified as billing.** Its 402s read "would exceed your
   available credits given your current in-flight requests" and "requires more credits … can only
   afford N" — neither in `BILLING_SIGNATURES` — so Gemini wrote empty rows until `FAILURE_HALT`
@@ -172,7 +165,9 @@ for that. Hidden reasoning is capped regardless (`model-parameters.md`).
 
 ## Read this before touching it
 
-`AWARENESS_NOTES.md` in the folder is deep and authoritative. Four sections change what a run means:
+`FULL_RUN_NOTES.md` in the folder is the 2026-10-12 full run's record: incidents, the Qwen
+refusal diagnosis, the suspected gold errors and the scorer gap. `AWARENESS_NOTES.md` is deep and
+authoritative on the dataset. Four sections change what a run means:
 §2.5 (the schema changes per dimension — one parser cannot read the file), §2.7 (the released file is
 not the file the paper evaluated), §2.8 (`perspective` is scored second-order only), §4 (what is
 broken as delivered). §5 is the run plan; the judge we chose not to run is
