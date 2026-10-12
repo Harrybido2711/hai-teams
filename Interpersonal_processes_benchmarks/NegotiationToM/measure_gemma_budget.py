@@ -38,7 +38,7 @@ from together import Together
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
-import Interpersonal_processes_benchmarks.NegotiationToM.neg_eval_core as core  # noqa: E402
+import neg_eval_core as core  # noqa: E402
 
 load_dotenv(os.path.join(ROOT, ".env"))
 client = Together(api_key=os.getenv("TOGETHER_API_KEY"), timeout=900)

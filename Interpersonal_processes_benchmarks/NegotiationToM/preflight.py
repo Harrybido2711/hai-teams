@@ -42,7 +42,7 @@ TOY_DIALOGUE = [
 
 
 def probe_messages():
-    import Interpersonal_processes_benchmarks.NegotiationToM.neg_eval_core as core
+    import neg_eval_core as core
     return core.desire_messages(TOY_DIALOGUE, "agent_1")
 
 
@@ -193,7 +193,7 @@ def check_core():
     section("Shared evaluator")
     try:
         sys.path.insert(0, ROOT)
-        import Interpersonal_processes_benchmarks.NegotiationToM.neg_eval_core as core
+        import neg_eval_core as core
         check("import neg_eval_core", True)
         for fn in ("run_desire", "run_belief", "run_intention", "run_cli",
                    "record_call", "usage_from"):

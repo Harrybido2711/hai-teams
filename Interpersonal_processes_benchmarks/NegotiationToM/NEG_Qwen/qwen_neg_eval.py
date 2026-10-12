@@ -8,7 +8,7 @@ from together import Together
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
-from Interpersonal_processes_benchmarks.NegotiationToM.neg_eval_core import (  # noqa: E402
+from neg_eval_core import (  # noqa: E402
     halt_on_billing, record_call, record_empty, record_error, record_usage, retry_delay, run_cli, usage_from,
 )
 

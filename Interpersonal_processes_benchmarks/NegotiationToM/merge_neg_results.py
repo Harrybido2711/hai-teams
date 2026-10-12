@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.metrics import f1_score
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from Interpersonal_processes_benchmarks.NegotiationToM.neg_eval_core import scorable  # noqa: E402
+from neg_eval_core import scorable  # noqa: E402
 
 
 TEMPLATE_COLUMNS = {

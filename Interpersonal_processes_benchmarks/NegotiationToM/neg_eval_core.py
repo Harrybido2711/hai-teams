@@ -49,14 +49,77 @@ STATS = {
 }
 
 
-def record_call(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_reason=None):
+# Per-row usage: the fields of .claude/references/evaluation-criteria.md § Per-row fields. STATS is
+# run-level, and a run-level sum gives neither a cost per correct answer nor a per-item comparison.
+# These are the same events kept for the one row in flight: call_and_parse resets it, the record_*
+# calls below fill it, and each run_* merges row_meta() into the row it writes. Every API request
+# ends in exactly one of record_call / record_usage / record_error, so counting them is n_attempts.
+# A runner that passes no latency_s or reasoning_tokens leaves those None — not measured, which is
+# not the same as zero. Outside a row (the negotiate probe, the measure_* scripts) nothing is kept.
+_ROW = {}
+
+
+def row_meta_reset():
+    _ROW.clear()
+    _ROW.update({"prompt_tokens": None, "completion_tokens": None, "reasoning_tokens": None,
+                 "latency_s": None, "finish_reason": None, "n_attempts": 0})
+
+
+def _row_add(prompt_tokens, completion_tokens, usage_seen, finish_reason, reasoning_tokens,
+             latency_s):
+    if not _ROW:
+        return
+    _ROW["n_attempts"] += 1
+    # Summed over every call the row spent — empty retries and parse re-calls are billed too, so
+    # the sum is what the row cost.
+    if usage_seen:
+        _ROW["prompt_tokens"] = (_ROW["prompt_tokens"] or 0) + (prompt_tokens or 0)
+        _ROW["completion_tokens"] = (_ROW["completion_tokens"] or 0) + (completion_tokens or 0)
+    if reasoning_tokens is not None:
+        _ROW["reasoning_tokens"] = (_ROW["reasoning_tokens"] or 0) + reasoning_tokens
+    if finish_reason is not None:
+        _ROW["finish_reason"] = finish_reason
+    if latency_s is not None:
+        _ROW["latency_s"] = latency_s
+
+
+def row_meta(pred):
+    """The row's usage fields plus parse_ok, then cleared so the next row starts empty."""
+    meta = dict(_ROW)
+    meta["parse_ok"] = isinstance(pred, dict)
+    _ROW.clear()
+    return meta
+
+
+def reasoning_from(response):
+    """Hidden reasoning tokens where the provider reports them; None where it does not."""
+    usage = getattr(response, "usage", None) or getattr(response, "usage_metadata", None)
+    if usage is None:
+        return None
+    details = getattr(usage, "completion_tokens_details", None)
+    if isinstance(details, dict):
+        value = details.get("reasoning_tokens")
+    else:
+        value = getattr(details, "reasoning_tokens", None)
+    if value is None:
+        value = getattr(usage, "thoughts_token_count", None)      # google-genai
+    return value
+
+
+def record_call(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_reason=None,
+                reasoning_tokens=None, latency_s=None):
     """Called by each runner after a successful API call.
 
     `finish_reason` is optional and defaults to None so the six existing runners, which call this
     as `record_call(*usage_from(response))`, keep working untouched. Pass it to make truncation
     visible: a response cut off at max_tokens is otherwise indistinguishable from a wrong answer,
     which is how a too-tight budget silently lowers a score.
+
+    `reasoning_tokens` and `latency_s` feed only the per-row fields. latency_s is the successful
+    request alone, timed by the runner around create() — back-off and pacing sleeps excluded.
     """
+    _row_add(prompt_tokens, completion_tokens, usage_seen, finish_reason, reasoning_tokens,
+             latency_s)
     STATS["calls"] += 1
     STATS["prompt_tokens"] += prompt_tokens or 0
     STATS["completion_tokens"] += completion_tokens or 0
@@ -69,13 +132,16 @@ def record_call(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_r
             STATS["truncated"] += 1
 
 
-def record_usage(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_reason=None):
+def record_usage(prompt_tokens=0, completion_tokens=0, usage_seen=False, finish_reason=None,
+                 reasoning_tokens=None):
     """Record billed tokens from an API response that did not yield a usable answer.
 
     Empty responses are especially expensive for reasoning models: Qwen can consume its entire
     output budget and return empty content. They must count toward cost without being reported as
     successful calls.
     """
+    # No latency here: latency_s is the successful call's, and an empty body is not one.
+    _row_add(prompt_tokens, completion_tokens, usage_seen, finish_reason, reasoning_tokens, None)
     STATS["prompt_tokens"] += prompt_tokens or 0
     STATS["completion_tokens"] += completion_tokens or 0
     if usage_seen:
@@ -124,6 +190,8 @@ def record_empty():
 
 
 def record_error():
+    if _ROW:
+        _ROW["n_attempts"] += 1
     STATS["errors"] += 1
 
 
@@ -173,6 +241,19 @@ BILLING_SIGNATURES = (
     "credit balance",
     "payment required",
     "arrears",
+    # OpenRouter, added 2026-09-11 after a live probe. Its 402 reads "This request requires more
+    # credits, or fewer max_tokens. You requested up to 8192 tokens, but can only afford 8119" —
+    # which matched NONE of the signatures above, so halt_on_billing returned and the run would
+    # have retried a permanent refusal for hours. That is the xAI failure exactly (9,378 empty
+    # rows, job COMPLETED 0:0), and it has already happened once on this provider: MMLU's
+    # OpenRouter Gemini run has 2,188 empty rows from the same 402.
+    #
+    # "openrouter_credits" is the metadata limit_source and is money-only. "requires more credits"
+    # and "afford" are the human wording. None can be produced by a throughput limit, which is the
+    # property every entry in this tuple must have.
+    "requires more credits",
+    "openrouter_credits",
+    "but can only afford",
 )
 
 # Throughput limits, kept for documentation and for `retry_delay`. They are deliberately NOT used to
@@ -507,6 +588,83 @@ def retry_delay_cap():
     return max(5.0, min(60.0, HARD_CALL_TIMEOUT / 4.0))
 
 
+# Wordings that mean "this key cannot call this model at all". Negotiating around one of these
+# would strip every parameter in turn and then fail anyway, with the real cause buried under four
+# misleading "unsupported, DROPPED" lines.
+#
+# 401 and 403 are matched by status code, not as text: a bare "401" also matches request ids such
+# as "req_9c401fe2" inside an ordinary 5xx message (found in EmoBench's luna runner, 2026-10-08).
+AUTH_MARKERS = ("authentication", "api key", "invalid_api_key", "insufficient_quota", "billing")
+AUTH_STATUS = (401, 403)
+
+# Preference order when a provider refuses the effort VALUE but supports the parameter. Lowest
+# first: the point of the cap is to spend less, so accept the cheapest offered rather than the
+# first named. `none` is never here — that is removal, not a cap, and on gpt-5.6-luna it costs
+# 9-11 points (`.claude/references/model-parameters.md`).
+EFFORT_FALLBACKS = ("minimal", "low", "medium", "high")
+
+
+def negotiate(client, model, wanted, verbose=True):
+    """Find which of `wanted` an OpenAI-compatible model actually accepts, in one probe call.
+
+    Ported verbatim in behaviour from `Tasks_benchmarks/bbh/bbh_eval_core.py::negotiate`, which
+    took it from EmoBench. It lives in this core rather than in a runner for the same reason the
+    scorer does: a copied implementation is one that can drift, and the two runners that need it
+    here must negotiate identically or their configs are not comparable.
+
+    Only for the OpenAI-compatible clients. The google-genai and xai_sdk runners take a different
+    request shape and must not call this.
+
+    Returns (params, notes). Raises on anything that is not a parameter problem — an unknown model
+    or a bad key is not something to negotiate around.
+    """
+    params, notes = dict(wanted), []
+    for _ in range(len(wanted) + 2):
+        try:
+            client.chat.completions.create(
+                model=model, messages=[{"role": "user", "content": "Reply with: ok"}], **params)
+            return params, notes
+        except Exception as error:
+            err = str(error)
+            if (getattr(error, "status_code", None) in AUTH_STATUS
+                    or any(marker in err.lower() for marker in AUTH_MARKERS)):
+                raise SystemExit(f"Authentication or quota failure, not negotiated around: {error}")
+            offender = next((k for k in params if f"'{k}'" in err), None)
+            if offender is None:
+                raise
+
+            # A refused VALUE is not a refused PARAMETER, and conflating them is how a cap gets
+            # dropped instead of corrected: gpt-5.6-luna refuses reasoning_effort="minimal" while
+            # supporting the parameter perfectly. Dropping it there runs the whole benchmark at
+            # the model default, uncapped, with nothing in the log saying so.
+            if "Unsupported value" in err or "does not support" in err:
+                match = re.search(r"[Ss]upported values are:?\s*([^.}]+)", err)
+                options = re.findall(r"'([^']+)'", match.group(1)) if match else []
+                pick = next((v for v in EFFORT_FALLBACKS if v in options),
+                            options[0] if options else None)
+                if pick is not None:
+                    asked = params[offender]
+                    params[offender] = pick
+                    notes.append(f"{offender}={pick} (asked {asked!r}, refused)")
+                    if verbose:
+                        print(f"  negotiate: {offender} refused {asked!r}; supported {options}, "
+                              f"using {pick!r}", flush=True)
+                    continue
+
+            value = params.pop(offender)
+            rename = re.search(r"[Uu]se '([A-Za-z_]+)' instead", err)
+            if rename:
+                params[rename.group(1)] = value
+                notes.append(f"{offender} -> {rename.group(1)}")
+                if verbose:
+                    print(f"  negotiate: {offender} rejected, using {rename.group(1)}", flush=True)
+            else:
+                notes.append(f"{offender} unsupported, DROPPED")
+                if verbose:
+                    print(f"  negotiate: {offender} unsupported, dropped", flush=True)
+    raise SystemExit(f"no working parameter set for {model}; last tried {params}")
+
+
 class CallTimeout(BaseException):
     """Derives from BaseException on purpose, like KeyboardInterrupt and SystemExit.
 
@@ -628,6 +786,7 @@ def guarded_call(call_api, messages, model):
 
 
 def call_and_parse(call_api, messages, model, max_parse_retries=3):
+    row_meta_reset()      # one call_and_parse is one row; every call below is charged to it
     last_raw = None
     for attempt in range(max_parse_retries):
         try:
@@ -945,7 +1104,8 @@ def run_desire(data, call_api, model, script_dir, shard, total_shards, save_ever
             raw, pred = call_and_parse(call_api, desire_messages(item["dialogue"], item["agent"]), model)
             results.append({"uid": uid, "dialogue_id": item["dialogue_id"], "agent": item["agent"],
                             "gold_desire": item["gold_desire"], "pred": pred,
-                            "raw_response": raw or "", "desire_em": desire_em(pred, item["gold_desire"])})
+                            "raw_response": raw or "", "desire_em": desire_em(pred, item["gold_desire"]),
+                            **row_meta(pred)})
             done.add(uid)
             if len(results) % save_every == 0:
                 save_checkpoint(checkpoint, results)
@@ -981,7 +1141,7 @@ def run_belief(data, call_api, model, script_dir, shard, total_shards, save_ever
                             "opponent": item["opponent"], "gold_high": item["gold_high"],
                             "gold_med": item["gold_med"], "gold_low": item["gold_low"], "pred": pred,
                             "belief_em": belief_em(pred, item["gold_high"], item["gold_med"], item["gold_low"]),
-                            "raw_response": raw or ""})
+                            "raw_response": raw or "", **row_meta(pred)})
             done.add(uid)
             if len(results) % save_every == 0:
                 save_checkpoint(checkpoint, results)
@@ -1024,7 +1184,7 @@ def run_intention(data, call_api, model, script_dir, shard, total_shards, save_e
                             "target_utterance": item["target"], "gold_intent": item["gold_intent"],
                             "gold_bitmask": intent_bitmask(item["gold_intent"]),
                             "pred_intents": pred_intents, "pred_bitmask": intent_bitmask(pred_intents),
-                            "raw_response": raw or ""})
+                            "raw_response": raw or "", **row_meta(pred)})
             done.add(uid)
             if len(results) % save_every == 0:
                 save_checkpoint(checkpoint, results)

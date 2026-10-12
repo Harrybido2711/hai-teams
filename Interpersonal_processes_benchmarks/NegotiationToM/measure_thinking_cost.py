@@ -25,7 +25,7 @@ from google.genai import types
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
-import Interpersonal_processes_benchmarks.NegotiationToM.neg_eval_core as core  # noqa: E402
+import neg_eval_core as core  # noqa: E402
 
 load_dotenv(os.path.join(ROOT, ".env"))
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"))

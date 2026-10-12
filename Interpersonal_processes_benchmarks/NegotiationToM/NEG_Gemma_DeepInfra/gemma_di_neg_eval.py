@@ -9,7 +9,7 @@ from openai import OpenAI
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
-from Interpersonal_processes_benchmarks.NegotiationToM.neg_eval_core import (  # noqa: E402
+from neg_eval_core import (  # noqa: E402
     backoff_sleep, finish_reason_from, halt_on_billing, record_call, record_empty, record_error,
     record_usage, retry_delay, run_cli, set_call_timeout, usage_from,
 )
