@@ -1,0 +1,46 @@
+negotiating parameter surface for deepseek-flash ...
+  accepted: {'temperature': 0, 'max_tokens': 8192, 'seed': 42}
+[culture] 522 rows in this shard, 522 to call
+  [culture] 20/522
+  [culture] 40/522
+  [culture] 60/522
+  [culture] 80/522
+  [culture] 100/522
+  [culture] 120/522
+  [culture] 140/522
+  [culture] 160/522
+  [culture] 180/522
+  [culture] 200/522
+  [culture] 220/522
+  [culture] 240/522
+  [culture] 260/522
+  [culture] 280/522
+  [culture] 300/522
+  [culture] 320/522
+  [culture] 340/522
+  [culture] 360/522
+  [culture] 380/522
+  [culture] 400/522
+  [culture] 420/522
+  [culture] 440/522
+  [culture] 460/522
+  [culture] 480/522
+  [culture] 500/522
+  [culture] 520/522
+  culture: n=522 acc=0.9540 parse_fail=0 declined=0 empty=0 fallback=0 finish={'stop': 522}
+    pred={'wrong': 280, 'correct': 242} gold={'wrong': 264, 'correct': 258}
+    completion_tokens median=52.0 max=6297  reasoning_tokens median=50.0 max=6295
+
+calls: {'ok': 522, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 1849s
+
+deepseek-flash — results: 2809/4015 rows, complete=0, parse_fail_rate=0.0
+  capability                  rows= 580/600  acc=0.9152 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 600/966  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9428 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 160/200  acc=0.9563 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.954 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 620/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows=   0/170  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_1st       rows=   0/166  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_reality   rows=   0/91   acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0

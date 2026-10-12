@@ -1,0 +1,28 @@
+negotiating parameter surface for google/gemma-4-31B-it ...
+  accepted: {'temperature': 0, 'max_tokens': 2048, 'seed': 42}
+[perspective_story_1st] 166 rows in this shard, 166 to call
+  [perspective_story_1st] 20/166
+  [perspective_story_1st] 40/166
+  [perspective_story_1st] 60/166
+  [perspective_story_1st] 80/166
+  [perspective_story_1st] 100/166
+  [perspective_story_1st] 120/166
+  [perspective_story_1st] 140/166
+  [perspective_story_1st] 160/166
+  perspective_story_1st: n=166 acc=0.7229 parse_fail=0 declined=9 empty=0 fallback=0 finish={'stop': 166}
+    pred={'bucket': 20, 'cupboard': 16, 'box': 15, 'crate': 14, 'basket': 13, 'bottle': 12} gold={'bucket': 19, 'drawer': 17, 'treasure_chest': 16, 'pantry': 14, 'box': 14, 'cupboard': 13}
+    completion_tokens median=14.5 max=85  reasoning_tokens median=0.0 max=0
+
+calls: {'ok': 166, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 951s
+
+google/gemma-4-31B-it — results: 3739/4015 rows, complete=0, parse_fail_rate=0.0003
+  capability                  rows= 600/600  acc=0.9064 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 820/966  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9933 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.945 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9713 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 820/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows= 120/170  acc=0.125 parse_fail=0.0083 declined=0.7083 empty=0 fallback=0
+  perspective_story_1st       rows= 166/166  acc=0.7229 parse_fail=0.0 declined=0.0542 empty=0 fallback=0
+  perspective_story_reality   rows=  91/91   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=  73/73   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0

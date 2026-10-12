@@ -1,0 +1,55 @@
+negotiating parameter surface for Qwen/Qwen3.5-9B ...
+  accepted: {'temperature': 0, 'max_tokens': 2048, 'seed': 42}
+[culture] 522 rows in this shard, 522 to call
+  [culture] 20/522
+  [culture] 40/522
+  [culture] 60/522
+  [culture] 80/522
+  [culture] 100/522
+  [culture] 120/522
+  [culture] 140/522
+  [culture] 160/522
+  [culture] 180/522
+  [culture] 200/522
+  [culture] 220/522
+  [culture] 240/522
+[Qwen/Qwen3.5-9B] API error (1/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+  [culture] 260/522
+[Qwen/Qwen3.5-9B] API error (1/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+[Qwen/Qwen3.5-9B] API error (2/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+  [culture] 280/522
+  [culture] 300/522
+  [culture] 320/522
+  [culture] 340/522
+[Qwen/Qwen3.5-9B] API error (1/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+  [culture] 360/522
+[Qwen/Qwen3.5-9B] API error (1/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+[Qwen/Qwen3.5-9B] API error (2/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+[Qwen/Qwen3.5-9B] API error (1/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+[Qwen/Qwen3.5-9B] API error (2/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+[Qwen/Qwen3.5-9B] API error (1/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+  [culture] 380/522
+  [culture] 400/522
+  [culture] 420/522
+  [culture] 440/522
+  [culture] 460/522
+  [culture] 480/522
+  [culture] 500/522
+  [culture] 520/522
+  culture: n=522 acc=0.9579 parse_fail=0 declined=0 empty=0 fallback=0 finish={'stop': 522}
+    pred={'wrong': 276, 'correct': 246} gold={'wrong': 264, 'correct': 258}
+    completion_tokens median=2.0 max=2
+
+calls: {'ok': 522, 'empty': 0, 'errors': 9, 'timeouts': 0, 'failed_rows': 0}  elapsed 1389s
+
+Qwen/Qwen3.5-9B — results: 2409/4015 rows, complete=0, parse_fail_rate=0.0
+  capability                  rows= 480/600  acc=0.5983 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 460/966  acc=0.9935 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9428 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 160/200  acc=0.9313 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9579 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 460/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows=   0/170  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_1st       rows=   0/166  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_reality   rows=   0/91   acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0

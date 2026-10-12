@@ -1,0 +1,68 @@
+negotiating parameter surface for Qwen/Qwen3.5-9B ...
+  accepted: {'temperature': 0, 'max_tokens': 2048, 'seed': 42}
+[mission_explicit] 966 rows in this shard, 966 to call
+  [mission_explicit] 20/966
+  [mission_explicit] 40/966
+  [mission_explicit] 60/966
+  [mission_explicit] 80/966
+  [mission_explicit] 100/966
+  [mission_explicit] 120/966
+  [mission_explicit] 140/966
+  [mission_explicit] 160/966
+  [mission_explicit] 180/966
+  [mission_explicit] 200/966
+  [mission_explicit] 220/966
+  [mission_explicit] 240/966
+  [mission_explicit] 260/966
+  [mission_explicit] 280/966
+  [mission_explicit] 300/966
+  [mission_explicit] 320/966
+  [mission_explicit] 340/966
+  [mission_explicit] 360/966
+  [mission_explicit] 380/966
+  [mission_explicit] 400/966
+  [mission_explicit] 420/966
+  [mission_explicit] 440/966
+  [mission_explicit] 460/966
+  [mission_explicit] 480/966
+  [mission_explicit] 500/966
+  [mission_explicit] 520/966
+  [mission_explicit] 540/966
+  [mission_explicit] 560/966
+  [mission_explicit] 580/966
+  [mission_explicit] 600/966
+  [mission_explicit] 620/966
+  [mission_explicit] 640/966
+  [mission_explicit] 660/966
+  [mission_explicit] 680/966
+  [mission_explicit] 700/966
+  [mission_explicit] 720/966
+  [mission_explicit] 740/966
+  [mission_explicit] 760/966
+  [mission_explicit] 780/966
+  [mission_explicit] 800/966
+  [mission_explicit] 820/966
+  [mission_explicit] 840/966
+  [mission_explicit] 860/966
+  [mission_explicit] 880/966
+  [mission_explicit] 900/966
+  [mission_explicit] 920/966
+  [mission_explicit] 940/966
+  [mission_explicit] 960/966
+  mission_explicit: n=966 acc=0.9959 parse_fail=0 declined=0 empty=0 fallback=0 finish={'stop': 966}
+    pred={'C': 323, 'A': 322, 'B': 321} gold={'A': 322, 'B': 322, 'C': 322}
+    completion_tokens median=2.0 max=2
+
+calls: {'ok': 966, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 2612s
+
+Qwen/Qwen3.5-9B — results: 4015/4015 rows, complete=1, parse_fail_rate=0.0007
+  capability                  rows= 600/600  acc=0.6237 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 966/966  acc=0.9959 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9428 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.905 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9579 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 900/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows= 170/170  acc=0.0 parse_fail=0.0 declined=1.0 empty=0 fallback=0
+  perspective_story_1st       rows= 166/166  acc=0.7952 parse_fail=0.0 declined=0.006 empty=0 fallback=0
+  perspective_story_reality   rows=  91/91   acc=0.967 parse_fail=0.033 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=  73/73   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0

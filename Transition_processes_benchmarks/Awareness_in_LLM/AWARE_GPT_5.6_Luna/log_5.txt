@@ -1,0 +1,30 @@
+negotiating parameter surface for gpt-5.6-luna ...
+  accepted: {'max_completion_tokens': 2048, 'reasoning_effort': 'low', 'seed': 42}
+[emotion] 200 rows in this shard, 200 to call
+  [emotion] 20/200
+  [emotion] 40/200
+  [emotion] 60/200
+  [emotion] 80/200
+  [emotion] 100/200
+  [emotion] 120/200
+  [emotion] 140/200
+  [emotion] 160/200
+  [emotion] 180/200
+  [emotion] 200/200
+  emotion: n=200 acc=0.9350 parse_fail=0 declined=0 empty=0 fallback=0 finish={'stop': 200}
+    pred={'2': 76, '1': 54, '3': 47, '4': 23} gold={'2': 77, '1': 58, '3': 43, '4': 22}
+    completion_tokens median=8.0 max=89  reasoning_tokens median=0.0 max=74
+
+calls: {'ok': 200, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 586s
+
+gpt-5.6-luna — results: 3408/4015 rows, complete=0, parse_fail_rate=0.0
+  capability                  rows= 600/600  acc=0.5268 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 966/966  acc=0.9969 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 220/327  acc=0.8529 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.935 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9674 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 900/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows=   0/170  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_1st       rows=   0/166  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_reality   rows=   0/91   acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0

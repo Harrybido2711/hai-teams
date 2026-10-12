@@ -1,0 +1,23 @@
+negotiating parameter surface for gpt-5.6-luna ...
+  accepted: {'max_completion_tokens': 2048, 'reasoning_effort': 'low', 'seed': 42}
+[perspective_story_memory] 73 rows in this shard, 73 to call
+  [perspective_story_memory] 20/73
+  [perspective_story_memory] 40/73
+  [perspective_story_memory] 60/73
+  perspective_story_memory: n=73 acc=1.0000 parse_fail=0 declined=0 empty=0 fallback=0 finish={'stop': 73}
+    pred={'cupboard': 9, 'bottle': 8, 'pantry': 8, 'crate': 7, 'box': 6, 'suitcase': 6} gold={'cupboard': 9, 'bottle': 8, 'pantry': 8, 'crate': 7, 'box': 6, 'suitcase': 6}
+    completion_tokens median=11 max=44  reasoning_tokens median=0 max=28
+
+calls: {'ok': 73, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 232s
+
+gpt-5.6-luna — results: 4015/4015 rows, complete=1, parse_fail_rate=0.0005
+  capability                  rows= 600/600  acc=0.5268 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 966/966  acc=0.9969 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.8418 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.935 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9674 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 900/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows= 170/170  acc=0.6059 parse_fail=0.0118 declined=0.0 empty=0 fallback=0
+  perspective_story_1st       rows= 166/166  acc=0.7952 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_reality   rows=  91/91   acc=0.989 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=  73/73   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0

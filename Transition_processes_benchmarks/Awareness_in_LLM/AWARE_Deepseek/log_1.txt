@@ -1,0 +1,65 @@
+negotiating parameter surface for deepseek-flash ...
+  accepted: {'temperature': 0, 'max_tokens': 8192, 'seed': 42}
+[perspective_mcq] 900 rows in this shard, 900 to call
+  [perspective_mcq] 20/900
+  [perspective_mcq] 40/900
+  [perspective_mcq] 60/900
+  [perspective_mcq] 80/900
+  [perspective_mcq] 100/900
+  [perspective_mcq] 120/900
+  [perspective_mcq] 140/900
+  [perspective_mcq] 160/900
+  [perspective_mcq] 180/900
+  [perspective_mcq] 200/900
+  [perspective_mcq] 220/900
+  [perspective_mcq] 240/900
+  [perspective_mcq] 260/900
+  [perspective_mcq] 280/900
+  [perspective_mcq] 300/900
+  [perspective_mcq] 320/900
+  [perspective_mcq] 340/900
+  [perspective_mcq] 360/900
+  [perspective_mcq] 380/900
+  [perspective_mcq] 400/900
+  [perspective_mcq] 420/900
+  [perspective_mcq] 440/900
+  [perspective_mcq] 460/900
+  [perspective_mcq] 480/900
+  [perspective_mcq] 500/900
+  [perspective_mcq] 520/900
+  [perspective_mcq] 540/900
+  [perspective_mcq] 560/900
+  [perspective_mcq] 580/900
+  [perspective_mcq] 600/900
+  [perspective_mcq] 620/900
+  [perspective_mcq] 640/900
+  [perspective_mcq] 660/900
+  [perspective_mcq] 680/900
+  [perspective_mcq] 700/900
+  [perspective_mcq] 720/900
+  [perspective_mcq] 740/900
+  [perspective_mcq] 760/900
+  [perspective_mcq] 780/900
+  [perspective_mcq] 800/900
+  [perspective_mcq] 820/900
+  [perspective_mcq] 840/900
+  [perspective_mcq] 860/900
+  [perspective_mcq] 880/900
+  [perspective_mcq] 900/900
+  perspective_mcq: n=900 acc=1.0000 parse_fail=0 declined=0 empty=0 fallback=0 finish={'stop': 900}
+    pred={'B': 302, 'A': 299, 'C': 299} gold={'B': 302, 'A': 299, 'C': 299}
+    completion_tokens median=28.0 max=95  reasoning_tokens median=26.0 max=93
+
+calls: {'ok': 900, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 2629s
+
+deepseek-flash — results: 3753/4015 rows, complete=0, parse_fail_rate=0.0003
+  capability                  rows= 600/600  acc=0.9181 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 860/966  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9428 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.93 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.954 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 900/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows=  60/170  acc=0.8 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_1st       rows= 120/166  acc=0.8667 parse_fail=0.0083 declined=0.0 empty=0 fallback=0
+  perspective_story_reality   rows=  91/91   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=  73/73   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0

@@ -1,0 +1,28 @@
+negotiating parameter surface for deepseek-flash ...
+  accepted: {'temperature': 0, 'max_tokens': 8192, 'seed': 42}
+[perspective_story_1st] 166 rows in this shard, 166 to call
+  [perspective_story_1st] 20/166
+  [perspective_story_1st] 40/166
+  [perspective_story_1st] 60/166
+  [perspective_story_1st] 80/166
+  [perspective_story_1st] 100/166
+  [perspective_story_1st] 120/166
+  [perspective_story_1st] 140/166
+  [perspective_story_1st] 160/166
+  perspective_story_1st: n=166 acc=0.8855 parse_fail=1 declined=0 empty=0 fallback=0 finish={'stop': 166}
+    pred={'bucket': 19, 'cupboard': 15, 'pantry': 15, 'drawer': 15, 'box': 14, 'envelope': 13} gold={'bucket': 19, 'drawer': 17, 'treasure_chest': 16, 'pantry': 14, 'box': 14, 'cupboard': 13}
+    completion_tokens median=186.5 max=6014  reasoning_tokens median=176.5 max=6001
+
+calls: {'ok': 166, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 836s
+
+deepseek-flash — results: 3859/4015 rows, complete=0, parse_fail_rate=0.0003
+  capability                  rows= 600/600  acc=0.9181 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 920/966  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9428 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.93 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.954 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 900/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows=  60/170  acc=0.8 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_1st       rows= 166/166  acc=0.8855 parse_fail=0.006 declined=0.0 empty=0 fallback=0
+  perspective_story_reality   rows=  91/91   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=  73/73   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0

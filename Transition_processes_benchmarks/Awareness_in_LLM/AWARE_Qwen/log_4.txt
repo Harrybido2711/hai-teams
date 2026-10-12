@@ -1,0 +1,37 @@
+negotiating parameter surface for Qwen/Qwen3.5-9B ...
+  accepted: {'temperature': 0, 'max_tokens': 2048, 'seed': 42}
+[mission_implicit] 327 rows in this shard, 327 to call
+  [mission_implicit] 20/327
+  [mission_implicit] 40/327
+  [mission_implicit] 60/327
+  [mission_implicit] 80/327
+  [mission_implicit] 100/327
+  [mission_implicit] 120/327
+  [mission_implicit] 140/327
+  [mission_implicit] 160/327
+  [mission_implicit] 180/327
+  [mission_implicit] 200/327
+  [mission_implicit] 220/327
+  [mission_implicit] 240/327
+[Qwen/Qwen3.5-9B] API error (1/5): RateLimitError: Error code: 429 - {"message": "Too many requests in a short window. Our rate limits are dynamic - they shift with live model capacity and your traffic shape, so steady traffic and exponential back-off help. Retry starting from ~2s (X-RateLimit-Reset header). If you hit rate limits often, consider a dedicated endpoint or batch inference. See https://docs.together.ai/docs/rate-limits.", "type_": "dynamic_rate_limit"}
+  [mission_implicit] 260/327
+  [mission_implicit] 280/327
+  [mission_implicit] 300/327
+  [mission_implicit] 320/327
+  mission_implicit: n=327 acc=0.9480 parse_fail=0 declined=0 empty=0 fallback=0 finish={'stop': 327}
+    pred={'C': 114, 'B': 111, 'A': 102} gold={'A': 109, 'B': 109, 'C': 109}
+    completion_tokens median=2 max=2
+
+calls: {'ok': 327, 'empty': 0, 'errors': 1, 'timeouts': 0, 'failed_rows': 0}  elapsed 811s
+
+Qwen/Qwen3.5-9B — results: 1587/4015 rows, complete=0, parse_fail_rate=0.0
+  capability                  rows= 320/600  acc=0.5818 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 300/966  acc=0.99 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9428 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows=   0/200  acc= parse_fail= declined= empty=0 fallback=0
+  culture                     rows= 320/522  acc=0.9656 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 320/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows=   0/170  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_1st       rows=   0/166  acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_reality   rows=   0/91   acc= parse_fail= declined= empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0

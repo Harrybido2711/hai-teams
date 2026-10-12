@@ -1,0 +1,28 @@
+negotiating parameter surface for google/gemma-4-31B-it ...
+  accepted: {'temperature': 0, 'max_tokens': 2048, 'seed': 42}
+[perspective_story_2nd] 170 rows in this shard, 170 to call
+  [perspective_story_2nd] 20/170
+  [perspective_story_2nd] 40/170
+  [perspective_story_2nd] 60/170
+  [perspective_story_2nd] 80/170
+  [perspective_story_2nd] 100/170
+  [perspective_story_2nd] 120/170
+  [perspective_story_2nd] 140/170
+  [perspective_story_2nd] 160/170
+  perspective_story_2nd: n=170 acc=0.1294 parse_fail=1 declined=124 empty=0 fallback=0 finish={'stop': 170}
+    pred={'DECLINED': 124, 'crate': 7, 'box': 4, 'bucket': 4, 'container': 4, 'basket': 4} gold={'suitcase': 19, 'crate': 18, 'treasure_chest': 17, 'bucket': 17, 'bathtub': 13, 'basket': 13}
+    completion_tokens median=52.0 max=153  reasoning_tokens median=0.0 max=0
+
+calls: {'ok': 170, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 1315s
+
+google/gemma-4-31B-it — results: 3949/4015 rows, complete=0, parse_fail_rate=0.0003
+  capability                  rows= 600/600  acc=0.9064 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 900/966  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9933 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.945 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9713 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 900/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows= 170/170  acc=0.1294 parse_fail=0.0059 declined=0.7294 empty=0 fallback=0
+  perspective_story_1st       rows= 166/166  acc=0.7229 parse_fail=0.0 declined=0.0542 empty=0 fallback=0
+  perspective_story_reality   rows=  91/91   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=  73/73   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0

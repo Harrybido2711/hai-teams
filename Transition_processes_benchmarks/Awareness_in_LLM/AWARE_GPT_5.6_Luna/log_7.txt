@@ -1,0 +1,28 @@
+negotiating parameter surface for gpt-5.6-luna ...
+  accepted: {'max_completion_tokens': 2048, 'reasoning_effort': 'low', 'seed': 42}
+[perspective_story_1st] 166 rows in this shard, 166 to call
+  [perspective_story_1st] 20/166
+  [perspective_story_1st] 40/166
+  [perspective_story_1st] 60/166
+  [perspective_story_1st] 80/166
+  [perspective_story_1st] 100/166
+  [perspective_story_1st] 120/166
+  [perspective_story_1st] 140/166
+  [perspective_story_1st] 160/166
+  perspective_story_1st: n=166 acc=0.7952 parse_fail=0 declined=0 empty=0 fallback=0 finish={'stop': 166}
+    pred={'pantry': 16, 'cupboard': 15, 'box': 15, 'envelope': 14, 'crate': 14, 'bucket': 14} gold={'bucket': 19, 'drawer': 17, 'treasure_chest': 16, 'pantry': 14, 'box': 14, 'cupboard': 13}
+    completion_tokens median=45.0 max=269  reasoning_tokens median=25.0 max=246
+
+calls: {'ok': 166, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 578s
+
+gpt-5.6-luna — results: 3861/4015 rows, complete=0, parse_fail_rate=0.0003
+  capability                  rows= 600/600  acc=0.5268 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 966/966  acc=0.9969 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.8418 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.935 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9674 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 900/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows= 100/170  acc=0.6 parse_fail=0.01 declined=0.0 empty=0 fallback=0
+  perspective_story_1st       rows= 166/166  acc=0.7952 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_reality   rows=  80/91   acc=0.9875 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0

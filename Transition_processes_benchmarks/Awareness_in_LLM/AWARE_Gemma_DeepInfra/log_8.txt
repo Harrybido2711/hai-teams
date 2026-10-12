@@ -1,0 +1,24 @@
+negotiating parameter surface for google/gemma-4-31B-it ...
+  accepted: {'temperature': 0, 'max_tokens': 2048, 'seed': 42}
+[perspective_story_reality] 91 rows in this shard, 91 to call
+  [perspective_story_reality] 20/91
+  [perspective_story_reality] 40/91
+  [perspective_story_reality] 60/91
+  [perspective_story_reality] 80/91
+  perspective_story_reality: n=91 acc=1.0000 parse_fail=0 declined=0 empty=0 fallback=0 finish={'stop': 91}
+    pred={'drawer': 11, 'crate': 10, 'box': 9, 'bottle': 7, 'pantry': 7, 'treasure_chest': 7} gold={'drawer': 11, 'crate': 10, 'box': 9, 'bottle': 7, 'pantry': 7, 'treasure_chest': 7}
+    completion_tokens median=8 max=10  reasoning_tokens median=0 max=0
+
+calls: {'ok': 91, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 430s
+
+google/gemma-4-31B-it — results: 3180/4015 rows, complete=0, parse_fail_rate=0.0
+  capability                  rows= 600/600  acc=0.9064 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 660/966  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9933 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.945 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9713 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 680/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows=  40/170  acc=0.05 parse_fail=0.0 declined=0.85 empty=0 fallback=0
+  perspective_story_1st       rows=  60/166  acc=0.6667 parse_fail=0.0 declined=0.05 empty=0 fallback=0
+  perspective_story_reality   rows=  91/91   acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0

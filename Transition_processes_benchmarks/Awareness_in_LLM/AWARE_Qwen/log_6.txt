@@ -1,0 +1,28 @@
+negotiating parameter surface for Qwen/Qwen3.5-9B ...
+  accepted: {'temperature': 0, 'max_tokens': 2048, 'seed': 42}
+[perspective_story_2nd] 170 rows in this shard, 170 to call
+  [perspective_story_2nd] 20/170
+  [perspective_story_2nd] 40/170
+  [perspective_story_2nd] 60/170
+  [perspective_story_2nd] 80/170
+  [perspective_story_2nd] 100/170
+  [perspective_story_2nd] 120/170
+  [perspective_story_2nd] 140/170
+  [perspective_story_2nd] 160/170
+  perspective_story_2nd: n=170 acc=0.0000 parse_fail=0 declined=170 empty=0 fallback=0 finish={'stop': 170}
+    pred={'DECLINED': 170} gold={'suitcase': 19, 'crate': 18, 'treasure_chest': 17, 'bucket': 17, 'bathtub': 13, 'basket': 13}
+    completion_tokens median=111.0 max=191
+
+calls: {'ok': 170, 'empty': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 661s
+
+Qwen/Qwen3.5-9B — results: 3510/4015 rows, complete=0, parse_fail_rate=0.0009
+  capability                  rows= 600/600  acc=0.6237 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_explicit            rows= 720/966  acc=0.9958 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  mission_implicit            rows= 327/327  acc=0.9428 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  emotion                     rows= 200/200  acc=0.905 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  culture                     rows= 522/522  acc=0.9579 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_mcq             rows= 740/900  acc=1.0 parse_fail=0.0 declined=0.0 empty=0 fallback=0
+  perspective_story_2nd       rows= 170/170  acc=0.0 parse_fail=0.0 declined=1.0 empty=0 fallback=0
+  perspective_story_1st       rows= 140/166  acc=0.7929 parse_fail=0.0 declined=0.0071 empty=0 fallback=0
+  perspective_story_reality   rows=  91/91   acc=0.967 parse_fail=0.033 declined=0.0 empty=0 fallback=0
+  perspective_story_memory    rows=   0/73   acc= parse_fail= declined= empty=0 fallback=0
