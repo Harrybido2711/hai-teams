@@ -40,8 +40,9 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
 from neg_eval_core import (  # noqa: E402
-    backoff_sleep, finish_reason_from, halt_on_billing, negotiate, reasoning_from, record_call,
-    record_empty, record_error, record_usage, retry_delay, run_cli, usage_from,
+    backoff_sleep, enable_row_fields, finish_reason_from, halt_on_billing, negotiate,
+    reasoning_from, record_call, record_empty, record_error, record_usage, retry_delay, run_cli,
+    usage_from,
 )
 
 DEFAULT_MODEL = "google/gemini-3.5-flash-lite"
@@ -57,17 +58,23 @@ WANTED = {"max_tokens": 8192, "seed": 42}
 
 PARAMS = {}
 BACKENDS = collections.Counter()
+BACKENDS_WRITE_EVERY = 50
+RUN_TAG = ["full"]       # pilot | shardNofM | full, set in __main__ before any call
 
 
-def _write_backends():
-    """Written on every exit path, including a wall-clock kill: which backend answered is not
-    recoverable from the rows afterwards."""
+def _write_backends(quiet=False):
+    """Which backend answered is not recoverable from the rows afterwards, so the tally is written
+    every BACKENDS_WRITE_EVERY calls and again at exit. atexit alone was not enough: it does not run
+    on the SIGTERM a SLURM wall-clock kill sends, so such a run left no file at all. One file per
+    shard: an untagged file was last-writer-wins and showed one shard's split as the run's."""
     if not BACKENDS:
         return
     os.makedirs(os.path.join(SCRIPT_DIR, "results"), exist_ok=True)
-    with open(os.path.join(SCRIPT_DIR, "results", "backend_providers.json"), "w") as handle:
+    path = os.path.join(SCRIPT_DIR, "results", f"backend_providers_{RUN_TAG[0]}.json")
+    with open(path, "w") as handle:
         json.dump(dict(BACKENDS), handle, indent=2)
-    print("backends:", dict(BACKENDS), flush=True)
+    if not quiet:
+        print("backends:", dict(BACKENDS), flush=True)
 
 
 load_dotenv(os.path.join(ROOT, ".env"))
@@ -90,6 +97,8 @@ def call_api(messages, model, max_retries=5):
             # Counted before the content check: a backend that answers only with empty bodies is
             # exactly what this tally is for, and skipping it there would hide the culprit.
             BACKENDS[getattr(response, "provider", None) or "unreported"] += 1
+            if sum(BACKENDS.values()) % BACKENDS_WRITE_EVERY == 0:
+                _write_backends(quiet=True)
             content = (response.choices[0].message.content or "").strip()
             reason = finish_reason_from(response)
             if not content:
@@ -107,13 +116,12 @@ def call_api(messages, model, max_retries=5):
             return content
         except Exception as error:
             record_error()
-            message = str(error).lower()
             print(f"[{model}] API error ({attempt + 1}/{max_retries}): "
                   f"{type(error).__name__}: {error}", flush=True)
+            # A real daily cap halts inside halt_on_billing. No "requests per day" early return
+            # after it: what reaches this line is the seconds-scale RPD throttle ("try again in
+            # 8.64s"), and returning there wrote an empty row after one request.
             halt_on_billing(error, model, SCRIPT_DIR)
-            if "requests per day" in message:
-                print(f"[{model}] daily request quota exhausted", flush=True)
-                return None
             if attempt + 1 < max_retries:
                 backoff_sleep(retry_delay(error, attempt=attempt))
     print(f"[{model}] all {max_retries} attempts failed, giving up on this item", flush=True)
@@ -125,18 +133,32 @@ if __name__ == "__main__":
     # model that will actually be called. parse_known_args leaves sys.argv untouched for run_cli.
     pre = argparse.ArgumentParser(add_help=False)
     pre.add_argument("--model", default=DEFAULT_MODEL)
-    model = pre.parse_known_args()[0].model
+    pre.add_argument("--shard", type=int, default=0)
+    pre.add_argument("--total-shards", type=int, default=1)
+    pre.add_argument("--pilot", action="store_true")
+    known = pre.parse_known_args()[0]
+    model = known.model
+    # Every shard negotiates and tallies for itself, so each records its own.
+    RUN_TAG[0] = ("pilot" if known.pilot
+                  else f"shard{known.shard}of{known.total_shards}" if known.total_shards > 1
+                  else "full")
 
+    enable_row_fields()
     print(f"negotiating parameter surface for {model} ...", flush=True)
-    # The probe writes no row, so it keeps the SDK's own retries: a transient 5xx here would
-    # otherwise end the job before the first item.
-    PARAMS, notes = negotiate(client.with_options(max_retries=2), model, WANTED)
+    try:
+        # The probe writes no row, so it keeps the SDK's own retries: a transient 5xx here would
+        # otherwise end the job before the first item.
+        PARAMS, notes = negotiate(client.with_options(max_retries=2), model, WANTED)
+    except Exception as error:
+        halt_on_billing(error, model, SCRIPT_DIR)    # an OpenRouter 402 leaves BILLING_HALT.txt
+        raise
     print(f"  accepted: {PARAMS}" + (f"  [{'; '.join(notes)}]" if notes else ""), flush=True)
     if "seed" not in PARAMS:
         print("  WARNING: seed was dropped — this run is NOT reproducible "
               "(model-parameters.md rule 8)", flush=True)
     os.makedirs(os.path.join(SCRIPT_DIR, "results"), exist_ok=True)
-    with open(os.path.join(SCRIPT_DIR, "results", "negotiated_params.json"), "w") as handle:
+    with open(os.path.join(SCRIPT_DIR, "results", f"negotiated_params_{RUN_TAG[0]}.json"),
+              "w") as handle:
         json.dump({"model": model, "asked": WANTED, "accepted": PARAMS,
                    "extra_body": EXTRA_BODY, "notes": notes}, handle, indent=2)
 

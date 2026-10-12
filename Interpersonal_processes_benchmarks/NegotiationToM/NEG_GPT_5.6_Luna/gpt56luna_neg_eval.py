@@ -29,14 +29,15 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, ROOT)
 from neg_eval_core import (  # noqa: E402
-    backoff_sleep, finish_reason_from, halt_on_billing, negotiate, reasoning_from, record_call,
-    record_empty, record_error, record_usage, retry_delay, run_cli, usage_from,
+    backoff_sleep, enable_row_fields, finish_reason_from, halt_on_billing, negotiate,
+    reasoning_from, record_call, record_empty, record_error, record_usage, retry_delay, run_cli,
+    usage_from,
 )
 
 DEFAULT_MODEL = "gpt-5.6-luna"
 
 # What we ask for; what is actually used is whatever negotiate() settles on, written to
-# results/negotiated_params.json beside the numbers.
+# results/negotiated_params_<pilot|shardNofM>.json beside the numbers.
 #
 # `max_completion_tokens` counts reasoning tokens as well as visible ones. A NegotiationToM answer
 # is a small JSON object and `low` effort measured a median of 203 reasoning tokens on an
@@ -90,13 +91,12 @@ def call_api(messages, model, max_retries=5):
             return content
         except Exception as error:
             record_error()
-            message = str(error).lower()
             print(f"[{model}] API error ({attempt + 1}/{max_retries}): "
                   f"{type(error).__name__}: {error}", flush=True)
+            # A real daily cap halts inside halt_on_billing. No "requests per day" early return
+            # after it: what reaches this line is the seconds-scale RPD throttle ("try again in
+            # 8.64s"), and returning there wrote an empty row after one request.
             halt_on_billing(error, model, SCRIPT_DIR)
-            if "requests per day" in message:
-                print(f"[{model}] daily request quota exhausted", flush=True)
-                return None
             if attempt + 1 < max_retries:
                 backoff_sleep(retry_delay(error, attempt=attempt))
     print(f"[{model}] all {max_retries} attempts failed, giving up on this item", flush=True)
@@ -108,12 +108,25 @@ if __name__ == "__main__":
     # model that will actually be called. parse_known_args leaves sys.argv untouched for run_cli.
     pre = argparse.ArgumentParser(add_help=False)
     pre.add_argument("--model", default=DEFAULT_MODEL)
-    model = pre.parse_known_args()[0].model
+    pre.add_argument("--shard", type=int, default=0)
+    pre.add_argument("--total-shards", type=int, default=1)
+    pre.add_argument("--pilot", action="store_true")
+    known = pre.parse_known_args()[0]
+    model = known.model
+    # Every shard negotiates for itself, so each records its own: one untagged file was
+    # last-writer-wins and could not show a shard that settled on something different.
+    run_tag = ("pilot" if known.pilot
+               else f"shard{known.shard}of{known.total_shards}" if known.total_shards > 1 else "full")
 
+    enable_row_fields()
     print(f"negotiating parameter surface for {model} ...", flush=True)
-    # The probe writes no row, so it keeps the SDK's own retries: a transient 5xx here would
-    # otherwise end the job before the first item.
-    PARAMS, notes = negotiate(client.with_options(max_retries=2), model, WANTED)
+    try:
+        # The probe writes no row, so it keeps the SDK's own retries: a transient 5xx here would
+        # otherwise end the job before the first item.
+        PARAMS, notes = negotiate(client.with_options(max_retries=2), model, WANTED)
+    except Exception as error:
+        halt_on_billing(error, model, SCRIPT_DIR)    # leaves BILLING_HALT.txt / QUOTA_HALT.txt
+        raise
     print(f"  accepted: {PARAMS}" + (f"  [{'; '.join(notes)}]" if notes else ""), flush=True)
     if "reasoning_effort" not in PARAMS:
         raise SystemExit("reasoning_effort was dropped entirely — that runs uncapped at the model "
@@ -123,7 +136,7 @@ if __name__ == "__main__":
         print("  WARNING: seed was dropped — this run is NOT reproducible "
               "(model-parameters.md rule 8)", flush=True)
     os.makedirs(os.path.join(SCRIPT_DIR, "results"), exist_ok=True)
-    with open(os.path.join(SCRIPT_DIR, "results", "negotiated_params.json"), "w") as handle:
+    with open(os.path.join(SCRIPT_DIR, "results", f"negotiated_params_{run_tag}.json"), "w") as handle:
         json.dump({"model": model, "asked": WANTED, "accepted": PARAMS, "notes": notes},
                   handle, indent=2)
 

@@ -66,6 +66,26 @@ def probe_gpt(api_key, model):
     return probe_openai_compatible(api_key, model)
 
 
+def probe_gpt56luna(api_key, model):
+    from openai import OpenAI
+    client = OpenAI(api_key=api_key, timeout=60)
+    resp = client.chat.completions.create(
+        model=model, messages=probe_messages(),
+        max_completion_tokens=8192, reasoning_effort="low", seed=42,
+    )
+    return (resp.choices[0].message.content or "").strip()
+
+
+def probe_gemini35lite(api_key, model):
+    from openai import OpenAI
+    client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1", timeout=60)
+    resp = client.chat.completions.create(
+        model=model, messages=probe_messages(), max_tokens=8192, seed=42,
+        extra_body={"reasoning": {"effort": "minimal"}},
+    )
+    return (resp.choices[0].message.content or "").strip()
+
+
 def probe_together(api_key, model, reasoning=None):
     from together import Together
     client = Together(api_key=api_key, timeout=120)
@@ -131,6 +151,13 @@ register("gemma", "NEG_Gemma", ["TOGETHER_API_KEY"], "google/gemma-4-31B-it",
          ["together"], probe_together)
 register("deepseek", "NEG_Deepseek", ["DEEPSEEK_API_KEY"], "deepseek-reasoner",
          ["openai"], probe_deepseek)
+# The two selected slots that replace gpt-4o-mini and gemini-2.5-flash. Not probe_openai_compatible:
+# it sends temperature=0 and max_tokens, and gpt-5.6-luna refuses both. Each probe sends what its
+# runner's WANTED/EXTRA_BODY ask for, so a key that works but a parameter that is refused fails here.
+register("gpt56luna", "NEG_GPT_5.6_Luna", ["OPENAI_API_KEY"], "gpt-5.6-luna",
+         ["openai"], probe_gpt56luna)
+register("gemini35lite", "NEG_Gemini_Flash3.5lite_OpenRouter", ["OPENROUTER_API_KEY"],
+         "google/gemini-3.5-flash-lite", ["openai"], probe_gemini35lite)
 
 
 # ── reporting ─────────────────────────────────────────────────────────────────

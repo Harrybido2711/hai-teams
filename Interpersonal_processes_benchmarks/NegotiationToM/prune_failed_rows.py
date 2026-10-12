@@ -18,7 +18,11 @@ import os
 import shutil
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-MODELS = ["NEG_GPT", "NEG_Gemini", "NEG_XAI", "NEG_Qwen", "NEG_Gemma", "NEG_Deepseek"]
+# Every model folder on disk, not a list kept by hand. The hand-kept list named the original six, so
+# after a halt in NEG_GPT_5.6_Luna this tool reported "no failed rows" while its empty rows sat in a
+# checkpoint that resume would skip forever (found in review, 2026-10-12).
+MODELS = sorted(os.path.basename(path) for path in glob.glob(os.path.join(ROOT, "NEG_*"))
+                if os.path.isdir(path))
 
 
 def is_failed(row):

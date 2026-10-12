@@ -56,11 +56,23 @@ STATS = {
 # ends in exactly one of record_call / record_usage / record_error, so counting them is n_attempts.
 # A runner that passes no latency_s or reasoning_tokens leaves those None — not measured, which is
 # not the same as zero. Outside a row (the negotiate probe, the measure_* scripts) nothing is kept.
+#
+# Opt-in, by enable_row_fields(). The runners written before 2026-10-12 leave the openai SDK's own
+# retries on, so their n_attempts would undercount by every hidden retry while looking measured
+# (script-skeleton.md §4). Rows from a runner that has not opted in carry no fields at all, which is
+# what evaluation-criteria.md asks of a run made before its runner was updated.
 _ROW = {}
+_ROW_FIELDS = [False]
+
+
+def enable_row_fields():
+    _ROW_FIELDS[0] = True
 
 
 def row_meta_reset():
     _ROW.clear()
+    if not _ROW_FIELDS[0]:
+        return
     _ROW.update({"prompt_tokens": None, "completion_tokens": None, "reasoning_tokens": None,
                  "latency_s": None, "finish_reason": None, "n_attempts": 0})
 
@@ -85,6 +97,8 @@ def _row_add(prompt_tokens, completion_tokens, usage_seen, finish_reason, reason
 
 def row_meta(pred):
     """The row's usage fields plus parse_ok, then cleared so the next row starts empty."""
+    if not _ROW_FIELDS[0]:
+        return {}
     meta = dict(_ROW)
     meta["parse_ok"] = isinstance(pred, dict)
     _ROW.clear()
