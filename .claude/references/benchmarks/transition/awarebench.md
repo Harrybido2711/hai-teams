@@ -136,10 +136,15 @@ for that. Hidden reasoning is capped regardless (`model-parameters.md`).
   run with no reasoning, as does Gemini. DeepSeek, the top score, spent 1,465 reasoning tokens on
   an average second-order item (Luna 179, the other three 0): its "think briefly" ceiling is a
   request it does not keep on hard items. Without PERSPECTIVE, Gemma leads and Qwen is not last.
-  Qwen's refusal is the model's, not the setting: a 10-item local probe with reasoning **on**
-  (two lost to 503s) got 0/8 — 5 still declined after 3,900–5,900 thinking tokens, 2 hit 6,144 with
-  no answer, 1 wrong. Its first-order 0.80 is object tracking: 0.89 where belief equals reality,
-  0.37 on false-belief items.
+  **Qwen's refusal is Qwen3.5-9B's, triggered by an assumption the benchmark leaves unstated**
+  (local probes, same 10 items, 2026-10-12). It survives reasoning on (0/8 right, 5 still declined
+  after ~4–6k thinking tokens), another host (Parasail bf16: 10/10 declined), temperature 0.7
+  (10/10) and "give your best inference" (7/10). It disappears with a larger model of the same
+  family on the unchanged prompt (35B, 122B, 397B: 0 declined, 3–4/10 right) and when the prompt
+  states ToMi's rule — characters see what happens in a room while they are in it (0 declined,
+  6/10 right). So the 9B reads "think" literally where every other model assumes that rule; the
+  pipeline, scorer and settings are not the cause. Its first-order 0.80 is object tracking: 0.89
+  where belief equals reality, 0.37 on false-belief items.
 - **Second-order gold labels look wrong on some items — unmeasured.** Of three DeepSeek misses on
   items whose gold is the object's real location, two have a gold the story contradicts: Liam
   leaves before Chloe moves the spinach, yet gold for "where does Liam think Chloe searches" is
