@@ -1,0 +1,29 @@
+negotiating parameter surface for google/gemini-3.5-flash-lite ...
+  accepted: {'max_tokens': 8192, 'seed': 42}
+[pulse] 1 calls, 0/1 hung (0%), trunc 0, empty 0, err 0, mean 2.8s, effective 2.8s/row -> 21.45 rows/min, tokens p99~14, latency p90 3s p99 3s max 3s (ceiling 200s)
+[pulse] 208 calls, 0/208 hung (0%), trunc 0, empty 0, err 0, mean 2.9s, effective 2.9s/row -> 20.62 rows/min, tokens p99~16, latency p90 3s p99 6s max 16s (ceiling 200s)
+[pulse] 428 calls, 0/428 hung (0%), trunc 0, empty 0, err 0, mean 2.8s, effective 2.8s/row -> 21.29 rows/min, tokens p99~16, latency p90 3s p99 4s max 16s (ceiling 200s)
+[pulse] 653 calls, 0/653 hung (0%), trunc 0, empty 0, err 0, mean 2.8s, effective 2.8s/row -> 21.69 rows/min, tokens p99~16, latency p90 3s p99 4s max 16s (ceiling 200s)
+[google/gemini-3.5-flash-lite] JSON parse failed (1/3); calling again
+[google/gemini-3.5-flash-lite] JSON parse failed (2/3); calling again
+[google/gemini-3.5-flash-lite] JSON parse failed (3/3); calling again
+[pulse] 883 calls, 0/883 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.01 rows/min, tokens p99~16, latency p90 3s p99 3s max 16s (ceiling 200s)
+[desire] excluded 37/952 unannotated rows from the metrics
+[pulse] 1112 calls, 0/1112 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.19 rows/min, tokens p99~16, latency p90 3s p99 3s max 16s (ceiling 200s)
+[pulse] 1343 calls, 0/1343 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.33 rows/min, tokens p99~16, latency p90 3s p99 3s max 16s (ceiling 200s)
+[pulse] 1569 calls, 0/1569 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.37 rows/min, tokens p99~16, latency p90 3s p99 3s max 16s (ceiling 200s)
+[pulse] 1799 calls, 0/1799 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.45 rows/min, tokens p99~16, latency p90 3s p99 3s max 16s (ceiling 200s)
+[belief] excluded 37/952 unannotated rows from the metrics
+[pulse] 2028 calls, 0/2028 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.49 rows/min, tokens p99~16, latency p90 3s p99 3s max 16s (ceiling 200s)
+[pulse] 2255 calls, 0/2255 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.51 rows/min, tokens p99~18, latency p90 3s p99 3s max 16s (ceiling 200s)
+[pulse] 2483 calls, 0/2483 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.54 rows/min, tokens p99~19, latency p90 3s p99 3s max 16s (ceiling 200s)
+[pulse] 2711 calls, 0/2711 hung (0%), trunc 0, empty 0, err 0, mean 2.7s, effective 2.7s/row -> 22.56 rows/min, tokens p99~19, latency p90 3s p99 3s max 16s (ceiling 200s)
+
+[google/gemini-3.5-flash-lite] shard 2 finished in 125.6 min
+
+[budget]  measured, for the next run's max_tokens and call timeout
+          output tokens    : median 14  p90 16  p99 20  max 28  (n=2830)
+          suggested max_tokens : 30  (p99 x 1.5)
+          truncated at the cap : 0 of 2830 checked (measured — the tail above is real)
+          call latency (s) : median 2.6  p90 2.8  p99 3.2  max 15.7  (n=2830)
+backends: {'Google': 2830}
