@@ -75,15 +75,18 @@ Every run: 14,138 rows, **0 empty responses**, 0 duplicate uids.
 
 | Slot | Folder · model | Desire | Belief | Micro F1 | Macro F1 | All_EM | In `Final_result` |
 |---|---|---|---|---|---|---|---|
-| Deepseek | `NEG_Deepseek` · `deepseek-reasoner` | 0.6234 | **0.6197** | 0.4980 | 0.4742 | 0.0534 | yes |
-| Gemma | `NEG_Gemma` · `gemma-4-31B-it`, reasoning off | **0.6494** | 0.5007 | 0.5345 | 0.5064 | **0.0773** | yes — belief caveat |
+| OpenAI | `NEG_GPT_5.6_Luna` · `gpt-5.6-luna`, effort low | **0.6520** | **0.6405** | 0.5215 | 0.5012 | 0.0765 | yes |
+| Deepseek | `NEG_Deepseek` · `deepseek-reasoner` | 0.6234 | 0.6197 | 0.4980 | 0.4742 | 0.0534 | yes |
+| Gemma | `NEG_Gemma` · `gemma-4-31B-it`, reasoning off | 0.6494 | 0.5007 | 0.5345 | 0.5064 | **0.0773** | yes — belief caveat |
 | Qwen | `NEG_Qwen` · `Qwen3.5-9B`, reasoning off | 0.5888 | 0.5374 | 0.4860 | 0.3992 | 0.0408 | yes |
 | XAI | `NEG_XAI` · `grok-3-mini` | 0.5393 | 0.5510 | **0.5382** | **0.5366** | 0.0702 | no — XAI out since 2026-10-05 |
 | — | `NEG_Gemini` · `gemini-2.5-flash` | 0.5315 | 0.5593 | 0.5369 | 0.5133 | 0.0647 | no — superseded |
 | — | `NEG_GPT` · `gpt-4o-mini` | 0.5046 | 0.4522 | 0.4194 | 0.3376 | 0.0034 | no — superseded |
 
-**The current Gemini and OpenAI slots have not run.** `NEG_Gemini_Flash3.5lite_OpenRouter` and
-`NEG_GPT_5.6_Luna` are written but unpiloted, so those two `Final_result.xlsx` cells are blank.
+`gpt-5.6-luna` ran 2026-10-12 (job 9644711; 0 empty, 0 truncated, one negotiated config on every
+shard) and is recorded. **The Gemini slot is the one blank:** `NEG_Gemini_Flash3.5lite_OpenRouter`'s
+pilot passed the same day (Desire 0.6350, Belief 0.6134 on 238 dialogues) and its full run, job
+9682468, was submitted then.
 
 **Gemma's belief is a thinking-off number.** Paired on 463 uids against an archived reasoning-on
 pilot, belief was 0.6177 on and 0.4903 off (McNemar p=1.2e-08). Off is Gemma's settled config on

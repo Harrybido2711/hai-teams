@@ -92,12 +92,13 @@ produced the number is part of what the number means.
 **`Final_result.xlsx` never borrows a number from a model that is not selected. A blank means the
 selected model has not been run on that sheet**, and it stays blank until it is. That rule is what
 makes the two files different in practice: `gemini-2.5-flash` and `gpt-4o-mini-2024-07-18` are
-superseded but are still what `NEG_Gemini` and `NEG_GPT` call, so on the `NegotiationToM` sheet the
-`Gemini` and `OpenAI` columns of `Final_result.xlsx` are **empty**. Nothing is lost — those runs
-keep their columns in `Tempo_results.xlsx`. `Emo`, `Big Bench Hard`, `MMLU` and `DocVQA` are all
-filled for both slots. **NegotiationToM's two blanks are the one gap a run closes**: the runners
-`NEG_GPT_5.6_Luna` and `NEG_Gemini_Flash3.5lite_OpenRouter` were written 2026-09-11 and have not
-been piloted. `Awareness` is filled for all five since 2026-10-12, and DocVQA's Deepseek blank is
+superseded but are still what `NEG_Gemini` and `NEG_GPT` call, so their numbers never fill the
+`NegotiationToM` sheet's `Gemini` and `OpenAI` columns of `Final_result.xlsx`. Nothing is lost —
+those runs keep their columns in `Tempo_results.xlsx`. `Emo`, `Big Bench Hard`, `MMLU` and `DocVQA`
+are all filled for both slots. On `NegotiationToM`, `OpenAI` is filled since 2026-10-12
+(`NEG_GPT_5.6_Luna`, job 9644711) and **`Gemini` is the one gap a run closes**:
+`NEG_Gemini_Flash3.5lite_OpenRouter` passed its pilot that day and its full run, job 9682468, was
+submitted. `Awareness` is filled for all five since 2026-10-12, and DocVQA's Deepseek blank is
 a modality ceiling.
 
 The `Emo` result for `gpt-5.6-luna` is at the settled `low` since 2026-10-12 (`results/`, EU 0.690,
