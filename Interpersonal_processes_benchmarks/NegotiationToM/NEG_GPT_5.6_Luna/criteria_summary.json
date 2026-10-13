@@ -1,0 +1,189 @@
+{
+  "folder": "Interpersonal_processes_benchmarks/NegotiationToM/NEG_GPT_5.6_Luna",
+  "definitions": "criteria-runs.md \u00a7 Analysing it; seed pinned in every rep",
+  "tasks": {
+    "desire": {
+      "items": 294,
+      "clusters": 126,
+      "stability": {
+        "identical_all_5": 0.717687074829932,
+        "pass@1": 0.6204081632653061,
+        "pass^5": 0.5272108843537415,
+        "accuracy_min": 0.608843537414966,
+        "accuracy_max": 0.6394557823129252,
+        "failed_rows_per_rep": {
+          "rep1": 0,
+          "rep2": 0,
+          "rep3": 0,
+          "rep4": 0,
+          "rep5": 0
+        }
+      },
+      "robustness": {
+        "baseline_flip_rep1_vs_rep2": 0.1326530612244898,
+        "perturb-shuffle": {
+          "flip_vs_rep1": 0.14965986394557823,
+          "excess_flip": 0.017006802721088437,
+          "excess_flip_95ci_cluster": [
+            -0.020202020202020204,
+            0.054982817869415807
+          ],
+          "excess_mcnemar": {
+            "flip_only_under_perturbation": 18,
+            "flip_only_between_reps": 13,
+            "p": 0.47312965989112854
+          },
+          "accuracy_rep1": 0.6394557823129252,
+          "accuracy_perturbed": 0.6326530612244898,
+          "accuracy_mcnemar": {
+            "rep1_only": 13,
+            "perturbed_only": 11,
+            "p": 0.8388197422027588
+          }
+        },
+        "perturb-paraphrase": {
+          "flip_vs_rep1": 0.21428571428571427,
+          "excess_flip": 0.08163265306122448,
+          "excess_flip_95ci_cluster": [
+            0.03424657534246575,
+            0.13
+          ],
+          "excess_mcnemar": {
+            "flip_only_under_perturbation": 41,
+            "flip_only_between_reps": 17,
+            "p": 0.0022325516199429227
+          },
+          "accuracy_rep1": 0.6394557823129252,
+          "accuracy_perturbed": 0.6326530612244898,
+          "accuracy_mcnemar": {
+            "rep1_only": 18,
+            "perturbed_only": 16,
+            "p": 0.8641662404406816
+          }
+        }
+      }
+    },
+    "belief": {
+      "items": 294,
+      "clusters": 126,
+      "stability": {
+        "identical_all_5": 0.6666666666666666,
+        "pass@1": 0.6231292517006803,
+        "pass^5": 0.5306122448979592,
+        "accuracy_min": 0.608843537414966,
+        "accuracy_max": 0.6428571428571429,
+        "failed_rows_per_rep": {
+          "rep1": 0,
+          "rep2": 0,
+          "rep3": 0,
+          "rep4": 0,
+          "rep5": 0
+        }
+      },
+      "robustness": {
+        "baseline_flip_rep1_vs_rep2": 0.20408163265306123,
+        "perturb-shuffle": {
+          "flip_vs_rep1": 0.20408163265306123,
+          "excess_flip": 0.0,
+          "excess_flip_95ci_cluster": [
+            -0.04778156996587031,
+            0.04609929078014184
+          ],
+          "excess_mcnemar": {
+            "flip_only_under_perturbation": 25,
+            "flip_only_between_reps": 25,
+            "p": 1.0
+          },
+          "accuracy_rep1": 0.608843537414966,
+          "accuracy_perturbed": 0.608843537414966,
+          "accuracy_mcnemar": {
+            "rep1_only": 17,
+            "perturbed_only": 17,
+            "p": 1.0
+          }
+        },
+        "perturb-paraphrase": {
+          "flip_vs_rep1": 0.21768707482993196,
+          "excess_flip": 0.013605442176870748,
+          "excess_flip_95ci_cluster": [
+            -0.028938906752411574,
+            0.059027777777777776
+          ],
+          "excess_mcnemar": {
+            "flip_only_under_perturbation": 25,
+            "flip_only_between_reps": 21,
+            "p": 0.6587380770236564
+          },
+          "accuracy_rep1": 0.608843537414966,
+          "accuracy_perturbed": 0.5986394557823129,
+          "accuracy_mcnemar": {
+            "rep1_only": 21,
+            "perturbed_only": 18,
+            "p": 0.7492586247608415
+          }
+        }
+      }
+    },
+    "intention": {
+      "items": 295,
+      "clusters": 126,
+      "stability": {
+        "identical_all_5": 0.6338983050847458,
+        "pass@1": 0.2630508474576271,
+        "pass^5": 0.2033898305084746,
+        "accuracy_min": 0.25084745762711863,
+        "accuracy_max": 0.2745762711864407,
+        "failed_rows_per_rep": {
+          "rep1": 0,
+          "rep2": 0,
+          "rep3": 0,
+          "rep4": 0,
+          "rep5": 0
+        }
+      },
+      "robustness": {
+        "baseline_flip_rep1_vs_rep2": 0.20677966101694914,
+        "perturb-shuffle": {
+          "flip_vs_rep1": 0.24067796610169492,
+          "excess_flip": 0.03389830508474576,
+          "excess_flip_95ci_cluster": [
+            -0.0231023102310231,
+            0.09278350515463918
+          ],
+          "excess_mcnemar": {
+            "flip_only_under_perturbation": 38,
+            "flip_only_between_reps": 28,
+            "p": 0.267811664846587
+          },
+          "accuracy_rep1": 0.2576271186440678,
+          "accuracy_perturbed": 0.26101694915254237,
+          "accuracy_mcnemar": {
+            "rep1_only": 7,
+            "perturbed_only": 8,
+            "p": 1.0
+          }
+        },
+        "perturb-paraphrase": {
+          "flip_vs_rep1": 0.2576271186440678,
+          "excess_flip": 0.05084745762711865,
+          "excess_flip_95ci_cluster": [
+            -0.003257328990228013,
+            0.10320284697508897
+          ],
+          "excess_mcnemar": {
+            "flip_only_under_perturbation": 38,
+            "flip_only_between_reps": 23,
+            "p": 0.07217743850092258
+          },
+          "accuracy_rep1": 0.2576271186440678,
+          "accuracy_perturbed": 0.24745762711864408,
+          "accuracy_mcnemar": {
+            "rep1_only": 11,
+            "perturbed_only": 8,
+            "p": 0.6476058959960938
+          }
+        }
+      }
+    }
+  }
+}

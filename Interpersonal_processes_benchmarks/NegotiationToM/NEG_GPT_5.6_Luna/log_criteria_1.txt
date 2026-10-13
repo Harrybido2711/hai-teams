@@ -1,0 +1,49 @@
+negotiating parameter surface for gpt-5.6-luna ...
+  accepted: {'max_completion_tokens': 8192, 'reasoning_effort': 'low', 'seed': 42}
+[subsample] 150/2380 dialogues from ../criteria_subsample.json
+[pulse] 1 calls, 0/1 hung (0%), trunc 0, empty 0, err 0, mean 6.4s, effective 6.4s/row -> 9.35 rows/min, tokens p99~337, latency p90 6s p99 6s max 6s (ceiling 200s)
+[pulse] 165 calls, 0/165 hung (0%), trunc 0, empty 0, err 0, mean 3.7s, effective 3.7s/row -> 16.24 rows/min, tokens p99~410, latency p90 5s p99 7s max 8s (ceiling 200s)
+[desire] excluded 6/300 unannotated rows from the metrics
+[pulse] 305 calls, 0/305 hung (0%), trunc 0, empty 0, err 0, mean 4.0s, effective 4.0s/row -> 15.09 rows/min, tokens p99~415, latency p90 5s p99 7s max 64s (ceiling 200s)
+[pulse] 468 calls, 0/468 hung (0%), trunc 0, empty 0, err 0, mean 3.9s, effective 3.9s/row -> 15.49 rows/min, tokens p99~453, latency p90 5s p99 7s max 64s (ceiling 200s)
+[belief] excluded 6/300 unannotated rows from the metrics
+[pulse] 629 calls, 0/629 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.63 rows/min, tokens p99~446, latency p90 5s p99 7s max 64s (ceiling 200s)
+[pulse] 790 calls, 0/790 hung (0%), trunc 0, empty 0, err 0, mean 3.8s, effective 3.8s/row -> 15.70 rows/min, tokens p99~442, latency p90 5s p99 7s max 64s (ceiling 200s)
+
+====================================================================
+ PILOT REPORT — gpt-5.6-luna
+====================================================================
+
+[sample]  150 / 2380 dialogues (6.3%), seed-fixed so every model sees the same subset
+
+[health]  successful calls : 895
+          empty responses  : 0
+          API errors       : 0
+          JSON parse fails : 0
+          failure rate     : 0.0%  (looks healthy)
+
+[scores]
+          Desire_EM          0.6190
+          Desire_EM_all      0.6067
+          desire_scored_rows 294.0000
+          Belief_EM          0.6429
+          Belief_EM_all      0.6300
+          belief_scored_rows 294.0000
+          Intent_Micro_F1    0.4871
+          Intent_Macro_F1    0.4695
+          intention_scored_rows 295.0000
+
+[cost]    elapsed          : 57.1 min for 895 calls
+          projected full   : 15.1 h single-threaded, 3.0 h across 5 shards
+          tokens           : 258,311 in / 101,501 out (895 API responses reported usage)
+          output/response  : 113.4 tokens average
+          projected full   : 4,098,535 in / 1,610,483 out
+          projected cost   : add 'gpt-5.6-luna' to PRICE_PER_1M to get a figure
+
+[budget]  measured, for the next run's max_tokens and call timeout
+          output tokens    : median 93  p90 216  p99 436  max 535  (n=895)
+          suggested max_tokens : 654  (p99 x 1.5)
+          truncated at the cap : 0 of 895 checked (measured — the tail above is real)
+          call latency (s) : median 3.6  p90 4.8  p99 6.7  max 63.6  (n=895)
+====================================================================
+
