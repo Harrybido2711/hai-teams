@@ -1,6 +1,6 @@
 # Wonderbread — benchmark card
 
-<!-- size-budget: 7000 -->
+<!-- size-budget: 7400 -->
 <!-- One job: Wonderbread's operating facts. Larger than the default because its data has a fetch
      path of its own (the 33 GB question) and its judged scope covers two subtasks. -->
 
@@ -91,7 +91,10 @@ the same text). `--limit` writes `smoke/`, gitignored. SLURM logs `log_<jobid>.t
    4480407, 8m13s:** QA 12/12 and SOP 48/48 `ok`, all `finish=stop`, 0 empty, 0 retries; pulled
    down md5-identical. The SOPs come to 1,054 lines over both directions — 3,162 judge calls per
    judge at 3 replicates. Then `../run_judges.sh` — submitted 2026-10-19, job 4482838: QA (sample
-   and anchor) done for all four judges; SOP running for three; Sonnet 5.5 refused SOP and exited 1.
+   and anchor) done for all four judges; SOP anchor done for both Haikus. **Halted on OpenRouter
+   billing** 13:34–13:56 — SOP sample unfinished for all three (21, 551, 0 of 3,162), Kimi's anchor
+   1,237/1,767; Sonnet 5.5 refused SOP and exited 1. Resume: `sbatch --array=0-2 ../run_judges.sh`
+   after a top-up.
 5. `python ../compare_judges.py` on the pulled rows.
 
 ## What its README says about showing reasoning

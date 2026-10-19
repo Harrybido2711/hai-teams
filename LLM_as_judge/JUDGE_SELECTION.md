@@ -388,7 +388,10 @@ others, it is not considered further.**
   lines over both directions, so about 5,500 judge calls per judge, nine-tenths of them SOP line
   matching. From the smoke run's billed calls, per judge: Haiku 4.5 ≈ $6, Kimi K2.6 ≈ $4, Sonnet
   5.5 ≈ $1.4 (its SOP calls are refused, unbilled; billed in the end $1.37), Haiku 5.5 ≈ $0.8 —
-  about $13 in all. Four to five hours, the four judges in parallel.
+  about $13 in all. Four to five hours, the four judges in parallel. **The estimate was never set
+  against the account:** the OpenRouter key had $15 bought and much of it spent, and job 4482838
+  halted on billing at 13:34–13:56 after $6.35, every judge's SOP sample unfinished (Kimi's anchor
+  too). Finishing the three needs ≈ $7.5; resume is safe (no failed rows).
 - **Result for Sonnet 5.5** — MultiChallenge and QA finished for all four judges on 2026-10-19 (job
   4482838); SOP is the other three's. Report: `Action_processes_benchmarks/judge_comparison/`.
   - *MultiChallenge*: on the 23 items every judge labelled, Sonnet's macro is 46.7 against 36.1–44.5

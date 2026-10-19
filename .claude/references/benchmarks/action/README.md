@@ -19,5 +19,5 @@ three properties that decide how any work here starts:
 
 | Benchmark | Page | Judge covers | State |
 |---|---|---|---|
-| Wonderbread | [wonderbread.md](wonderbread.md) | QA **and** SOP Generation | judge pilot: GPT responses generated 2026-10-19 (job 4480407); judges: job 4482838 — QA done, SOP running |
+| Wonderbread | [wonderbread.md](wonderbread.md) | QA **and** SOP Generation | judge pilot: GPT responses generated 2026-10-19 (job 4480407); judges: job 4482838 — QA done, SOP halted on OpenRouter credit |
 | MultiChallenge | [multichallenge.md](multichallenge.md) | every item | judge pilot: GPT responses generated 2026-10-19 (job 4480406); judged by all four, job 4482838 |

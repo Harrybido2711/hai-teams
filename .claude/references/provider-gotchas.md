@@ -1,4 +1,4 @@
-<!-- size-budget: 9000 -->
+<!-- size-budget: 9600 -->
 <!-- One row per provider plus its failure modes; it grows when a provider is added or
      replaced, which is the file working, not the file sprawling. Raised to 9000 on 2026-10-19 for
      the OpenRouter section the judge-pilot probes produced. -->
@@ -108,8 +108,11 @@ Do not hand-roll `if "insufficient_quota" in text` — that narrow test is exact
 9,378 empty rows, because its wording is "used all available credits or reached its monthly spending
 limit".
 
-**OpenRouter's out-of-credit 402 matches no signature yet** (2026-10-12, AwareBench Gemini): "This
-request would exceed your available credits given your current in-flight requests. Retry after
-in-flight requests settle, or add credits." and "… requires more credits … can only afford N". The
-run stopped only at `FAILURE_HALT`, after 10 consecutive failures. The first wording also invites a
-retry, so whether it should halt at once is undecided.
+**OpenRouter's out-of-credit 402 has two wordings, in this order.** First "… would exceed your
+available credits given your current in-flight requests. Retry after …" (`in_flight_budget_exhausted`,
+`Retry-After: 120`) — the balance covers some calls but not every reservation in flight, since each
+reserves `max_tokens` × price. Then "… requires more credits, or fewer max_tokens … can only afford
+N" once it cannot cover one. `neg_eval_core.py` and `judge_core.py` retry the first and halt on the
+second, which stopped judge job 4482838 cleanly (2026-10-19, no failed rows); `aware_eval_core.py`
+matches neither and stopped only at `FAILURE_HALT` (2026-10-12). Before a run whose estimate nears
+the balance: `GET https://openrouter.ai/api/v1/credits` (`total_credits`, `total_usage`).
