@@ -15,6 +15,9 @@ core writes them for all five of its runners, and its full run (2026-10-12) has 
 row — the first benchmark where criteria 1–3 and 6 exist for all five models. No other runner
 writes them. Rows already on disk therefore **cannot** produce
 criteria 1–3 per item. A run made before a runner was updated says so; it does not get an estimate.
+Criteria 1, 2, 3 and 6 are computed on every benchmark by one function and one price table,
+`usage_criteria()` and `PRICES` in `.claude/scripts/criteria_report.py` — how to run it:
+[criteria-runs.md](criteria-runs.md) § Analysing it.
 
 ## The six
 
@@ -90,4 +93,6 @@ McNemar for right/wrong. Two models whose intervals overlap are not ranked.
 Criteria 4 and 5 need runs of their own — the design the user chose, how they are run and how
 they are analysed: [criteria-runs.md](criteria-runs.md).
 
-**Not yet decided — ask before acting:** the gate thresholds and the weights for any composite score.
+**Not yet decided — ask before acting:** the gate thresholds, the weights for any composite score, and
+whether criterion 2's wrong-÷-right ratio is pooled over a benchmark's tasks or kept per task — pooled,
+the task with most wrong rows dominates it (NegotiationToM gemini: 0.98 pooled, intention alone 1.26).

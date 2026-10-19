@@ -1,6 +1,32 @@
 {
   "folder": "Interpersonal_processes_benchmarks/EmoBench/EMO_GPT_5.6_Luna",
-  "definitions": "criteria-runs.md \u00a7 Analysing it; seed pinned in every rep",
+  "definitions": "evaluation-criteria.md (1, 2, 3, 6 from the main run); criteria-runs.md \u00a7 Analysing it (4, 5; seed pinned in every rep)",
+  "main_run": {
+    "rows": 400,
+    "scored_rows": 400,
+    "sources": [
+      "results/EU/gpt-5_6-luna_en.jsonl",
+      "results/EA/gpt-5_6-luna_en.jsonl"
+    ],
+    "1_cost_usd_full_run": 0.0502,
+    "1_usd_per_1k_correct": 0.1827,
+    "1_price_source": "model-parameters.md; OpenRouter agrees, read 2026-10-12",
+    "2_output_tokens_mean": 55.0,
+    "2_output_tokens_p95": 181,
+    "2_reasoning_tokens_mean": 38.0,
+    "2_wrong_over_right_tokens": 1.44,
+    "3_latency_p50_s": 1.124,
+    "3_latency_p95_s": 2.839,
+    "6_parse_ok_rate": 1.0,
+    "6_empty_rate": 0.0,
+    "6_truncation_rate": 0.0,
+    "6_retried_row_rate": 0.0,
+    "6_one_config": 1,
+    "2_wrong_over_right_tokens_by_task": {
+      "EU": 1.35,
+      "EA": 1.88
+    }
+  },
   "tasks": {
     "EU": {
       "items": 200,

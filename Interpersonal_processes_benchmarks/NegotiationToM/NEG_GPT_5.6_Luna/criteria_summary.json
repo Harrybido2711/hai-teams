@@ -1,6 +1,34 @@
 {
   "folder": "Interpersonal_processes_benchmarks/NegotiationToM/NEG_GPT_5.6_Luna",
-  "definitions": "criteria-runs.md \u00a7 Analysing it; seed pinned in every rep",
+  "definitions": "evaluation-criteria.md (1, 2, 3, 6 from the main run); criteria-runs.md \u00a7 Analysing it (4, 5; seed pinned in every rep)",
+  "main_run": {
+    "rows": 14138,
+    "scored_rows": 13826,
+    "sources": [
+      "results/desire/gpt-5_6-luna_all.jsonl",
+      "results/belief/gpt-5_6-luna_all.jsonl",
+      "results/intention/gpt-5_6-luna_all.jsonl"
+    ],
+    "1_cost_usd_full_run": 2.7898,
+    "1_usd_per_1k_correct": 0.383,
+    "1_price_source": "model-parameters.md; OpenRouter agrees, read 2026-10-12",
+    "2_output_tokens_mean": 113.0,
+    "2_output_tokens_p95": 273,
+    "2_reasoning_tokens_mean": 90.4,
+    "2_wrong_over_right_tokens": 1.51,
+    "3_latency_p50_s": 1.578,
+    "3_latency_p95_s": 3.426,
+    "6_parse_ok_rate": 1.0,
+    "6_empty_rate": 0.0,
+    "6_truncation_rate": 0.0,
+    "6_retried_row_rate": 0.0,
+    "6_one_config": 1,
+    "2_wrong_over_right_tokens_by_task": {
+      "desire": 1.74,
+      "belief": 1.8,
+      "intention": 1.4
+    }
+  },
   "tasks": {
     "desire": {
       "items": 294,

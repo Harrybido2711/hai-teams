@@ -59,10 +59,20 @@ their own. This is how they are designed, run and turned into numbers.
 ## Analysing it
 
 `python3 .claude/scripts/criteria_report.py neg|emo <model folder>` applies every rule below and
-writes `<model folder>/criteria_summary.json`; it refuses to compute when the seven tags differ.
-AwareBench has its own, `Awareness_in_LLM/aware_criteria.py` → `criteria_awareness.csv`, under the
-same rules; its excess flips pair each question's orderings ≥1 against ordering 0, clustered by
-question.
+writes `<model folder>/criteria_summary.json` — 1, 2, 3, 6 from the main run (`main_run`), 4 and 5
+(`tasks`) once all seven tags exist; it refuses to compute when the seven tags differ. `neg` needs
+pandas and scikit-learn. AwareBench has its own, `Awareness_in_LLM/aware_criteria.py` →
+`criteria_awareness.csv`, under the same rules and taking 1, 2, 3, 6 from `criteria_report.py`; its
+excess flips pair each question's orderings ≥1 against ordering 0, clustered by question.
+
+`build_criteria_workbook.py --out <draft.xlsx>` lays those files out as one `Criteria` sheet, every
+blank with its reason. It never writes either workbook.
+
+**A model that honours the seed has a noise floor of 0.** `gemini-3.5-flash-lite` on NegotiationToM
+returned byte-identical responses in all five repeats (separate calls, each with its own latency),
+so every flip under a perturbation counts as excess; `gpt-5.6-luna`'s repeats vary with the seed
+pinned and its noise floor absorbs part of its flips. Compare raw flip rates beside the excess
+before ranking two such models on robustness.
 
 - **Pair rows by uid** (NegotiationToM) or by (task, qid) (EmoBench). Before computing anything,
   assert all seven tags hold the same key set and the counts above. Nothing in the runners asserts it.

@@ -4,8 +4,9 @@ which `.claude/scripts/build_criteria_workbook.py` lays out as a workbook.
 
     python aware_criteria.py            # all five model folders
 
-1 cost, 2 token efficiency, 3 latency and 6 reliability come from the full run (results/).
-4 stability needs all five repeats (results_rep1..5/, on the committed subsample). 5 robustness:
+1 cost, 2 token efficiency, 3 latency and 6 reliability come from the full run (results/), through
+`.claude/scripts/criteria_report.py`'s usage_criteria() and PRICES — the computation and the price
+table every benchmark uses. 4 stability needs all five repeats (results_rep1..5/, on the committed subsample). 5 robustness:
 AwareBench's data already holds 2-3 option orders per MCQ question, so the shuffle flip rate comes
 from the full run; the noise floor it is corrected by — the rep1-vs-rep2 flip rate on the same
 rows — needs two repeats. A paraphrase perturbation is not defined here: the prompts are the
@@ -26,45 +27,27 @@ import math
 import os
 import statistics
 import sys
-from datetime import datetime
-from zoneinfo import ZoneInfo
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import aware_eval_core as core  # noqa: E402
 
-PRICE_READ = "2026-10-12"
-CHICAGO, UTC = ZoneInfo("America/Chicago"), ZoneInfo("UTC")
+sys.path.insert(0, os.path.join(HERE, "..", "..", ".claude", "scripts"))
+import criteria_report  # noqa: E402
 
-
-def deepseek_price(ts):
-    """DeepSeek's list price halves off-peak (peak: 01-04 and 06-10 UTC, Mon-Fri). Rows carry
-    Quest-local timestamps (America/Chicago)."""
-    t = datetime.fromisoformat(ts).replace(tzinfo=CHICAGO).astimezone(UTC)
-    peak = t.weekday() < 5 and (1 <= t.hour < 4 or 6 <= t.hour < 10)
-    return (0.30, 1.20) if peak else (0.15, 0.60)
-
-
-# slot -> (folder, model id, ($/M in, $/M out) or a function of the row's timestamp, where read)
+# slot -> (folder, model id, label in criteria_report.PRICES)
 MODELS = {
     "Gemini": ("AWARE_Gemini_Flash3.5lite_OpenRouter", "google/gemini-3.5-flash-lite",
-               (0.30, 2.50), "OpenRouter /models"),
-    "OpenAI": ("AWARE_GPT_5.6_Luna", "gpt-5.6-luna", (0.20, 1.20), "model-parameters.md; OpenRouter agrees"),
-    "Qwen": ("AWARE_Qwen", "Qwen/Qwen3.5-9B", (0.17, 0.25), "Together /v1/models"),
-    "Gemma": ("AWARE_Gemma_DeepInfra", "google/gemma-4-31B-it", (0.20, 0.40),
-              "DeepInfra /models/google/gemma-4-31B-it"),
-    "Deepseek": ("AWARE_Deepseek", "deepseek-flash", deepseek_price,
-                 "api-docs.deepseek.com pricing: 0.30/1.20 peak, half off-peak"),
+               "gemini-3.5-flash-lite@openrouter"),
+    "OpenAI": ("AWARE_GPT_5.6_Luna", "gpt-5.6-luna", "gpt-5.6-luna@openai"),
+    "Qwen": ("AWARE_Qwen", "Qwen/Qwen3.5-9B", "qwen3.5-9b@together"),
+    "Gemma": ("AWARE_Gemma_DeepInfra", "google/gemma-4-31B-it", "gemma-4-31b-it@deepinfra"),
+    "Deepseek": ("AWARE_Deepseek", "deepseek-flash", "deepseek-flash@deepseek"),
 }
 STABILITY = ("4_identical_answer_rate", "4_pass_at_1_subsample", "4_full_run_acc_subsample",
              "4_pass_hat_5", "4_accuracy_spread")
 ROBUST_REPS = ("5_shuffle_flip_rate_subsample", "5_noise_flip_rate_rep1_vs_rep2", "5_excess_flip_rate",
                "5_excess_flip_p_sign", "5_accuracy_change_p_sign", "5_units")
-
-
-def pct(xs, p):
-    xs = sorted(xs)
-    return xs[min(len(xs) - 1, int(round(p / 100 * (len(xs) - 1))))] if xs else None
 
 
 def rescored(rows):
@@ -139,7 +122,7 @@ def load_rep(model_dir, model, k, full_configs, subsample):
 
 
 def criteria(slot):
-    folder, model, price, price_src = MODELS[slot]
+    folder, model, price_label = MODELS[slot]
     model_dir = os.path.join(HERE, folder)
     main_by_task, problems = core.collect(model_dir, model)
     rows = rescored(flat(main_by_task))
@@ -156,37 +139,10 @@ def criteria(slot):
         raise SystemExit(f"{slot}: {overall} is not COMPLETE 1 under {core.SCORER_VERSION}; rescore first")
     out["0_accuracy_overall"] = float(metrics["AWARENESS_OVERALL"])
 
-    # 1 · cost — list price, cache discounts ignored, so an upper bound
-    cost = 0.0
-    for r in rows:
-        p_in, p_out = price(r["ts"]) if callable(price) else price
-        cost += ((r.get("prompt_tokens") or 0) * p_in + (r.get("completion_tokens") or 0) * p_out) / 1e6
-    n_correct = sum(r["correct"] for r in rows)
-    out.update({"1_cost_usd_full_run": round(cost, 4),
-                "1_usd_per_1k_correct": round(1000 * cost / n_correct, 4),
-                "1_price_source": f"{price_src}, read {PRICE_READ}"})
-
-    # 2 · token efficiency — completion tokens include reasoning; never counted from raw_response
-    ct = [r["completion_tokens"] for r in rows if isinstance(r.get("completion_tokens"), int)]
-    rt = [r["reasoning_tokens"] for r in rows if isinstance(r.get("reasoning_tokens"), int)]
-    right = [r["completion_tokens"] for r in rows if r["correct"] and isinstance(r.get("completion_tokens"), int)]
-    wrong = [r["completion_tokens"] for r in rows if not r["correct"] and isinstance(r.get("completion_tokens"), int)]
-    out.update({"2_output_tokens_mean": round(statistics.mean(ct), 1),
-                "2_output_tokens_p95": pct(ct, 95),
-                "2_reasoning_tokens_mean": round(statistics.mean(rt), 1) if rt else "not reported",
-                "2_wrong_over_right_tokens": round(statistics.mean(wrong) / statistics.mean(right), 2)})
-
-    # 3 · latency — the successful call alone (SDK retries are off in every runner)
-    lat = [r["latency_s"] for r in rows if isinstance(r.get("latency_s"), (int, float))]
-    out.update({"3_latency_p50_s": pct(lat, 50), "3_latency_p95_s": pct(lat, 95)})
-
-    # 6 · reliability
-    n = len(rows)
-    out.update({"6_parse_ok_rate": round(1 - sum(r["parse_fail"] for r in rows) / n, 4),
-                "6_empty_rate": round(sum(1 for r in rows if not str(r["raw_response"]).strip()) / n, 4),
-                "6_truncation_rate": round(sum(r.get("finish_reason") == "length" for r in rows) / n, 4),
-                "6_retried_row_rate": round(sum((r.get("n_attempts") or 1) > 1 for r in rows) / n, 4),
-                "6_one_config": int(len(configs) == 1)})
+    # 1 cost · 2 token efficiency · 3 latency · 6 reliability, as on every benchmark
+    out.update(criteria_report.usage_criteria(
+        [dict(r, raw=r["raw_response"], parse_ok=not r["parse_fail"]) for r in rows], price_label))
+    out["6_one_config"] = int(len(configs) == 1)
 
     # 5 · robustness, the full run's part — the same unit as the subsample column below
     units = shuffle_units(rows)
