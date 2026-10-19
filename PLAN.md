@@ -40,6 +40,7 @@ hai-teams/
 ├── README.md
 ├── Tempo_results.xlsx                   every model ever run — the wide record
 ├── Final_result.xlsx                    the selected models (five since 2026-10-05) — what gets reported
+├── Criteria_results.xlsx                accuracy beside the six criteria, per benchmark × selected model — built, never hand-edited (`.claude/references/criteria-runs.md`)
 └── quest_pull.log                       gitignored
 ```
 

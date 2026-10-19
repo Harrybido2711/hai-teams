@@ -28,8 +28,9 @@ their own. This is how they are designed, run and turned into numbers.
 - **Phase 1:** EmoBench and NegotiationToM, `gpt-5.6-luna` and `gemini-3.5-flash-lite`. Phase 2:
   the other three models there, then MMLU, bbh and DocVQA, whose Qwen/Gemma/Deepseek runners are
   legacy scripts with no tag, no subsample and no per-row fields.
-- **Recorded in** a new `Criteria` sheet in both workbooks — rows benchmark × model, columns the six
-  criteria — under the same rule as accuracy: after the user confirms the run.
+- **Recorded in** `Criteria_results.xlsx` (the user's decision 2026-10-19, replacing a `Criteria`
+  sheet in both workbooks): a sheet per benchmark, a row per selected model, accuracy beside the six
+  criteria. An unconfirmed run is shown flagged; it reaches `Final_result.xlsx` once confirmed.
 
 ## Running it
 
@@ -65,14 +66,13 @@ pandas and scikit-learn. AwareBench has its own, `Awareness_in_LLM/aware_criteri
 `criteria_awareness.csv`, under the same rules and taking 1, 2, 3, 6 from `criteria_report.py`; its
 excess flips pair each question's orderings ≥1 against ordering 0, clustered by question.
 
-`build_criteria_workbook.py --out <draft.xlsx>` lays those files out as one `Criteria` sheet, every
-blank with its reason. It never writes either workbook.
+`build_criteria_workbook.py` rebuilds `Criteria_results.xlsx` from those files, every blank with its
+reason; never edit it by hand. It never writes `Tempo_results.xlsx` or `Final_result.xlsx`.
 
 **A model that honours the seed has a noise floor of 0.** `gemini-3.5-flash-lite` on NegotiationToM
-returned byte-identical responses in all five repeats (separate calls, each with its own latency),
-so every flip under a perturbation counts as excess; `gpt-5.6-luna`'s repeats vary with the seed
-pinned and its noise floor absorbs part of its flips. Compare raw flip rates beside the excess
-before ranking two such models on robustness.
+returned byte-identical responses in all five repeats (separate calls), so every flip under a
+perturbation counts as excess; `gpt-5.6-luna`'s repeats vary with the seed pinned and its noise
+floor absorbs part of its flips. Compare raw flips beside the excess before ranking the two.
 
 - **Pair rows by uid** (NegotiationToM) or by (task, qid) (EmoBench). Before computing anything,
   assert all seven tags hold the same key set and the counts above. Nothing in the runners asserts it.
