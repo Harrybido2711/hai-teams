@@ -61,7 +61,8 @@ flushed per call; resume skips finished uids and refuses a different config. SLU
    files from running `test_judge_pilot.py` there, and nothing else). No job submitted.
 4. `sbatch run_mc.sh` in `MC_GPT_5.6_Luna/` — **done 2026-10-19, job 4480406, 4m39s:** 27/27 rows
    `ok`, all `finish=stop`, 0 empty, 0 retries, one config; pulled down md5-identical. Then
-   `../run_judges.sh` (after the Wonderbread generation job too) — not yet submitted.
+   `../run_judges.sh` — job 4482838; this benchmark's stage done 2026-10-19, 81/81 rows per judge,
+   Sonnet 5.5 refusing 11 (`LLM_as_judge/JUDGE_SELECTION.md` §6.1).
 5. `python ../compare_judges.py` on the pulled rows.
 
 ## What its README says about showing reasoning

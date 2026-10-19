@@ -13,8 +13,10 @@
 - **The final choice is made by a bake-off on our own human-labelled data.** That bake-off has not
   run yet, and the human labels it needs have not been collected.
 - **A smaller judge pilot comes first (§6.4).** `gpt-5.6-luna`'s responses to a 10% sample were
-  generated on 2026-10-19; the four candidates are judging them. Probing the four for it changed two
-  facts below — Kimi K2.6's price, and Sonnet 5.5 refusing SOP Generation (§6.1).
+  generated on 2026-10-19 and are being judged (job 4482838). Probing the four for it changed two
+  facts below — Kimi K2.6's price, and Sonnet 5.5 refusing SOP Generation (§6.1). The run added a
+  third: Sonnet also refuses some MultiChallenge calls, and where it answers it is no better than
+  the cheaper judges (§6.4).
 
 ## Summary
 
@@ -296,8 +298,12 @@ pilot (§6.4). The configurations that came out of it are `judge_core.JUDGES` in
 - **Sonnet 5.5's refusal** is `finish_reason: content_filter` with `message.refusal`: "blocked as it
   seems to violate Anthropic's Terms of Service restrictions on reverse engineering or duplicating
   model outputs". The same on a synthetic and on upstream's real SOP pairs, and on every backend
-  tried (Anthropic, Google, Azure, Claude Platform on AWS); MultiChallenge's and QA's prompts pass.
-  The likeliest trigger is the prompt's `"scratchpad": think step by step` field *(our inference,
+  tried (Anthropic, Google, Azure, Claude Platform on AWS). QA's prompt passes (504 of 504 pilot
+  calls). MultiChallenge's passed the probe and the smoke run but not the pilot: **11 of 81 calls
+  refused**, same message, on 6 of 27 items (four Instruction Retention, two Reliable Version
+  Editing) — and not consistently: one item was refused on one replicate and answered on the other
+  two, so a refusal is a per-call outcome, not a property of the item. Those 11 are billed ($0.045);
+  the SOP refusals are not. The likeliest trigger for SOP is the prompt's `"scratchpad": think step by step` field *(our inference,
   untested)*. Rewording upstream's prompt to get past it would break F5, so it stays verbatim and a
   refusal is recorded as its own status. Whether Sonnet 5.5 can judge SOP Generation at all is open
   (§8).
@@ -381,8 +387,21 @@ others, it is not considered further.**
 - **Size and cost.** GPT's responses cost $0.62 (generated 2026-10-19). Its 48 SOPs come to 1,054
   lines over both directions, so about 5,500 judge calls per judge, nine-tenths of them SOP line
   matching. From the smoke run's billed calls, per judge: Haiku 4.5 ≈ $6, Kimi K2.6 ≈ $4, Sonnet
-  5.5 ≈ $1.4 (its SOP calls are refused, unbilled), Haiku 5.5 ≈ $0.8 — about $13 in all. Four to
-  five hours, the four judges in parallel.
+  5.5 ≈ $1.4 (its SOP calls are refused, unbilled; billed in the end $1.37), Haiku 5.5 ≈ $0.8 —
+  about $13 in all. Four to five hours, the four judges in parallel.
+- **Result for Sonnet 5.5** — MultiChallenge and QA finished for all four judges on 2026-10-19 (job
+  4482838); SOP is the other three's. Report: `Action_processes_benchmarks/judge_comparison/`.
+  - *MultiChallenge*: on the 23 items every judge labelled, Sonnet's macro is 46.7 against 36.1–44.5
+    for the others; its agreement with each of them is κ 0.83–0.91, McNemar p ≥ 0.5 — no measurable
+    difference. The 4 items it left without a majority verdict are its refusals.
+  - *QA, against the 30 human-labelled answers* (QWK, completeness / soundness / clarity /
+    compactness): Sonnet 0.55 / 0.38 / 0.07 / 0.33; Kimi K2.6 0.63 / 0.32 / 0.26 / 0.74; Haiku 4.5
+    0.42 / 0.16 / 0.36 / 0.56; Haiku 5.5 0.42 / 0.20 / 0.26 / 0.12. Sonnet leads only on soundness,
+    by 0.06 at n = 30.
+  - *Cost per judged unit*: $0.015 (MultiChallenge) and $0.023 (QA) — 2–20× the others.
+  - **Under the user's rule it is dropped**: no better where it answers, absent on SOP and on 4 of
+    27 MultiChallenge items, and the most expensive. Proposed 2026-10-19; the user's confirmation is
+    pending.
 
 ## 7. The judge record — what must be documented, and what is
 
@@ -562,10 +581,14 @@ Three facts that were wrong or unknown before, all found by reading code rather 
   either way.
 - **Two Wonderbread QA criteria may not be judgeable.** If clarity and compactness fail for every
   candidate, they will be human-scored or reported as unvalidated.
-- **Sonnet 5.5 refuses SOP Generation's judge prompt** (§6.1). Unless that changes, it cannot be
-  the one judge for all three tasks (§6.2 step 5), and its SOP numbers in the pilot will be absent,
-  not low. Under the user's rule (§6.4), if it matches the others on MultiChallenge and QA it is
-  dropped and the question closes.
+- **Sonnet 5.5 refuses SOP Generation's judge prompt, and 11 of 81 MultiChallenge calls** (§6.1),
+  so it cannot be the one judge for all three tasks (§6.2 step 5). On MultiChallenge and QA it
+  matched or trailed the cheaper judges, so under the user's rule it is dropped (§6.4) — closes when
+  the user confirms.
+- **Upstream's GPT-4 judge agrees with the QA human labels far better than any candidate** (QWK
+  0.78–0.92 against 0.07–0.74, same 30 answers). Whether the labels were made with GPT-4's scores in
+  view is unestablished; if they were, "agreement with humans" there partly measures agreement with
+  GPT-4.
 - **MultiChallenge disagreements need a person.** The pilot can say whether the four judges agree
   there; if they do not, which one is right is a labelling question (§6.4).
 

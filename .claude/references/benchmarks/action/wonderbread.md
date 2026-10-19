@@ -90,7 +90,8 @@ the same text). `--limit` writes `smoke/`, gitignored. SLURM logs `log_<jobid>.t
 4. `sbatch run_wb.sh` in `WB_GPT_5.6_Luna/` (QA then SOP, one job) — **done 2026-10-19, job
    4480407, 8m13s:** QA 12/12 and SOP 48/48 `ok`, all `finish=stop`, 0 empty, 0 retries; pulled
    down md5-identical. The SOPs come to 1,054 lines over both directions — 3,162 judge calls per
-   judge at 3 replicates. Then `../run_judges.sh` — not yet submitted.
+   judge at 3 replicates. Then `../run_judges.sh` — submitted 2026-10-19, job 4482838: QA (sample
+   and anchor) done for all four judges; SOP running for three; Sonnet 5.5 refused SOP and exited 1.
 5. `python ../compare_judges.py` on the pulled rows.
 
 ## What its README says about showing reasoning

@@ -1,0 +1,1258 @@
+{
+ "multichallenge": {
+  "scores": [
+   {
+    "judge": "haiku-4.5",
+    "covering": true,
+    "n_common": 23,
+    "n_own": 27,
+    "macro": 44.46969696969697,
+    "micro": 47.82608695652174,
+    "micro_ci": [
+     0.2923686953994572,
+     0.6703757013578151
+    ],
+    "axes": {
+     "INFERENCE_MEMORY": 54.54545454545455,
+     "INSTRUCTION_RETENTION": 50.0,
+     "RELIABLE_VERSION_EDITING": 33.333333333333336,
+     "SELF_COHERENCE": 40.0
+    },
+    "axes_missing": [],
+    "per_rep_macro": [
+     46.85064935064935,
+     46.85064935064935,
+     46.85064935064935
+    ],
+    "flip": 0.0
+   },
+   {
+    "judge": "haiku-5.5",
+    "covering": true,
+    "n_common": 23,
+    "n_own": 27,
+    "macro": 36.13636363636364,
+    "micro": 43.47826086956522,
+    "micro_ci": [
+     0.25634368332198654,
+     0.6318895069498304
+    ],
+    "axes": {
+     "INFERENCE_MEMORY": 54.54545454545455,
+     "INSTRUCTION_RETENTION": 50.0,
+     "RELIABLE_VERSION_EDITING": 0.0,
+     "SELF_COHERENCE": 40.0
+    },
+    "axes_missing": [],
+    "per_rep_macro": [
+     43.76623376623377,
+     41.493506493506494,
+     47.743506493506494
+    ],
+    "flip": 0.07407407407407407
+   },
+   {
+    "judge": "kimi-k2.6",
+    "covering": true,
+    "n_common": 23,
+    "n_own": 27,
+    "macro": 44.46969696969697,
+    "micro": 47.82608695652174,
+    "micro_ci": [
+     0.2923686953994572,
+     0.6703757013578151
+    ],
+    "axes": {
+     "INFERENCE_MEMORY": 54.54545454545455,
+     "INSTRUCTION_RETENTION": 50.0,
+     "RELIABLE_VERSION_EDITING": 33.333333333333336,
+     "SELF_COHERENCE": 40.0
+    },
+    "axes_missing": [],
+    "per_rep_macro": [
+     36.89935064935065,
+     47.743506493506494,
+     46.4448051948052
+    ],
+    "flip": 0.14814814814814814
+   },
+   {
+    "judge": "sonnet-5.5",
+    "covering": true,
+    "n_common": 23,
+    "n_own": 23,
+    "macro": 46.74242424242424,
+    "micro": 52.17391304347826,
+    "micro_ci": [
+     0.3296242986421849,
+     0.7076313046005427
+    ],
+    "axes": {
+     "INFERENCE_MEMORY": 63.63636363636363,
+     "INSTRUCTION_RETENTION": 50.0,
+     "RELIABLE_VERSION_EDITING": 33.333333333333336,
+     "SELF_COHERENCE": 40.0
+    },
+    "axes_missing": [],
+    "per_rep_macro": [
+     38.40909090909091,
+     49.24242424242424,
+     49.24242424242424
+    ],
+    "flip": 0.0
+   }
+  ],
+  "pairs": [
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "n": 27,
+    "agree": 0.8518518518518519,
+    "kappa": 0.7032967032967034,
+    "a_only_pass": 2,
+    "b_only_pass": 2,
+    "mcnemar_p": 1.0
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "n": 27,
+    "agree": 0.9259259259259259,
+    "kappa": 0.8516483516483517,
+    "a_only_pass": 1,
+    "b_only_pass": 1,
+    "mcnemar_p": 1.0
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "n": 23,
+    "agree": 0.9565217391304348,
+    "kappa": 0.9132075471698113,
+    "a_only_pass": 0,
+    "b_only_pass": 1,
+    "mcnemar_p": 1.0
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "n": 27,
+    "agree": 0.9259259259259259,
+    "kappa": 0.8516483516483517,
+    "a_only_pass": 1,
+    "b_only_pass": 1,
+    "mcnemar_p": 1.0
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "n": 23,
+    "agree": 0.9130434782608695,
+    "kappa": 0.8270676691729324,
+    "a_only_pass": 0,
+    "b_only_pass": 2,
+    "mcnemar_p": 0.5
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "n": 23,
+    "agree": 0.9565217391304348,
+    "kappa": 0.9132075471698113,
+    "a_only_pass": 0,
+    "b_only_pass": 1,
+    "mcnemar_p": 1.0
+   }
+  ]
+ },
+ "wonderbread_qa/gpt-5.6-luna": {
+  "scores": [
+   {
+    "judge": "haiku-4.5",
+    "flip": 0.0,
+    "means": {
+     "completeness": 2.0833333333333335,
+     "soundness": 2.0833333333333335,
+     "clarity": 1.0833333333333333,
+     "compactness": 1.0833333333333333
+    },
+    "n": {
+     "completeness": 12,
+     "soundness": 12,
+     "clarity": 12,
+     "compactness": 12
+    },
+    "covering": {
+     "completeness": true,
+     "soundness": true,
+     "clarity": true,
+     "compactness": true
+    }
+   },
+   {
+    "judge": "haiku-5.5",
+    "flip": 0.0625,
+    "means": {
+     "completeness": 1.8333333333333333,
+     "soundness": 1.4166666666666667,
+     "clarity": 1,
+     "compactness": 1.3333333333333333
+    },
+    "n": {
+     "completeness": 12,
+     "soundness": 12,
+     "clarity": 12,
+     "compactness": 12
+    },
+    "covering": {
+     "completeness": true,
+     "soundness": true,
+     "clarity": true,
+     "compactness": true
+    }
+   },
+   {
+    "judge": "kimi-k2.6",
+    "flip": 0.0625,
+    "means": {
+     "completeness": 1.5833333333333333,
+     "soundness": 1.5,
+     "clarity": 1.0833333333333333,
+     "compactness": 1
+    },
+    "n": {
+     "completeness": 12,
+     "soundness": 12,
+     "clarity": 12,
+     "compactness": 12
+    },
+    "covering": {
+     "completeness": true,
+     "soundness": true,
+     "clarity": true,
+     "compactness": true
+    }
+   },
+   {
+    "judge": "sonnet-5.5",
+    "flip": 0.041666666666666664,
+    "means": {
+     "completeness": 1.75,
+     "soundness": 2,
+     "clarity": 1.25,
+     "compactness": 1.3333333333333333
+    },
+    "n": {
+     "completeness": 12,
+     "soundness": 12,
+     "clarity": 12,
+     "compactness": 12
+    },
+    "covering": {
+     "completeness": true,
+     "soundness": true,
+     "clarity": true,
+     "compactness": true
+    }
+   }
+  ],
+  "pairs": [
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "criterion": "completeness",
+    "n": 12,
+    "agree": 0.75,
+    "qwk": 0.5909090909090909
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "criterion": "soundness",
+    "n": 12,
+    "agree": 0.16666666666666666,
+    "qwk": 0.10447761194029848
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "criterion": "clarity",
+    "n": 12,
+    "agree": 0.9166666666666666,
+    "qwk": 0.0
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "criterion": "compactness",
+    "n": 12,
+    "agree": 0.75,
+    "qwk": 0.3076923076923077
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "criterion": "completeness",
+    "n": 12,
+    "agree": 0.5,
+    "qwk": 0.5324675324675325
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "criterion": "soundness",
+    "n": 12,
+    "agree": 0.25,
+    "qwk": 0.4375
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "criterion": "clarity",
+    "n": 12,
+    "agree": 1.0,
+    "qwk": 1.0
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "criterion": "compactness",
+    "n": 12,
+    "agree": 0.9166666666666666,
+    "qwk": 0.0
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "criterion": "completeness",
+    "n": 12,
+    "agree": 0.5,
+    "qwk": 0.52
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "criterion": "soundness",
+    "n": 12,
+    "agree": 0.5833333333333334,
+    "qwk": 0.4444444444444444
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "criterion": "clarity",
+    "n": 12,
+    "agree": 0.8333333333333334,
+    "qwk": 0.4285714285714286
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "criterion": "compactness",
+    "n": 12,
+    "agree": 0.75,
+    "qwk": 0.3076923076923077
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "criterion": "completeness",
+    "n": 12,
+    "agree": 0.5833333333333334,
+    "qwk": 0.5588235294117647
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "criterion": "soundness",
+    "n": 12,
+    "agree": 0.5833333333333334,
+    "qwk": 0.5833333333333333
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "criterion": "clarity",
+    "n": 12,
+    "agree": 0.9166666666666666,
+    "qwk": 0.0
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "criterion": "compactness",
+    "n": 12,
+    "agree": 0.6666666666666666,
+    "qwk": 0.0
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "criterion": "completeness",
+    "n": 12,
+    "agree": 0.5833333333333334,
+    "qwk": 0.5833333333333333
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "criterion": "soundness",
+    "n": 12,
+    "agree": 0.4166666666666667,
+    "qwk": 0.46153846153846145
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "criterion": "clarity",
+    "n": 12,
+    "agree": 0.75,
+    "qwk": 0.0
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "criterion": "compactness",
+    "n": 12,
+    "agree": 0.6666666666666666,
+    "qwk": 0.25
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "criterion": "completeness",
+    "n": 12,
+    "agree": 0.8333333333333334,
+    "qwk": 0.8709677419354839
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "criterion": "soundness",
+    "n": 12,
+    "agree": 0.5,
+    "qwk": 0.6666666666666667
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "criterion": "clarity",
+    "n": 12,
+    "agree": 0.8333333333333334,
+    "qwk": 0.4285714285714286
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "criterion": "compactness",
+    "n": 12,
+    "agree": 0.6666666666666666,
+    "qwk": 0.0
+   }
+  ]
+ },
+ "wonderbread_qa/anchor-human-sample": {
+  "scores": [
+   {
+    "judge": "haiku-4.5",
+    "flip": 0.0,
+    "means": {
+     "completeness": 1.9,
+     "soundness": 2.033333333333333,
+     "clarity": 1.2,
+     "compactness": 1.3666666666666667
+    },
+    "n": {
+     "completeness": 30,
+     "soundness": 30,
+     "clarity": 30,
+     "compactness": 30
+    },
+    "covering": {
+     "completeness": true,
+     "soundness": true,
+     "clarity": true,
+     "compactness": true
+    }
+   },
+   {
+    "judge": "haiku-5.5",
+    "flip": 0.025,
+    "means": {
+     "completeness": 1.8333333333333333,
+     "soundness": 1.7333333333333334,
+     "clarity": 1.1,
+     "compactness": 1.7333333333333334
+    },
+    "n": {
+     "completeness": 30,
+     "soundness": 30,
+     "clarity": 30,
+     "compactness": 30
+    },
+    "covering": {
+     "completeness": true,
+     "soundness": true,
+     "clarity": true,
+     "compactness": true
+    }
+   },
+   {
+    "judge": "kimi-k2.6",
+    "flip": 0.025,
+    "means": {
+     "completeness": 1.6333333333333333,
+     "soundness": 1.2666666666666666,
+     "clarity": 1.1,
+     "compactness": 1.1333333333333333
+    },
+    "n": {
+     "completeness": 30,
+     "soundness": 30,
+     "clarity": 30,
+     "compactness": 30
+    },
+    "covering": {
+     "completeness": true,
+     "soundness": true,
+     "clarity": true,
+     "compactness": true
+    }
+   },
+   {
+    "judge": "sonnet-5.5",
+    "flip": 0.058333333333333334,
+    "means": {
+     "completeness": 1.5333333333333334,
+     "soundness": 1.6,
+     "clarity": 1.2333333333333334,
+     "compactness": 1.6666666666666667
+    },
+    "n": {
+     "completeness": 30,
+     "soundness": 30,
+     "clarity": 30,
+     "compactness": 30
+    },
+    "covering": {
+     "completeness": true,
+     "soundness": true,
+     "clarity": true,
+     "compactness": true
+    }
+   }
+  ],
+  "pairs": [
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "criterion": "completeness",
+    "n": 30,
+    "agree": 0.8,
+    "qwk": 0.6842105263157894
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "criterion": "soundness",
+    "n": 30,
+    "agree": 0.6333333333333333,
+    "qwk": 0.4891640866873065
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "criterion": "clarity",
+    "n": 30,
+    "agree": 0.9,
+    "qwk": 0.6153846153846154
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "criterion": "compactness",
+    "n": 30,
+    "agree": 0.5,
+    "qwk": 0.28115015974440893
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "criterion": "completeness",
+    "n": 30,
+    "agree": 0.6666666666666666,
+    "qwk": 0.6402877697841727
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "criterion": "soundness",
+    "n": 30,
+    "agree": 0.26666666666666666,
+    "qwk": 0.2746615087040618
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "criterion": "clarity",
+    "n": 30,
+    "agree": 0.8333333333333334,
+    "qwk": 0.35897435897435903
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "criterion": "compactness",
+    "n": 30,
+    "agree": 0.8,
+    "qwk": 0.5018450184501846
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "criterion": "completeness",
+    "n": 30,
+    "agree": 0.5666666666666667,
+    "qwk": 0.5962732919254659
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "criterion": "soundness",
+    "n": 30,
+    "agree": 0.6,
+    "qwk": 0.41860465116279066
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "criterion": "clarity",
+    "n": 30,
+    "agree": 0.8333333333333334,
+    "qwk": 0.5098039215686275
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "criterion": "compactness",
+    "n": 30,
+    "agree": 0.5666666666666667,
+    "qwk": 0.417910447761194
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "criterion": "completeness",
+    "n": 30,
+    "agree": 0.6,
+    "qwk": 0.5068493150684932
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "criterion": "soundness",
+    "n": 30,
+    "agree": 0.5666666666666667,
+    "qwk": 0.4339622641509434
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "criterion": "clarity",
+    "n": 30,
+    "agree": 0.8666666666666667,
+    "qwk": 0.2592592592592592
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "criterion": "compactness",
+    "n": 30,
+    "agree": 0.3333333333333333,
+    "qwk": 0.09638554216867468
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "criterion": "completeness",
+    "n": 30,
+    "agree": 0.43333333333333335,
+    "qwk": 0.4
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "criterion": "soundness",
+    "n": 30,
+    "agree": 0.7,
+    "qwk": 0.53125
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "criterion": "clarity",
+    "n": 30,
+    "agree": 0.8666666666666667,
+    "qwk": 0.5348837209302326
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "criterion": "compactness",
+    "n": 30,
+    "agree": 0.7333333333333333,
+    "qwk": 0.4545454545454546
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "criterion": "completeness",
+    "n": 30,
+    "agree": 0.7666666666666667,
+    "qwk": 0.7861507128309573
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "criterion": "soundness",
+    "n": 30,
+    "agree": 0.6666666666666666,
+    "qwk": 0.6212121212121212
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "criterion": "clarity",
+    "n": 30,
+    "agree": 0.8666666666666667,
+    "qwk": 0.5348837209302326
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "criterion": "compactness",
+    "n": 30,
+    "agree": 0.4666666666666667,
+    "qwk": 0.2941176470588235
+   }
+  ]
+ },
+ "wonderbread_qa/vs_human": [
+  {
+   "judge": "upstream gpt-4 (reference)",
+   "criterion": "completeness",
+   "n": 30,
+   "exact": 0.8666666666666667,
+   "qwk": 0.8148148148148148,
+   "spearman": 0.8601529608430022,
+   "human_mean": 1.6,
+   "judge_mean": 1.7333333333333334
+  },
+  {
+   "judge": "haiku-4.5",
+   "criterion": "completeness",
+   "n": 30,
+   "exact": 0.5666666666666667,
+   "qwk": 0.4247787610619469,
+   "spearman": 0.4572537609444331,
+   "human_mean": 1.6,
+   "judge_mean": 1.9
+  },
+  {
+   "judge": "haiku-5.5",
+   "criterion": "completeness",
+   "n": 30,
+   "exact": 0.6333333333333333,
+   "qwk": 0.42105263157894735,
+   "spearman": 0.48570161269606027,
+   "human_mean": 1.6,
+   "judge_mean": 1.8333333333333333
+  },
+  {
+   "judge": "kimi-k2.6",
+   "criterion": "completeness",
+   "n": 30,
+   "exact": 0.7,
+   "qwk": 0.628099173553719,
+   "spearman": 0.6416843925355393,
+   "human_mean": 1.6,
+   "judge_mean": 1.6333333333333333
+  },
+  {
+   "judge": "sonnet-5.5",
+   "criterion": "completeness",
+   "n": 30,
+   "exact": 0.6,
+   "qwk": 0.5522388059701493,
+   "spearman": 0.5699841001114381,
+   "human_mean": 1.6,
+   "judge_mean": 1.5333333333333334
+  },
+  {
+   "judge": "upstream gpt-4 (reference)",
+   "criterion": "soundness",
+   "n": 30,
+   "exact": 0.9333333333333333,
+   "qwk": 0.9090909090909091,
+   "spearman": 0.8758113121817134,
+   "human_mean": 1.3333333333333333,
+   "judge_mean": 1.4
+  },
+  {
+   "judge": "haiku-4.5",
+   "criterion": "soundness",
+   "n": 30,
+   "exact": 0.3,
+   "qwk": 0.1649484536082474,
+   "spearman": 0.2895047709182717,
+   "human_mean": 1.3333333333333333,
+   "judge_mean": 2.033333333333333
+  },
+  {
+   "judge": "haiku-5.5",
+   "criterion": "soundness",
+   "n": 30,
+   "exact": 0.4666666666666667,
+   "qwk": 0.19512195121951226,
+   "spearman": 0.17573987289165943,
+   "human_mean": 1.3333333333333333,
+   "judge_mean": 1.7333333333333334
+  },
+  {
+   "judge": "kimi-k2.6",
+   "criterion": "soundness",
+   "n": 30,
+   "exact": 0.7333333333333333,
+   "qwk": 0.32258064516129026,
+   "spearman": 0.2790009915537611,
+   "human_mean": 1.3333333333333333,
+   "judge_mean": 1.2666666666666666
+  },
+  {
+   "judge": "sonnet-5.5",
+   "criterion": "soundness",
+   "n": 30,
+   "exact": 0.5666666666666667,
+   "qwk": 0.3846153846153847,
+   "spearman": 0.3718686625344909,
+   "human_mean": 1.3333333333333333,
+   "judge_mean": 1.6
+  },
+  {
+   "judge": "upstream gpt-4 (reference)",
+   "criterion": "clarity",
+   "n": 30,
+   "exact": 0.9666666666666667,
+   "qwk": 0.7826086956521738,
+   "spearman": 0.8017837257372732,
+   "human_mean": 1.1,
+   "judge_mean": 1.0666666666666667
+  },
+  {
+   "judge": "haiku-4.5",
+   "criterion": "clarity",
+   "n": 30,
+   "exact": 0.8333333333333334,
+   "qwk": 0.35897435897435903,
+   "spearman": 0.3888888888888889,
+   "human_mean": 1.1,
+   "judge_mean": 1.2
+  },
+  {
+   "judge": "haiku-5.5",
+   "criterion": "clarity",
+   "n": 30,
+   "exact": 0.8666666666666667,
+   "qwk": 0.2592592592592592,
+   "spearman": 0.25925925925925924,
+   "human_mean": 1.1,
+   "judge_mean": 1.1
+  },
+  {
+   "judge": "kimi-k2.6",
+   "criterion": "clarity",
+   "n": 30,
+   "exact": 0.8666666666666667,
+   "qwk": 0.2592592592592592,
+   "spearman": 0.25925925925925924,
+   "human_mean": 1.1,
+   "judge_mean": 1.1
+  },
+  {
+   "judge": "sonnet-5.5",
+   "criterion": "clarity",
+   "n": 30,
+   "exact": 0.7333333333333333,
+   "qwk": 0.06976744186046513,
+   "spearman": 0.07881104062391006,
+   "human_mean": 1.1,
+   "judge_mean": 1.2333333333333334
+  },
+  {
+   "judge": "upstream gpt-4 (reference)",
+   "criterion": "compactness",
+   "n": 30,
+   "exact": 0.9666666666666667,
+   "qwk": 0.9230769230769231,
+   "spearman": 0.8861469461982083,
+   "human_mean": 1.1666666666666667,
+   "judge_mean": 1.2
+  },
+  {
+   "judge": "haiku-4.5",
+   "criterion": "compactness",
+   "n": 30,
+   "exact": 0.8333333333333334,
+   "qwk": 0.5636363636363637,
+   "spearman": 0.6048383966404791,
+   "human_mean": 1.1666666666666667,
+   "judge_mean": 1.3666666666666667
+  },
+  {
+   "judge": "haiku-5.5",
+   "criterion": "compactness",
+   "n": 30,
+   "exact": 0.36666666666666664,
+   "qwk": 0.12307692307692308,
+   "spearman": 0.23607141059883702,
+   "human_mean": 1.1666666666666667,
+   "judge_mean": 1.7333333333333334
+  },
+  {
+   "judge": "kimi-k2.6",
+   "criterion": "compactness",
+   "n": 30,
+   "exact": 0.9,
+   "qwk": 0.7428571428571429,
+   "spearman": 0.5564476963746957,
+   "human_mean": 1.1666666666666667,
+   "judge_mean": 1.1333333333333333
+  },
+  {
+   "judge": "sonnet-5.5",
+   "criterion": "compactness",
+   "n": 30,
+   "exact": 0.5,
+   "qwk": 0.32835820895522394,
+   "spearman": 0.4014775342734831,
+   "human_mean": 1.1666666666666667,
+   "judge_mean": 1.6666666666666667
+  }
+ ],
+ "wonderbread_sop/gpt-5.6-luna": {
+  "scores": [
+   {
+    "judge": "sonnet-5.5",
+    "covering": false,
+    "groups": {},
+    "n_common": 0,
+    "n_own": 0,
+    "flip": null
+   }
+  ],
+  "pairs": []
+ },
+ "wonderbread_sop/anchor-human-sample": {
+  "scores": [
+   {
+    "judge": "sonnet-5.5",
+    "covering": false,
+    "groups": {},
+    "n_common": 0,
+    "n_own": 0,
+    "flip": null
+   }
+  ],
+  "pairs": []
+ },
+ "wonderbread_sop/vs_human": [
+  {
+   "judge": "upstream gpt-4 (reference)",
+   "metric": "precision",
+   "n": 0,
+   "mae": null,
+   "pearson": null,
+   "spearman": null,
+   "human_mean": null,
+   "judge_mean": null
+  },
+  {
+   "judge": "upstream gpt-4 (reference)",
+   "metric": "recall",
+   "n": 0,
+   "mae": null,
+   "pearson": null,
+   "spearman": null,
+   "human_mean": null,
+   "judge_mean": null
+  }
+ ],
+ "usage": [
+  {
+   "judge": "haiku-4.5",
+   "set": "mc/sample",
+   "rows": 81,
+   "ok": 81,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 81,
+   "cost_usd": 0.168085,
+   "cost_per_unit": 0.006225370370370371,
+   "latency_p50": 2.85,
+   "latency_p95": 5.47,
+   "backends": {
+    "Anthropic": 81
+   }
+  },
+  {
+   "judge": "haiku-5.5",
+   "set": "mc/sample",
+   "rows": 81,
+   "ok": 81,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 81,
+   "cost_usd": 0.0209102,
+   "cost_per_unit": 0.0007744518518518519,
+   "latency_p50": 1.94,
+   "latency_p95": 3.2,
+   "backends": {
+    "Anthropic": 81
+   }
+  },
+  {
+   "judge": "kimi-k2.6",
+   "set": "mc/sample",
+   "rows": 81,
+   "ok": 81,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 81,
+   "cost_usd": 0.1111474,
+   "cost_per_unit": 0.00411657037037037,
+   "latency_p50": 3.76,
+   "latency_p95": 10.39,
+   "backends": {
+    "Crusoe": 81
+   }
+  },
+  {
+   "judge": "sonnet-5.5",
+   "set": "mc/sample",
+   "rows": 81,
+   "ok": 70,
+   "refused": 11,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 81,
+   "cost_usd": 0.39961599999999997,
+   "cost_per_unit": 0.014800592592592591,
+   "latency_p50": 3.07,
+   "latency_p95": 4.13,
+   "backends": {
+    "Anthropic": 81
+   }
+  },
+  {
+   "judge": "haiku-4.5",
+   "set": "qa/gpt-5.6-luna",
+   "rows": 144,
+   "ok": 144,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 144,
+   "cost_usd": 0.103674,
+   "cost_per_unit": 0.0086395,
+   "latency_p50": 0.59,
+   "latency_p95": 0.89,
+   "backends": {
+    "Anthropic": 144
+   }
+  },
+  {
+   "judge": "haiku-5.5",
+   "set": "qa/gpt-5.6-luna",
+   "rows": 144,
+   "ok": 144,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 144,
+   "cost_usd": 0.0137748,
+   "cost_per_unit": 0.0011479,
+   "latency_p50": 0.77,
+   "latency_p95": 2.33,
+   "backends": {
+    "Anthropic": 144
+   }
+  },
+  {
+   "judge": "kimi-k2.6",
+   "set": "qa/gpt-5.6-luna",
+   "rows": 144,
+   "ok": 144,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 144,
+   "cost_usd": 0.0367542,
+   "cost_per_unit": 0.00306285,
+   "latency_p50": 0.37,
+   "latency_p95": 0.77,
+   "backends": {
+    "Crusoe": 144
+   }
+  },
+  {
+   "judge": "sonnet-5.5",
+   "set": "qa/gpt-5.6-luna",
+   "rows": 144,
+   "ok": 144,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 144,
+   "cost_usd": 0.27578400000000003,
+   "cost_per_unit": 0.022982000000000002,
+   "latency_p50": 1.21,
+   "latency_p95": 2.05,
+   "backends": {
+    "Anthropic": 144
+   }
+  },
+  {
+   "judge": "haiku-4.5",
+   "set": "qa/anchor-human-sample",
+   "rows": 360,
+   "ok": 360,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 360,
+   "cost_usd": 0.260232,
+   "cost_per_unit": 0.0086744,
+   "latency_p50": 0.69,
+   "latency_p95": 1.5,
+   "backends": {
+    "Anthropic": 360
+   }
+  },
+  {
+   "judge": "haiku-5.5",
+   "set": "qa/anchor-human-sample",
+   "rows": 360,
+   "ok": 360,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 360,
+   "cost_usd": 0.0344856,
+   "cost_per_unit": 0.00114952,
+   "latency_p50": 0.86,
+   "latency_p95": 3.38,
+   "backends": {
+    "Anthropic": 360
+   }
+  },
+  {
+   "judge": "kimi-k2.6",
+   "set": "qa/anchor-human-sample",
+   "rows": 360,
+   "ok": 360,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 360,
+   "cost_usd": 0.0955528,
+   "cost_per_unit": 0.003185093333333333,
+   "latency_p50": 0.43,
+   "latency_p95": 0.96,
+   "backends": {
+    "Crusoe": 360
+   }
+  },
+  {
+   "judge": "sonnet-5.5",
+   "set": "qa/anchor-human-sample",
+   "rows": 360,
+   "ok": 360,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 360,
+   "cost_usd": 0.690432,
+   "cost_per_unit": 0.0230144,
+   "latency_p50": 1.26,
+   "latency_p95": 3.28,
+   "backends": {
+    "Anthropic": 360
+   }
+  },
+  {
+   "judge": "sonnet-5.5",
+   "set": "sop/gpt-5.6-luna",
+   "rows": 20,
+   "ok": 0,
+   "refused": 20,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 20,
+   "cost_usd": 0,
+   "cost_per_unit": 0.0,
+   "latency_p50": 1.09,
+   "latency_p95": 2.26,
+   "backends": {
+    "Anthropic": 20
+   }
+  },
+  {
+   "judge": "sonnet-5.5",
+   "set": "sop/anchor-human-sample",
+   "rows": 20,
+   "ok": 0,
+   "refused": 20,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 20,
+   "cost_usd": 0,
+   "cost_per_unit": 0.0,
+   "latency_p50": 1.14,
+   "latency_p95": 8.23,
+   "backends": {
+    "Anthropic": 20
+   }
+  }
+ ]
+}

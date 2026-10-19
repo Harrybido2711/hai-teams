@@ -27,9 +27,11 @@ Probed 2026-10-19 on the four candidate judges (`Action_processes_benchmarks/jud
   endpoints found that can handle the requested parameters" — so send that on every call whose
   settings are part of the result, and treat the 404 as a fatal config error.
 - **A content-filter refusal is HTTP 200 with `content: null`.** `finish_reason: "content_filter"`,
-  `native_finish_reason: "refusal"`, the reason in `message.refusal`, no `usage`. A loop that only
-  reads `content` sees an empty body and retries it as transient; read `message.refusal` and record
-  the row as refused. Sonnet 5.5 does this deterministically on Wonderbread's SOP judge prompt.
+  `native_finish_reason: "refusal"`, the reason in `message.refusal`, sometimes no `usage`. A loop
+  that only reads `content` sees an empty body and retries it as transient; read `message.refusal`
+  and record the row as refused. Sonnet 5.5 does this on every Wonderbread SOP judge call (no
+  `usage`, unbilled) and on 11 of 81 MultiChallenge judge calls (billed) — the same prompt refused
+  on one replicate and answered on the next, so it is per call, not per item.
 - **One model id is many backends, at different precisions.** Kimi K2.6 is served by 17 providers
   at int4, fp4, fp8 and bf16, and one unpinned run used two. Pin with `"provider": {"only":
   ["<name>"], "allow_fallbacks": False}` wherever the comparison is between models; the endpoint
