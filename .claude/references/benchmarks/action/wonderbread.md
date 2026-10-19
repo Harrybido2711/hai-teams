@@ -93,8 +93,8 @@ the same text). `--limit` writes `smoke/`, gitignored. SLURM logs `log_<jobid>.t
    judge at 3 replicates. Then `../run_judges.sh` — submitted 2026-10-19, job 4482838: QA (sample
    and anchor) done for all four judges; SOP anchor done for both Haikus. **Halted on OpenRouter
    billing** 13:34–13:56 — SOP sample unfinished for all three (21, 551, 0 of 3,162), Kimi's anchor
-   1,237/1,767; Sonnet 5.5 refused SOP and exited 1. Resume: `sbatch --array=0-2 ../run_judges.sh`
-   after a top-up.
+   1,237/1,767; Sonnet 5.5 refused SOP and exited 1. Resumed after a top-up
+   as `sbatch --array=0-2 ../run_judges.sh`, job 4506836 (15:18), from those checkpoints.
 5. `python ../compare_judges.py` on the pulled rows.
 
 ## What its README says about showing reasoning
