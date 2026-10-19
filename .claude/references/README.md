@@ -63,7 +63,7 @@ Read a whole file when you are editing it. Retrieve when you are using it.
 
 1. **[shared-context.md](shared-context.md)** — first, because it decides *which* document is
    authoritative on a subject. Where it names one (`negotiation.md` for NegotiationToM findings,
-   `DATA_NOTES.md` for dataset traps, `JUDGE_RECORD.md` for judges), that one wins on that subject.
+   `DATA_NOTES.md` for dataset traps, `LLM_as_judge/JUDGE_SELECTION.md` for judges), that one wins on that subject.
 2. **[PLAN.md](../../PLAN.md)** — repo layout, which benchmark needs a judge, what state each run is in.
 3. A **benchmark page** wins on its own benchmark — counts, paths and task names are never inherited
    from a generic file or from another benchmark.

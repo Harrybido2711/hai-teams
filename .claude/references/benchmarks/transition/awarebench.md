@@ -181,4 +181,4 @@ authoritative on the dataset. Four sections change what a run means:
 §2.5 (the schema changes per dimension — one parser cannot read the file), §2.7 (the released file is
 not the file the paper evaluated), §2.8 (`perspective` is scored second-order only), §4 (what is
 broken as delivered). §5 is the run plan; the judge we chose not to run is
-`LLM_as_judge/JUDGE_RECORD.md` §3.
+`LLM_as_judge/JUDGE_SELECTION.md` §1.

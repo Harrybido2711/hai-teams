@@ -18,7 +18,7 @@ the page is missing. Changes nothing but the page and its group-index row.
    - Expected counts per task — count the data (`wc -l`, `len(json.load(…))`), then what the scorer
      filters out of the denominator.
    - Scoring — the metric, the exclusions, judge or not (a judge also needs
-     `LLM_as_judge/JUDGE_DOCUMENTATION_RULE.md`).
+     `LLM_as_judge/JUDGE_SELECTION.md` §7).
    - Output naming and the shard tag; which `results/` folders are upstream's (no model in the name).
    - What the README says about showing reasoning — quote the line.
    - Traps that would produce wrong numbers that look right.

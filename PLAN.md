@@ -32,8 +32,7 @@ hai-teams/
 ├── LLM_as_judge/                        judge methodology, not a benchmark
 │   ├── README.md                        literature review: choosing the judge model, building the pipeline
 │   ├── papers/                          the review's ten PDFs (2025–2026)
-│   ├── JUDGE_RECORD.md                  the filled record for all three judged benchmarks
-│   └── JUDGE_SUMMARY.md                 its two-page version, for discussion
+│   └── JUDGE_SELECTION.md               the one judge document: decision, pilot and the judge record
 ├── .claude/                             INDEX, tools, agents, references, workflows (see below)
 ├── CLAUDE.md                            planner rules only; `.claude/INDEX.md` is the entry point
 ├── AGENTS.md                            situation → fastest first move, for Claude and Codex alike
@@ -161,8 +160,8 @@ redone.
 | `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | no — its 60 judged rows were dropped 2026-10-05 | all five selected models, full run 2026-10-12; recorded |
 | `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval      | goal specification                         | AddleseeHQ/mpgt-eval          | no — human review                                   | none yet (vendored 2026-08-19)                                 |
 | `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | none yet                                                       |
-| `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | none yet (vendored 2026-08-19)                                 |
-| `Action_.../Multi-challenge_bench`               | MultiChallenge | coordination                               | ekwinox117/multi-challenge    | **yes** — every item                          | none yet (vendored 2026-08-19)                                 |
+| `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | judge pilot only — `gpt-5.6-luna` on a 10% sample, four candidate judges; GPT responses generated 2026-10-19, judges not yet run |
+| `Action_.../Multi-challenge_bench`               | MultiChallenge | coordination                               | ekwinox117/multi-challenge    | **yes** — every item                          | judge pilot only — `gpt-5.6-luna` on a 10% sample, four candidate judges; GPT responses generated 2026-10-19, judges not yet run |
 | `Interpersonal_.../NegotiationToM`               | NegotiationToM | conflict management                        | HKUST-KnowComp/NegotiationToM | no — EM + micro/macro F1                            | GPT, Gemini, Gemma, Qwen, Deepseek, XAI                        |
 | `Interpersonal_.../EmoBench`                     | EmoBench       | affect management                          | Sahandfer/EmoBench            | no — MCQ accuracy                                   | OpenAI, Gemini, Gemma, Qwen, Deepseek, XAI                     |
 | `Tasks_.../DocVQA`                               | DocVQA         | general task ability                       | docvqa.org (registered download; baselines at mineshmathew/DocVQA) | no — ANLS                                           | OpenAI, Gemini, Qwen, Gemma — the four that take an image       |
@@ -170,7 +169,7 @@ redone.
 | `Tasks_.../mmlu`                                 | MMLU           | general task ability                       | hendrycks/test                | no — accuracy                                       | 7 providers incl. Llama                                        |
 
 "Result files present" means CSV/JSONL output exists on disk under that provider's name — it is not a
-claim that the run is complete or that its numbers have been audited. `LLM_as_judge/JUDGE_RECORD.md`
+claim that the run is complete or that its numbers have been audited. `LLM_as_judge/JUDGE_SELECTION.md`
 carries the judge verdict and the evidence behind it.
 
 ## The shape that repeats inside a benchmark folder
@@ -214,12 +213,7 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 | `.claude/references/sync-and-consistency.md`         | the three sync layers — local↔local, local↔Quest, local↔git — what enforces each, and when the Quest one applies at all |
 | `.claude/references/doc-check.md`                    | what every consistency-check finding means and how to clear it — read this when a commit is blocked |
 | `.claude/references/benchmarks/<group>/<name>.md`    | per-benchmark operating detail: Quest path, layout, verified counts, output naming, run order, its own traps — one page for each of the ten, plus a group page for what a process folder's benchmarks share. The rest of `.claude/` is benchmark-agnostic on purpose |
-| `LLM_as_judge/JUDGE_DOCUMENTATION_RULE.md`           | the thirteen fields that must be recorded about any judge before its numbers are used                                                         |
-| `LLM_as_judge/JUDGE_RECORD.md`                       | the filled record — every judge in the suite: what it is, what it is shown, what its numbers mean, and which seven benchmarks need no record |
-| `LLM_as_judge/JUDGE_SUMMARY.md`                      | the two-page version of that record: the findings, the cost per model, and the open decisions                                                 |
-| `LLM_as_judge/GPT_LLM_AS_JUDGE_GUIDE.md`             | how to*build* a judge with GPT — pairwise setup, structured output, position bias                                                          |
-| `LLM_as_judge/JUDGE_SELECTION.md`                    | the judge decision start to finish: which benchmarks need a judge, what the literature established, which model we use — the version to present |
-| `LLM_as_judge/README.md`                             | which judge model Wonderbread and MultiChallenge should use and the pipeline for each, from fifteen papers at 2026 top venues; the PDFs are in `LLM_as_judge/papers/` |
+| `LLM_as_judge/JUDGE_SELECTION.md`                    | the one judge document: which benchmarks need a judge, the literature, the chosen judges and the pilot comparing them, and the filled judge record (§7) — the PDFs are in `LLM_as_judge/papers/` |
 | `Interpersonal_.../NegotiationToM/negotiation.md`    | current NegotiationToM results, dataset traps, reasoning-token cost, silent-failure catalogue                                                 |
 | `Interpersonal_.../NegotiationToM/ISSUES.md`         | problems already hit, what was rejected, what shipped                                                                                         |
 | `Interpersonal_.../NegotiationToM/DATA_NOTES.md`     | cutoff tiling, the`"None"` sentinel, expected row counts                                                                                    |
@@ -262,22 +256,25 @@ follows, and none holds a benchmark-specific path — so they are adapted to a t
 
 ## Open work
 
-1. **Judge record — done 2026-08-19.** `LLM_as_judge/JUDGE_RECORD.md` is the single filled record:
-   all thirteen fields for Wonderbread, MultiChallenge and AwareBench, plus verbatim prompts. The
-   seven benchmarks with no LLM judge get no record — they are named in its opening section. Three
-   findings from writing them change downstream work: Wonderbread's judge covers **SOP Generation**
-   as well as QA (so the call budget scales with SOP length, not with item count); MultiChallenge's
-   harness raises `TypeError` before its first API call and needs a one-line patch. AwareBench's
-   judge needs nothing: its 60 judged rows were dropped on 2026-10-05. Choosing the replacement
-   judge for the remaining two is `LLM_as_judge/README.md`.
+1. **Judge record — done 2026-08-19; one document since 2026-10-19.** `LLM_as_judge/JUDGE_SELECTION.md`
+   is the only judge document — the user had the folder cut to it on 2026-10-19. Its §7 is the
+   filled record for MultiChallenge and Wonderbread, its §1 names the seven benchmarks that need
+   none and why AwareBench's judged rows were dropped (2026-10-05). Three findings from writing the
+   record changed downstream work: Wonderbread's judge covers **SOP Generation** as well as QA (so
+   the call budget scales with SOP length, not item count); MultiChallenge's harness raises
+   `TypeError` before its first API call; Wonderbread's SOP-Improvement scorer never runs.
 2. **AwareBench run.** Scope is decided (AwareEval, not `New/`, and without the 60
    `mission_open-ended` rows). All five selected models ran in full on Quest on 2026-10-12 —
    4,015 rows each, `COMPLETE 1`; confirmed and recorded in both workbooks the same day. Open:
    criteria 4–5 need repeat runs on a subsample, not yet run; a
    known scorer gap is documented, not applied (`Awareness_in_LLM/FULL_RUN_NOTES.md`).
    `.claude/references/benchmarks/transition/awarebench.md`.
-3. **Four benchmarks have no runner.** PlanBench, Multi-party Goal Tracking, Wonderbread and
-   MultiChallenge are vendored but have no per-provider harness, no SLURM script, and no results.
+3. **Two benchmarks have no runner.** PlanBench and Multi-party Goal Tracking are vendored but have
+   no per-provider harness, no SLURM script, and no results. Wonderbread and MultiChallenge have
+   the judge pilot's runners (2026-10-19): `gpt-5.6-luna` on a 10% sample of each, graded by the
+   four candidate judges and compared by the advisor's rule — cheap if they agree, expensive only
+   if it is clearly better (`LLM_as_judge/JUDGE_SELECTION.md` §6.4). GPT's responses were
+   generated on Quest 2026-10-19 (jobs 4480406, 4480407); the judge run is next.
 4. **Provider coverage is uneven.** DocVQA has two providers where bbh and mmlu have seven; whether
    that gap is closed is a scope decision, not an oversight to fix silently.
 5. **The pre-submit Quest gate covers one benchmark.** `check_quest_sync.py` hardcodes

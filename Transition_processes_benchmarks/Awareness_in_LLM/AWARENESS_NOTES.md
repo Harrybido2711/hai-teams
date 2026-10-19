@@ -477,7 +477,7 @@ What follows:
   the §2.6 formula with that `mission`.
 - **Not the paper's number.** Neither `mission` nor the headline is the paper's figure. Dropping
   open-ended raises the paper's own 13 models by about 3 points and flips one pair of ranks
-  (`LLM_as_judge/JUDGE_SUMMARY.md` §4).
+  (`LLM_as_judge/JUDGE_SELECTION.md` §1).
   - Compare against the paper baseline recomputed the same way, never against its printed headline.
   - The other tasks' per-task numbers are unaffected and stay comparable to §2.3.
 - **Workbooks.** The `mission_open-ended` row in both workbooks' `Awareness` sheet stays blank by

@@ -70,6 +70,7 @@ follow, Codex included. A workflow named beside one runs that whole stretch in C
 | A job is writing bad data | **standing authorisation, do not ask:** `scancel` → fix locally → transfer the whole change set, verify `md5sum` → decide resume / prune / archive and say which → resubmit | **`kill-and-resync`** · workflow `fix-run`; `CLAUDE.md`; `quest-cluster.md` § Replacing the code |
 | Fixed locally, job still wrong | the live process imported the old modules. Cancel *before* transferring | `quest-cluster.md` |
 | HTTP 200, empty body | that provider's row in the gotchas table; empties are retried, never scored as zero | `provider-gotchas.md`; `script-skeleton.md` §4 |
+| OpenRouter: empty body with `finish_reason` `content_filter`, or a setting that seems ignored | a refusal (`message.refusal`), not an empty — record it, do not retry; send `provider.require_parameters` so a dropped setting fails loudly | `provider-gotchas.md` § OpenRouter |
 | The same error on every call (`ValidationError`, `INVALID_ARGUMENT`, `Extra inputs`) | a permanent config error — make it fatal. Check the SDK version Quest's interpreter has, not yours | `provider-gotchas.md` § google-genai |
 | The same few items fail at a fixed seed (`MALFORMED_RESPONSE`) | a property of those inputs; retrying is waste. Record them as unanswerable | `provider-gotchas.md` |
 | Billing / quota / "credits" wording | the shared `halt_on_billing` classifier — never a hand-written string test | `provider-gotchas.md` § Classifying a refusal |

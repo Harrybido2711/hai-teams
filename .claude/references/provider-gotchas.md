@@ -1,6 +1,7 @@
-<!-- size-budget: 7000 -->
+<!-- size-budget: 9000 -->
 <!-- One row per provider plus its failure modes; it grows when a provider is added or
-     replaced, which is the file working, not the file sprawling. -->
+     replaced, which is the file working, not the file sprawling. Raised to 9000 on 2026-10-19 for
+     the OpenRouter section the judge-pilot probes produced. -->
 # Provider gotchas
 
 Every one of these has cost a debugging cycle, and most fail with **HTTP 200 and no exception** —
@@ -15,6 +16,27 @@ the run looks complete while scoring 0.
 | xAI `grok-3-mini` | `xai_sdk.Client` | no message dicts — `chat.create(model=...)`, `chat.append(xai_system(...))`, `chat.append(xai_user(...))`, `chat.sample()`. It does accept `max_tokens`/`temperature` | **RETIRED — xAI serves neither this id nor any alias of it, checked 2026-09-08 against `api.x.ai/v1/language-models`; the stored results stay valid but a new run fails. What it serves now: grok-4.3/4.5/4.6/4.20/build-0.1, all text+image.**
 | Qwen `Qwen/Qwen3.5-9B` | `together.Together`, **`timeout=180`** | hybrid model: pass `reasoning={"enabled": False}`; retain `max_tokens=8192` for visible JSON headroom |
 | Gemma `google/gemma-4-31B-it` | `together.Together`, **`timeout=300`** | intermittent empty string at HTTP 200 — retry up to 5× |
+
+## OpenRouter: dropped settings, and refusals that look like empties
+
+Probed 2026-10-19 on the four candidate judges (`Action_processes_benchmarks/judge_core.py`):
+
+- **A setting no backend supports is silently dropped.** `temperature=0` to Claude Haiku 5.5 returns
+  200 and an answer, while the model page lists no `temperature`. With
+  `extra_body={"provider": {"require_parameters": True}}` the same request is refused 404 "No
+  endpoints found that can handle the requested parameters" — so send that on every call whose
+  settings are part of the result, and treat the 404 as a fatal config error.
+- **A content-filter refusal is HTTP 200 with `content: null`.** `finish_reason: "content_filter"`,
+  `native_finish_reason: "refusal"`, the reason in `message.refusal`, no `usage`. A loop that only
+  reads `content` sees an empty body and retries it as transient; read `message.refusal` and record
+  the row as refused. Sonnet 5.5 does this deterministically on Wonderbread's SOP judge prompt.
+- **One model id is many backends, at different precisions.** Kimi K2.6 is served by 17 providers
+  at int4, fp4, fp8 and bf16, and one unpinned run used two. Pin with `"provider": {"only":
+  ["<name>"], "allow_fallbacks": False}` wherever the comparison is between models; the endpoint
+  list with each provider's quantization is `GET /api/v1/models/<id>/endpoints`. The maker's own
+  endpoint is not automatically the safe pin: Moonshot AI's returns whitespace in JSON mode.
+- **Claude fences JSON mode** — `response_format={"type": "json_object"}` comes back inside
+  ```` ```json … ``` ````; a bare `json.loads` raises. Strip fences before parsing.
 
 ## Timeouts, and why `timeout=` is not a guard
 

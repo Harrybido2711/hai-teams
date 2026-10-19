@@ -50,3 +50,13 @@ quest_pull.log
 Transition_processes_benchmarks/Awareness_in_LLM/AWARE_*/smoke/
 Transition_processes_benchmarks/Awareness_in_LLM/AWARE_*/smoke_rep*/
 Transition_processes_benchmarks/Awareness_in_LLM/AWARE_*/smoke_log.txt
+
+# Judge pilot (Action_processes_benchmarks): --limit smoke runs, never a result; the sampled
+# Wonderbread demos (278 MB, re-fetchable from Zenodo by fetch_sample_demos.py); and the SOP text
+# files upstream's run() writes beside our rows — the .jsonl next to them holds the same text.
+Action_processes_benchmarks/*/*/smoke/
+Action_processes_benchmarks/judge_comparison/smoke/
+Action_processes_benchmarks/Wonderbread_bench/data/demos/
+Action_processes_benchmarks/Wonderbread_bench/WB_GPT_5.6_Luna/results/sop_upstream_files/
+# judge_core.lock_output: one writer per result file; the lock is process state, never a result
+Action_processes_benchmarks/**/*.jsonl.lock

@@ -10,9 +10,7 @@ stay in sync as the project moves — prefer them over anything remembered from 
 |---|---|
 | `.claude/references/benchmarks/<group>/<name>.md` | **Everything specific to one benchmark** — its Quest path, layout, expected counts, output paths, run order and its own traps. Read the page for the benchmark you are working on, and its group page with it; a number from another page is not transferable |
 | `.claude/references/benchmarks/README.md` | The index of all ten pages, and what a page is required to establish before its numbers are used |
-| `LLM_as_judge/JUDGE_RECORD.md` | Which benchmarks need an LLM judge, and the full record for the three that do |
-| `LLM_as_judge/JUDGE_SELECTION.md` | The judge decision as one argument — which benchmarks need a judge, what the literature established, and which model we use and why. Read it when explaining or presenting the choice; use `LLM_as_judge/README.md` for the page-cited evidence |
-| `LLM_as_judge/README.md` | Which judge model to use for Wonderbread and MultiChallenge, and the pipeline for each — read it when choosing a replacement judge or designing a judge's prompt, references and validation. Fifteen papers from 2026 top venues (ICML, ICLR, COLM, ACL, NeurIPS, EMNLP), page-cited, PDFs in `LLM_as_judge/papers/` |
+| `LLM_as_judge/JUDGE_SELECTION.md` | **Everything about LLM judges, in one file** — which benchmarks need one, the literature, which judge model and why, the pilot comparing the four candidates, and the filled judge record a judged number needs before it is used (§7). Fifteen 2026 top-venue papers, PDFs in `LLM_as_judge/papers/` |
 | `PLAN.md` | Repo map: what each folder is, provider coverage, and the state of each run |
 
 A benchmark's own `*_script.md` / `*_SCRIPT.md` is authoritative on what a task *means*, but their
