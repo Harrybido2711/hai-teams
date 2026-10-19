@@ -389,15 +389,22 @@ def sop_section(sub, judges, producer, group_of):
                    | {"pairs": len(ms)} for g, ms in sorted(groups.items())} if j in covering else {}
         out.append({"judge": j, "covering": j in covering, "groups": summary, "n_common": len(common),
                     "n_own": sum(1 for u in universe if metrics[j].get(u)), "flip": flips[j]})
+    return out, line_agreement(line_labels), usage, metrics, common, covering
+
+
+def line_agreement(line_labels):
+    """Pairwise agreement on the majority MATCH decision (True/False) of each line both judges
+    labelled. The labels are booleans, not indices — testing them against -1 made every line
+    'matched' and every pair agree 100%."""
     agree = []
     for a, b in itertools.combinations(sorted(line_labels), 2):
         keys = [k for k in line_labels[a] if line_labels[a][k] is not None
                 and line_labels[b].get(k) is not None]
-        x = [line_labels[a][k] != -1 for k in keys]
-        y = [line_labels[b][k] != -1 for k in keys]
+        x = [line_labels[a][k] for k in keys]
+        y = [line_labels[b][k] for k in keys]
         agree.append({"a": a, "b": b, "n_lines": len(keys), "agree": agreement(x, y),
                       "kappa": cohen_kappa(x, y, categories=[False, True])})
-    return out, agree, usage, metrics, common, covering
+    return agree
 
 
 def sop_vs_human(metrics, common, covering):

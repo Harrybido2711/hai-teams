@@ -140,19 +140,28 @@ Pairwise agreement on line-match decisions (lines both labelled):
 
 | judge | group | pairs | precision | recall | F1 | ordering | flip rate | scored (own) |
 |---|---|---|---|---|---|---|---|---|
+| haiku-4.5 | all | 30 | 0.708 | 0.816 | 0.726 | 0.590 | 1.4% | 30 |
+| haiku-5.5 | all | 30 | 0.730 | 0.767 | 0.709 | 0.632 | 8.1% | 30 |
 | sonnet-5.5 | insufficient coverage | — | — | — | — | — | — | 0 |
 
 Pairwise agreement on line-match decisions (lines both labelled):
 
 | judge A | judge B | lines | agree | κ |
 |---|---|---|---|---|
+| haiku-4.5 | haiku-5.5 | 589 | 89.3% | 0.74 |
+| haiku-4.5 | sonnet-5.5 | 0 | — | — |
+| haiku-5.5 | sonnet-5.5 | 0 | — | — |
 
 **Against the human precision / recall** (common pairs):
 
 | judge | metric | n | MAE | Pearson | Spearman | human mean | judge mean |
 |---|---|---|---|---|---|---|---|
-| upstream gpt-4 (reference) | precision | 0 | — | — | — | — | — |
-| upstream gpt-4 (reference) | recall | 0 | — | — | — | — | — |
+| upstream gpt-4 (reference) | precision | 30 | 0.112 | 0.84 | 0.85 | 0.515 | 0.533 |
+| upstream gpt-4 (reference) | recall | 30 | 0.078 | 0.88 | 0.82 | 0.631 | 0.606 |
+| haiku-4.5 | precision | 30 | 0.193 | 0.76 | 0.79 | 0.515 | 0.708 |
+| haiku-4.5 | recall | 30 | 0.185 | 0.67 | 0.55 | 0.631 | 0.816 |
+| haiku-5.5 | precision | 30 | 0.224 | 0.72 | 0.74 | 0.515 | 0.730 |
+| haiku-5.5 | recall | 30 | 0.145 | 0.79 | 0.63 | 0.631 | 0.767 |
 
 ## Reliability and cost — every judge, every set
 
@@ -173,11 +182,13 @@ Cost is OpenRouter's billed `cost`, summed over every call ever made (re-asks an
 | kimi-k2.6 | qa/anchor-human-sample | 360 | 360 | 0 | 0 | 0 | 0 | 0 | 360 | 0.0956 | 0.00319 | 0.4 | 1.0 | Crusoe 360 |
 | sonnet-5.5 | qa/anchor-human-sample | 360 | 360 | 0 | 0 | 0 | 0 | 0 | 360 | 0.6904 | 0.02301 | 1.3 | 3.3 | Anthropic 360 |
 | sonnet-5.5 | sop/gpt-5.6-luna | 20 | 0 | 20 | 0 | 0 | 0 | 0 | 20 | 0.0000 | 0.00000 | 1.1 | 2.3 | Anthropic 20 |
+| haiku-4.5 | sop/anchor-human-sample | 1767 | 1767 | 0 | 0 | 0 | 0 | 0 | 1769 | 2.4775 | 0.08258 | 2.1 | 3.1 | Anthropic 1767 |
+| haiku-5.5 | sop/anchor-human-sample | 1767 | 1767 | 0 | 0 | 0 | 0 | 0 | 1767 | 0.2897 | 0.00966 | 1.9 | 3.0 | Anthropic 1767 |
 | sonnet-5.5 | sop/anchor-human-sample | 20 | 0 | 20 | 0 | 0 | 0 | 0 | 20 | 0.0000 | 0.00000 | 1.1 | 8.2 | Anthropic 20 |
 
 | judge | backend | total cost $ | list price in / out per M |
 |---|---|---|---|
-| haiku-4.5 | Anthropic | 0.5320 | 1.0 / 5.0 |
-| haiku-5.5 | Anthropic | 0.0692 | 0.1 / 0.5 |
+| haiku-4.5 | Anthropic | 3.0095 | 1.0 / 5.0 |
+| haiku-5.5 | Anthropic | 0.3588 | 0.1 / 0.5 |
 | kimi-k2.6 | Crusoe | 0.2435 | 0.7 / 3.5 |
 | sonnet-5.5 | Anthropic | 1.3658 | 2.0 / 10.0 |

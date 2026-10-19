@@ -114,6 +114,9 @@ m = cj.sop_pair_metrics("u", 2, 1, {("u", "pred", 0): True, ("u", "pred", 1): Fa
 check("sop pair: match decided, index split", (m["precision"], m["recall"], m["ordering"]), (0.5, 1.0, None))
 check("sop pair: a line with no majority match voids the pair",
       cj.sop_pair_metrics("u", 1, 1, {("u", "pred", 0): None, ("u", "gold", 0): True}, {}), None)
+# line labels are match booleans: a disagreement must show, and an unlabelled line is left out
+la = cj.line_agreement({"a": {1: True, 2: False, 3: True, 4: None}, "b": {1: True, 2: True, 3: True, 4: False}})
+check("sop line agreement on match booleans", (la[0]["n_lines"], round(la[0]["agree"], 4)), (3, 0.6667))
 # an axis outside the common set must void the macro, not shrink it to three axes
 qids = [q for q in items if items[q]["AXIS"] in ("INFERENCE_MEMORY", "SELF_COHERENCE")][:1] + \
        [q for q in items if items[q]["AXIS"] == "SELF_COHERENCE"][:1]
