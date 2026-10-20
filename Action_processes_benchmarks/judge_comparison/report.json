@@ -942,15 +942,148 @@
  "wonderbread_sop/gpt-5.6-luna": {
   "scores": [
    {
+    "judge": "haiku-4.5",
+    "covering": true,
+    "groups": {
+     "td": {
+      "precision": 0.5958137457881704,
+      "recall": 0.8241508199402936,
+      "f1": 0.6741505172131259,
+      "ordering": 0.5245976510938148,
+      "pairs": 15
+     },
+     "td_kf": {
+      "precision": 0.8146169274566014,
+      "recall": 0.9821714743589743,
+      "f1": 0.8817047224094554,
+      "ordering": 0.786265478181239,
+      "pairs": 16
+     },
+     "td_kf_act": {
+      "precision": 0.8830650252525253,
+      "recall": 0.9817708333333334,
+      "f1": 0.9264020101857032,
+      "ordering": 0.8585016835016835,
+      "pairs": 16
+     }
+    },
+    "n_common": 47,
+    "n_own": 48,
+    "flip": 0.010436432637571158
+   },
+   {
+    "judge": "haiku-5.5",
+    "covering": true,
+    "groups": {
+     "td": {
+      "precision": 0.5569206250791928,
+      "recall": 0.7374861980125138,
+      "f1": 0.5902619904187216,
+      "ordering": 0.5371511138890818,
+      "pairs": 15
+     },
+     "td_kf": {
+      "precision": 0.8504470092105961,
+      "recall": 0.9628321103238866,
+      "f1": 0.8966527750117826,
+      "ordering": 0.8021109232647694,
+      "pairs": 16
+     },
+     "td_kf_act": {
+      "precision": 0.9033933080808081,
+      "recall": 0.9569384699730095,
+      "f1": 0.9257091990775341,
+      "ordering": 0.8760140621905328,
+      "pairs": 16
+     }
+    },
+    "n_common": 47,
+    "n_own": 47,
+    "flip": 0.07122507122507123
+   },
+   {
+    "judge": "kimi-k2.6",
+    "covering": true,
+    "groups": {
+     "td": {
+      "precision": 0.5721507733528194,
+      "recall": 0.8052619310514048,
+      "f1": 0.6426941618783876,
+      "ordering": 0.5208423158459695,
+      "pairs": 15
+     },
+     "td_kf": {
+      "precision": 0.8030841893613633,
+      "recall": 0.9751918859649122,
+      "f1": 0.8764058664510442,
+      "ordering": 0.7802328623757195,
+      "pairs": 16
+     },
+     "td_kf_act": {
+      "precision": 0.8746072860962567,
+      "recall": 0.9513737769905533,
+      "f1": 0.9048573184183685,
+      "ordering": 0.826113091701327,
+      "pairs": 16
+     }
+    },
+    "n_common": 47,
+    "n_own": 48,
+    "flip": 0.08064516129032258
+   },
+   {
     "judge": "sonnet-5.5",
     "covering": false,
     "groups": {},
-    "n_common": 0,
+    "n_common": 47,
     "n_own": 0,
     "flip": null
    }
   ],
-  "pairs": []
+  "pairs": [
+   {
+    "a": "haiku-4.5",
+    "b": "haiku-5.5",
+    "n_lines": 1053,
+    "agree": 0.9107312440645774,
+    "kappa": 0.7235772811814054
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "n_lines": 1054,
+    "agree": 0.9222011385199241,
+    "kappa": 0.7597941124155105
+   },
+   {
+    "a": "haiku-4.5",
+    "b": "sonnet-5.5",
+    "n_lines": 0,
+    "agree": null,
+    "kappa": null
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "n_lines": 1053,
+    "agree": 0.8955365622032289,
+    "kappa": 0.6891321034240289
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "n_lines": 0,
+    "agree": null,
+    "kappa": null
+   },
+   {
+    "a": "kimi-k2.6",
+    "b": "sonnet-5.5",
+    "n_lines": 0,
+    "agree": null,
+    "kappa": null
+   }
+  ]
  },
  "wonderbread_sop/anchor-human-sample": {
   "scores": [
@@ -987,6 +1120,22 @@
     "flip": 0.08149405772495756
    },
    {
+    "judge": "kimi-k2.6",
+    "covering": true,
+    "groups": {
+     "all": {
+      "precision": 0.6820129543658955,
+      "recall": 0.735947427858183,
+      "f1": 0.6741454906444557,
+      "ordering": 0.604608156549333,
+      "pairs": 30
+     }
+    },
+    "n_common": 30,
+    "n_own": 30,
+    "flip": 0.10526315789473684
+   },
+   {
     "judge": "sonnet-5.5",
     "covering": false,
     "groups": {},
@@ -1005,6 +1154,13 @@
    },
    {
     "a": "haiku-4.5",
+    "b": "kimi-k2.6",
+    "n_lines": 589,
+    "agree": 0.8998302207130731,
+    "kappa": 0.7622123536536132
+   },
+   {
+    "a": "haiku-4.5",
     "b": "sonnet-5.5",
     "n_lines": 0,
     "agree": null,
@@ -1012,6 +1168,20 @@
    },
    {
     "a": "haiku-5.5",
+    "b": "kimi-k2.6",
+    "n_lines": 589,
+    "agree": 0.8743633276740238,
+    "kappa": 0.6966664346857819
+   },
+   {
+    "a": "haiku-5.5",
+    "b": "sonnet-5.5",
+    "n_lines": 0,
+    "agree": null,
+    "kappa": null
+   },
+   {
+    "a": "kimi-k2.6",
     "b": "sonnet-5.5",
     "n_lines": 0,
     "agree": null,
@@ -1079,6 +1249,26 @@
    "spearman": 0.6266759596546152,
    "human_mean": 0.6313729935840919,
    "judge_mean": 0.7672544916309219
+  },
+  {
+   "judge": "kimi-k2.6",
+   "metric": "precision",
+   "n": 30,
+   "mae": 0.17513108623402743,
+   "pearson": 0.8172388476877503,
+   "spearman": 0.8371184743759214,
+   "human_mean": 0.5152152014652015,
+   "judge_mean": 0.6820129543658955
+  },
+  {
+   "judge": "kimi-k2.6",
+   "metric": "recall",
+   "n": 30,
+   "mae": 0.11619059589025264,
+   "pearson": 0.7590785549970653,
+   "spearman": 0.6293421566638746,
+   "human_mean": 0.6313729935840919,
+   "judge_mean": 0.735947427858183
   }
  ],
  "usage": [
@@ -1311,6 +1501,63 @@
    }
   },
   {
+   "judge": "haiku-4.5",
+   "set": "sop/gpt-5.6-luna",
+   "rows": 3162,
+   "ok": 3162,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 3166,
+   "cost_usd": 4.677876,
+   "cost_per_unit": 0.09745575000000001,
+   "latency_p50": 2.15,
+   "latency_p95": 3.2,
+   "backends": {
+    "Anthropic": 3162
+   }
+  },
+  {
+   "judge": "haiku-5.5",
+   "set": "sop/gpt-5.6-luna",
+   "rows": 3162,
+   "ok": 3158,
+   "refused": 0,
+   "parse_fail": 4,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 3191,
+   "cost_usd": 0.5681806,
+   "cost_per_unit": 0.011837095833333333,
+   "latency_p50": 1.94,
+   "latency_p95": 3.0,
+   "backends": {
+    "Anthropic": 3162
+   }
+  },
+  {
+   "judge": "kimi-k2.6",
+   "set": "sop/gpt-5.6-luna",
+   "rows": 3162,
+   "ok": 3162,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 3171,
+   "cost_usd": 3.3901315,
+   "cost_per_unit": 0.07062773958333333,
+   "latency_p50": 2.41,
+   "latency_p95": 6.7,
+   "backends": {
+    "Crusoe": 3162
+   }
+  },
+  {
    "judge": "sonnet-5.5",
    "set": "sop/gpt-5.6-luna",
    "rows": 20,
@@ -1365,6 +1612,25 @@
    "latency_p95": 3.03,
    "backends": {
     "Anthropic": 1767
+   }
+  },
+  {
+   "judge": "kimi-k2.6",
+   "set": "sop/anchor-human-sample",
+   "rows": 1767,
+   "ok": 1767,
+   "refused": 0,
+   "parse_fail": 0,
+   "failed": 0,
+   "skipped": 0,
+   "stale": 0,
+   "calls": 1772,
+   "cost_usd": 1.7796373,
+   "cost_per_unit": 0.059321243333333336,
+   "latency_p50": 2.81,
+   "latency_p95": 7.79,
+   "backends": {
+    "Crusoe": 1767
    }
   },
   {

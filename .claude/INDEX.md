@@ -42,10 +42,8 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 - **All ten benchmarks have a knowledge-base page**; two of them — PlanBench and mpgt — have no
   runner at all, so work there starts at phase 1 or 2 rather than 3. Wonderbread and MultiChallenge
   have the **judge pilot**'s runners only (2026-10-19): `gpt-5.6-luna` on a 10% sample, graded by
-  the four candidate judges. GPT's responses were generated on Quest 2026-10-19; judge job 4482838
-  finished MultiChallenge and QA, then halted on OpenRouter credit mid-SOP; SOP resumed as job
-  4506836
-  (`references/benchmarks/action/`).
+  the four candidate judges. GPT's responses were generated and judged on Quest 2026-10-19 (jobs
+  4482838, 4506836); which judge to adopt is open (`LLM_as_judge/JUDGE_SELECTION.md` §6.4).
 - **Two runners comply with the model-parameter rule; every other one does not.** bbh's
   `BBH_GPT_5.6_Luna` and `BBH_Gemini_Flash3.5lite_OpenRouter` (added 2026-08-29) negotiate their
   surface and set a cap; their caps are chosen rather than measured, but both have since run all

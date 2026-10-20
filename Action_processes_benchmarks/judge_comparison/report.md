@@ -129,12 +129,27 @@ Pairwise agreement per criterion:
 
 | judge | group | pairs | precision | recall | F1 | ordering | flip rate | scored (own) |
 |---|---|---|---|---|---|---|---|---|
+| haiku-4.5 | td | 15 | 0.596 | 0.824 | 0.674 | 0.525 | 1.0% | 48 |
+| haiku-4.5 | td_kf | 16 | 0.815 | 0.982 | 0.882 | 0.786 | 1.0% | 48 |
+| haiku-4.5 | td_kf_act | 16 | 0.883 | 0.982 | 0.926 | 0.859 | 1.0% | 48 |
+| haiku-5.5 | td | 15 | 0.557 | 0.737 | 0.590 | 0.537 | 7.1% | 47 |
+| haiku-5.5 | td_kf | 16 | 0.850 | 0.963 | 0.897 | 0.802 | 7.1% | 47 |
+| haiku-5.5 | td_kf_act | 16 | 0.903 | 0.957 | 0.926 | 0.876 | 7.1% | 47 |
+| kimi-k2.6 | td | 15 | 0.572 | 0.805 | 0.643 | 0.521 | 8.1% | 48 |
+| kimi-k2.6 | td_kf | 16 | 0.803 | 0.975 | 0.876 | 0.780 | 8.1% | 48 |
+| kimi-k2.6 | td_kf_act | 16 | 0.875 | 0.951 | 0.905 | 0.826 | 8.1% | 48 |
 | sonnet-5.5 | insufficient coverage | — | — | — | — | — | — | 0 |
 
 Pairwise agreement on line-match decisions (lines both labelled):
 
 | judge A | judge B | lines | agree | κ |
 |---|---|---|---|---|
+| haiku-4.5 | haiku-5.5 | 1053 | 91.1% | 0.72 |
+| haiku-4.5 | kimi-k2.6 | 1054 | 92.2% | 0.76 |
+| haiku-4.5 | sonnet-5.5 | 0 | — | — |
+| haiku-5.5 | kimi-k2.6 | 1053 | 89.6% | 0.69 |
+| haiku-5.5 | sonnet-5.5 | 0 | — | — |
+| kimi-k2.6 | sonnet-5.5 | 0 | — | — |
 
 ## Wonderbread SOP Generation — anchor set
 
@@ -142,6 +157,7 @@ Pairwise agreement on line-match decisions (lines both labelled):
 |---|---|---|---|---|---|---|---|---|
 | haiku-4.5 | all | 30 | 0.708 | 0.816 | 0.726 | 0.590 | 1.4% | 30 |
 | haiku-5.5 | all | 30 | 0.730 | 0.767 | 0.709 | 0.632 | 8.1% | 30 |
+| kimi-k2.6 | all | 30 | 0.682 | 0.736 | 0.674 | 0.605 | 10.5% | 30 |
 | sonnet-5.5 | insufficient coverage | — | — | — | — | — | — | 0 |
 
 Pairwise agreement on line-match decisions (lines both labelled):
@@ -149,8 +165,11 @@ Pairwise agreement on line-match decisions (lines both labelled):
 | judge A | judge B | lines | agree | κ |
 |---|---|---|---|---|
 | haiku-4.5 | haiku-5.5 | 589 | 89.3% | 0.74 |
+| haiku-4.5 | kimi-k2.6 | 589 | 90.0% | 0.76 |
 | haiku-4.5 | sonnet-5.5 | 0 | — | — |
+| haiku-5.5 | kimi-k2.6 | 589 | 87.4% | 0.70 |
 | haiku-5.5 | sonnet-5.5 | 0 | — | — |
+| kimi-k2.6 | sonnet-5.5 | 0 | — | — |
 
 **Against the human precision / recall** (common pairs):
 
@@ -162,6 +181,8 @@ Pairwise agreement on line-match decisions (lines both labelled):
 | haiku-4.5 | recall | 30 | 0.185 | 0.67 | 0.55 | 0.631 | 0.816 |
 | haiku-5.5 | precision | 30 | 0.224 | 0.72 | 0.74 | 0.515 | 0.730 |
 | haiku-5.5 | recall | 30 | 0.145 | 0.79 | 0.63 | 0.631 | 0.767 |
+| kimi-k2.6 | precision | 30 | 0.175 | 0.82 | 0.84 | 0.515 | 0.682 |
+| kimi-k2.6 | recall | 30 | 0.116 | 0.76 | 0.63 | 0.631 | 0.736 |
 
 ## Reliability and cost — every judge, every set
 
@@ -181,14 +202,18 @@ Cost is OpenRouter's billed `cost`, summed over every call ever made (re-asks an
 | haiku-5.5 | qa/anchor-human-sample | 360 | 360 | 0 | 0 | 0 | 0 | 0 | 360 | 0.0345 | 0.00115 | 0.9 | 3.4 | Anthropic 360 |
 | kimi-k2.6 | qa/anchor-human-sample | 360 | 360 | 0 | 0 | 0 | 0 | 0 | 360 | 0.0956 | 0.00319 | 0.4 | 1.0 | Crusoe 360 |
 | sonnet-5.5 | qa/anchor-human-sample | 360 | 360 | 0 | 0 | 0 | 0 | 0 | 360 | 0.6904 | 0.02301 | 1.3 | 3.3 | Anthropic 360 |
+| haiku-4.5 | sop/gpt-5.6-luna | 3162 | 3162 | 0 | 0 | 0 | 0 | 0 | 3166 | 4.6779 | 0.09746 | 2.1 | 3.2 | Anthropic 3162 |
+| haiku-5.5 | sop/gpt-5.6-luna | 3162 | 3158 | 0 | 4 | 0 | 0 | 0 | 3191 | 0.5682 | 0.01184 | 1.9 | 3.0 | Anthropic 3162 |
+| kimi-k2.6 | sop/gpt-5.6-luna | 3162 | 3162 | 0 | 0 | 0 | 0 | 0 | 3171 | 3.3901 | 0.07063 | 2.4 | 6.7 | Crusoe 3162 |
 | sonnet-5.5 | sop/gpt-5.6-luna | 20 | 0 | 20 | 0 | 0 | 0 | 0 | 20 | 0.0000 | 0.00000 | 1.1 | 2.3 | Anthropic 20 |
 | haiku-4.5 | sop/anchor-human-sample | 1767 | 1767 | 0 | 0 | 0 | 0 | 0 | 1769 | 2.4775 | 0.08258 | 2.1 | 3.1 | Anthropic 1767 |
 | haiku-5.5 | sop/anchor-human-sample | 1767 | 1767 | 0 | 0 | 0 | 0 | 0 | 1767 | 0.2897 | 0.00966 | 1.9 | 3.0 | Anthropic 1767 |
+| kimi-k2.6 | sop/anchor-human-sample | 1767 | 1767 | 0 | 0 | 0 | 0 | 0 | 1772 | 1.7796 | 0.05932 | 2.8 | 7.8 | Crusoe 1767 |
 | sonnet-5.5 | sop/anchor-human-sample | 20 | 0 | 20 | 0 | 0 | 0 | 0 | 20 | 0.0000 | 0.00000 | 1.1 | 8.2 | Anthropic 20 |
 
 | judge | backend | total cost $ | list price in / out per M |
 |---|---|---|---|
-| haiku-4.5 | Anthropic | 3.0095 | 1.0 / 5.0 |
-| haiku-5.5 | Anthropic | 0.3588 | 0.1 / 0.5 |
-| kimi-k2.6 | Crusoe | 0.2435 | 0.7 / 3.5 |
+| haiku-4.5 | Anthropic | 7.6873 | 1.0 / 5.0 |
+| haiku-5.5 | Anthropic | 0.9270 | 0.1 / 0.5 |
+| kimi-k2.6 | Crusoe | 5.4132 | 0.7 / 3.5 |
 | sonnet-5.5 | Anthropic | 1.3658 | 2.0 / 10.0 |

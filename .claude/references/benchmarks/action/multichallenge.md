@@ -63,7 +63,7 @@ flushed per call; resume skips finished uids and refuses a different config. SLU
    `ok`, all `finish=stop`, 0 empty, 0 retries, one config; pulled down md5-identical. Then
    `../run_judges.sh` — job 4482838; this benchmark's stage done 2026-10-19, 81/81 rows per judge,
    Sonnet 5.5 refusing 11 (`LLM_as_judge/JUDGE_SELECTION.md` §6.1).
-5. `python ../compare_judges.py` on the pulled rows.
+5. `python ../compare_judges.py` on the pulled rows — done; `JUDGE_SELECTION.md` §6.4.
 
 ## What its README says about showing reasoning
 

@@ -9,14 +9,15 @@
   file. What the others held now lives here: the documentation rule and the filled judge record
   (§7), the decided and open questions (§1, §8), and the paper list (§9). The per-paper, page-cited
   extractions were not carried over; the PDFs are in `papers/`.
-- **The provisional default judge is Claude Haiku 4.5.**
+- **The provisional default judge is Claude Haiku 4.5** — the pilot argues against it (§6.4).
 - **The final choice is made by a bake-off on our own human-labelled data.** That bake-off has not
   run yet, and the human labels it needs have not been collected.
 - **A smaller judge pilot comes first (§6.4).** `gpt-5.6-luna`'s responses to a 10% sample were
-  generated on 2026-10-19 and are being judged (job 4482838). Probing the four for it changed two
-  facts below — Kimi K2.6's price, and Sonnet 5.5 refusing SOP Generation (§6.1). The run added a
-  third: Sonnet also refuses some MultiChallenge calls, and where it answers it is no better than
-  the cheaper judges (§6.4).
+  generated and judged on 2026-10-19 (jobs 4482838, 4506836). Result (§6.4): GPT's scores barely
+  depend on the judge; against the humans Kimi K2.6 is closest, consistently but not decisively;
+  Haiku 4.5 is never better than Kimi and costs more; Sonnet 5.5 is dropped. Kimi K2.6 or Haiku 5.5
+  is the open choice (§8). Probing changed two facts below — Kimi K2.6's price, and Sonnet 5.5's
+  refusals (§6.1).
 
 ## Summary
 
@@ -305,8 +306,8 @@ pilot (§6.4). The configurations that came out of it are `judge_core.JUDGES` in
   two, so a refusal is a per-call outcome, not a property of the item. Those 11 are billed ($0.045);
   the SOP refusals are not. The likeliest trigger for SOP is the prompt's `"scratchpad": think step by step` field *(our inference,
   untested)*. Rewording upstream's prompt to get past it would break F5, so it stays verbatim and a
-  refusal is recorded as its own status. Whether Sonnet 5.5 can judge SOP Generation at all is open
-  (§8).
+  refusal is recorded as its own status, which leaves Sonnet 5.5 unable to judge SOP Generation —
+  one reason the pilot drops it (§6.4).
 - **Claude fences JSON mode** (```` ```json … ``` ````) on OpenRouter; upstream's bare `json.loads`
   would have raised on it. The pilot's parser strips fences.
 
@@ -391,7 +392,8 @@ others, it is not considered further.**
   about $13 in all. Four to five hours, the four judges in parallel. **The estimate was never set
   against the account:** the OpenRouter key had $15 bought and much of it spent, and job 4482838
   halted on billing at 13:34–13:56 after $6.35, every judge's SOP sample unfinished (Kimi's anchor
-  too). Finishing the three needs ≈ $7.5; resume is safe (no failed rows).
+  too). Resumed after a top-up (job 4506836, 15:18–19:06). Billed in the end: Haiku 4.5 $7.69,
+  Kimi K2.6 $5.41, Sonnet 5.5 $1.37, Haiku 5.5 $0.93 — $15.39.
 - **Result for Sonnet 5.5** — MultiChallenge and QA finished for all four judges on 2026-10-19 (job
   4482838); SOP is the other three's. Report: `Action_processes_benchmarks/judge_comparison/`.
   - *MultiChallenge*: on the 23 items every judge labelled, Sonnet's macro is 46.7 against 36.1–44.5
@@ -405,6 +407,28 @@ others, it is not considered further.**
   - **Under the user's rule it is dropped**: no better where it answers, absent on SOP and on 4 of
     27 MultiChallenge items, and the most expensive. Proposed 2026-10-19; the user's confirmation is
     pending.
+- **Result for the other three** — every set complete, 2026-10-19 (job 4506836; Haiku 5.5 left 4
+  of 3,162 SOP lines unparsed).
+  - *GPT's scores barely depend on the judge.* MultiChallenge as above. GPT's 48 SOPs: per-ablation
+    F1 within 0.08 across the three (td 0.59–0.67, td_kf 0.88–0.90, td_kf_act 0.91–0.93), the
+    ablations in the same order, line decisions agreeing 89.6–92.2% (κ 0.69–0.76).
+  - *Against the humans, Kimi K2.6 is closest on 6 of 8 measures* (not QA clarity, not SOP recall
+    correlation): QA QWK averaged over the four criteria 0.49, against 0.38 (Haiku 4.5) and 0.25
+    (Haiku 5.5); SOP precision / recall MAE 0.175 / 0.116, against 0.193 / 0.185 and 0.224 / 0.145.
+    Paired bootstrap over the 30 anchor items (4,000 resamples): Kimi − Haiku 5.5 on the QA average
+    +0.24 [−0.01, +0.37]; Kimi's SOP precision MAE below Haiku 5.5's by 0.05 [0.00, 0.10], its
+    recall MAE below Haiku 4.5's by 0.07 [0.01, 0.13]; no single QA criterion separates at n = 30.
+  - *Weak spots.* Haiku 5.5 on QA compactness (QWK 0.12; mean 1.73 against the humans' 1.17 — it
+    marks concise answers down). All three are lenient on SOP, crediting about 0.2 more precision
+    than the humans (upstream's GPT-4: 0.02).
+  - *Stability* (share of units whose replicates disagree, SOP): Haiku 4.5 1.0–1.4% at temperature
+    0; Haiku 5.5 7–8%; Kimi 8–10.5% even at temperature 0 on bf16 — three replicates matter for both.
+  - *Full-run cost* per evaluated model, the sample's billed cost (anchors excluded) times ten:
+    Haiku 4.5 ≈ $50, Kimi K2.6 ≈ $35, Haiku 5.5 ≈ $6.
+  - **Under the advisor's rule:** Haiku 4.5 is out — never better than Kimi, and dearer. Kimi and
+    Haiku 5.5 give GPT about the same scores; against the humans Kimi is ahead on almost every
+    measure, by a margin n = 30 cannot confirm, at about six times the price. Kimi if agreement with
+    humans decides, Haiku 5.5 if the outcomes do — the user's and the advisor's call (§8).
 
 ## 7. The judge record — what must be documented, and what is
 
@@ -570,8 +594,10 @@ Three facts that were wrong or unknown before, all found by reading code rather 
 
 ## 8. What is still open
 
-- **The bake-off and the human labels.** Neither exists yet. Until both do, Haiku 4.5 is a
-  provisional default, not a result.
+- **Which judge: Kimi K2.6 or Haiku 5.5** (§6.4) — the user's and the advisor's decision. Haiku 4.5
+  and Sonnet 5.5 are out on the pilot's evidence, Sonnet pending the user's confirmation.
+- **The bake-off and the human labels.** Neither exists yet. Until both do, any judge is a
+  provisional choice, not a result.
 - **Haiku 5.5 is untested anywhere.** No published evaluation of it exists.
 - **Kimi K2.6 has one supporting paper,** and none on a short YES/NO rubric like MultiChallenge's.
 - **MultiChallenge task version.** In March 2026 the authors revised 54 tasks and moved their own
@@ -582,12 +608,9 @@ Three facts that were wrong or unknown before, all found by reading code rather 
   takes only the sampled demos from it by byte range (291 MB). Whether a full run is in scope, and
   whether it is multimodal or text-only, is still the advisor's question. The judge is text-only
   either way.
-- **Two Wonderbread QA criteria may not be judgeable.** If clarity and compactness fail for every
-  candidate, they will be human-scored or reported as unvalidated.
-- **Sonnet 5.5 refuses SOP Generation's judge prompt, and 11 of 81 MultiChallenge calls** (§6.1),
-  so it cannot be the one judge for all three tasks (§6.2 step 5). On MultiChallenge and QA it
-  matched or trailed the cheaper judges, so under the user's rule it is dropped (§6.4) — closes when
-  the user confirms.
+- **Wonderbread QA clarity is not judgeable on this evidence.** Every candidate's QWK is 0.07–0.36
+  and the human labels are nearly constant (mean 1.10), so κ cannot separate judges there. It will
+  be human-scored or reported as unvalidated. Compactness is judgeable (Kimi K2.6 0.74).
 - **Upstream's GPT-4 judge agrees with the QA human labels far better than any candidate** (QWK
   0.78–0.92 against 0.07–0.74, same 30 answers). Whether the labels were made with GPT-4's scores in
   view is unestablished; if they were, "agreement with humans" there partly measures agreement with
