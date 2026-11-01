@@ -41,7 +41,9 @@ Probed 2026-10-19 on the four candidate judges (`Action_processes_benchmarks/jud
   endpoint is not automatically the safe pin: Moonshot AI's returns whitespace in JSON mode.
 - **A backend that fails mid-answer is HTTP 200 with the fragment as content** — `finish_reason:
   "error"`, usage 0. Gemini 3.5 Flash-Lite, MultiChallenge full run, 2026-11-01: 19 KB stopping
-  mid-quote, recorded `ok` because the body was not empty. DeepSeek's documented equivalent is
+  mid-quote, recorded `ok` because the body was not empty. Its `native_finish_reason` was
+  `RECITATION` — Google's filter on reproduced text, the item asking for dozens of famous quotes —
+  so it is deterministic: 5 of 5 retries cut off, unbilled. DeepSeek's documented equivalent is
   `insufficient_system_resource` (not yet met here). `judge_core.INTERRUPTED_FINISH` holds both:
   the call is retried, and a resume regenerates an `ok` row stored with one.
 - **Claude fences JSON mode** — `response_format={"type": "json_object"}` comes back inside
