@@ -18,8 +18,9 @@ long the answers look. Its wording is part of the run config, so it is on every 
 what answered.
 
 **The answer sometimes arrives in `reasoning_content` with `content` empty.** Fallen back to
-explicitly, logged, and marked on the row (`fallback`). Never when `finish_reason` is `length`: that
-is chain of thought cut off mid-way, not an answer, so the row is treated as empty and retried.
+explicitly, logged, and marked on the row (`fallback`). Only when `finish_reason` is `stop`: under
+`length`, `insufficient_system_resource` (DeepSeek's own interruption) or anything unmet, the chain
+of thought was cut off mid-way, not an answer, so the row is treated as empty or interrupted.
 The long client timeout is deliberate: DeepSeek queues rather than refusing. The SIGALRM ceiling is
 600 s — 8,192 tokens at ~30 tok/s with margin.
 
@@ -51,7 +52,8 @@ def with_ceiling(conversation):
 
 def answer(response):
     text, meta = jc.read_answer(response)
-    if not text.strip() and meta.get("finish_reason") != "length":
+    # only a clean stop: a cut-off chain (length, or a finish nothing here has met) is never the answer
+    if not text.strip() and meta.get("finish_reason") == "stop":
         message = response.choices[0].message
         text = (getattr(message, "reasoning_content", None) or "").strip()
         if text:

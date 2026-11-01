@@ -299,6 +299,63 @@ text, meta, status = jc.call_with_retries(lambda: jc.read_answer(fake_response("
 check("empty + length: one attempt, failed, finish kept", (status, meta["n_attempts"], meta["finish_reason"]),
       ("failed", 1, "length"))
 
+# --- a backend that stopped mid-answer: OpenRouter finish_reason=error with a non-empty fragment
+# (Gemini, MultiChallenge full run, 2026-11-01 — the fragment was recorded `ok`)
+def must_not_classify(*args):
+    raise AssertionError("an interruption reached a halt classifier")
+
+
+saved = jc.halt_on_billing, jc.is_fatal_request
+jc.halt_on_billing = jc.is_fatal_request = must_not_classify   # the branch must not consult them
+reset_streaks()
+text, meta, status = jc.call_with_retries(sequence(fake_response("half an answ", 0.5, finish="error"),
+                                                   fake_response("whole answer", 1.0)), "m", TMP)
+check("finish=error retried, fragment never kept, its bill summed",
+      (text, status, meta["n_attempts"], meta["cost"]), ("whole answer", "ok", 2, 1.5))
+for finish in jc.INTERRUPTED_FINISH:
+    reset_streaks()
+    text, meta, status = jc.call_with_retries(lambda: jc.read_answer(fake_response("frag", 0.5, finish=finish)),
+                                              "m", TMP)
+    check(f"finish={finish} every time: failed, says why and what it cost",
+          (text, status, meta["n_attempts"], meta.get("finish_reason"), meta.get("cost")),
+          ("", "failed", 5, finish, 2.5))
+jc.halt_on_billing, jc.is_fatal_request = saved
+native = fake_response("x", 0.0)
+native.choices[0].native_finish_reason = "MAX_TOKENS"
+check("openrouter's native finish kept", jc.openai_meta(native).get("native_finish_reason"), "MAX_TOKENS")
+
+# --- an `ok` fragment written before the guard is not finished: a resume regenerates it
+resume_path = os.path.join(TMP, "interrupted_resume.jsonl")
+if os.path.exists(resume_path):
+    os.remove(resume_path)
+for uid, status, finish in (("a", "ok", "stop"), ("b", "ok", "error"), ("c", "failed", None)):
+    jc.append_row(resume_path, {"uid": uid, "status": status, "finish_reason": finish, "config": {"k": 1}})
+check("ok + error is not finished", sorted(jc.load_done(resume_path, {"k": 1})), ["a"])
+jc.append_row(resume_path, {"uid": "b", "status": "ok", "finish_reason": "stop", "config": {"k": 1}})
+check("a regenerated row supersedes the fragment", sorted(jc.load_done(resume_path, {"k": 1})), ["a", "b"])
+check("judges refuse a fragment",
+      [jc.usable({"status": s, "finish_reason": f}) for s, f in
+       (("ok", "stop"), ("ok", "error"), ("ok", "insufficient_system_resource"), ("failed", "stop"))],
+      [True, False, False, False])
+check("an unmet finish on an ok row is counted, not passed",
+      dict(jc.unexpected_finish([{"status": "ok", "finish_reason": f} for f in
+                                 ("stop", "eos", "length", "content_filter", None)]
+                                + [{"status": "failed", "finish_reason": "error"}])),
+      {"content_filter": 1, None: 1})
+
+# --- Deepseek's fallback rescues only a clean stop
+starved = fake_response("", 0.0, finish="insufficient_system_resource")
+starved.choices[0].message.reasoning_content = "half a thought, cut"
+try:
+    ds.answer(starved)
+    raised = False
+except jc.Interrupted:
+    raised = True
+check("deepseek: insufficient_system_resource interrupts, never falls back", raised, True)
+odd = fake_response("", 0.0, finish="abort")
+odd.choices[0].message.reasoning_content = "half a thought, cut"
+check("deepseek: no fallback on a finish it has not met", ds.answer(odd)[0], "")
+
 # --- SOP index: invalid JSON from unescaped quotes in the scratchpad (Haiku 5.5, 2026-10-31 smoke)
 p8 = wb.make_index_parser(8)
 check("sop index from the last field of invalid json",

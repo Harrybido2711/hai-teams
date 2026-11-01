@@ -162,13 +162,17 @@ def run_cli(gen, model_dir, description):
     fallback = sum(1 for r in rows if r.get("fallback"))
     print(f"\nDONE {len(rows)}/{len(items)} rows  status={jc.status_counts(rows)}  finish={dict(finish)}"
           f"  fallback={fallback}  calls={jc.STATS}", flush=True)
+    odd = jc.unexpected_finish(rows)
+    if odd:
+        print(f"STOP: {sum(odd.values())} ok row(s) ended with finish_reason {dict(odd)}, not a known "
+              f"complete answer — inspect them before judging.", flush=True)
     # length first: a row whose whole cap went on reasoning is `failed` AND finish=length, and the
     # decision it needs is the cap, not a resubmit
     if finish.get("length"):
         print(f"STOP: {finish['length']} row(s) hit the output cap — the cap bound. Decide whether "
               f"to raise it (archive the results first) before judging.", flush=True)
         sys.exit(2)
-    if len(rows) < len(items) or any(r["status"] != "ok" for r in rows):
+    if odd or len(rows) < len(items) or any(r["status"] != "ok" for r in rows):
         sys.exit(1)
 
 

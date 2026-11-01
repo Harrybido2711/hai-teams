@@ -525,6 +525,10 @@ def run_cli(gen, model_dir, description):
     if over:
         print(f"  {over} unit(s) over this model's {gen.max_images}-image cap: not called, not "
               f"judged — a ceiling, not a failure", flush=True)
+    odd = jc.unexpected_finish(rows)
+    if odd:
+        print(f"STOP: {sum(odd.values())} ok row(s) ended with finish_reason {dict(odd)}, not a known "
+              f"complete answer — inspect them before judging.", flush=True)
     # length first: a row whose whole cap went on reasoning is `failed` AND finish=length, and the
     # decision it needs is the cap, not a resubmit
     if finish.get("length"):
@@ -532,7 +536,7 @@ def run_cli(gen, model_dir, description):
               f"to raise it (archive the results first) before judging.", flush=True)
         sys.exit(2)
     # a unit over the model's image cap is finished (uncalled by design); anything else must be ok
-    if len(rows) < len(uids) or any(r["status"] not in ("ok", OVER_LIMIT) for r in rows):
+    if odd or len(rows) < len(uids) or any(r["status"] not in ("ok", OVER_LIMIT) for r in rows):
         sys.exit(1)
 
 

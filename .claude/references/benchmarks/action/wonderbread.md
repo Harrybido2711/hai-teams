@@ -1,16 +1,17 @@
 # Wonderbread — benchmark card
 
-<!-- size-budget: 10500 -->
+<!-- size-budget: 11500 -->
 <!-- One job: Wonderbread's operating facts. Larger than the default because its data has a fetch
      path of its own, its judged scope covers two subtasks, and since 2026-10-31 it carries the
-     judge pilot and the full run side by side, with the per-model image caps the full run needs. -->
+     judge pilot and the full run side by side, with the per-model image caps the full run needs
+     and, since 2026-11-01, the full run's Quest record. -->
 
 Monitoring progress toward goals. Upstream `HazyResearch/wonderbread`. **LLM-judged.** The **judge
 pilot** (2026-10-19) graded `gpt-5.6-luna` on a 10% sample of the two judged subtasks with four
 candidate judges, plus upstream's human-labelled samples; the user chose **Claude Haiku 5.5** on
 2026-10-31. The **full run** has four selected models — GPT, Gemini, Qwen, Gemma — answer every
 item, and Haiku 5.5 grade each; Deepseek is text-only and does not run here (the user's decision,
-2026-10-31). Scripts written and smoke-tested 2026-10-31, not yet on Quest; no recorded result.
+2026-10-31). Generation submitted on Quest 2026-11-01 (run order below); no recorded result.
 
 ## Paths
 
@@ -18,6 +19,7 @@ item, and Haiku 5.5 grade each; Deepseek is text-only and does not run here (the
 |---|---|
 | Local | `Action_processes_benchmarks/Wonderbread_bench` |
 | Quest | `/projects/p32983/Action_processes_benchmarks/Wonderbread_bench` — created 2026-10-19 by the pilot's first transfer (the whole vendored tree plus our files, md5-verified); `.env` copied there from our NegotiationToM folder on Quest; `data/demos/` is fetched there by `fetch_sample_demos.py`, never transferred |
+| Shared | `Action_processes_benchmarks/` itself (`judge_core.py` and the judge scripts) — md5 it too on every sync; [multichallenge.md](multichallenge.md) § Paths |
 
 ## Layout
 
@@ -134,11 +136,15 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    Haiku 5.5 on each model's smoke rows: 96/96 QA `ok`; SOP 7 parse failures in 720, all
    recovered by the parser fix (the same gold line, quoted text copied unescaped).
 2. **The user verifies the scripts.** Phase 3 does not start before.
-3. On the Quest login node: `python fetch_sample_demos.py --set full`, then `--set full --check`.
-   Transfer with MultiChallenge and the shared files as one set; md5 both sides. Quest's `.env`
-   here needs `TOGETHER_API_KEY` and `DEEPINFRA_API_KEY` beside the two it has.
-4. `sbatch run_wb.sh` in each `WB_<Model>/` (QA then SOP, one job, `normal` 12 h); then
-   `run_judge_full.sh` from `Action_processes_benchmarks/` after the generation jobs.
+3. On the Quest login node: `python fetch_sample_demos.py --set full`, then `--set full --check`
+   — done 2026-11-01: the 224 demos the sample lacked, 2,431 MB in 1,937 range requests; `--check`
+   "all 255 needed demos present". Transferred with MultiChallenge and the shared files as one
+   set, 95 files md5-identical both sides (2026-10-31); `TOGETHER_API_KEY` and `DEEPINFRA_API_KEY`
+   added to Quest's `.env` here.
+4. `sbatch run_wb.sh` in each `WB_<Model>/` (QA then SOP, one job, `normal` 12 h) — submitted
+   2026-11-01 on the interrupted-finish guard (multichallenge.md § Run order): GPT 6648994, Gemini
+   6648995, Qwen 6648996, Gemma 6648997. Then `run_judge_full.sh` from `Action_processes_benchmarks/`
+   after the generation jobs.
 
 ## What its README says about showing reasoning
 

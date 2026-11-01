@@ -1,8 +1,9 @@
-<!-- size-budget: 11000 -->
+<!-- size-budget: 11500 -->
 <!-- One row per provider plus its failure modes; it grows when a provider is added or
      replaced, which is the file working, not the file sprawling. Raised to 9000 on 2026-10-19 for
      the OpenRouter section the judge-pilot probes produced, and to 11000 on 2026-10-31 for the
-     per-provider image limits Wonderbread's full run hit. -->
+     per-provider image limits Wonderbread's full run hit; to 11500 on 2026-11-01 for the
+     mid-answer interruption a stored `ok` row hid. -->
 # Provider gotchas
 
 Every one of these has cost a debugging cycle, and most fail with **HTTP 200 and no exception** —
@@ -38,6 +39,11 @@ Probed 2026-10-19 on the four candidate judges (`Action_processes_benchmarks/jud
   ["<name>"], "allow_fallbacks": False}` wherever the comparison is between models; the endpoint
   list with each provider's quantization is `GET /api/v1/models/<id>/endpoints`. The maker's own
   endpoint is not automatically the safe pin: Moonshot AI's returns whitespace in JSON mode.
+- **A backend that fails mid-answer is HTTP 200 with the fragment as content** — `finish_reason:
+  "error"`, usage 0. Gemini 3.5 Flash-Lite, MultiChallenge full run, 2026-11-01: 19 KB stopping
+  mid-quote, recorded `ok` because the body was not empty. DeepSeek's documented equivalent is
+  `insufficient_system_resource` (not yet met here). `judge_core.INTERRUPTED_FINISH` holds both:
+  the call is retried, and a resume regenerates an `ok` row stored with one.
 - **Claude fences JSON mode** — `response_format={"type": "json_object"}` comes back inside
   ```` ```json … ``` ````; a bare `json.loads` raises. Strip fences before parsing.
 

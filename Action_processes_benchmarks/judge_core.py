@@ -243,8 +243,8 @@ def is_fatal_request(error):
     return any(sig in text for sig in FATAL_SIGNATURES) or any(m in text for m in AUTH_MARKERS)
 
 
-STATS = {"ok": 0, "empty": 0, "errors": 0, "timeouts": 0, "failed_rows": 0, "refused": 0,
-         "parse_fail": 0}
+STATS = {"ok": 0, "empty": 0, "errors": 0, "timeouts": 0, "interrupted": 0, "failed_rows": 0,
+         "refused": 0, "parse_fail": 0}
 HALT_MARKERS = ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt", "REFUSAL_HALT.txt",
                 "PARSE_HALT.txt")
 # Set by each runner to name the run a marker belongs to (`gpt-5.6-luna_`, `anchor-human-sample_`,
@@ -340,6 +340,39 @@ class Refused(Exception):
         self.text, self.meta = text, meta
 
 
+class Interrupted(Exception):
+    """The backend stopped mid-generation (a finish in INTERRUPTED_FINISH): the content, often
+    non-empty, is a fragment of an answer. Retried in a branch of its own, never through the halt
+    classifiers, and its meta carried so the attempt's bill and finish_reason reach the row."""
+
+    def __init__(self, text, meta):
+        super().__init__(text)
+        self.text, self.meta = text, meta
+
+
+# A backend that cut the answer off — not the model, not the cap. OpenRouter normalises an upstream
+# failure to `error` (Gemini, MultiChallenge full run, 2026-11-01: 19 KB stopping mid-quote, HTTP 200,
+# usage 0, recorded `ok`); DeepSeek documents `insufficient_system_resource`. `read_answer` raises on
+# both, and `load_done` does not count an `ok` row stored with one as finished, so a resume
+# regenerates a fragment written before this guard existed.
+INTERRUPTED_FINISH = ("error", "insufficient_system_resource")
+# How a complete answer ends here (`eos` is Together's). `length` has its own exit (2); an `ok` row
+# ending any other way makes a generation run exit 1, so a value nothing here has met yet is looked
+# at before anyone judges it.
+EXPECTED_FINISH = ("stop", "eos", "length")
+
+
+def usable(row):
+    """A generated row the judge may grade: `ok`, and not a fragment its backend cut off."""
+    return row.get("status") == "ok" and row.get("finish_reason") not in INTERRUPTED_FINISH
+
+
+def unexpected_finish(rows):
+    """`ok` rows that ended no way a complete answer is known to end here, counted by finish."""
+    return collections.Counter(r.get("finish_reason") for r in rows if r.get("status") == "ok"
+                               and r.get("finish_reason") not in EXPECTED_FINISH)
+
+
 # Hard ceiling on one HTTP attempt, by SIGALRM: `timeout=` is not a guard (provider-gotchas.md §
 # Timeouts). Generation with many screenshots is slower than judging; runners override it.
 HARD_CALL_TIMEOUT = 200
@@ -423,6 +456,14 @@ def call_with_retries(once, model, out_dir, tries=5):
         except CallTimeout as error:
             STATS["timeouts"] += 1
             print(f"[{model}] TIMEOUT ({attempt + 1}/{tries}): {error}", flush=True)
+        except Interrupted as interrupted:
+            # its own branch: transient, so retried — but never offered to the halt classifiers,
+            # and its meta kept, so a row failed on it still says why and what it cost
+            STATS["interrupted"] += 1
+            _add_usage(used, interrupted.meta)
+            meta = dict(interrupted.meta or {}, **used)
+            print(f"[{model}] INTERRUPTED ({attempt + 1}/{tries}): {interrupted.text}", flush=True)
+            wait = retry_delay(interrupted, attempt)
         except Refused as refusal:
             STATS["refused"] += 1
             _add_usage(used, refusal.meta)
@@ -489,6 +530,9 @@ def openai_meta(response):
         "reasoning_tokens": as_int(getattr(details, "reasoning_tokens", None)),
         "served_model": str(getattr(response, "model", "") or "") or None,
     }
+    native = getattr(choice, "native_finish_reason", None)   # OpenRouter: the backend's own word
+    if native:
+        meta["native_finish_reason"] = str(native)
     provider = getattr(response, "provider", None)       # OpenRouter's answering backend
     if provider:
         meta["backend"] = str(provider)
@@ -499,7 +543,8 @@ def openai_meta(response):
 
 
 def read_answer(response):
-    """(content, meta) from one response; a refusal raises `Refused`."""
+    """(content, meta) from one response; a refusal raises `Refused`, a backend that stopped
+    mid-generation `Interrupted` — its content is non-empty, so nothing else would catch it."""
     meta = openai_meta(response)
     message = response.choices[0].message if getattr(response, "choices", None) else None
     content = getattr(message, "content", None) or ""
@@ -508,6 +553,9 @@ def read_answer(response):
         raise Refused(str(refusal), meta)
     if meta.get("finish_reason") == "content_filter" and not content.strip():
         raise Refused("finish_reason=content_filter with no content", meta)
+    if meta.get("finish_reason") in INTERRUPTED_FINISH:
+        raise Interrupted(f"finish_reason={meta['finish_reason']}: the backend stopped "
+                          f"mid-generation and the content is a fragment", meta)
     return content, meta
 
 
@@ -703,7 +751,9 @@ def load_done(path, config):
                                  f"config.\n  (wanted, stored): {diff}\n  Archive the results "
                                  f"directory to a timestamped name and start clean.")
             rows[r["uid"]] = r
-    done = {u: r for u, r in rows.items() if r.get("status") in FINISHED}
+    # an `ok` fragment its backend cut off (INTERRUPTED_FINISH) is not finished: regenerated
+    done = {u: r for u, r in rows.items() if r.get("status") in FINISHED
+            and not (r.get("status") == "ok" and r.get("finish_reason") in INTERRUPTED_FINISH)}
     retry = len(rows) - len(done)
     if rows:
         print(f"  resume {os.path.basename(path)}: {len(done)} finished, {retry} to retry", flush=True)

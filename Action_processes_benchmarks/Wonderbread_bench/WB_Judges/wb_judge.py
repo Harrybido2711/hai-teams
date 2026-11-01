@@ -76,7 +76,7 @@ def qa_units(set_name, smoke, limit, producer):
         return units[:limit or None], wb.ANCHOR_PRODUCER, None
     path, rows, name = producer_rows(producer, set_name, "qa", smoke)
     uids = within_cap(wb.load_set("qa", set_name)[:limit or None], rows, path)
-    missing = [u for u in uids if rows.get(u, {}).get("status") != "ok"]
+    missing = [u for u in uids if not jc.usable(rows.get(u, {}))]
     if missing:
         raise SystemExit(f"{path}: {len(missing)} of {len(uids)} answers missing or failed "
                          f"(e.g. {missing[:3]}). Finish the generation run first.")
@@ -93,7 +93,7 @@ def sop_units(set_name, smoke, limit, producer):
     path, rows, name = producer_rows(producer, set_name, "sop", smoke)
     demos = wb.load_set("sop", set_name)[:limit or None]
     uids = within_cap([f"{d}|{a}" for d in demos for a in wb.SOP_ABLATIONS], rows, path)
-    missing = [u for u in uids if rows.get(u, {}).get("status") != "ok"]
+    missing = [u for u in uids if not jc.usable(rows.get(u, {}))]
     if missing:
         raise SystemExit(f"{path}: {len(missing)} of {len(uids)} SOPs missing or failed "
                          f"(e.g. {missing[:3]}). Finish the generation run first.")

@@ -70,7 +70,7 @@ def main():
     if smoke:
         items = items[:args.limit]
     not_ready = [it["QUESTION_ID"] for it in items
-                 if responses.get(it["QUESTION_ID"], {}).get("status") != "ok"]
+                 if not jc.usable(responses.get(it["QUESTION_ID"], {}))]
     if not_ready:
         raise SystemExit(f"{responses_path}: {len(not_ready)} of {len(items)} items have no usable "
                          f"response (e.g. {not_ready[:3]}). Finish the generation run first — a "
