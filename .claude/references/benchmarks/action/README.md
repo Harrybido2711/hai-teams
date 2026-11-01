@@ -5,19 +5,21 @@ three properties that decide how any work here starts:
 
 - **Both are judged by an LLM**, so neither number can be re-derived from the data. Their records are
   §7 of `LLM_as_judge/JUDGE_SELECTION.md`, and nothing from either may enter `Tempo_results.xlsx`
-  until that record is filled — the rule in its §7.1. The original judge models are retired; which
-  replacement judge to use, and the pilot that compares the four candidates, are its §6.
-- **Their runners are the judge pilot's, and they share one core.** Since 2026-10-19 both have a
-  `gpt-5.6-luna` generation runner and a judge runner for the four candidate judges, on a 10%
-  sample. The judge configurations, call infrastructure and checkpoint are
-  `Action_processes_benchmarks/judge_core.py`; the four judges run as one array,
-  `run_judges.sh`; `compare_judges.py` compares them; `test_judge_pilot.py` pins the parsers,
-  samples, prompts and scorer. No other model has a runner here.
+  until that record is filled — the rule in its §7.1. The original judge models are retired; the
+  pilot that compared four replacements is its §6.4, and **the user chose Claude Haiku 5.5 on
+  2026-10-31** (its §8).
+- **Their runners share one core.** `Action_processes_benchmarks/judge_core.py` holds the judge
+  configurations, `Generator` (one tested model's client and parameters), the call infrastructure
+  and the checkpoint; each benchmark's `*_eval_core.py::run_cli` is the generation loop every model
+  runs, so a model's folder holds only its client. The pilot (10% sample, `gpt-5.6-luna`, four
+  judges): `run_judges.sh`, `compare_judges.py`. The full run (every item, the five selected
+  models, Haiku 5.5): each folder's `run_mc.sh` / `run_wb.sh`, then `run_judge_full.sh`.
+  `test_judge_pilot.py` pins parsers, sets, prompts, scorer and the generator plumbing.
 - **Both harnesses fail as vendored.** This is the finding that writing the judge records produced,
   and it is why "just run the upstream code" is not available here. The pilot's runners import
   upstream's prompts, builders and scorers but not its entry points.
 
 | Benchmark | Page | Judge covers | State |
 |---|---|---|---|
-| Wonderbread | [wonderbread.md](wonderbread.md) | QA **and** SOP Generation | judge pilot: GPT responses generated 2026-10-19 (job 4480407); judged by all candidates (jobs 4482838, 4506836); choice open, `JUDGE_SELECTION.md` §6.4 |
-| MultiChallenge | [multichallenge.md](multichallenge.md) | every item | judge pilot: GPT responses generated 2026-10-19 (job 4480406); judged by all four (job 4482838); choice open, `JUDGE_SELECTION.md` §6.4 |
+| Wonderbread | [wonderbread.md](wonderbread.md) | QA **and** SOP Generation | pilot done 2026-10-19; full-run runners for four models (not Deepseek) written 2026-10-31, awaiting the user's verification |
+| MultiChallenge | [multichallenge.md](multichallenge.md) | every item | pilot done 2026-10-19; full-run runners for all five written 2026-10-31, awaiting the user's verification |

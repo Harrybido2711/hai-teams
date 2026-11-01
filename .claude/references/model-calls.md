@@ -1,6 +1,7 @@
-<!-- size-budget: 8000 -->
+<!-- size-budget: 8500 -->
 <!-- One invocation recipe per model in use; it grows when a model is adopted, which is the
-     file working. Recipes are measured, so they carry the probe that established them. -->
+     file working. Recipes are measured, so they carry the probe that established them. Raised to
+     8500 on 2026-10-31 for the pointer to the per-route image caps. -->
 # How to call each model
 
 Which client, `base_url`, key, model id, and the non-optional parameters. Limits a runner must set:
@@ -25,6 +26,9 @@ four, and they send real image bytes (`types.Part.from_bytes(mime_type="image/pn
 | Gemma | `google/gemma-4-31B-it` | text · **image** · video |
 | Deepseek | `deepseek-reasoner` | **text only** — DeepSeek serves one vision model, `deepseek-v4-flash-vision-exp`, and this is not it |
 | XAI | `grok-3-mini` | **unestablished** — xAI no longer serves this model, so no live source can be asked |
+
+**Taking an image is not taking many.** Per-request image caps differ by route — 10 on Together's
+Qwen, 32 on DeepInfra's Gemma — [provider-gotchas.md](provider-gotchas.md) § Image limits.
 
 **Do not read the two blanks in DocVQA as work waiting to be done.** Neither model can accept the
 input. Changing that means changing the model, which is a decision about the six, not a rerun —

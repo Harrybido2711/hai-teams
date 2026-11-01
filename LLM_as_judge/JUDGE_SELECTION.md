@@ -4,22 +4,24 @@
 <!-- The one judge document, by the user's decision of 2026-10-19: the argument, the decision, the
      pilot, and the record every judged number needs. Large because it is all of them. -->
 
-**Status, 2026-10-19.**
+**Status, 2026-10-31.**
 - **This is the main judge document.** On 2026-10-19 the user had `LLM_as_judge/` cut to this one
   file. On 2026-10-28 they asked for the pilot's finalists to be written up beside it, so the
   three-way comparison now lives in [PILOT_FINALISTS.md](PILOT_FINALISTS.md). What the others held
   now lives here: the documentation rule and the filled judge record
   (§7), the decided and open questions (§1, §8), and the paper list (§9). The per-paper, page-cited
   extractions were not carried over; the PDFs are in `papers/`.
-- **The provisional default judge is Claude Haiku 4.5** — the pilot argues against it (§6.4).
-- **The final choice is made by a bake-off on our own human-labelled data.** That bake-off has not
-  run yet, and the human labels it needs have not been collected.
+- **The judge is Claude Haiku 5.5 — chosen by the user on 2026-10-31**, on the pilot's evidence
+  (§6.4; the case for and against, [PILOT_FINALISTS.md](PILOT_FINALISTS.md)). The full run has the
+  five selected models generate on every item of both judged benchmarks, and Haiku 5.5 grades each.
+- **The bake-off on our own human-labelled data (§6.2) has not run**, and its labels have not been
+  collected. Until it does, Haiku 5.5's error rates on our data are unmeasured (§8).
 - **A smaller judge pilot comes first (§6.4).** `gpt-5.6-luna`'s responses to a 10% sample were
   generated and judged on 2026-10-19 (jobs 4482838, 4506836). Result (§6.4): GPT's scores barely
   depend on the judge; against the humans Kimi K2.6 is closest, consistently but not decisively;
-  Haiku 4.5 is never better than Kimi and costs more; Sonnet 5.5 is dropped. Kimi K2.6 or Haiku 5.5
-  is the open choice (§8). Probing changed two facts below — Kimi K2.6's price, and Sonnet 5.5's
-  refusals (§6.1).
+  Haiku 4.5 is never better than Kimi and costs more; Sonnet 5.5 is dropped. Of Kimi K2.6 and Haiku
+  5.5 the user chose Haiku 5.5 (2026-10-31). Probing changed two facts below — Kimi K2.6's price,
+  and Sonnet 5.5's refusals (§6.1).
 
 ## Summary
 
@@ -263,8 +265,8 @@ candidates on the same task**, which is why the bake-off is needed.
 
 | Role | Model | Price in / out per M tokens | Cost per full pass, all three tasks, five models |
 |---|---|---|---:|
-| **Default light judge (provisional)** | Claude Haiku 4.5 | $1 / $5 | ~$21 |
-| Cheapest candidate, untested | Claude Haiku 5.5 | $0.10 / $0.50 | ~$2 |
+| Default light judge (provisional until the pilot) | Claude Haiku 4.5 | $1 / $5 | ~$21 |
+| Cheapest candidate — **chosen 2026-10-31** (§6.4) | Claude Haiku 5.5 | $0.10 / $0.50 | ~$2 |
 | Cheap challenger | Kimi K2.6 | $0.70 / $3.50 on the pinned backend | ~$14 |
 | Escalation if the light judges fail | Claude Sonnet 5.5 | $2 / $10 | ~$41 |
 
@@ -407,14 +409,14 @@ others, it is not considered further.**
     by 0.06 at n = 30.
   - *Cost per judged unit*: $0.015 (MultiChallenge) and $0.023 (QA) — 2–20× the others.
   - **Under the user's rule it is dropped**: no better where it answers, absent on SOP and on 4 of
-    27 MultiChallenge items, and the most expensive. Proposed 2026-10-19; the user's confirmation is
-    pending.
+    27 MultiChallenge items, and the most expensive. Proposed 2026-10-19; settled by the user's
+    choice of Haiku 5.5 on 2026-10-31.
 - **Result for the other three** — every set complete, 2026-10-19 (job 4506836). GPT's scores
   barely depend on the judge. Against the humans Kimi K2.6 is closest, by a margin n = 30 cannot
   confirm. Haiku 4.5 is out: never better than Kimi, and dearer. Kimi if agreement with the humans
-  decides, Haiku 5.5 if the outcomes do — the user's and the advisor's call (§8). **The numbers,
-  and the case for and against Haiku 5.5, are in [PILOT_FINALISTS.md](PILOT_FINALISTS.md)**
-  (2026-10-28).
+  decides, Haiku 5.5 if the outcomes do. **The numbers, and the case for and against Haiku 5.5, are
+  in [PILOT_FINALISTS.md](PILOT_FINALISTS.md)** (2026-10-28). **The user chose Haiku 5.5 on
+  2026-10-31.**
 
 ## 7. The judge record — what must be documented, and what is
 
@@ -565,7 +567,9 @@ replace them are declared in §6.1 — model id, backend, reasoning, temperature
 `Action_processes_benchmarks/judge_core.py::JUDGES`, which writes the full configuration onto every
 judge row. For the pilot: `N_REPS=3` replicates, a unit's label by strict majority (QA: the median
 when every replicate answered), refusals and parse failures as statuses of their own, never scored.
-Each benchmark's pages under `.claude/references/benchmarks/action/` hold its run order and counts.
+The full run uses the same rules with one judge, Haiku 5.5 at its §6.1 configuration
+(`judge_core.JUDGE`). Each benchmark's pages under `.claude/references/benchmarks/action/` hold its
+run order and counts.
 
 ### 7.7 What writing the record changed
 
@@ -580,20 +584,23 @@ Three facts that were wrong or unknown before, all found by reading code rather 
 
 ## 8. What is still open
 
-- **Which judge: Kimi K2.6 or Haiku 5.5** (§6.4; the case for each, [PILOT_FINALISTS.md](PILOT_FINALISTS.md)) — the user's and the advisor's decision. Haiku 4.5
-  and Sonnet 5.5 are out on the pilot's evidence, Sonnet pending the user's confirmation.
-- **The bake-off and the human labels.** Neither exists yet. Until both do, any judge is a
-  provisional choice, not a result.
+- **Decided 2026-10-31: the judge is Haiku 5.5** (the user; §6.4, [PILOT_FINALISTS.md](PILOT_FINALISTS.md)).
+  Haiku 4.5, Sonnet 5.5 and Kimi K2.6 are out. Still open from the finalists' write-up: Haiku 5.5
+  with reasoning on, over the 27 MultiChallenge items (its §6).
+- **The bake-off and the human labels.** Neither exists yet. Until both do, Haiku 5.5's error rates
+  on our data are unmeasured, so the corrected pass rate of §6.3 cannot be computed.
 - **Haiku 5.5 is untested anywhere.** No published evaluation of it exists.
 - **Kimi K2.6 has one supporting paper,** and none on a short YES/NO rubric like MultiChallenge's.
 - **MultiChallenge task version.** In March 2026 the authors revised 54 tasks and moved their own
   judge to Gemini 2.5 Pro. Whether we use the revised tasks or our vendored February-2025 set is the
-  user's decision. Either way the Gemini judge is excluded.
-- **Wonderbread's data for a full run.** `gold_demos.zip` is 33 GB, nine-tenths of it video. The
-  pilot reads only SOPs, traces and screenshots, which Zenodo also ships as a 5.7 GB archive, and
-  takes only the sampled demos from it by byte range (291 MB). Whether a full run is in scope, and
-  whether it is multimodal or text-only, is still the advisor's question. The judge is text-only
-  either way.
+  user's decision. Either way the Gemini judge is excluded. The full run's scripts (2026-10-31) use
+  the vendored set.
+- **Wonderbread's full run — decided by the user 2026-10-31: full, multimodal.** Only SOPs, traces
+  and screenshots are read, fetched by byte range from Zenodo's 5.7 GB archive (255 demos). The
+  screenshots go to every model downscaled alike; Qwen and Gemma skip requests over their providers'
+  image caps (10 and 32), and Deepseek, text-only, does not run Wonderbread — the benchmark's page
+  has the detail. The judge is
+  text-only either way.
 - **Wonderbread QA clarity is not judgeable on this evidence.** Every candidate's QWK is 0.07–0.36
   and the human labels are nearly constant (mean 1.10), so κ cannot separate judges there. It will
   be human-scored or reported as unvalidated. Compactness is judgeable (Kimi K2.6 0.74).

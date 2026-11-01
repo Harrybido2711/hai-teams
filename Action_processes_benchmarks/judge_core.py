@@ -1,13 +1,16 @@
-"""Shared core for the LLM-as-judge pilot on the two judged benchmarks — MultiChallenge and Wonderbread.
+"""Shared core for the LLM-as-judge work on the two judged benchmarks — MultiChallenge and Wonderbread.
 
 The pilot (asked for 2026-10-19): generate `gpt-5.6-luna` responses on a stratified 10% sample of
 each benchmark, have each of the four candidate judges grade them with the benchmark's own judge
 prompt, and compare the judges. The advisor's rule for choosing: if the judges agree, take the cheap
 one; if they differ a lot and the expensive one is better, take the expensive one.
 Why these four: `LLM_as_judge/JUDGE_SELECTION.md` §5; how they were configured: §6.1.
+**Chosen 2026-10-31 by the user: Claude Haiku 5.5** (`JUDGE`). The full run (`--set full`) has the
+five selected models generate on every item, then Haiku 5.5 grades each of them.
 
 What lives here, because both benchmarks need it identically:
 - `JUDGES` — the four configurations, probed on OpenRouter 2026-10-19 (below);
+- `Generator` — one tested model's client and parameters, as each model's runner declares them;
 - the call infrastructure, ported from `Awareness_in_LLM/aware_eval_core.py` (itself ported from
   `neg_eval_core.py`): billing/quota halts, the SIGALRM watchdog, retries on an empty body, the
   per-row usage fields, parameter negotiation for the generating model;
@@ -66,6 +69,8 @@ JUDGES = {
                   "params": {"temperature": 0, "reasoning": {"enabled": False}}},
 }
 PRICES_READ = "2026-10-19"
+# The judge the user chose on 2026-10-31 for every evaluated model (JUDGE_SELECTION.md §6.4, §8).
+JUDGE = "haiku-5.5"
 # Every upstream judge call in both benchmarks passes max_tokens=4096 (LLM_as_judge/JUDGE_SELECTION.md §7.2-7.4, C1).
 JUDGE_MAX_TOKENS = 4096
 # Replicates per judged unit (LLM_as_judge/JUDGE_SELECTION.md §6.4). A unit's label needs a strict
@@ -78,17 +83,70 @@ PARSE_FAIL_EXIT_RATE = 0.05
 # were left for REFUSAL_HALT to trigger (a resumed run). Its rows stay, and the report shows them.
 REFUSAL_EXIT_RATE = 0.5
 
-# The generating model — the project's GPT, settled config (model-parameters.md § Settled).
+# The pilot's generating model — the project's GPT, settled config (model-parameters.md § Settled).
 # max_completion_tokens counts reasoning too; 8192 leaves upstream's 4096-token visible cap
 # (Wonderbread `_fetch_openai_completion`) plus headroom for `low` reasoning. A declared cap is a
 # hypothesis: a generation run with any finish_reason=length exits 2, so judging cannot start on
-# truncated answers without someone deciding it should.
+# truncated answers without someone deciding it should. Every other model's runner declares its own.
 GEN_MODEL = "gpt-5.6-luna"
 GEN_WANTED = {"max_completion_tokens": 8192, "reasoning_effort": "low", "seed": 42}
 GEN_REQUIRED = {"reasoning_effort": "low", "max_completion_tokens": 8192}
+# The output cap every non-GPT generator sets (model-parameters.md rule 2), the same 8192 for all.
+GEN_MAX_TOKENS = 8192
 
 SAMPLE_SEED = 20261019
 SAMPLE_FRACTION = 0.10     # the user's bound is 5-10%; the top, because MultiChallenge has 273 items
+# `sample` is the pilot's 10%; `full` every item (asked for 2026-10-31). The pilot's files stay where
+# they were written, under results/; a full run writes under results/full/ (`set_parts`).
+SETS = ("full", "sample")
+
+
+def set_parts(set_name):
+    """Path components a set adds under results/ or smoke/: none for the pilot's sample, so its
+    committed files and compare_judges.py keep their paths."""
+    return ("full",) if set_name == "full" else ()
+
+
+def model_slug(model):
+    """A model id as a file name. Only "/" is replaced, so the pilot's `gpt-5.6-luna.jsonl` keeps its
+    name; upstream Wonderbread also writes it into SOP file names, where a "/" would be a directory."""
+    return model.replace("/", "-")
+
+
+class Generator:
+    """One tested model, as both benchmarks' generation loops need it. Each model's runner builds one
+    and hands it to its benchmark core's `run_cli`, so everything model-specific stays in that runner
+    and the loop is the same for every model (script-skeleton.md, invariants).
+
+    make_client   zero-argument factory, so a --dry-run needs no key
+    wanted        negotiated at startup (`negotiate`); the `required` values must survive it
+    fixed         sent on every call and never negotiated away — a thinking switch in a body field
+    prepare       the messages the benchmark built -> the messages sent (a prompt ceiling), or None
+    answer        response -> (text, meta); default `read_answer`, which raises Refused on a refusal
+    call_timeout  the SIGALRM ceiling on one attempt, seconds
+    max_images    the provider's per-request image cap, or None; a request over it is never sent
+    extra_config  written into the run config, so it is on every row and checked on resume
+    """
+
+    def __init__(self, model, make_client, wanted, required, fixed=None, prepare=None, answer=None,
+                 call_timeout=300, max_images=None, extra_config=None):
+        self.model, self.make_client = model, make_client
+        self.wanted, self.required, self.fixed = dict(wanted), dict(required), dict(fixed or {})
+        self.prepare, self.answer = prepare, answer
+        self.call_timeout, self.max_images = call_timeout, max_images
+        self.extra_config = dict(extra_config or {})
+
+    def config(self, model, params, notes):
+        """The settings a generation row was produced under; the benchmark adds its own keys."""
+        return {"model": model, "params": params, "negotiated": notes, "fixed": self.fixed,
+                **({"max_images": self.max_images} if self.max_images is not None else {}),
+                **self.extra_config}
+
+    def messages(self, built):
+        return self.prepare(built) if self.prepare else built
+
+    def once(self, client, model, messages, params):
+        return gen_once(client, model, messages, params, self.fixed, self.answer)
 
 
 def stratified_sample(units, stratum_of, fraction=SAMPLE_FRACTION, seed=SAMPLE_SEED):
@@ -358,6 +416,10 @@ def call_with_retries(once, model, out_dir, tries=5):
             print(f"[{model}] empty response ({attempt + 1}/{tries}) "
                   f"finish_reason={meta.get('finish_reason')} "
                   f"completion_tokens={meta.get('completion_tokens')}", flush=True)
+            if meta.get("finish_reason") == "length":
+                # the cap went on reasoning before any answer: deterministic, so a retry only pays
+                # for it again. The row is `failed` with finish_reason=length; the runner exits 2.
+                break
         except CallTimeout as error:
             STATS["timeouts"] += 1
             print(f"[{model}] TIMEOUT ({attempt + 1}/{tries}): {error}", flush=True)
@@ -380,9 +442,9 @@ def call_with_retries(once, model, out_dir, tries=5):
         if attempt + 1 < tries:
             time.sleep(wait)
     STATS["failed_rows"] += 1
-    print(f"[{model}] all {tries} attempts failed; row written as failed, retried on resume",
+    print(f"[{model}] {attempt + 1} attempt(s) failed; row written as failed, retried on resume",
           flush=True)
-    return "", dict(meta or {}, **used, latency_s=None, n_attempts=tries), "failed"
+    return "", dict(meta or {}, **used, latency_s=None, n_attempts=attempt + 1), "failed"
 
 
 def call_and_parse(once, parse, model, out_dir, parse_tries=3):
@@ -436,7 +498,7 @@ def openai_meta(response):
     return meta
 
 
-def _answer(response):
+def read_answer(response):
     """(content, meta) from one response; a refusal raises `Refused`."""
     meta = openai_meta(response)
     message = response.choices[0].message if getattr(response, "choices", None) else None
@@ -452,7 +514,7 @@ def _answer(response):
 # ---------------------------------------------------------------- clients
 
 
-def _key(name):
+def api_key(name):
     """Never let the SDK pick a key: openai falls back to OPENAI_API_KEY when api_key is None, which
     would send the OpenAI key to openrouter.ai."""
     value = os.getenv(name)
@@ -461,7 +523,7 @@ def _key(name):
     return value
 
 
-def _openai():
+def openai_class():
     """The real openai client class. wb_eval_core stands an absent library in for upstream's
     module-level imports; a client must never be built from that stand-in."""
     import openai
@@ -471,9 +533,9 @@ def _openai():
 
 
 def judge_client():
-    OpenAI = _openai()
+    OpenAI = openai_class()
     # max_retries=0: the SDK's own hidden retries would make n_attempts and latency_s lie.
-    return OpenAI(base_url="https://openrouter.ai/api/v1", api_key=_key("OPENROUTER_API_KEY"),
+    return OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key("OPENROUTER_API_KEY"),
                   timeout=180, max_retries=0)
 
 
@@ -500,12 +562,12 @@ def judge_once(client, judge, messages, response_format=None):
                   extra_body=extra, **params)
     if response_format is not None:
         kwargs["response_format"] = response_format
-    return lambda: _answer(client.chat.completions.create(**kwargs))
+    return lambda: read_answer(client.chat.completions.create(**kwargs))
 
 
 def gen_client():
-    OpenAI = _openai()
-    return OpenAI(api_key=_key("OPENAI_API_KEY"), timeout=300, max_retries=0)
+    OpenAI = openai_class()
+    return OpenAI(api_key=api_key("OPENAI_API_KEY"), timeout=300, max_retries=0)
 
 
 EFFORT_FALLBACKS = ("minimal", "low", "medium", "high")
@@ -513,15 +575,18 @@ _TRANSIENT = ("rate limit", "429", "500", "502", "503", "504", "timed out", "tim
               "connection", "overloaded", "unavailable")
 
 
-def negotiate(client, model, wanted, out_dir, required=None):
+def negotiate(client, model, wanted, out_dir, required=None, fixed=None):
     """From aware_eval_core.negotiate: find the accepted parameter set with one probe, never letting
-    a required VALUE change (a refused value is not a refused parameter — model-parameters.md 7)."""
+    a required VALUE change (a refused value is not a refused parameter — model-parameters.md 7).
+    `fixed` goes on the probe too, so what is accepted is accepted beside it, and is never dropped."""
     params, notes = dict(wanted), []
+    fixed = dict(fixed or {})
     transient_left = 3
     for _ in range(len(wanted) + 3 + transient_left):
         try:
             _guarded(lambda: client.chat.completions.create(
-                model=model, messages=[{"role": "user", "content": "Reply with: ok"}], **params))
+                model=model, messages=[{"role": "user", "content": "Reply with: ok"}],
+                **fixed, **params))
             break
         except CallTimeout as error:
             if transient_left <= 0:
@@ -569,8 +634,19 @@ def negotiate(client, model, wanted, out_dir, required=None):
     return params, notes
 
 
-def gen_once(client, model, messages, params):
-    return lambda: _answer(client.chat.completions.create(model=model, messages=messages, **params))
+def gen_once(client, model, messages, params, fixed=None, answer=None):
+    read = answer or read_answer
+    return lambda: read(client.chat.completions.create(model=model, messages=messages,
+                                                       **(fixed or {}), **params))
+
+
+def responses_file(folder):
+    """The one generation file a full run left in `folder` (e.g. MC_Qwen/results/full/) — a judge
+    names the producer by its folder, and two files there would mean two models or a stale run."""
+    files = sorted(f for f in os.listdir(folder) if f.endswith(".jsonl")) if os.path.isdir(folder) else []
+    if len(files) != 1:
+        raise SystemExit(f"{folder}: expected exactly one responses .jsonl, found {files or 'none'}")
+    return os.path.join(folder, files[0])
 
 
 # ---------------------------------------------------------------- checkpoint
@@ -578,7 +654,8 @@ def gen_once(client, model, messages, params):
 # a crash loses at most the call in flight — upstream Wonderbread wrote its CSV only after the loop
 # (LLM_as_judge/JUDGE_SELECTION.md §7.3, C1). On resume the LAST row for a uid wins.
 
-FINISHED = ("ok", "parse_fail", "refused", "skipped")
+# `over_image_limit`: a generation unit over the model's image cap, never sent (wb_eval_core).
+FINISHED = ("ok", "parse_fail", "refused", "skipped", "over_image_limit")
 _locks = []
 
 

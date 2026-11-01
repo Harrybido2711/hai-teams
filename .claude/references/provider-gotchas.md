@@ -1,7 +1,8 @@
-<!-- size-budget: 9600 -->
+<!-- size-budget: 11000 -->
 <!-- One row per provider plus its failure modes; it grows when a provider is added or
      replaced, which is the file working, not the file sprawling. Raised to 9000 on 2026-10-19 for
-     the OpenRouter section the judge-pilot probes produced. -->
+     the OpenRouter section the judge-pilot probes produced, and to 11000 on 2026-10-31 for the
+     per-provider image limits Wonderbread's full run hit. -->
 # Provider gotchas
 
 Every one of these has cost a debugging cycle, and most fail with **HTTP 200 and no exception** —
@@ -39,6 +40,23 @@ Probed 2026-10-19 on the four candidate judges (`Action_processes_benchmarks/jud
   endpoint is not automatically the safe pin: Moonshot AI's returns whitespace in JSON mode.
 - **Claude fences JSON mode** — `response_format={"type": "json_object"}` comes back inside
   ```` ```json … ``` ````; a bare `json.loads` raises. Strip fences before parsing.
+
+## Image limits per request — three providers, three different walls
+
+Probed 2026-10-31 with Wonderbread's real requests (Retina screenshots, 3456×2234 PNG, ~0.8 MB each;
+up to 55 per QA request and 71 per SOP request). Only OpenAI's `gpt-5.6-luna` took them as they are.
+
+| Route | Limit | How it fails |
+|---|---|---|
+| OpenRouter, `google/gemini-3.5-flash-lite` | 30 MB of image content | HTTP 413 "Downloaded image content cannot exceed 30MB" |
+| Together, `Qwen/Qwen3.5-9B` | **10 images**, and 255 MiB *decoded* (six full-size screenshots came to 556 MiB) | HTTP 400 `invalid_multimodal_request` "supports at most 10 image inputs"; HTTP 413 `multimodal_payload_too_large` |
+| DeepInfra, `google/gemma-4-31B-it` | **32 images** | HTTP 400 "Too many images in request: 55 > 32" — but 30 *full-size* images got **no error**: they hung past a 300 s watchdog three times (22 took 19 s) |
+
+All of these are deterministic, but the retry loop treats them as transient and spends five
+attempts on each. A long side of 1188 px as JPEG q85 (~100 KB an image) cleared the byte and decode
+limits and Gemma's hang (30 images: 4.3 MB, answered in 4 s; 32: 8.9 s). The image-count caps — 10
+on Together's Qwen, 32 on DeepInfra's Gemma — move with no encoding; Gemini took 71 at 9.6 MB. How
+Wonderbread applies all of it: its page.
 
 ## Timeouts, and why `timeout=` is not a guard
 

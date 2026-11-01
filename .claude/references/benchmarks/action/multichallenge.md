@@ -1,8 +1,13 @@
+<!-- size-budget: 7500 -->
+<!-- One job: MultiChallenge's operating facts. Larger than the default because it carries the
+     judge pilot and the full run side by side, which share every path but the set. -->
 # MultiChallenge — benchmark card
 
 Coordination, over multi-turn conversations. Upstream `ekwinox117/multi-challenge`. **LLM-judged, on
-every item.** Our runners exist for the **judge pilot** only (2026-10-19): `gpt-5.6-luna` on a 10%
-sample, graded by four candidate judges. No full run, no recorded result.
+every item.** The **judge pilot** (2026-10-19) graded `gpt-5.6-luna` on a 10% sample with four
+candidate judges; the user chose **Claude Haiku 5.5** on 2026-10-31. Since then all five selected
+models have a runner for the **full run** (all 273 items), and Haiku 5.5 grades each. Scripts
+written and smoke-tested 2026-10-31, not yet on Quest; no full run, no recorded result.
 
 ## Paths
 
@@ -17,22 +22,26 @@ sample, graded by four candidate judges. No full run, no recorded result.
 Multi-challenge_bench/
 ├── main.py · src/                upstream harness — src/evaluator.py holds JUDGE_PROMPT
 ├── data/benchmark_questions.jsonl  the 273 items; data/final_model_responses/ is upstream's
-├── mc_eval_core.py               ours: sample, verbatim prompt + schema, scorer (imports ../judge_core.py)
+├── mc_eval_core.py               ours: sets, the generation loop (run_cli), verbatim prompt + schema, scorer
 ├── sample_uids.json              the pilot sample, drawn once (seed 20261019), committed
-├── MC_GPT_5.6_Luna/              generation: gpt56luna_mc_eval.py, run_mc.sh
-└── MC_Judges/                    mc_judge.py --judge <key>; one file for all four judges
+├── MC_GPT_5.6_Luna/              gpt56luna_mc_eval.py, run_mc.sh — one folder per model, each the
+├── MC_Gemini_Flash3.5lite_OpenRouter/  client and parameters only (a judge_core.Generator):
+├── MC_Qwen/ · MC_Gemma_DeepInfra/      gemini35lite_ / qwen_ / gemma_di_ / deepseek_mc_eval.py
+├── MC_Deepseek/                  + run_mc.sh (short 4 h; Deepseek normal 12 h — it queues and reasons)
+└── MC_Judges/                    mc_judge.py --judge <key> [--set full --producer MC_<Model>]
 ```
 
-The judge configurations, call infrastructure and checkpoint are shared with Wonderbread in
-`Action_processes_benchmarks/judge_core.py`; the array job is `../run_judges.sh` and the comparison
-`../compare_judges.py`. Pinned checks: `../test_judge_pilot.py`.
+The judge configurations, `Generator`, call infrastructure and checkpoint are shared with
+Wonderbread in `Action_processes_benchmarks/judge_core.py`. Pilot: `../run_judges.sh` (array over
+the four judges) and `../compare_judges.py`. Full run: `../run_judge_full.sh` (array over the five
+models, Haiku 5.5). Pinned checks: `../test_judge_pilot.py`.
 
 ## Expected counts
 
 273 items — `INFERENCE_MEMORY` 113, `INSTRUCTION_RETENTION` 69, `SELF_COHERENCE` 50,
 `RELIABLE_VERSION_EDITING` 41; `PASS_CRITERIA` is `"YES"` on all 273. `mc_eval_core.load_items`
 refuses any other count. **Pilot sample: 27** — 11 / 7 / 5 / 4. Judge rows: 27 × 3 replicates = 81
-per judge.
+per judge. **Full run:** 273 generation rows per model; 273 × 3 = 819 judge rows per model.
 
 ## Scoring
 
@@ -45,11 +54,16 @@ verdict, and a unit's label is the majority of its replicates (a tie is unjudged
 
 ## Output and logs
 
-Ours: `MC_GPT_5.6_Luna/results/gpt-5.6-luna.jsonl` (one row per item) and
-`MC_Judges/results/<judge>/gpt-5.6-luna.jsonl` (one row per item × replicate) — each directory named
-after the model that wrote it. `--limit` writes `smoke/` instead, gitignored. Rows are appended and
-flushed per call; resume skips finished uids and refuses a different config. SLURM logs
-`log_<jobid>.txt` per folder; the judge array logs to `../judge_log_<job>_<task>.txt`.
+Ours, each directory named after the model that wrote it, one row per item (generation) or per item
+× replicate (judge):
+
+- pilot: `MC_GPT_5.6_Luna/results/gpt-5.6-luna.jsonl`, `MC_Judges/results/<judge>/gpt-5.6-luna.jsonl`;
+- full run: `MC_<Model>/results/full/<model id, "/" → "-">.jsonl` (e.g. `Qwen-Qwen3.5-9B.jsonl`) and
+  `MC_Judges/results/full/haiku-5.5/<same name>.jsonl`. A judge refuses rows generated for another set.
+
+`--limit` writes `smoke/` instead, gitignored. Rows are appended and flushed per call; resume skips
+finished uids and refuses a different config. SLURM logs `log_<jobid>.txt` per folder; the judge
+arrays log to `../judge_log_<job>_<task>.txt` (pilot) and `../judge_full_log_<job>_<task>.txt`.
 
 ## Run order
 
@@ -65,16 +79,31 @@ flushed per call; resume skips finished uids and refuses a different config. SLU
    Sonnet 5.5 refusing 11 (`LLM_as_judge/JUDGE_SELECTION.md` §6.1).
 5. `python ../compare_judges.py` on the pulled rows — done; `JUDGE_SELECTION.md` §6.4.
 
+**Full run** (the five selected models, then Haiku 5.5):
+
+1. Local smoke — done 2026-10-31: each model `--limit 3` (3/3 `ok`, `finish=stop`, exit 0, no
+   `<think>` text); Haiku 5.5 on each model's smoke rows, `--set full --limit 3` (45/45 `ok`, 0
+   parse failures). The pilot's judge files still resume with 0 calls under the changed code.
+2. **The user verifies the scripts.** Phase 3 does not start before.
+3. Transfer with Wonderbread and the shared files as one set; md5 both sides. Quest's `.env` here
+   needs `TOGETHER_API_KEY`, `DEEPINFRA_API_KEY`, `DEEPSEEK_API_KEY` beside the two it has.
+4. `sbatch run_mc.sh` in each `MC_<Model>/`; then, after both benchmarks' generation jobs,
+   `sbatch --dependency=afterok:… run_judge_full.sh` from `Action_processes_benchmarks/`.
+
 ## What its README says about showing reasoning
 
 Nothing. The tested model gets the stored conversation verbatim, no system prompt, so nothing is
-added to ask for or suppress visible reasoning. Hidden reasoning is capped at the settled
-`reasoning_effort="low"`.
+added to ask for or suppress visible reasoning. Hidden reasoning is capped per model — each runner's
+docstring; for Deepseek, which has no knob, by a prompt ceiling (its trap below).
 
 ## Its own traps
 
 - **The vendored harness does not run** (`TypeError` before the first call) — `JUDGE_SELECTION.md` §7.2 D1. Our
   runners do not use `main.py`.
+- **Deepseek's conversation is not upstream's.** It has no thinking knob, so a system message asks it
+  to reason briefly (`model-parameters.md` rule 5), ahead of a conversation upstream sends with no
+  system prompt — the user's decision, 2026-10-31, and on every row's config. It is a request: one
+  smoke item still spent 3,143 reasoning tokens. Read it from `reasoning_tokens`, not from answer length.
 - **An unpinned OpenRouter model is several models.** In the first smoke run Kimi K2.6 flipped one
   verdict across three replicates at `temperature=0` — while its calls were landing on two backends
   with different quantizations. Pinned to one (bf16), it gave three identical answers in three.

@@ -147,7 +147,7 @@ def fake_response(content, cost, finish="stop", refusal=None):
 
 def sequence(*responses):
     it = iter(responses)
-    return lambda: jc._answer(next(it))
+    return lambda: jc.read_answer(next(it))
 
 
 reset_streaks()
@@ -166,7 +166,7 @@ check("content_filter with no content is a refusal", status, "refused")
 reset_streaks()
 try:
     for _ in range(jc.CONSECUTIVE_PARSE_FAIL_LIMIT):
-        st = jc.call_and_parse(lambda: jc._answer(fake_response("junk", 0.1)), wb.parse_qa_score, "m", TMP)[3]
+        st = jc.call_and_parse(lambda: jc.read_answer(fake_response("junk", 0.1)), wb.parse_qa_score, "m", TMP)[3]
         jc.note_outcome(st, "m", TMP)
     check("parse-fail streak halts", "no halt", "SystemExit")
 except SystemExit:
@@ -202,7 +202,7 @@ check("a second writer is refused", second.returncode != 0, True)
 
 os.environ.pop("OPENROUTER_API_KEY", None)
 try:
-    jc._key("OPENROUTER_API_KEY")
+    jc.api_key("OPENROUTER_API_KEY")
     check("missing key refused", "used a fallback", "SystemExit")
 except SystemExit:
     pass
@@ -242,6 +242,73 @@ check("mcnemar none discordant", cj.mcnemar_p(0, 0), 1.0)
 # --- the stand-ins for absent client libraries are never called
 up = wb.upstream()
 check("helpers imported", hasattr(up.helpers, "create_merged_trace"), True)
+
+# --- the full run (2026-10-31): every item, every model, files apart from the pilot's
+check("mc full set", len(mc.load_set("full")), mc.EXPECTED_ITEMS)
+check("mc sample set is the pilot's", [i["QUESTION_ID"] for i in mc.load_set("sample")],
+      [i["QUESTION_ID"] for i in mc_sample])
+check("qa full set", len(wb.load_set("qa", "full")), wb.EXPECTED_QA)
+check("sop full set", len(wb.load_set("sop", "full")), wb.EXPECTED_RANK1)
+check("demos needed, full", len(wb.demos_needed("full")), 255)
+check("demos for a qa unit", wb.demos_for("qa", ["qa000"]),
+      {x.strip() for x in str(wb.load_qa()["qa000"]["Task ID(s)"]).split(",")})
+check("pilot keeps its paths", jc.set_parts("sample"), ())
+check("full runs apart", jc.set_parts("full"), ("full",))
+check("slug keeps the pilot's file name", jc.model_slug("gpt-5.6-luna"), "gpt-5.6-luna")
+check("slug has no directory", jc.model_slug("google/gemini-3.5-flash-lite"), "google-gemini-3.5-flash-lite")
+g = jc.Generator("m", None, {"max_tokens": 8, "seed": 1}, {"max_tokens": 8},
+                 fixed={"reasoning": {"enabled": False}}, extra_config={"prompt_ceiling": "C"})
+check("generator config", g.config("m", {"max_tokens": 8}, []),
+      {"model": "m", "params": {"max_tokens": 8}, "negotiated": [],
+       "fixed": {"reasoning": {"enabled": False}}, "prompt_ceiling": "C"})
+check("no prepare sends the conversation as built", g.messages([{"role": "user", "content": "x"}]),
+      [{"role": "user", "content": "x"}])
+
+
+class _Client:
+    """Records what a generator sends; answers with one canned response."""
+    def __init__(self, response):
+        self.sent, self.response = [], response
+        self.chat = self.completions = self
+
+    def create(self, **kwargs):
+        self.sent.append(kwargs)
+        return self.response
+
+
+mock = _Client(fake_response("hi", 0.0))
+check("fixed travels on every call", (g.once(mock, "m", [], {"max_tokens": 8})(), mock.sent[0]["reasoning"]),
+      (("hi", jc.openai_meta(fake_response("hi", 0.0))), {"enabled": False}))
+sys.path.insert(0, os.path.join(GROUP_ROOT, "Multi-challenge_bench", "MC_Deepseek"))
+import deepseek_mc_eval as ds  # noqa: E402
+check("deepseek ceiling ahead of the conversation",
+      [m["role"] for m in ds.GEN.messages([{"role": "user", "content": "x"}])], ["system", "user"])
+check("deepseek ceiling on the config", ds.GEN.config("deepseek-flash", {}, [])["prompt_ceiling"],
+      ds.PROMPT_CEILING)
+empty = fake_response("", 0.0)
+empty.choices[0].message.reasoning_content = "the answer"
+check("deepseek falls back to reasoning_content", ds.answer(empty)[0], "the answer")
+cut = fake_response("", 0.0, finish="length")
+cut.choices[0].message.reasoning_content = "half a chain of thought"
+check("deepseek never falls back on a cut-off chain", ds.answer(cut)[0], "")
+
+# --- an empty answer cut by the cap is not retried: deterministic, and every retry is billed
+reset_streaks()
+text, meta, status = jc.call_with_retries(lambda: jc.read_answer(fake_response("", 0.1, finish="length")),
+                                          "m", TMP)
+check("empty + length: one attempt, failed, finish kept", (status, meta["n_attempts"], meta["finish_reason"]),
+      ("failed", 1, "length"))
+
+# --- SOP index: invalid JSON from unescaped quotes in the scratchpad (Haiku 5.5, 2026-10-31 smoke)
+p8 = wb.make_index_parser(8)
+check("sop index from the last field of invalid json",
+      p8('```json\n{\n  "scratchpad": "type the date, "01/01/2022". Line 4 fits.",\n  "index": 4\n}\n```'), 4)
+check("sop index -1 from invalid json",
+      p8('{"scratchpad": "no "match" here", "index": -1}'), -1)
+check("sop index out of range from invalid json", p8('{"scratchpad": "a "b"", "index": 9}'), None)
+check("sop index not the last field", p8('{"scratchpad": "x "y" "index": 3 z", "other": 1}'), None)
+check("sop index quoted inside text only", p8('{"scratchpad": "the "index": 2 is wrong"}'), None)
+check("sop index from prose that is not an object", p8('I cannot decide. If forced: "index": 5}'), None)
 
 if FAILED:
     print("\n".join(FAILED))

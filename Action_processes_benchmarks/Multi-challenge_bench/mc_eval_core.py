@@ -1,5 +1,6 @@
-"""MultiChallenge — shared core for the judge pilot: data, the 10% sample, the upstream judge prompt
-and its scorer. Identical for every judge; the runners hold only the client.
+"""MultiChallenge — shared core: data, the pilot's 10% sample, the generation loop every tested model
+runs (`run_cli`), the upstream judge prompt and its scorer. Identical for every model and every
+judge; each runner holds only its client and parameters (`judge_core.Generator`).
 
 What upstream does, and what this keeps (LLM_as_judge/JUDGE_SELECTION.md §7.2):
 - judge input: the tested model's FINAL response and the item's `TARGET_QUESTION` (the rubric) —
@@ -16,11 +17,13 @@ status and never becomes a fifth axis 'NA' at 0%; a generation error is retried,
 the response text "FAIL THIS QUESTION" and sent to the judge (C1).
 """
 
+import argparse
 import ast
 import collections
 import json
 import os
 import sys
+import time
 
 MC_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(MC_ROOT))
@@ -93,6 +96,80 @@ def load_sample():
     if missing:
         raise SystemExit(f"sample names {len(missing)} unknown QUESTION_IDs, e.g. {missing[:3]}")
     return [items[u] for u in uids]
+
+
+def load_set(set_name):
+    """`full`: all 273 items, in file order. `sample`: the pilot's 27 (`load_sample`)."""
+    return list(load_items().values()) if set_name == "full" else load_sample()
+
+
+def run_cli(gen, model_dir, description):
+    """One response per item — upstream's `--attempts 1`. The tested model gets the item's
+    CONVERSATION verbatim, as upstream's `OpenAIModel.generate` sends it: no system prompt, roles as
+    stored, the last turn the user's — unless the model's runner declares a `prepare` (a prompt
+    ceiling), which is then on every row's config. Nothing here scores; judging is MC_Judges/.
+
+    Exit 1 unless every item has an `ok` row; exit 2 if any row hit the output cap
+    (`finish_reason=length`), so a judge job waiting on `afterok` never starts on truncated answers."""
+    from dotenv import load_dotenv
+
+    ap = argparse.ArgumentParser(description=description)
+    ap.add_argument("--model", default=gen.model)
+    ap.add_argument("--set", dest="set_name", default="full", choices=jc.SETS)
+    ap.add_argument("--limit", type=int, default=0, help="first N items of the set; writes smoke/")
+    ap.add_argument("--sleep", type=float, default=1.0)
+    args = ap.parse_args()
+
+    load_dotenv(ENV_PATH)
+    jc.HARD_CALL_TIMEOUT = gen.call_timeout
+    smoke = args.limit > 0
+    jc.MARKER_PREFIX = ("smoke_" if smoke else "") + f"{args.set_name}_"
+    jc.clear_stale_halt_markers(model_dir)
+    client = gen.make_client()
+    print(f"negotiating parameter surface for {args.model} ...", flush=True)
+    params, notes = jc.negotiate(client, args.model, gen.wanted, model_dir, gen.required, gen.fixed)
+    print(f"  accepted: {params}" + (f"  notes: {notes}" if notes else ""), flush=True)
+
+    config = dict(gen.config(args.model, params, notes), set=args.set_name,
+                  input="upstream CONVERSATION verbatim, no system prompt"
+                  + (" (the runner's prepare adds one: see config)" if gen.prepare else ""))
+    if args.set_name == "sample":
+        config.update(sample_seed=jc.SAMPLE_SEED, sample_fraction=jc.SAMPLE_FRACTION)
+    path = jc.out_path(model_dir, smoke, *jc.set_parts(args.set_name),
+                       f"{jc.model_slug(args.model)}.jsonl")
+    jc.lock_output(path)
+    done = jc.load_done(path, config)
+    items = load_set(args.set_name)
+    if smoke:
+        items = items[:args.limit]
+    todo = [it for it in items if it["QUESTION_ID"] not in done]
+    print(f"{args.set_name}: {len(items)} items, {len(todo)} to call -> {path}", flush=True)
+
+    for n, item in enumerate(todo, 1):
+        once = gen.once(client, args.model, gen.messages(item["CONVERSATION"]), params)
+        text, meta, status = jc.call_with_retries(once, args.model, model_dir)
+        jc.append_row(path, {"uid": item["QUESTION_ID"], "axis": item["AXIS"], "status": status,
+                             "response": text, "config": config, **meta})
+        jc.note_outcome(status, args.model, model_dir)
+        print(f"  [{n}/{len(todo)}] {item['QUESTION_ID']} {item['AXIS']:24s} {status} "
+              f"finish={meta.get('finish_reason')} out={meta.get('completion_tokens')} "
+              f"reasoning={meta.get('reasoning_tokens')} {meta.get('latency_s')}s"
+              + (f" fallback={meta['fallback']}" if meta.get("fallback") else ""), flush=True)
+        time.sleep(args.sleep)
+
+    rows = [r for r in jc.read_rows(path) if r["uid"] in {it["QUESTION_ID"] for it in items}]
+    finish = collections.Counter(r.get("finish_reason") for r in rows)
+    fallback = sum(1 for r in rows if r.get("fallback"))
+    print(f"\nDONE {len(rows)}/{len(items)} rows  status={jc.status_counts(rows)}  finish={dict(finish)}"
+          f"  fallback={fallback}  calls={jc.STATS}", flush=True)
+    # length first: a row whose whole cap went on reasoning is `failed` AND finish=length, and the
+    # decision it needs is the cap, not a resubmit
+    if finish.get("length"):
+        print(f"STOP: {finish['length']} row(s) hit the output cap — the cap bound. Decide whether "
+              f"to raise it (archive the results first) before judging.", flush=True)
+        sys.exit(2)
+    if len(rows) < len(items) or any(r["status"] != "ok" for r in rows):
+        sys.exit(1)
 
 
 def judge_messages(response, item):

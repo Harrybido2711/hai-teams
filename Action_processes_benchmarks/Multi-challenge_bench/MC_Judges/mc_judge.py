@@ -1,16 +1,23 @@
-"""MultiChallenge — one candidate judge grades stored responses, for the judge pilot.
+"""MultiChallenge — one judge grades one model's stored responses.
 
-Every judge runs this same file; `--judge` picks one of `judge_core.JUDGES`. The prompt, the schema
-and the scorer are upstream's, from `../mc_eval_core.py`, so the judge model is the only thing that
-changes between the four. `N_REPS` replicates per item, rep-major.
+Every judge runs this same file; `--judge` picks one of `judge_core.JUDGES` — `haiku-5.5` since the
+user chose it on 2026-10-31 (`judge_core.JUDGE`). The prompt, the schema and the scorer are
+upstream's, from `../mc_eval_core.py`, so the judge model is the only thing that changes.
+`N_REPS` replicates per item, rep-major.
 
-Output: `results/<judge>/<responses-producer>.jsonl` — named after the model that produced it (the
+Two sets:
+- `--set sample` (default) — the judge pilot: the 27 sampled items, gpt-5.6-luna's responses;
+- `--set full` — all 273 items of one producer, named by its folder: `--producer MC_Qwen` reads
+  the one `.jsonl` in `MC_Qwen/results/full/` (`smoke/full/` with `--limit`).
+
+Output: `results/[full/]<judge>/<producer>.jsonl` — named after the model that produced it (the
 judge) and holding its verdicts on one model's responses. One row per (item, replicate):
 `status` is ok / parse_fail / refused / failed; a judge failure is never a verdict of NO and never
 an axis of its own (LLM_as_judge/JUDGE_SELECTION.md §7.2, D2).
 
-    python mc_judge.py --judge haiku-4.5 --limit 3     # smoke: first 3 items of the smoke responses
-    python mc_judge.py --judge haiku-4.5               # the sample, all replicates
+    python mc_judge.py --judge haiku-5.5 --set full --producer MC_Qwen --limit 3    # smoke
+    python mc_judge.py --judge haiku-5.5 --set full --producer MC_Qwen              # all 273 x reps
+    python mc_judge.py --judge haiku-4.5                                            # the pilot
 """
 
 import argparse
@@ -26,24 +33,40 @@ sys.path.insert(0, MC_ROOT)
 import mc_eval_core as mc  # noqa: E402
 jc = mc.jc
 
-DEFAULT_PRODUCER = os.path.join(MC_ROOT, "MC_GPT_5.6_Luna")
+PILOT_PRODUCER = "MC_GPT_5.6_Luna"
 
 
 def main():
-    ap = argparse.ArgumentParser(description="MultiChallenge — candidate judge (judge pilot)")
-    ap.add_argument("--judge", required=True, choices=sorted(jc.JUDGES))
-    ap.add_argument("--responses", default=None,
-                    help="responses .jsonl; default: MC_GPT_5.6_Luna/{results|smoke}/gpt-5.6-luna.jsonl")
+    ap = argparse.ArgumentParser(description="MultiChallenge — one judge on one model's responses")
+    ap.add_argument("--judge", default=jc.JUDGE, choices=sorted(jc.JUDGES))
+    ap.add_argument("--set", dest="set_name", default="sample", choices=jc.SETS)
+    ap.add_argument("--producer", default=PILOT_PRODUCER,
+                    help="the generating model's folder, e.g. MC_Qwen (sample: the pilot's GPT only)")
+    ap.add_argument("--responses", default=None, help="responses .jsonl; overrides --producer")
     ap.add_argument("--limit", type=int, default=0, help="first N items; writes smoke/")
     ap.add_argument("--reps", type=int, default=jc.N_REPS)
     ap.add_argument("--sleep", type=float, default=0.5)
     args = ap.parse_args()
     smoke = args.limit > 0
 
-    responses_path = args.responses or os.path.join(
-        DEFAULT_PRODUCER, "smoke" if smoke else "results", f"{jc.GEN_MODEL}.jsonl")
+    sub = os.path.join(MC_ROOT, args.producer, "smoke" if smoke else "results")
+    if args.responses:
+        responses_path = args.responses
+    elif args.set_name == "full":
+        responses_path = jc.responses_file(os.path.join(sub, "full"))
+    else:
+        responses_path = os.path.join(sub, f"{jc.GEN_MODEL}.jsonl")
     responses = {r["uid"]: r for r in jc.read_rows(responses_path)}
-    items = mc.load_sample()
+    stored_set = {r["config"].get("set") for r in responses.values()}
+    if stored_set != {args.set_name}:
+        raise SystemExit(f"{responses_path}: its rows were generated for set {sorted(map(str, stored_set))}, "
+                         f"not '{args.set_name}' — refusing to judge them as that set.")
+    items = mc.load_set(args.set_name)
+    fallback = sum(1 for it in items if responses.get(it["QUESTION_ID"], {}).get("fallback"))
+    if fallback:
+        # Deepseek's answer read from reasoning_content (deepseek_mc_eval.answer) — judged as given
+        print(f"NOTE: {fallback} response(s) are a reasoning_content fallback, judged as the answer",
+              flush=True)
     if smoke:
         items = items[:args.limit]
     not_ready = [it["QUESTION_ID"] for it in items
@@ -58,10 +81,11 @@ def main():
                   for it in items for rep in range(args.reps)}
 
     load_dotenv(mc.ENV_PATH)
-    out_dir = os.path.join(JUDGE_DIR, "smoke" if smoke else "results", args.judge)
+    parts = jc.set_parts(args.set_name)
+    out_dir = os.path.join(JUDGE_DIR, "smoke" if smoke else "results", *parts, args.judge)
     jc.MARKER_PREFIX = f"{producer}_"
     jc.clear_stale_halt_markers(out_dir)
-    path = jc.out_path(JUDGE_DIR, smoke, args.judge, f"{producer}.jsonl")
+    path = jc.out_path(JUDGE_DIR, smoke, *parts, args.judge, f"{producer}.jsonl")
     jc.lock_output(path)
     config = dict(jc.judge_config(args.judge), n_reps=args.reps, prompt="upstream JUDGE_PROMPT",
                   response_format="JudgeResponse json_schema", scorer=mc.SCORER_VERSION,

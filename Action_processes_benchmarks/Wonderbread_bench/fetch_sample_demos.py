@@ -1,17 +1,18 @@
-"""Fetch ONLY the demos the judge-pilot sample needs, out of Wonderbread's Zenodo archive.
+"""Fetch ONLY the demos a set needs, out of Wonderbread's Zenodo archive.
 
-The full gold set is 33 GB (`gold_demos.zip`, with videos) — the scope question on
-`.claude/references/benchmarks/action/wonderbread.md`. The pilot needs neither the videos nor most
-demos: QA and SOP Generation read each demo's SOP, trace .json and screenshots, which Zenodo also
-ships without videos as `gold_demos_sop_and_trace_and_screenshots_only.zip` (5.7 GB). Zenodo serves
-byte ranges, so this reads the zip's central directory (a few requests) and then only the members
-under the sampled demo folders — ~31 demos at a median 6.4 MB. zipfile checks every member's CRC.
+The full gold set is 33 GB (`gold_demos.zip`, with videos). Neither judged subtask needs the videos
+or most demos: QA and SOP Generation read each demo's SOP, trace .json and screenshots, which Zenodo
+also ships without videos as `gold_demos_sop_and_trace_and_screenshots_only.zip` (5.7 GB). Zenodo
+serves byte ranges, so this reads the zip's central directory (a few requests) and then only the
+members under the needed demo folders — 31 demos for the pilot's sample, 255 for the full set (the
+120 QA items' demos plus the 162 rank-1 demos). zipfile checks every member's CRC.
 
 Writes upstream's own layout, `data/demos/<demo folder>/{SOP - ….txt, ….json, screenshots/}`
 (gitignored), and is idempotent: a file already present at the right size is skipped.
 
-    python fetch_sample_demos.py            # what the sample needs (wb_eval_core.demos_needed)
-    python fetch_sample_demos.py --check    # verify what is on disk, fetch nothing
+    python fetch_sample_demos.py --set full            # what the full run needs
+    python fetch_sample_demos.py --set full --check    # verify what is on disk, fetch nothing
+    python fetch_sample_demos.py                       # the pilot's sample (the default)
 """
 
 import argparse
@@ -90,8 +91,9 @@ class HTTPRangeFile:
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--check", action="store_true", help="verify what is on disk; fetch nothing")
+    ap.add_argument("--set", dest="set_name", default="sample", choices=wb.jc.SETS)
     args = ap.parse_args()
-    need = wb.demos_needed()
+    need = wb.demos_needed(args.set_name)
     if not args.check:
         remote = HTTPRangeFile(f"{RECORD}/{ARCHIVE}/content")
         archive = zipfile.ZipFile(remote)

@@ -1,14 +1,17 @@
-"""Wonderbread — one candidate judge grades QA answers or generated SOPs, for the judge pilot.
+"""Wonderbread — one judge grades one producer's QA answers or generated SOPs.
 
-Every judge runs this same file; `--judge` picks one of `judge_core.JUDGES`. Prompts and scorers
-are upstream's, through `../wb_eval_core.py`, so the judge model is the only thing that changes.
-`N_REPS` replicates of every call, rep-major.
+Every judge runs this same file; `--judge` picks one of `judge_core.JUDGES` — `haiku-5.5` since the
+user chose it on 2026-10-31 (`judge_core.JUDGE`). Prompts and scorers are upstream's, through
+`../wb_eval_core.py`, so the judge model is the only thing that changes. `N_REPS` replicates of
+every call, rep-major.
 
-Two sets:
+Three sets:
 - `--set sample` — gpt-5.6-luna's answers / SOPs (`../WB_GPT_5.6_Luna/results/`), the pilot itself;
 - `--set anchor` — upstream's 30-item human-labelled samples (QA: human 1-3 scores; SOP: human
   precision / recall), which need no generation. Each judge's agreement with the HUMANS there is
-  what says which judge is better, not merely which judges agree (JUDGE_SELECTION.md §6.2).
+  what says which judge is better, not merely which judges agree (JUDGE_SELECTION.md §6.2);
+- `--set full` — every answer / SOP of one producer, named by its folder: `--producer WB_Qwen`
+  reads the one `.jsonl` in `WB_Qwen/results/full/<task>/` (`smoke/full/` with `--limit`).
 
 `--task qa`: four calls per answer, one per criterion (completeness and soundness see the Human
 Label; clarity and compactness do not), score 1-3 with **1 = best**. An answer shorter than 5
@@ -16,10 +19,12 @@ characters is not judged — status `skipped`, upstream's "NA".
 `--task sop`: one call per line of each SOP, in both directions (generated → gold for precision
 and ordering, gold → generated for recall); the judge returns the matching line's index or -1.
 
-Output: `results/<judge>/<task>/<producer>.jsonl`, producer = gpt-5.6-luna or anchor-human-sample.
+Output: `results/[full/]<judge>/<task>/<producer>.jsonl` — producer = the generating model's id
+(as its file is named) or anchor-human-sample.
 
-    python wb_judge.py --judge haiku-4.5 --task qa --set anchor --limit 2    # smoke, writes smoke/
-    python wb_judge.py --judge haiku-4.5 --task sop --set sample
+    python wb_judge.py --judge haiku-5.5 --task qa --set full --producer WB_Qwen --limit 2  # smoke
+    python wb_judge.py --judge haiku-5.5 --task sop --set full --producer WB_Qwen
+    python wb_judge.py --judge haiku-4.5 --task sop --set sample                           # the pilot
 """
 
 import argparse
@@ -36,49 +41,73 @@ sys.path.insert(0, WB_ROOT)
 import wb_eval_core as wb  # noqa: E402
 jc = wb.jc
 
-PRODUCER_DIR = os.path.join(WB_ROOT, "WB_GPT_5.6_Luna")
+PILOT_PRODUCER = "WB_GPT_5.6_Luna"
 
 
-def qa_units(set_name, smoke, limit):
+def producer_rows(producer, set_name, task, smoke):
+    """The producer's generation rows for this set and task, keyed by uid, and the file's model id —
+    refusing rows that were generated for another set."""
+    sub = os.path.join(WB_ROOT, producer, "smoke" if smoke else "results")
+    path = (jc.responses_file(os.path.join(sub, "full", task)) if set_name == "full"
+            else os.path.join(sub, task, f"{jc.GEN_MODEL}.jsonl"))
+    rows = {r["uid"]: r for r in jc.read_rows(path)}
+    stored = {r["config"].get("set") for r in rows.values()}
+    if stored != {set_name}:
+        raise SystemExit(f"{path}: its rows were generated for set {sorted(map(str, stored))}, not "
+                         f"'{set_name}' — refusing to judge them as that set.")
+    return path, rows, os.path.splitext(os.path.basename(path))[0]
+
+
+def within_cap(uids, rows, path):
+    """Drop the units the producer never sent because they exceeded its image cap — a ceiling of that
+    model, never judged and never scored as a failure (wb_eval_core.OVER_LIMIT)."""
+    over = [u for u in uids if rows.get(u, {}).get("status") == wb.OVER_LIMIT]
+    if over:
+        print(f"{path}: {len(over)} of {len(uids)} units over the producer's image cap — not judged",
+              flush=True)
+    return [u for u in uids if u not in set(over)]
+
+
+def qa_units(set_name, smoke, limit, producer):
     """(uid, question, human_label, response) per answer."""
     if set_name == "anchor":
         anchor = wb.load_anchor_qa()
         units = [(u, a["question"], a["human_label"], a["response"]) for u, a in anchor.items()]
         return units[:limit or None], wb.ANCHOR_PRODUCER, None
-    path = os.path.join(PRODUCER_DIR, "smoke" if smoke else "results", "qa", f"{jc.GEN_MODEL}.jsonl")
-    rows = {r["uid"]: r for r in jc.read_rows(path)}
-    uids = wb.load_sample("qa")[:limit or None]
+    path, rows, name = producer_rows(producer, set_name, "qa", smoke)
+    uids = within_cap(wb.load_set("qa", set_name)[:limit or None], rows, path)
     missing = [u for u in uids if rows.get(u, {}).get("status") != "ok"]
     if missing:
         raise SystemExit(f"{path}: {len(missing)} of {len(uids)} answers missing or failed "
                          f"(e.g. {missing[:3]}). Finish the generation run first.")
     units = [(u, rows[u]["question"], rows[u]["human_label"], rows[u]["response"]) for u in uids]
-    return units, jc.GEN_MODEL, rows[uids[0]]["config"]
+    return units, name, next(iter(rows.values()))["config"]
 
 
-def sop_units(set_name, smoke, limit):
+def sop_units(set_name, smoke, limit, producer):
     """(pair uid, pred_sop, gold_sop) per generated SOP."""
     if set_name == "anchor":
         anchor = wb.load_anchor_sop()
         units = [(u, a["pred_sop"], a["gold_sop"]) for u, a in anchor.items()]
         return units[:limit or None], wb.ANCHOR_PRODUCER, None
-    path = os.path.join(PRODUCER_DIR, "smoke" if smoke else "results", "sop", f"{jc.GEN_MODEL}.jsonl")
-    rows = {r["uid"]: r for r in jc.read_rows(path)}
-    demos = wb.load_sample("sop")[:limit or None]
-    uids = [f"{d}|{a}" for d in demos for a in wb.SOP_ABLATIONS]
+    path, rows, name = producer_rows(producer, set_name, "sop", smoke)
+    demos = wb.load_set("sop", set_name)[:limit or None]
+    uids = within_cap([f"{d}|{a}" for d in demos for a in wb.SOP_ABLATIONS], rows, path)
     missing = [u for u in uids if rows.get(u, {}).get("status") != "ok"]
     if missing:
         raise SystemExit(f"{path}: {len(missing)} of {len(uids)} SOPs missing or failed "
                          f"(e.g. {missing[:3]}). Finish the generation run first.")
-    return [(u, rows[u]["pred_sop"], rows[u]["gold_sop"]) for u in uids], jc.GEN_MODEL, \
-        rows[uids[0]]["config"]
+    return [(u, rows[u]["pred_sop"], rows[u]["gold_sop"]) for u in uids], name, \
+        next(iter(rows.values()))["config"]
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Wonderbread — candidate judge (judge pilot)")
-    ap.add_argument("--judge", required=True, choices=sorted(jc.JUDGES))
+    ap = argparse.ArgumentParser(description="Wonderbread — one judge on one producer's output")
+    ap.add_argument("--judge", default=jc.JUDGE, choices=sorted(jc.JUDGES))
     ap.add_argument("--task", required=True, choices=("qa", "sop"))
-    ap.add_argument("--set", dest="set_name", default="sample", choices=("sample", "anchor"))
+    ap.add_argument("--set", dest="set_name", default="sample", choices=("sample", "anchor", "full"))
+    ap.add_argument("--producer", default=PILOT_PRODUCER,
+                    help="the generating model's folder, e.g. WB_Qwen (sample: the pilot's GPT only)")
     ap.add_argument("--limit", type=int, default=0, help="first N answers / SOPs; writes smoke/")
     ap.add_argument("--reps", type=int, default=jc.N_REPS)
     ap.add_argument("--sleep", type=float, default=0.5)
@@ -86,15 +115,16 @@ def main():
     smoke = args.limit > 0
 
     if args.task == "qa":
-        units, producer, gen_config = qa_units(args.set_name, smoke, args.limit)
+        units, producer, gen_config = qa_units(args.set_name, smoke, args.limit, args.producer)
     else:
-        units, producer, gen_config = sop_units(args.set_name, smoke, args.limit)
+        units, producer, gen_config = sop_units(args.set_name, smoke, args.limit, args.producer)
 
     load_dotenv(wb.ENV_PATH)
-    out_dir = os.path.join(JUDGE_DIR, "smoke" if smoke else "results", args.judge, args.task)
+    parts = jc.set_parts(args.set_name)
+    out_dir = os.path.join(JUDGE_DIR, "smoke" if smoke else "results", *parts, args.judge, args.task)
     jc.MARKER_PREFIX = f"{producer}_"       # the anchor and sample stages share this folder
     jc.clear_stale_halt_markers(out_dir)
-    path = jc.out_path(JUDGE_DIR, smoke, args.judge, args.task, f"{producer}.jsonl")
+    path = jc.out_path(JUDGE_DIR, smoke, *parts, args.judge, args.task, f"{producer}.jsonl")
     jc.lock_output(path)
     config = dict(jc.judge_config(args.judge), n_reps=args.reps, task=args.task,
                   set=args.set_name, scorer=wb.SCORER_VERSION, responses=producer,

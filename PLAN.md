@@ -161,8 +161,8 @@ redone.
 | `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | no — its 60 judged rows were dropped 2026-10-05 | all five selected models, full run 2026-10-12; recorded |
 | `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval      | goal specification                         | AddleseeHQ/mpgt-eval          | no — human review                                   | none yet (vendored 2026-08-19)                                 |
 | `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | none yet                                                       |
-| `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | judge pilot only — `gpt-5.6-luna` on a 10% sample, four candidate judges; GPT responses generated 2026-10-19, judged by all candidates (jobs 4482838, 4506836); choice open (`JUDGE_SELECTION.md` §6.4) |
-| `Action_.../Multi-challenge_bench`               | MultiChallenge | coordination                               | ekwinox117/multi-challenge    | **yes** — every item                          | judge pilot only — `gpt-5.6-luna` on a 10% sample, four candidate judges; GPT responses generated 2026-10-19, judged by all four (job 4482838); choice open (`JUDGE_SELECTION.md` §6.4) |
+| `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | judge pilot done 2026-10-19 (jobs 4480407, 4482838, 4506836); judge chosen 2026-10-31: Haiku 5.5. Full-run runners for GPT, Gemini, Qwen, Gemma (Deepseek is text-only, out) written and smoke-tested 2026-10-31, awaiting the user's verification |
+| `Action_.../Multi-challenge_bench`               | MultiChallenge | coordination                               | ekwinox117/multi-challenge    | **yes** — every item                          | judge pilot done 2026-10-19 (jobs 4480406, 4482838); judge chosen 2026-10-31: Haiku 5.5. Full-run runners for all five selected models written and smoke-tested 2026-10-31, awaiting the user's verification |
 | `Interpersonal_.../NegotiationToM`               | NegotiationToM | conflict management                        | HKUST-KnowComp/NegotiationToM | no — EM + micro/macro F1                            | GPT, Gemini, Gemma, Qwen, Deepseek, XAI                        |
 | `Interpersonal_.../EmoBench`                     | EmoBench       | affect management                          | Sahandfer/EmoBench            | no — MCQ accuracy                                   | OpenAI, Gemini, Gemma, Qwen, Deepseek, XAI                     |
 | `Tasks_.../DocVQA`                               | DocVQA         | general task ability                       | docvqa.org (registered download; baselines at mineshmathew/DocVQA) | no — ANLS                                           | OpenAI, Gemini, Qwen, Gemma — the four that take an image       |
@@ -272,12 +272,12 @@ follows, and none holds a benchmark-specific path — so they are adapted to a t
    known scorer gap is documented, not applied (`Awareness_in_LLM/FULL_RUN_NOTES.md`).
    `.claude/references/benchmarks/transition/awarebench.md`.
 3. **Two benchmarks have no runner.** PlanBench and Multi-party Goal Tracking are vendored but have
-   no per-provider harness, no SLURM script, and no results. Wonderbread and MultiChallenge have
-   the judge pilot's runners (2026-10-19): `gpt-5.6-luna` on a 10% sample of each, graded by the
-   four candidate judges and compared by the advisor's rule — cheap if they agree, expensive only
-   if it is clearly better (`LLM_as_judge/JUDGE_SELECTION.md` §6.4). GPT's responses were
-   generated on Quest 2026-10-19 (jobs 4480406, 4480407) and judged by all four the same day (jobs
-   4482838, 4506836). Kimi K2.6 or Haiku 5.5 is the open choice (`LLM_as_judge/PILOT_FINALISTS.md`).
+   no per-provider harness, no SLURM script, and no results. Wonderbread and MultiChallenge ran
+   the judge pilot (2026-10-19): `gpt-5.6-luna` on a 10% sample of each, graded by the four
+   candidate judges (`LLM_as_judge/JUDGE_SELECTION.md` §6.4). The user chose Claude Haiku 5.5 on
+   2026-10-31, and the full run's runners were written the same day: the five selected models
+   generate on every item, then Haiku 5.5 grades each — Deepseek on MultiChallenge only, and
+   Qwen and Gemma within their providers' image caps on Wonderbread (the two benchmark pages).
 4. **Provider coverage is uneven.** DocVQA has two providers where bbh and mmlu have seven; whether
    that gap is closed is a scope decision, not an oversight to fix silently.
 5. **The pre-submit Quest gate covers one benchmark.** `check_quest_sync.py` hardcodes

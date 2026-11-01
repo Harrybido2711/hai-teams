@@ -1,13 +1,16 @@
 # Wonderbread — benchmark card
 
-<!-- size-budget: 7400 -->
+<!-- size-budget: 10500 -->
 <!-- One job: Wonderbread's operating facts. Larger than the default because its data has a fetch
-     path of its own (the 33 GB question) and its judged scope covers two subtasks. -->
+     path of its own, its judged scope covers two subtasks, and since 2026-10-31 it carries the
+     judge pilot and the full run side by side, with the per-model image caps the full run needs. -->
 
-Monitoring progress toward goals. Upstream `HazyResearch/wonderbread`. **LLM-judged.** Our runners
-exist for the **judge pilot** only (2026-10-19): `gpt-5.6-luna` on a 10% sample of the two judged
-subtasks, graded by four candidate judges, plus upstream's human-labelled samples graded by the same
-four. No full run, no recorded result.
+Monitoring progress toward goals. Upstream `HazyResearch/wonderbread`. **LLM-judged.** The **judge
+pilot** (2026-10-19) graded `gpt-5.6-luna` on a 10% sample of the two judged subtasks with four
+candidate judges, plus upstream's human-labelled samples; the user chose **Claude Haiku 5.5** on
+2026-10-31. The **full run** has four selected models — GPT, Gemini, Qwen, Gemma — answer every
+item, and Haiku 5.5 grade each; Deepseek is text-only and does not run here (the user's decision,
+2026-10-31). Scripts written and smoke-tested 2026-10-31, not yet on Quest; no recorded result.
 
 ## Paths
 
@@ -22,16 +25,18 @@ four. No full run, no recorded result.
 Wonderbread_bench/
 ├── wonderbread/              upstream package — helpers.py, the task folders, benchmark/webarena/*.json
 ├── data/                     qa_dataset.csv, df_rankings.csv; experimental_results/ is upstream's
-│   └── demos/                OURS, gitignored: only the sampled demos, from fetch_sample_demos.py
-├── wb_eval_core.py           ours: samples, anchor sets, upstream builders/prompts/scorer imported
-├── fetch_sample_demos.py     byte-range extraction of the sampled demos from Zenodo
+│   └── demos/                OURS, gitignored: the demos a set needs, from fetch_sample_demos.py
+├── wb_eval_core.py           ours: sets, anchors, image policy, the generation loop (run_cli), upstream imported
+├── fetch_sample_demos.py     byte-range extraction from Zenodo; --set sample (default) | full
 ├── sample_uids.json          the pilot sample, drawn once (seed 20261019), committed
-├── WB_GPT_5.6_Luna/          generation: gpt56luna_wb_eval.py --task qa|sop, run_wb.sh
-└── WB_Judges/                wb_judge.py --judge <key> --task qa|sop --set sample|anchor
+├── WB_GPT_5.6_Luna/          gpt56luna_wb_eval.py --task qa|sop, run_wb.sh — one folder per model,
+├── WB_Gemini_Flash3.5lite_OpenRouter/   each the client and parameters only (a judge_core.Generator):
+├── WB_Qwen/ · WB_Gemma_DeepInfra/       gemini35lite_ / qwen_ / gemma_di_wb_eval.py + run_wb.sh
+└── WB_Judges/                wb_judge.py [--judge <key>] --task qa|sop --set sample|anchor|full [--producer WB_<Model>]
 ```
 
-Shared with MultiChallenge in `Action_processes_benchmarks/`: `judge_core.py`, `run_judges.sh`,
-`compare_judges.py`, `test_judge_pilot.py`.
+Shared with MultiChallenge in `Action_processes_benchmarks/`: `judge_core.py`, `run_judges.sh`
+(pilot), `run_judge_full.sh` (full run), `compare_judges.py`, `test_judge_pilot.py`.
 
 ## What the judge actually covers — larger than "QA"
 
@@ -45,14 +50,37 @@ Recorded in `LLM_as_judge/JUDGE_SELECTION.md` §7.3–7.5, and found by reading 
 - **The same 1–5 rubric ships with both polarities**: "1 (best) to 5 (worst)" in one file, "1 (worse)
   to 5 (best)" in another. Which direction a number uses cannot be inferred from the number.
 
-## The data — the 33 GB question, for the pilot
+## The data — 33 GB upstream, 2.7 GB read
 
 `gold_demos.zip` is 33 GB because of the videos. Neither judged subtask reads a video: both read
 each demo's SOP, trace `.json` and screenshots, which Zenodo also ships as
 `gold_demos_sop_and_trace_and_screenshots_only.zip` (5.7 GB). Zenodo serves byte ranges, so
-`fetch_sample_demos.py` reads that zip's central directory and only the sampled members: **31
-demos, 383 files, 291 MB**, CRC-checked. Whether a full run is in scope is still the advisor's open
-question; the pilot does not settle it.
+`fetch_sample_demos.py` reads that zip's central directory and only the members a set needs,
+CRC-checked: the pilot's sample **31 demos, 383 files, 291 MB**; the full set (`--set full`) **255
+demos, 3,522 files, 2.7 GB** — fetched locally 2026-10-31, every needed demo present.
+
+## Images — downscaled for every model, and two per-request caps
+
+Upstream's screenshots are 3456×2234-class PNGs. At that size three of the four providers refuse or
+hang on the larger requests ([provider-gotchas.md](../../provider-gotchas.md) § Image limits).
+**Every model gets every screenshot at a 1188-px long side as JPEG q85** (`wb_eval_core.IMAGE_POLICY`,
+written on every row's config) — the user's decision, 2026-10-31, a declared deviation from
+upstream. Largest full-set request after it: QA 55 images / 7.8 MB, SOP 71 / 9.6 MB.
+
+Two models still have an image-count cap, `Generator.max_images`. A request over it is never sent:
+the unit is written `over_image_limit`, is not judged, and does not fail the run. **That model is
+reported on the units within its cap**, and every row carries `n_images`, so every model can also be
+scored on the same subset for a like-for-like comparison (the user's rule for Qwen, 2026-10-31,
+applied to Gemma the same way):
+
+| Model | Cap | QA over / 120 | SOP over / 486 (td_kf + td_kf_act) |
+|---|---|---|---|
+| Qwen3.5-9B, Together | 10 | 36 | 102 (51 demos × 2) |
+| Gemma 4 31B, DeepInfra | 32 | 5 | 4 (2 demos × 2) |
+| GPT-5.6-Luna, Gemini 3.5 Flash-Lite | none hit | 0 | 0 |
+
+The counts are from the full-set dry run (`--dry-run`, 2026-10-31). The `td` ablation and the 54
+SOP-evidence QA items send no images.
 
 ## Expected counts
 
@@ -60,57 +88,73 @@ QA 120 items, 11 question templates (one of 20, ten of 10), 126 distinct demos �
 gold demos. SOP Generation runs on the 162 rank-1 demos of `df_rankings.csv` (gitlab 46,
 shopping_admin 49, shopping 44, reddit 23) under three ablations: `td`, `td_kf`, `td_kf_act`.
 **Pilot sample:** QA 12 (one per template, two from the 20); SOP 16 demos (5 / 5 / 4 / 2) × 3
-ablations = 48 SOPs. **Anchor sets:** 30 QA answers with human 1–3 scores and 30 SOP pairs with
+ablations = 48 SOPs. **Full run, per model:** 120 QA rows and 486 SOP rows, `over_image_limit`
+included (table above). **Anchor sets:** 30 QA answers with human 1–3 scores and 30 SOP pairs with
 human precision/recall, both upstream's, under `data/experimental_results/*/human_correlation/`.
-Judge calls: QA 4 per answer per replicate; SOP one per line of each SOP in both directions.
+Judge calls: QA 4 per answer per replicate; SOP one per line of each SOP in both directions — the
+pilot averaged ~66 per SOP at 3 replicates, so ~32k per model on the full set.
 
 ## Scoring
 
 QA: four 1–3 scores, **1 = best**; completeness and soundness see the Human Label, clarity and
 compactness do not; an answer under 5 characters is not judged (`skipped`, upstream's "NA"). SOP:
 upstream's `PairwiseComparison` precision / recall / ordering, F1 as `run_sop_generation.py`, fed our
-parsed indices. Every deviation from upstream is declared in the docstring of `wb_eval_core.py`.
+parsed indices — **one unreadable line drops its SOP pair from that replicate**, which is why the
+index parser reads the final `"index"` of a judge answer whose scratchpad broke the JSON. Every
+deviation from upstream is declared in the docstring of `wb_eval_core.py`.
 
 ## Output and logs
 
-Ours: `WB_GPT_5.6_Luna/results/{qa,sop}/gpt-5.6-luna.jsonl`; `WB_Judges/results/<judge>/{qa,sop}/
-{gpt-5.6-luna,anchor-human-sample}.jsonl` — named after the model that wrote them. The SOP text
-files upstream's `run()` writes go to `results/sop_upstream_files/`, gitignored (the `.jsonl` holds
-the same text). `--limit` writes `smoke/`, gitignored. SLURM logs `log_<jobid>.txt`.
+Ours, named after the model that wrote them:
+
+- pilot: `WB_GPT_5.6_Luna/results/{qa,sop}/gpt-5.6-luna.jsonl`;
+  `WB_Judges/results/<judge>/{qa,sop}/{gpt-5.6-luna,anchor-human-sample}.jsonl`;
+- full run: `WB_<Model>/results/full/{qa,sop}/<model id, "/" → "-">.jsonl`;
+  `WB_Judges/results/full/haiku-5.5/{qa,sop}/<same name>.jsonl`. A judge refuses rows of another set.
+
+The SOP text files upstream's `run()` writes go to `results/[full/]sop_upstream_files/`, gitignored
+(the `.jsonl` holds the same text). `--limit` writes `smoke/`, gitignored. SLURM logs
+`log_<jobid>.txt`; the full-run judge array `../judge_full_log_<job>_<task>.txt`.
 
 ## Run order
 
-1. `python fetch_sample_demos.py` (local and on the Quest login node; `--check` verifies).
-2. Local smoke — done 2026-10-19: `--dry-run` for every request; generation `--limit 6` (24 calls,
-   all ok, largest request 35.6 MB / 30 screenshots); after the review fixes, every judge on every
-   set — 0 failed, 0 parse failures; Sonnet 5.5 refused every SOP call and exited 1, as designed.
-   Demos fetched on Quest too, md5-identical to the local 383 files.
-3. **The user verifies the scripts.** Phase 3 does not start before. The reviewed code is on Quest
-   (transferred with MultiChallenge's, `md5sum -c` exit 0); no job submitted.
-4. `sbatch run_wb.sh` in `WB_GPT_5.6_Luna/` (QA then SOP, one job) — **done 2026-10-19, job
-   4480407, 8m13s:** QA 12/12 and SOP 48/48 `ok`, all `finish=stop`, 0 empty, 0 retries; pulled
-   down md5-identical. The SOPs come to 1,054 lines over both directions — 3,162 judge calls per
-   judge at 3 replicates. Then `../run_judges.sh` — submitted 2026-10-19, job 4482838: QA (sample
-   and anchor) done for all four judges; SOP anchor done for both Haikus. **Halted on OpenRouter
-   billing** 13:34–13:56 — SOP sample unfinished for all three (21, 551, 0 of 3,162), Kimi's anchor
-   1,237/1,767; Sonnet 5.5 refused SOP and exited 1. Resumed after a top-up
-   as `sbatch --array=0-2 ../run_judges.sh`, job 4506836 (15:18–19:06): every set complete;
-   pulled down md5-identical.
-5. `python ../compare_judges.py` on the pulled rows — done; `JUDGE_SELECTION.md` §6.4.
+**Pilot** (2026-10-19, done). Demos fetched locally and on Quest (md5-identical, 383 files); local
+smoke; the user verified; code on Quest with MultiChallenge's (`md5sum -c` exit 0). `run_wb.sh` in
+`WB_GPT_5.6_Luna/`, job 4480407, 8m13s: QA 12/12 and SOP 48/48 `ok`, 0 empty, 0 retries; the SOPs
+came to 1,054 lines, 3,162 judge calls per judge. `../run_judges.sh`, job 4482838, **halted on
+OpenRouter billing** 13:34–13:56 with every SOP sample unfinished; resumed as
+`sbatch --array=0-2 ../run_judges.sh`, job 4506836 (15:18–19:06), every set complete, pulled down
+md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
+
+**Full run:**
+
+1. Local smoke — done 2026-10-31. `--set full` dry run for every request. Each model QA
+   `--limit 7` and SOP `--limit 1` (40/40 `ok`; Qwen and Gemma at a 10-image request). The largest
+   requests probed on Gemini (55 and 71 images, ok) and Gemma (32, ok; 55 and 71 refused — its cap).
+   Haiku 5.5 on each model's smoke rows: 96/96 QA `ok`; SOP 7 parse failures in 720, all
+   recovered by the parser fix (the same gold line, quoted text copied unescaped).
+2. **The user verifies the scripts.** Phase 3 does not start before.
+3. On the Quest login node: `python fetch_sample_demos.py --set full`, then `--set full --check`.
+   Transfer with MultiChallenge and the shared files as one set; md5 both sides. Quest's `.env`
+   here needs `TOGETHER_API_KEY` and `DEEPINFRA_API_KEY` beside the two it has.
+4. `sbatch run_wb.sh` in each `WB_<Model>/` (QA then SOP, one job, `normal` 12 h); then
+   `run_judge_full.sh` from `Action_processes_benchmarks/` after the generation jobs.
 
 ## What its README says about showing reasoning
 
 Nothing. Upstream's prompts ask for a 2–3-sentence answer (QA) or an SOP; nothing is added. Hidden
-reasoning is capped at the settled `reasoning_effort="low"`.
+reasoning is capped per model — each runner's docstring.
 
 ## Its own traps
 
-- **`wonderbread/helpers.py` imports four client libraries at module level** that the pilot never
-  calls; Quest lacks anthropic and pydrive2. `wb_eval_core.upstream()` substitutes stand-ins that
-  raise if touched — do not "fix" it by installing them.
+- **`wonderbread/helpers.py` imports four client libraries at module level** that we never call;
+  Quest lacks anthropic and pydrive2. `wb_eval_core.upstream()` substitutes stand-ins that raise if
+  touched — do not "fix" it by installing them.
 - **Sonnet 5.5 refuses SOP Generation's line-matching prompt** — content filter, HTTP 200,
   `content` null. `LLM_as_judge/JUDGE_SELECTION.md` §6.1.
 - **One anchor pair's text is not the one upstream scored.** `anchor20`'s stored generated SOP has
   10 steps; upstream recorded 11 lines for it. Its human labels are kept; the test pins the gap.
 - **`preprocess_sop` strips everything up to the first "."** of each line (`JUDGE_SELECTION.md` §7.4, B4) — kept for
   comparability, so a step like "Click Save. Then confirm." is matched as "Then confirm."
+- **The pilot's rows ran at full-size screenshots; the full run's do not.** GPT's `--set sample`
+  refuses to resume the pilot files rather than mix the two.

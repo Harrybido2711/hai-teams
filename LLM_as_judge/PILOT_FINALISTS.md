@@ -16,8 +16,8 @@ open. Numbers come from `Action_processes_benchmarks/judge_comparison/report.md`
 ## 1. Bottom line
 
 - **Proposed: Claude Haiku 5.5 as the working judge, with Kimi K2.6 as the named fallback.** Both are
-  provisional until the bake-off on human-labelled data (JUDGE_SELECTION §6.2). The choice is the
-  user's and the advisor's.
+  provisional until the bake-off on human-labelled data (JUDGE_SELECTION §6.2). **The user chose
+  Haiku 5.5 on 2026-10-31** (JUDGE_SELECTION §8).
 - **Why.** On the scores GPT receives, Haiku 5.5 and Kimi agree. Kimi agrees more closely with the
   humans, consistently, but n = 30 cannot confirm the margin. Haiku 5.5 costs about a sixth as much,
   is more stable than Kimi, and runs on its maker's own endpoint. The advisor's rule says: if the
