@@ -1,9 +1,10 @@
-<!-- size-budget: 11500 -->
+<!-- size-budget: 12000 -->
 <!-- One row per provider plus its failure modes; it grows when a provider is added or
      replaced, which is the file working, not the file sprawling. Raised to 9000 on 2026-10-19 for
      the OpenRouter section the judge-pilot probes produced, and to 11000 on 2026-10-31 for the
      per-provider image limits Wonderbread's full run hit; to 11500 on 2026-11-01 for the
-     mid-answer interruption a stored `ok` row hid. -->
+     mid-answer interruption a stored `ok` row hid, and to 12000 on 2026-11-04 for Qwen's
+     second route. -->
 # Provider gotchas
 
 Every one of these has cost a debugging cycle, and most fail with **HTTP 200 and no exception** —
@@ -16,7 +17,7 @@ the run looks complete while scoring 0.
 | Gemini `gemini-3.5-flash-lite` **via OpenRouter** | `openai.OpenAI`, `base_url="https://openrouter.ai/api/v1"` | the project's Gemini since 2026-08-23. `extra_body={"reasoning":{"effort":"minimal"}}`; a seed alone does not reproduce, the backend decides (below) |
 | ~~Gemini `gemini-2.5-flash`~~ *(superseded, still in the bbh/NegToM/DocVQA runners)* | `google.genai.Client` | no `system` role in messages; `thinking_budget=0`; do **not** set `max_output_tokens` (256 truncated JSON mid-object) |
 | xAI `grok-3-mini` | `xai_sdk.Client` | no message dicts — `chat.create(model=...)`, `chat.append(xai_system(...))`, `chat.append(xai_user(...))`, `chat.sample()`. It does accept `max_tokens`/`temperature` | **RETIRED — xAI serves neither this id nor any alias of it, checked 2026-09-08 against `api.x.ai/v1/language-models`; the stored results stay valid but a new run fails. What it serves now: grok-4.3/4.5/4.6/4.20/build-0.1, all text+image.**
-| Qwen `Qwen/Qwen3.5-9B` | `together.Together`, **`timeout=180`** | hybrid model: pass `reasoning={"enabled": False}`; retain `max_tokens=8192` for visible JSON headroom |
+| Qwen `Qwen/Qwen3.5-9B` | `together.Together`, **`timeout=180`** — every run on disk; **new runs use DeepInfra from 2026-11-04** ([model-calls.md](model-calls.md) § Qwen) | hybrid model: pass `reasoning={"enabled": False}` on **either** route; retain `max_tokens=8192` for visible JSON headroom |
 | Gemma `google/gemma-4-31B-it` | `together.Together`, **`timeout=300`** | intermittent empty string at HTTP 200 — retry up to 5× |
 
 ## OpenRouter: dropped settings, and refusals that look like empties
@@ -58,6 +59,7 @@ up to 55 per QA request and 71 per SOP request). Only OpenAI's `gpt-5.6-luna` to
 |---|---|---|
 | OpenRouter, `google/gemini-3.5-flash-lite` | 30 MB of image content | HTTP 413 "Downloaded image content cannot exceed 30MB" |
 | Together, `Qwen/Qwen3.5-9B` | **10 images**, and 255 MiB *decoded* (six full-size screenshots came to 556 MiB) | HTTP 400 `invalid_multimodal_request` "supports at most 10 image inputs"; HTTP 413 `multimodal_payload_too_large` |
+| DeepInfra, `Qwen/Qwen3.5-9B` | **30 images** (probed 2026-11-04 with tiny PNGs; real screenshots not yet) | HTTP 400 "Too many images in request: 32 > 30" |
 | DeepInfra, `google/gemma-4-31B-it` | **32 images** | HTTP 400 "Too many images in request: 55 > 32" — but 30 *full-size* images got **no error**: they hung past a 300 s watchdog three times (22 took 19 s) |
 
 All of these are deterministic, but the retry loop treats them as transient and spends five

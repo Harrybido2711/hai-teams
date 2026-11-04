@@ -83,7 +83,7 @@ the warning under the table.
 | Gemini | `gemini-3.5-flash-lite` | OpenRouter (`google/gemini-3.5-flash-lite`) | `references/model-calls.md` |
 | OpenAI | `gpt-5.6-luna` | OpenAI platform, `reasoning_effort="low"` | `references/model-calls.md` |
 | XAI — **not in `Final_result.xlsx` since 2026-10-05, provisional** | `grok-3-mini` | xAI | `references/model-parameters.md` |
-| Qwen | `Qwen/Qwen3.5-9B` | Together, `reasoning={"enabled": False}` | `references/model-parameters.md` |
+| Qwen | `Qwen/Qwen3.5-9B` | Together for every run on disk; **DeepInfra for new runs from 2026-11-04**, both with `reasoning={"enabled": False}` | `references/model-calls.md` |
 | Gemma | `google/gemma-4-31B-it` | DeepInfra | `references/model-calls.md` |
 | Deepseek | `deepseek-reasoner` | DeepSeek | `references/model-calls.md` |
 

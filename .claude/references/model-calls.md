@@ -1,7 +1,8 @@
-<!-- size-budget: 8500 -->
+<!-- size-budget: 10500 -->
 <!-- One invocation recipe per model in use; it grows when a model is adopted, which is the
      file working. Recipes are measured, so they carry the probe that established them. Raised to
-     8500 on 2026-10-31 for the pointer to the per-route image caps. -->
+     8500 on 2026-10-31 for the pointer to the per-route image caps, and to 10500 on 2026-11-04 for
+     Qwen's second route. -->
 # How to call each model
 
 Which client, `base_url`, key, model id, and the non-optional parameters. Limits a runner must set:
@@ -28,7 +29,7 @@ four, and they send real image bytes (`types.Part.from_bytes(mime_type="image/pn
 | XAI | `grok-3-mini` | **unestablished** — xAI no longer serves this model, so no live source can be asked |
 
 **Taking an image is not taking many.** Per-request image caps differ by route — 10 on Together's
-Qwen, 32 on DeepInfra's Gemma — [provider-gotchas.md](provider-gotchas.md) § Image limits.
+Qwen, 30 on DeepInfra's Qwen, 32 on DeepInfra's Gemma — [provider-gotchas.md](provider-gotchas.md) § Image limits.
 
 **Do not read the two blanks in DocVQA as work waiting to be done.** Neither model can accept the
 input. Changing that means changing the model, which is a decision about the six, not a rerun —
@@ -56,6 +57,35 @@ returned stopped on its own. · `NEG_Gemma/gemma_neg_eval.py:21-53`
 
 Across both: **SIGALRM at 120 s is the primary guard**, below the 300 s socket timeout — Together
 ignores `timeout=` outright. And **tolerate four `<think>` spellings**, not one.
+
+## `Qwen/Qwen3.5-9B` — DeepInfra **from 2026-11-04**; every Qwen result on disk was Together
+
+The user's decision, 2026-11-04: new Qwen runs use the DeepInfra key. Nothing already run is redone —
+MultiChallenge, Wonderbread, AwareBench, EmoBench, NegotiationToM, DocVQA and MMLU stay Together, and
+bbh's 2026-08 repair of its empty rows was already DeepInfra (`BBH_Qwen/qwen_bbh_eval.py --provider`).
+**A row's route is part of its config**; a table that mixes the two says which cell is which.
+
+```python
+OpenAI(api_key=os.getenv("DEEPINFRA_API_KEY"),
+       base_url="https://api.deepinfra.com/v1/openai", timeout=300)
+# .chat.completions.create(model="Qwen/Qwen3.5-9B", messages=…, temperature=0, seed=…, max_tokens=…,
+#                          extra_body={"reasoning": {"enabled": False}})
+```
+
+Probed 2026-11-04, `temperature=0`, the project's existing key:
+
+- **Thinking is ON by default, as on Together — keep `reasoning={"enabled": False}`.** Without it a
+  one-line question ran 51 s, hit `max_tokens=1024` (`finish=length`) with an empty `content` and 2,382
+  characters of `reasoning_content`; with it, 1.0 s, 12 tokens, `finish=stop`. Leaving it off the call
+  is the trap that wrote Together's empty rows. Unlike Gemma's route, this knob is not optional.
+- **`seed=42` is accepted** (Together's runner never set one) and two calls came back identical.
+- **At most 30 images a request** — 32 and 33 refused HTTP 400 "Too many images in request: 32 > 30";
+  1, 10 and 11 were accepted. Tested with 8×8 PNGs: Wonderbread's real screenshots (bytes, decode,
+  the 300 s hang Gemma showed at 30 full-size images) are **not** probed, so measure those before a
+  runner relies on 30.
+- **Price $0.10/M in, $0.15/M out** (the call's `usage.estimated_cost` and the dashboard agree;
+  Together's was $0.17/$0.25). `PRICES` in `criteria_report.py` has only the `@together` label —
+  add `qwen3.5-9b@deepinfra` with the first priced run.
 
 ## `gemini-3.5-flash-lite` — two routes, both probed; **OpenRouter is the settled one**
 
