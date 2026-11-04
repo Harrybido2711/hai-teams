@@ -47,6 +47,7 @@ def doc_files():
     out = [os.path.join(REPO, f) for f in ("CLAUDE.md", "AGENTS.md", "PLAN.md", "README.md")]
     out += glob.glob(os.path.join(REPO, ".claude", "**", "*.md"), recursive=True)
     out += glob.glob(os.path.join(REPO, "LLM_as_judge", "*.md"))
+    out += glob.glob(os.path.join(REPO, "Router_research", "*.md"))
     skip = (os.sep + "memory" + os.sep, os.sep + "patches" + os.sep)
     return sorted(p for p in out if os.path.exists(p) and not any(s in p for s in skip))
 

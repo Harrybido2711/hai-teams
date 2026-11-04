@@ -33,6 +33,9 @@ hai-teams/
 │   ├── papers/                          the judge literature's PDFs (2025–2026)
 │   ├── JUDGE_SELECTION.md               the main judge document: decision, pilot and the judge record
 │   └── PILOT_FINALISTS.md               the pilot's three finalists compared, and the case for Haiku 5.5
+├── Router_research/                     which router to put in front of the five models — research, not a benchmark
+│   ├── ROUTER_RESEARCH.md               the recommendation, the offline headroom measured on our rows, and how to test a router
+│   └── router_headroom.py · intent_check.py · headroom.json   the offline analysis behind its numbers
 ├── .claude/                             INDEX, tools, agents, references, workflows (see below)
 ├── CLAUDE.md                            planner rules only; `.claude/INDEX.md` is the entry point
 ├── AGENTS.md                            situation → fastest first move, for Claude and Codex alike
@@ -216,6 +219,7 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 | `.claude/references/benchmarks/<group>/<name>.md`    | per-benchmark operating detail: Quest path, layout, verified counts, output naming, run order, its own traps — one page for each of the ten, plus a group page for what a process folder's benchmarks share. The rest of `.claude/` is benchmark-agnostic on purpose |
 | `LLM_as_judge/JUDGE_SELECTION.md`                    | the main judge document: which benchmarks need a judge, the literature, the chosen judges and the pilot comparing them, and the filled judge record (§7) — the PDFs are in `LLM_as_judge/papers/` |
 | `LLM_as_judge/PILOT_FINALISTS.md`                    | the judge pilot's finalists — Kimi K2.6, Haiku 4.5, Haiku 5.5 — side by side, and the case for and against Haiku 5.5 |
+| `Router_research/ROUTER_RESEARCH.md`                 | choosing or building a router over the five selected models: the three recommended, what routing can gain on our rows (measured offline), and how to tell a router works |
 | `Interpersonal_.../NegotiationToM/negotiation.md`    | current NegotiationToM results, dataset traps, reasoning-token cost, silent-failure catalogue                                                 |
 | `Interpersonal_.../NegotiationToM/ISSUES.md`         | problems already hit, what was rejected, what shipped                                                                                         |
 | `Interpersonal_.../NegotiationToM/DATA_NOTES.md`     | cutoff tiling, the`"None"` sentinel, expected row counts                                                                                    |
