@@ -44,8 +44,8 @@ page, and carrying one across benchmarks is the mistake that split is there to p
   ran the **judge pilot** (2026-10-19), and the user chose **Claude Haiku 5.5** as the judge on
   2026-10-31 (`LLM_as_judge/JUDGE_SELECTION.md` §8). Their **full-run** runners — the five selected
   models generate, Haiku 5.5 grades (Deepseek on MultiChallenge only) — were verified by the user
-  2026-10-31 and run on Quest: MultiChallenge generated 2026-11-01, Wonderbread running, nothing
-  judged yet. State per model: each benchmark page's § Run order.
+  2026-10-31 and run on Quest: both generated 2026-11-01; Haiku 5.5 judging GPT since 2026-11-04,
+  the rest waiting. State per model: each benchmark page's § Run order.
 - **Two runners comply with the model-parameter rule; every other one does not.** bbh's
   `BBH_GPT_5.6_Luna` and `BBH_Gemini_Flash3.5lite_OpenRouter` (added 2026-08-29) negotiate their
   surface and set a cap; their caps are chosen rather than measured, but both have since run all
