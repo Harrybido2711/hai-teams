@@ -105,9 +105,12 @@ arrays log to `../judge_log_<job>_<task>.txt` (pilot) and `../judge_full_log_<jo
    call, pending**; until then their judges wait. Gemini's `error` on `6765fc5e…` was a 19 KB
    fragment recorded `ok` ([provider-gotchas.md](../../provider-gotchas.md) § OpenRouter): Google's
    `RECITATION` filter, deterministic, so the regenerated row is `failed` and `mc_judge` refuses the
-   set. **How that item counts for Gemini is the user's call, pending.**
-5. Then `sbatch --array=<i> [--dependency=afterok:…] run_judge_full.sh` from
-   `Action_processes_benchmarks/`, per model, after both benchmarks' generation jobs.
+   set. **How that item counts for Gemini is the user's call, pending.** All five files and their
+   logs pulled down md5-identical 2026-11-04.
+5. `sbatch --array=<i> run_judge_full.sh` from `Action_processes_benchmarks/`, per model, once both
+   benchmarks' generation is usable. GPT (index 0): job 7177159, 2026-11-04 — needs no decision and
+   fits the balance. The rest wait on OpenRouter (≈ $20 for all five, wonderbread.md § Expected
+   counts; $8.11 left at submit) and, for Gemini, Qwen and Deepseek, the decisions above.
 
 ## What its README says about showing reasoning
 

@@ -93,8 +93,11 @@ shopping_admin 49, shopping 44, reddit 23) under three ablations: `td`, `td_kf`,
 ablations = 48 SOPs. **Full run, per model:** 120 QA rows and 486 SOP rows, `over_image_limit`
 included (table above). **Anchor sets:** 30 QA answers with human 1–3 scores and 30 SOP pairs with
 human precision/recall, both upstream's, under `data/experimental_results/*/human_correlation/`.
-Judge calls: QA 4 per answer per replicate; SOP one per line of each SOP in both directions — the
-pilot averaged ~66 per SOP at 3 replicates, so ~32k per model on the full set.
+Judge calls: QA 4 per answer per replicate; SOP one per line of each SOP in both directions, × 3
+replicates. Counted from the full run's SOPs with `sop_lines` (2026-11-04, the method reproduces the
+pilot's 3,162): SOP GPT 33,840 · Gemma 27,786 · Gemini 26,241 · Qwen 22,338; QA 1,440 · 1,380 ·
+1,440 · 1,008. At Haiku 5.5's pilot rates (~$0.00018 and ~2.1 s per SOP call, plus the 0.5 s sleep)
+that is ≈ $4–6.5 and 17–25 h per model, one stream each.
 
 ## Scoring
 
@@ -141,10 +144,13 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    "all 255 needed demos present". Transferred with MultiChallenge and the shared files as one
    set, 95 files md5-identical both sides (2026-10-31); `TOGETHER_API_KEY` and `DEEPINFRA_API_KEY`
    added to Quest's `.env` here.
-4. `sbatch run_wb.sh` in each `WB_<Model>/` (QA then SOP, one job, `normal` 12 h) — submitted
-   2026-11-01 on the interrupted-finish guard (multichallenge.md § Run order): GPT 6648994, Gemini
-   6648995, Qwen 6648996, Gemma 6648997. Then `run_judge_full.sh` from `Action_processes_benchmarks/`
-   after the generation jobs.
+4. `sbatch run_wb.sh` in each `WB_<Model>/` (QA then SOP, one job, `normal` 12 h) — done
+   2026-11-01 on the interrupted-finish guard (multichallenge.md § Run order). GPT 6648994 (1h10m),
+   Gemini 6648995 (42m), Gemma 6648997 (1h56m): exit 0, every unit `ok` or over its cap exactly as
+   the dry run counted. Qwen 6648996 (48m): exit 1, SOP exit 2 on 3 rows at `length` — the user's
+   call, with MultiChallenge's. 0 empty rows. Pulled down md5-identical 2026-11-04.
+5. `sbatch --array=<i> run_judge_full.sh` from `Action_processes_benchmarks/`: GPT (index 0) job
+   7177159, 2026-11-04. The rest wait on the OpenRouter balance and the user's decisions.
 
 ## What its README says about showing reasoning
 
