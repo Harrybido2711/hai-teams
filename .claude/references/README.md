@@ -37,6 +37,7 @@ and proceeding anyway is the failure this table exists to prevent.
 | **comparing models on anything but accuracy** — cost, tokens, latency, stability, robustness, reliability; which per-row fields a runner must persist; choosing which models to keep | [evaluation-criteria.md](evaluation-criteria.md) | 5 KB |
 | **you need a recorded score or criterion value**, or changed a workbook or a criteria file — query it rather than parsing Excel, then rebuild | [results-db.md](results-db.md) | 3 KB |
 | **running or analysing stability / robustness** — repeats, perturbations, `--tag` / `--subsample` / `--perturb`, `run_criteria.sh`, how flips are counted | [criteria-runs.md](criteria-runs.md) | 6 KB |
+| **the 10% sample rerun** — `sample10`, estimating a benchmark's cost from a sample, or picking up one of its work packages | [sample10-plan.md](sample10-plan.md) | 15 KB |
 | a reasoning bill that looks too high, or how a cap backfires | [reasoning-cost.md](reasoning-cost.md) | 3 KB |
 | the model offers **no thinking or output parameter**, so the cap goes in the prompt | [prompt-ceiling.md](prompt-ceiling.md) | 1 KB |
 | writing or changing an eval script — retries, checkpoints, resume, scoring, a shared core | [script-skeleton.md](script-skeleton.md) | 5 KB |
