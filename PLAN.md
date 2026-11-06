@@ -35,7 +35,9 @@ hai-teams/
 │   └── PILOT_FINALISTS.md               the pilot's three finalists compared, and the case for Haiku 5.5
 ├── Router_research/                     which router to put in front of the five models — research, not a benchmark
 │   ├── ROUTER_RESEARCH.md               the recommendation, the offline headroom measured on our rows, and how to test a router
-│   └── router_headroom.py · intent_check.py · headroom.json   the offline analysis behind its numbers
+│   ├── router_reported.py · reported.json   the document's scores: rows weighted to reproduce `Results/results.db`, with bootstrap intervals
+│   ├── router_headroom.py · intent_check.py · headroom.json   every row weighted alike, and the task-type classifier
+│   └── build_pdf.py                     renders the .md to `Results/ROUTER_RESEARCH.pdf`
 ├── .claude/                             INDEX, tools, agents, references, workflows (see below)
 ├── CLAUDE.md                            planner rules only; `.claude/INDEX.md` is the entry point
 ├── AGENTS.md                            situation → fastest first move, for Claude and Codex alike
@@ -45,7 +47,7 @@ hai-teams/
 │   ├── Tempo_results.xlsx               every model ever run — the wide record, where results land first
 │   ├── Final_result.xlsx                the selected models (five since 2026-10-05) — what gets reported
 │   ├── results.db                       every score and the six criteria for querying — built, never hand-edited (`.claude/references/results-db.md`)
-│   └── ROUTER_RESEARCH.pdf              Router_research/ROUTER_RESEARCH.md as of 2026-11-06, unchanged and not yet corrected
+│   └── ROUTER_RESEARCH.pdf              Router_research/ROUTER_RESEARCH.md rendered by its `build_pdf.py`; rebuild after editing the .md
 ├── Criteria_results.xlsx                accuracy beside the six criteria, per benchmark × selected model — built, never hand-edited (`.claude/references/criteria-runs.md`)
 └── quest_pull.log                       gitignored
 ```
