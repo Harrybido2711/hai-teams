@@ -52,7 +52,8 @@ doubts a green result.
 confirmed the run is good. Both halves are required. Rows on disk are not a result until the user
 says so, the same gate as phase 3 and for the same reason: whether the numbers can be believed is
 theirs to judge. Do not write a model into the workbooks on the strength of a job that merely
-exited.
+exited. **The confirmation is the only gate: once it is given, record the run straight away, without
+asking a second time** (the user's rule, 2026-11-06).
 
 **Then, in one edit, the model reaches three places:**
 
@@ -60,8 +61,8 @@ exited.
    the headline score, and the unusable-row counts (`no_marker`, `empty`) that say whether the score
    can be read at face value. Per-task cells stay in the workbooks; the page holds the summary and
    the caveats.
-2. **`Tempo_results.xlsx`** — always. Every model that has run gets a column here, selected or not.
-3. **`Final_result.xlsx`** — only if the model is selected — `PLAN.md` names which. A model that is not selected never
+2. **`Results/Tempo_results.xlsx`** — always. Every model that has run gets a column here, selected or not.
+3. **`Results/Final_result.xlsx`** — only if the model is selected — `PLAN.md` names which. A model that is not selected never
    earns a cell here, and a blank stays blank until the *selected* model runs.
 
 **Rebuild the cells from the result files on disk, never from another summary.** Aggregate the

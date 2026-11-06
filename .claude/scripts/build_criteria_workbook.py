@@ -30,8 +30,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 NEG = os.path.join(ROOT, "Interpersonal_processes_benchmarks", "NegotiationToM")
 EMO = os.path.join(ROOT, "Interpersonal_processes_benchmarks", "EmoBench")
 AWARE_CSV = os.path.join(ROOT, "Transition_processes_benchmarks", "Awareness_in_LLM", "criteria_awareness.csv")
-FINAL = os.path.join(ROOT, "Final_result.xlsx")
-TEMPO = os.path.join(ROOT, "Tempo_results.xlsx")
+FINAL = os.path.join(ROOT, "Results", "Final_result.xlsx")
+TEMPO = os.path.join(ROOT, "Results", "Tempo_results.xlsx")
 
 SLOTS = ["Gemini", "OpenAI", "Qwen", "Gemma", "Deepseek"]
 LEGACY = "legacy runner: no per-row usage fields, so no estimate"

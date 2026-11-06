@@ -4,7 +4,7 @@ What this repo holds: a benchmark suite for evaluating LLMs against the **team-p
 (transition / action / interpersonal processes, plus general task ability). Each benchmark is a
 vendored copy of an upstream project plus this project's own runners; the runs execute on the
 **Quest** SLURM cluster against six commercial providers, and the reported numbers converge in
-`Final_result.xlsx` — with `Tempo_results.xlsx` holding the wider record of every model ever run (see
+`Results/Final_result.xlsx` — with `Results/Tempo_results.xlsx` holding the wider record of every model ever run (see
 [Two workbooks](#two-workbooks-tempo_results-is-wide-final_result-is-what-is-reported)).
 
 Last verified against the working tree on 2026-08-19, after the reorganisation in `269bbfe`.
@@ -41,8 +41,9 @@ hai-teams/
 ├── AGENTS.md                            situation → fastest first move, for Claude and Codex alike
 ├── PLAN.md                              this file
 ├── README.md
-├── Tempo_results.xlsx                   every model ever run — the wide record
-├── Final_result.xlsx                    the selected models (five since 2026-10-05) — what gets reported
+├── Results/                             the two result workbooks — the user made this folder, 2026-11-06
+│   ├── Tempo_results.xlsx               every model ever run — the wide record, where results land first
+│   └── Final_result.xlsx                the selected models (five since 2026-10-05) — what gets reported
 ├── Criteria_results.xlsx                accuracy beside the six criteria, per benchmark × selected model — built, never hand-edited (`.claude/references/criteria-runs.md`)
 └── quest_pull.log                       gitignored
 ```
@@ -53,9 +54,16 @@ drives this project, so a benchmark's folder states which team process it is evi
 ## Two workbooks: Tempo_results is wide, Final_result is what is reported
 
 Stated by the user, 2026-08-29; the user renamed the files on 2026-10-05 (`Results.xlsx` →
-`Tempo_results.xlsx`, `Final_Result.xlsx` → `Final_result.xlsx`). Both workbooks carry the same six
-sheets — `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo`, `NegotiationToM`, `Awareness` — and differ only
-in which model columns they are allowed to hold.
+`Tempo_results.xlsx`, `Final_Result.xlsx` → `Final_result.xlsx`) and moved both into `Results/` on
+2026-11-06. Both workbooks carry the same six sheets — `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo`,
+`NegotiationToM`, `Awareness` — and differ only in which model columns they are allowed to hold.
+
+**What each one is for — the user's statement, 2026-11-06.** `Tempo_results.xlsx` is the preparation
+for the result. `Final_result.xlsx` records only the selected models: each item's result and the
+overall accuracy. Other criteria join when the retest happens, not before. Where they go then is not
+established: `Criteria_results.xlsx` holds the six criteria today (`references/criteria-runs.md`).
+**Once the user confirms a finished run, it goes into the workbooks directly** —
+`references/sync-and-consistency.md` § Layer 4.
 
 - **`Tempo_results.xlsx` records every model that has appeared in an experiment**, including ones that
   were tried and then dropped, and the two that were *replaced*. Its `Emo` sheet is the visible
