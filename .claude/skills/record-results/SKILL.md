@@ -20,12 +20,13 @@ Layer 4 · run by `executor` or the planner · used by `finish-run`.
 4. **`Provenance` row in the same edit:** source file, scorer tag, coverage, unusable-row counts.
 5. **The benchmark page's results table, same edit.** Then `check_docs.py --impact <benchmark>`:
    coverage sentences in `PLAN.md` and `INDEX.md` that this run just made false.
-6. **`sync-pass`.**
+6. **Rebuild the database:** `python3 .claude/scripts/build_results_db.py`, then `--check`.
+7. **`sync-pass`.**
 
 ## Done when
 
-Page, both workbooks and `Provenance` agree, the cell diff shows only intended changes, and the
-commit is on both remotes.
+Page, both workbooks and `Provenance` agree, the cell diff shows only intended changes, `results.db`
+is rebuilt, and the commit is on both remotes.
 
 ## Never
 

@@ -4,6 +4,7 @@
 interpersonal processes, plus general task ability), running on Northwestern's **Quest** SLURM
 cluster against six commercial providers, with every reported number taken from `Results/Final_result.xlsx`
 — the selected models — while `Results/Tempo_results.xlsx` keeps a column for every model ever run (`PLAN.md`).
+To read a number, query `Results/results.db` ([references/results-db.md](references/results-db.md)).
 
 Read this file, then only what the task needs. Nothing else is loaded up front — that is the design,
 not an omission. **Hit a problem, or a task done before?** [`../AGENTS.md`](../AGENTS.md) maps the

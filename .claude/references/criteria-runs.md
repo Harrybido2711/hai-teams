@@ -67,7 +67,8 @@ pandas and scikit-learn. AwareBench has its own, `Awareness_in_LLM/aware_criteri
 excess flips pair each question's orderings ≥1 against ordering 0, clustered by question.
 
 `build_criteria_workbook.py` rebuilds `Criteria_results.xlsx` from those files, every blank with its
-reason; never edit it by hand. It never writes `Tempo_results.xlsx` or `Final_result.xlsx`.
+reason; never edit it by hand. It never writes `Tempo_results.xlsx` or `Final_result.xlsx`. The same
+numbers are queryable in `Results/results.db`; rebuild it too ([results-db.md](results-db.md)).
 
 **A model that honours the seed has a noise floor of 0.** `gemini-3.5-flash-lite` on NegotiationToM
 returned byte-identical responses in all five repeats (separate calls), so every flip under a

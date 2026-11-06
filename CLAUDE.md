@@ -146,7 +146,7 @@ one started.
 | 1 · local ↔ local | **always**                                                                                                                | the consistency check passes, or every finding is declared with a reason          |
 | 2 · local ↔ Quest | **only when the task changed something that also exists on Quest** — a runner, a shared core, an sbatch script, a config | Quest matches local, proven with`md5sum`, core and runners transferred together |
 | 3 · local ↔ git   | **always**                                                                                                                | committed and pushed to`origin` and `backup`                                  |
-| 4 · results ↔ record | **only when a model has finished a whole benchmark *and* the user has confirmed the run** | that model's numbers are in its benchmark page and in both workbooks, rebuilt from the result files on disk |
+| 4 · results ↔ record | **only when a model has finished a whole benchmark *and* the user has confirmed the run** | that model's numbers are in its benchmark page and in both workbooks, rebuilt from the result files on disk, and `Results/results.db` is rebuilt from them |
 
 A change that touches only local files — documentation, notes, a script that never leaves the laptop
 — skips layer 2 and nothing else.
