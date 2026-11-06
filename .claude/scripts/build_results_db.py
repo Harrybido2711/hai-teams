@@ -40,7 +40,8 @@ BENCHMARKS = [
 ]
 SECTIONS = {"Emotional Understanding (EU)": "eu_overall", "Emotional Application (EA)": "ea_overall"}
 GROUP_ROWS = {"eu_overall", "ea_overall", "mission"}
-OVERALL_ROWS = {"All_EM", "ANLS", "Overall accuracy"}
+OVERALL_ROWS = {"ANLS", "Overall accuracy"}
+STANDALONE_ROWS = {"All_EM"}  # a separate metric, not NegotiationToM's total: never averaged across benchmarks
 CRITERIA = {1: "Cost", 2: "Token efficiency", 3: "Latency", 4: "Stability", 5: "Robustness", 6: "Reliability"}
 
 SCHEMA = """
@@ -53,7 +54,7 @@ CREATE TABLE runs (
     model_config TEXT, selected INTEGER NOT NULL, PRIMARY KEY (benchmark, model_column));
 CREATE TABLE scores (
     benchmark TEXT NOT NULL, subbench TEXT NOT NULL, parent TEXT,
-    level TEXT NOT NULL CHECK (level IN ('sub', 'group', 'overall')),
+    level TEXT NOT NULL CHECK (level IN ('sub', 'group', 'overall', 'standalone')),
     model_column TEXT NOT NULL, value REAL, position INTEGER NOT NULL,
     PRIMARY KEY (benchmark, subbench, model_column),
     FOREIGN KEY (benchmark, model_column) REFERENCES runs);
@@ -110,6 +111,8 @@ def classify(label, section):
     """(level, parent) of one workbook row. Labels are matched exactly, never by substring."""
     if label == "Overall Score" or label.startswith("Overall Score (macro-avg") or label in OVERALL_ROWS:
         return "overall", None
+    if label in STANDALONE_ROWS:
+        return "standalone", None
     if label in GROUP_ROWS:
         return "group", None
     if label.startswith("mission_"):

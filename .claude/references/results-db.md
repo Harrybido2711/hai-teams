@@ -24,7 +24,7 @@ python3 .claude/scripts/build_results_db.py --check  # exit 1 if a source change
 |---|---|---|
 | `benchmarks` | benchmark, all ten | process group and workbook sheet; a NULL sheet has no reported result yet |
 | `runs` | benchmark × workbook column | `model_config`; `selected` = 1 if the column is in `Final_result` |
-| `scores` | benchmark × sub-benchmark × column | `value`; `level` is `sub`, `group` or `overall`; `parent` names the group; `position` is the sheet order |
+| `scores` | benchmark × sub-benchmark × column | `value`; `level` is `sub`, `group`, `overall` or `standalone`; `parent` names the group; `position` is the sheet order |
 | `criteria` | benchmark × selected model × task × metric | `value` or `value_text`, `reason` when blank, `source` file |
 | `criteria_inputs` | benchmark × model with criteria | source file, rows, scorer, price source |
 | `provenance` | row of a workbook's `Provenance` sheet | where a column's numbers came from, and its caveats |
@@ -41,6 +41,7 @@ number, and why).
   pooled item-weighted, McNemar on the summed counts. Other `task` values are one task's own numbers,
   on the repeat subsample where the metric comes from repeats.
 - **`level` matters when averaging.** A `group` or `overall` row is already an aggregate of `sub` rows.
+- **`standalone` is never averaged.** `All_EM` is the one such row, so NegotiationToM has no `overall` row ([why](benchmarks/interpersonal/negotiationtom.md)).
 - **`value_text`** holds a non-numeric answer such as `not reported`.
 
 ```sql

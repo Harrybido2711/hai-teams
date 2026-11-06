@@ -90,6 +90,7 @@ follow, Codex included. A workflow named beside one runs that whole stretch in C
 | The CSV shows more ids than rows | newlines inside responses. Count from the `.jsonl` | `shared-context.md` |
 | A count of zero, or larger than the row count | a guessed field name, or shards and merged file counted together. Print one real row's keys first | Habits below |
 | A score you cannot read | check the denominator: `{task}_scored_rows`, and the exclusions on the page | the benchmark's page |
+| NegotiationToM's `All_EM` looks wrong at 0.0x, or you need that benchmark's overall score | it is correct, and it is a separate metric, not a total: the benchmark has no overall score, so never average `All_EM` across benchmarks | `benchmarks/interpersonal/negotiationtom.md` |
 
 ### Recording and finishing
 

@@ -14,13 +14,13 @@ Which model leads depends on how scores are averaged, so every table below state
 | --- | --- | --- | --- | --- | --- |
 | Every row alike, 5 benchmarks (Nov 4 version) | **0.811** | 0.803 | 0.794 | 0.793 | 0.756 |
 | Reported weighting, 5 benchmarks (this document) | 0.781 | **0.793** | 0.771 | 0.772 | 0.721 |
-| Workbook overall columns, 5 benchmarks | 0.698 | **0.704** | 0.686 | 0.682 | 0.636 |
-| Workbook overall columns plus DocVQA ANLS, 6 benchmarks | **0.736** | text-only | 0.728 | 0.712 | 0.690 |
+| Workbook scores with All_EM, 5 benchmarks | 0.698 | **0.704** | 0.686 | 0.682 | 0.636 |
+| Workbook scores with All_EM and DocVQA ANLS, 6 benchmarks | **0.736** | text-only | 0.728 | 0.712 | 0.690 |
 
 Three things drive the differences:
 
 - **AwareBench.** Counting every row gives Gemma 0.931, inflated by rows outside the reported score: 900 of the 4,015 are a multiple-choice perspective task scored 1.000 by all five. The reported score leaves those out and gives second-order perspective a fifth of the weight, where Gemma scores 0.129 (it declined 124 of 170) and Deepseek 0.806. Gemma's reported score is 0.790.
-- **NegotiationToM.** The workbook's overall column is All_EM, which needs desire, belief and intention all right on the same turn, so it sits near 0.05–0.09 and pulls down every model. It cannot be scored per row with a router choosing per question, so this document uses the mean of desire, belief and exact-match intention instead. Desire and belief equal the database; **exact-match intention is the one term here that is not a database number.**
+- **NegotiationToM.** It has no overall score. All_EM, the last row of its sheet, is a separate metric: a dialogue counts only if all its desire, belief and intention rows are right, usually six, so it sits at 0.04–0.09. It is not a total, so **the two All_EM rows above are invalid as summaries and are shown only to reconcile with averages that used it.** This document uses the mean of desire, belief and exact-match intention instead, because a router can score those per query. Desire and belief equal the database; **exact-match intention is the one term here that is not a database number.**
 - **DocVQA.** Deepseek cannot read images, so it has no six-benchmark mean.
 
 The weighted rows reproduce each reported overall score, and NegotiationToM's desire and belief; `router_reported.py` stops if they do not.

@@ -1,6 +1,6 @@
 # NegotiationToM — benchmark card
 
-<!-- size-budget: 7500 -->
+<!-- size-budget: 7900 -->
 <!-- One job — the operational card. Over the 5 KB nudge since 2026-10-05, when the results table
      arrived: eight runs in two generations plus a Gemma caveat that changes how one cell is read. -->
 
@@ -62,8 +62,11 @@ A full run is **14,138 rows**: desire 4,760 + belief 4,760 + intention **4,618**
   utterance, not two.
 - `scored_rows` is **4,604** for desire and belief: 156 rows per task are excluded because their gold
   is the sentinel `"None"`, which marks an unannotated sample rather than "wants nothing".
-- `All_EM` in the low single-digit percents is **expected**, not a defect: it ANDs all 5–6 rows of a
-  dialogue, and intention gets no partial credit there even though its F1 does.
+- `All_EM` at 0.04–0.09 is **expected**, not a defect: it ANDs all of a dialogue's rows (usually 6), and
+  intention gets no partial credit there even though its F1 does.
+- **`All_EM` is a separate metric, not this benchmark's total.** It is not the mean of the four columns
+  above it, and NegotiationToM has no overall score. Report it beside them; never use it as the
+  benchmark's result when averaging or ranking models across benchmarks. The user's rule, 2026-11-06.
 
 These are NegotiationToM's counts only. The workflows read each benchmark's counts from its own
 page; never pass these for another one.
