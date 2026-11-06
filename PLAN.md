@@ -41,9 +41,10 @@ hai-teams/
 ├── AGENTS.md                            situation → fastest first move, for Claude and Codex alike
 ├── PLAN.md                              this file
 ├── README.md
-├── Results/                             the two result workbooks — the user made this folder, 2026-11-06
+├── Results/                             the two result workbooks and a report PDF — the user made this folder, 2026-11-06
 │   ├── Tempo_results.xlsx               every model ever run — the wide record, where results land first
-│   └── Final_result.xlsx                the selected models (five since 2026-10-05) — what gets reported
+│   ├── Final_result.xlsx                the selected models (five since 2026-10-05) — what gets reported
+│   └── ROUTER_RESEARCH.pdf              Router_research/ROUTER_RESEARCH.md as of 2026-11-06, unchanged and not yet corrected
 ├── Criteria_results.xlsx                accuracy beside the six criteria, per benchmark × selected model — built, never hand-edited (`.claude/references/criteria-runs.md`)
 └── quest_pull.log                       gitignored
 ```
