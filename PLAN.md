@@ -108,10 +108,9 @@ superseded but are still what `NEG_Gemini` and `NEG_GPT` call, so their numbers 
 `NegotiationToM` sheet's `Gemini` and `OpenAI` columns of `Final_result.xlsx`. Nothing is lost —
 those runs keep their columns in `Tempo_results.xlsx`. `Emo`, `Big Bench Hard`, `MMLU` and `DocVQA`
 are all filled for both slots. On `NegotiationToM`, `OpenAI` is filled since 2026-10-12
-(`NEG_GPT_5.6_Luna`, job 9644711) and **`Gemini` is the one gap a run closes**:
-`NEG_Gemini_Flash3.5lite_OpenRouter` passed its pilot that day and its full run, job 9682468, was
-submitted. `Awareness` is filled for all five since 2026-10-12, and DocVQA's Deepseek blank is
-a modality ceiling.
+(`NEG_GPT_5.6_Luna`, job 9644711) and `Gemini` since 2026-11-06
+(`NEG_Gemini_Flash3.5lite_OpenRouter`, job 9682468). `Awareness` is filled for all five since
+2026-10-12, and DocVQA's Deepseek blank is a modality ceiling, the only blank left.
 
 The `Emo` result for `gpt-5.6-luna` is at the settled `low` since 2026-10-12 (`results/`, EU 0.690,
 EA 0.685, overall 0.6875). The earlier default-`medium` arm (0.71) keeps its own column,

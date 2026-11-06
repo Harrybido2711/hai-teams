@@ -70,10 +70,7 @@ FOLDERS = {
     },
 }
 # finished and audited, not yet confirmed by the user: (benchmark, slot) -> the run's own overall file
-UNCONFIRMED = {
-    ("NegotiationToM", "Gemini"): os.path.join(
-        NEG, "NEG_Gemini_Flash3.5lite_OpenRouter", "results", "gemini-3_5-flash-lite_negotiation_overall.csv"),
-}
+UNCONFIRMED = {}
 NOT_APPLICABLE = {("DocVQA", "Deepseek"): "not applicable: an image benchmark and a text-only model"}
 
 USAGE = [  # (group, header, criteria key, number format)
