@@ -43,7 +43,7 @@ models, Haiku 5.5). Pinned checks: `../test_judge_pilot.py`.
 273 items — `INFERENCE_MEMORY` 113, `INSTRUCTION_RETENTION` 69, `SELF_COHERENCE` 50,
 `RELIABLE_VERSION_EDITING` 41; `PASS_CRITERIA` is `"YES"` on all 273. `mc_eval_core.load_items`
 refuses any other count. **Pilot sample: 27** — 11 / 7 / 5 / 4. Judge rows: 27 × 3 replicates = 81
-per judge. **Full run:** 273 generation rows per model; 273 × 3 = 819 judge rows per model.
+per judge. **Full run:** 273 generation rows per model; 273 × 3 = 819 judge rows per model (Gemini: 272 × 3 = 816 — one item is not scored, see below).
 
 ## Scoring
 
@@ -105,7 +105,7 @@ arrays log to `../judge_log_<job>_<task>.txt` (pilot) and `../judge_full_log_<jo
    call, pending**; until then their judges wait. Gemini's `error` on `6765fc5e…` was a 19 KB
    fragment recorded `ok` ([provider-gotchas.md](../../provider-gotchas.md) § OpenRouter): Google's
    `RECITATION` filter, deterministic, so the regenerated row is `failed` and `mc_judge` refuses the
-   set. **How that item counts for Gemini is the user's call, pending.** All five files and their
+   set. **The user decided on 2026-11-07 that it is not scored** ("这个题目所有的benchmark都不记录评分"): `mc_judge.py --skip-qid 6765fc5e0af93a24e8fbe4ee` leaves it out, accepts only an item that has no usable response, and writes `skipped_qids` into the rows' config. Gemini is judged on 272 items; whether the other four are scored on the same 272 for the comparison is settled when the numbers are recorded. All five files and their
    logs pulled down md5-identical 2026-11-04.
 5. `sbatch --array=<i> run_judge_full.sh` from `Action_processes_benchmarks/`, per model, once both
    benchmarks' generation is usable. GPT (index 0): job 7177159, 2026-11-04 — needs no decision and

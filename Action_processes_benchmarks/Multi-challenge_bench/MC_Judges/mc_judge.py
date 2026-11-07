@@ -46,6 +46,11 @@ def main():
     ap.add_argument("--limit", type=int, default=0, help="first N items; writes smoke/")
     ap.add_argument("--reps", type=int, default=jc.N_REPS)
     ap.add_argument("--sleep", type=float, default=0.5)
+    ap.add_argument("--skip-qid", action="append", default=[], metavar="QID",
+                    help="leave this item out of the judged set — it must be one with no usable response "
+                         "(the user's decision, 2026-11-07: Gemini's one RECITATION item, "
+                         "6765fc5e0af93a24e8fbe4ee, is not scored). Repeatable. Any OTHER item without a "
+                         "usable response still refuses the run. The skip is written into the rows' config.")
     args = ap.parse_args()
     smoke = args.limit > 0
 
@@ -71,6 +76,16 @@ def main():
         items = items[:args.limit]
     not_ready = [it["QUESTION_ID"] for it in items
                  if not jc.usable(responses.get(it["QUESTION_ID"], {}))]
+    skip = sorted(set(args.skip_qid))
+    if skip:
+        usable_named = [q for q in skip if q not in not_ready]
+        if usable_named:
+            raise SystemExit(f"--skip-qid {usable_named}: these items DO have a usable response (or are "
+                             f"not in the set) — only an item with none may be skipped.")
+        not_ready = [q for q in not_ready if q not in skip]
+        items = [it for it in items if it["QUESTION_ID"] not in skip]
+        print(f"NOTE: --skip-qid: {len(skip)} item(s) with no usable response are NOT judged or "
+              f"scored: {skip}", flush=True)
     if not_ready:
         raise SystemExit(f"{responses_path}: {len(not_ready)} of {len(items)} items have no usable "
                          f"response (e.g. {not_ready[:3]}). Finish the generation run first — a "
@@ -90,6 +105,8 @@ def main():
     config = dict(jc.judge_config(args.judge), n_reps=args.reps, prompt="upstream JUDGE_PROMPT",
                   response_format="JudgeResponse json_schema", scorer=mc.SCORER_VERSION,
                   responses=producer, responses_config=gen_config)
+    if skip:  # only when used, so the other producers' rows are unchanged; a run without it will not mix
+        config["skipped_qids"] = skip
     done = jc.load_done(path, config)
     jc.check_judged(done, judged_sha, path)
     client = jc.judge_client()
@@ -120,7 +137,7 @@ def main():
             time.sleep(args.sleep)
 
     rows = [r for r in jc.read_rows(path) if r["qid"] in {it["QUESTION_ID"] for it in items}]
-    print(f"\nDONE {len(rows)}/{total} rows  status={jc.status_counts(rows)}  calls={jc.STATS}")
+    print(f"\nDONE {len(rows)}/{total} rows (skipped items: {len(skip)})  status={jc.status_counts(rows)}  calls={jc.STATS}")
     for rep in range(args.reps):
         s = mc.score({r["qid"]: r["passed"] for r in rows if r["rep"] == rep})
         print(f"  rep{rep}: macro={s['overall_macro']}  micro={s['overall_micro']}  "
