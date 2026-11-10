@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --account=p32983
 #SBATCH --partition=normal
-#SBATCH --array=0-4
+#SBATCH --array=0-5
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=2GB
@@ -28,7 +28,12 @@ cd "$SLURM_SUBMIT_DIR" || exit 1
 PY=/projects/p32983/pythonenvs/hai-teams/bin/python
 
 # The judge is the runners' default, judge_core.JUDGE — named in one place, not here.
-MODELS=(GPT_5.6_Luna Gemini_Flash3.5lite_OpenRouter Qwen Gemma_DeepInfra Deepseek)
+# Index 5, Qwen_DeepInfra, is Wonderbread only: Qwen's Wonderbread rerun on DeepInfra (the user's
+# decision, 2026-11-09). Its MultiChallenge stays MC_Qwen (Together), so there is no MC_ folder and
+# that stage is skipped. Before submitting it, archive the Together run's Qwen-Qwen3.5-9B.jsonl in
+# WB_Judges/results/full/<judge>/{qa,sop}/ — both producers write that name, and load_done refuses
+# to resume across their configs.
+MODELS=(GPT_5.6_Luna Gemini_Flash3.5lite_OpenRouter Qwen Gemma_DeepInfra Deepseek Qwen_DeepInfra)
 M=${MODELS[$SLURM_ARRAY_TASK_ID]}
 echo "model=$M args=$*"
 fail=0
@@ -36,7 +41,11 @@ run() {
     echo "=== $(date +%H:%M:%S) $*"
     "$PY" "$@" || { echo "=== FAILED (exit $?): $*"; fail=1; }
 }
-run Multi-challenge_bench/MC_Judges/mc_judge.py --set full --producer "MC_$M" "$@"
+if [ -d "Multi-challenge_bench/MC_$M" ]; then
+    run Multi-challenge_bench/MC_Judges/mc_judge.py --set full --producer "MC_$M" "$@"
+else
+    echo "=== no Multi-challenge_bench/MC_$M — Wonderbread only"
+fi
 if [ -d "Wonderbread_bench/WB_$M" ]; then
     run Wonderbread_bench/WB_Judges/wb_judge.py --task qa --set full --producer "WB_$M" "$@"
     run Wonderbread_bench/WB_Judges/wb_judge.py --task sop --set full --producer "WB_$M" "$@"

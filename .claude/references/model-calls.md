@@ -1,8 +1,8 @@
-<!-- size-budget: 10500 -->
+<!-- size-budget: 11000 -->
 <!-- One invocation recipe per model in use; it grows when a model is adopted, which is the
      file working. Recipes are measured, so they carry the probe that established them. Raised to
-     8500 on 2026-10-31 for the pointer to the per-route image caps, and to 10500 on 2026-11-04 for
-     Qwen's second route. -->
+     8500 on 2026-10-31 for the pointer to the per-route image caps, to 10500 on 2026-11-04 for
+     Qwen's second route, and to 11000 on 2026-11-09 for that route's real-screenshot probe. -->
 # How to call each model
 
 Which client, `base_url`, key, model id, and the non-optional parameters. Limits a runner must set:
@@ -80,9 +80,15 @@ Probed 2026-11-04, `temperature=0`, the project's existing key:
   is the trap that wrote Together's empty rows. Unlike Gemma's route, this knob is not optional.
 - **`seed=42` is accepted** (Together's runner never set one) and two calls came back identical.
 - **At most 30 images a request** — 32 and 33 refused HTTP 400 "Too many images in request: 32 > 30";
-  1, 10 and 11 were accepted. Tested with 8×8 PNGs: Wonderbread's real screenshots (bytes, decode,
-  the 300 s hang Gemma showed at 30 full-size images) are **not** probed, so measure those before a
-  runner relies on 30.
+  1, 10 and 11 were accepted (8×8 PNGs, 2026-11-04). **Real Wonderbread screenshots at the shared
+  downscale pass at 24, 28 and 30** (2026-11-09: 4.4 MB, answered, no hang), so 30 is usable.
+- **The switch goes in `extra_body` on the OpenAI SDK.** `reasoning=` as a top-level kwarg raises
+  `TypeError: Completions.create() got an unexpected keyword argument 'reasoning'` — Together's SDK
+  takes it there, the OpenAI one does not. A `judge_core.Generator` puts it in
+  `fixed={"extra_body": {...}}`.
+- **Slow, and not because of the request.** 2026-11-09: 17–46 s for a 12-token reply, 25–111 s per
+  Wonderbread unit with or without images — while Gemma on the same key and route answered in 0.3 s.
+  The 11-04 probe saw 1.0 s, so this varies by day; time a call before sizing a job's wall clock.
 - **Price $0.10/M in, $0.15/M out** (the call's `usage.estimated_cost` and the dashboard agree;
   Together's was $0.17/$0.25). `PRICES` in `criteria_report.py` has only the `@together` label —
   add `qwen3.5-9b@deepinfra` with the first priced run.

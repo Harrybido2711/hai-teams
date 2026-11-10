@@ -1,6 +1,6 @@
 # Wonderbread — benchmark card
 
-<!-- size-budget: 11500 -->
+<!-- size-budget: 12500 -->
 <!-- One job: Wonderbread's operating facts. Larger than the default because its data has a fetch
      path of its own, its judged scope covers two subtasks, and since 2026-10-31 it carries the
      judge pilot and the full run side by side, with the per-model image caps the full run needs
@@ -34,6 +34,7 @@ Wonderbread_bench/
 ├── WB_GPT_5.6_Luna/          gpt56luna_wb_eval.py --task qa|sop, run_wb.sh — one folder per model,
 ├── WB_Gemini_Flash3.5lite_OpenRouter/   each the client and parameters only (a judge_core.Generator):
 ├── WB_Qwen/ · WB_Gemma_DeepInfra/       gemini35lite_ / qwen_ / gemma_di_wb_eval.py + run_wb.sh
+├── WB_Qwen_DeepInfra/        qwen_di_wb_eval.py — Qwen's rerun at a 30-image cap (2026-11-09); WB_Qwen/ is the Together record
 └── WB_Judges/                wb_judge.py [--judge <key>] --task qa|sop --set sample|anchor|full [--producer WB_<Model>]
 ```
 
@@ -77,7 +78,8 @@ applied to Gemma the same way):
 
 | Model | Cap | QA over / 120 | SOP over / 486 (td_kf + td_kf_act) |
 |---|---|---|---|
-| Qwen3.5-9B, Together | 10 | 36 | 102 (51 demos × 2) |
+| Qwen3.5-9B, Together — the run judged so far | 10 | 36 | 102 (51 demos × 2) |
+| Qwen3.5-9B, DeepInfra — the rerun, `WB_Qwen_DeepInfra/` | 30 | 7 | 4 (2 demos × 2) |
 | Gemma 4 31B, DeepInfra | 32 | 5 | 4 (2 demos × 2) |
 | GPT-5.6-Luna, Gemini 3.5 Flash-Lite | none hit | 0 | 0 |
 
@@ -151,6 +153,12 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    call, with MultiChallenge's. 0 empty rows. Pulled down md5-identical 2026-11-04.
 5. `sbatch --array=<i> run_judge_full.sh` from `Action_processes_benchmarks/`: GPT (index 0) job
    7177159, 2026-11-04. The rest wait on the OpenRouter balance and the user's decisions.
+6. **Qwen's rerun on DeepInfra** (the user's decision, 2026-11-09, to lift the cap from 10 to 30 and
+   keep every unit on one route): `sbatch run_wb.sh` in `WB_Qwen_DeepInfra/` (24 h — the route ran
+   at 17–111 s a call, so ~9–10 h), then **archive** `WB_Judges/results/full/haiku-5.5/{qa,sop}/Qwen-Qwen3.5-9B.jsonl`
+   (both Qwen producers write that name; `load_done` refuses to resume across them), then
+   `sbatch --array=5 run_judge_full.sh` — Wonderbread only, ~18 h. Estimate ≈ $5.3, almost all of
+   it the judge. `Results/build_judge_summary.py` still reads `WB_Qwen` until the rerun is judged.
 
 ## What its README says about showing reasoning
 

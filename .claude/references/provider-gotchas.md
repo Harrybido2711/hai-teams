@@ -59,7 +59,7 @@ up to 55 per QA request and 71 per SOP request). Only OpenAI's `gpt-5.6-luna` to
 |---|---|---|
 | OpenRouter, `google/gemini-3.5-flash-lite` | 30 MB of image content | HTTP 413 "Downloaded image content cannot exceed 30MB" |
 | Together, `Qwen/Qwen3.5-9B` | **10 images**, and 255 MiB *decoded* (six full-size screenshots came to 556 MiB) | HTTP 400 `invalid_multimodal_request` "supports at most 10 image inputs"; HTTP 413 `multimodal_payload_too_large` |
-| DeepInfra, `Qwen/Qwen3.5-9B` | **30 images** (probed 2026-11-04 with tiny PNGs; real screenshots not yet) | HTTP 400 "Too many images in request: 32 > 30" |
+| DeepInfra, `Qwen/Qwen3.5-9B` | **30 images** (tiny PNGs 2026-11-04; downscaled real screenshots up to 30 answered 2026-11-09, no hang) | HTTP 400 "Too many images in request: 32 > 30" |
 | DeepInfra, `google/gemma-4-31B-it` | **32 images** | HTTP 400 "Too many images in request: 55 > 32" — but 30 *full-size* images got **no error**: they hung past a 300 s watchdog three times (22 took 19 s) |
 
 All of these are deterministic, but the retry loop treats them as transient and spends five
