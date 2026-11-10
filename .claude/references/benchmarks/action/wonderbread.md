@@ -1,6 +1,6 @@
 # Wonderbread — benchmark card
 
-<!-- size-budget: 12500 -->
+<!-- size-budget: 13000 -->
 <!-- One job: Wonderbread's operating facts. Larger than the default because its data has a fetch
      path of its own, its judged scope covers two subtasks, and since 2026-10-31 it carries the
      judge pilot and the full run side by side, with the per-model image caps the full run needs
@@ -155,10 +155,14 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    7177159, 2026-11-04. The rest wait on the OpenRouter balance and the user's decisions.
 6. **Qwen's rerun on DeepInfra** (the user's decision, 2026-11-09, to lift the cap from 10 to 30 and
    keep every unit on one route): `sbatch run_wb.sh` in `WB_Qwen_DeepInfra/` (24 h — the route ran
-   at 17–111 s a call, so ~9–10 h), then **archive** `WB_Judges/results/full/haiku-5.5/{qa,sop}/Qwen-Qwen3.5-9B.jsonl`
-   (both Qwen producers write that name; `load_done` refuses to resume across them), then
-   `sbatch --array=5 run_judge_full.sh` — Wonderbread only, ~18 h. Estimate ≈ $5.3, almost all of
-   it the judge. `Results/build_judge_summary.py` still reads `WB_Qwen` until the rerun is judged.
+   at 17–111 s a call, so ~9–10 h; per-call ceiling 600 s), then **archive** the Together judge
+   files — `WB_Judges/{results,smoke}/full/haiku-5.5/{qa,sop}/Qwen-Qwen3.5-9B.jsonl`, moved to
+   `WB_Judges/archive/qwen_together_2026-11/` with their paths kept, never renamed in place — since
+   both Qwen producers write that name and `load_done` refuses to resume across them. Then
+   `sbatch --array=5 run_judge_full.sh` — Wonderbread only, ~18 h; **index 2 no longer judges
+   Wonderbread**, so the two can never write one file. Estimate ≈ $5.3, almost all of it the judge.
+   Then point `Results/build_judge_summary.py`'s Qwen row at `WB_Qwen_DeepInfra`; until then it
+   reads `WB_Qwen`, and its `same_producer` check refuses judge rows from the other folder.
 
 ## What its README says about showing reasoning
 

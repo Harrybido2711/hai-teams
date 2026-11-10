@@ -44,7 +44,7 @@ def client():
     # max_retries=0: the SDK's own hidden retries would make n_attempts and latency_s lie; the core
     # makes up to 5 attempts itself (script-skeleton.md §4).
     return jc.openai_class()(base_url="https://api.deepinfra.com/v1/openai",
-                             api_key=jc.api_key("DEEPINFRA_API_KEY"), timeout=300, max_retries=0)
+                             api_key=jc.api_key("DEEPINFRA_API_KEY"), timeout=600, max_retries=0)
 
 
 GEN = jc.Generator(
@@ -54,7 +54,10 @@ GEN = jc.Generator(
     # In `extra_body`, not a top-level kwarg: the OpenAI SDK refuses an unknown `reasoning=` with a
     # TypeError (Together's SDK accepted it, which is how ../WB_Qwen/ passes it).
     fixed={"extra_body": {"reasoning": {"enabled": False}}},
-    call_timeout=300, max_images=30, extra_config={"route": "deepinfra"})
+    # 600 s, not the siblings' 300: on 2026-11-09 this route took 102 s for a 335-token SOP, and
+    # Together's Qwen SOPs reach 1,240 tokens at p99 — at that rate near or past 300 s, which would
+    # spend 5 x 300 s and write `failed`. A real hang still ends here; it just costs more wall clock.
+    call_timeout=600, max_images=30, extra_config={"route": "deepinfra"})
 
 if __name__ == "__main__":
     wb.run_cli(GEN, MODEL_DIR, "Wonderbread — Qwen3.5-9B generation (DeepInfra, reasoning off)")

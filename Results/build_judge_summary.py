@@ -72,8 +72,28 @@ def gen_counts(folder, task=None):
     return collections.Counter(r["status"] for r in rows(os.path.join(d, files[0])).values())
 
 
-def wb_qa(stem):
+def same_producer(judge_rows, wb_folder, task):
+    """Refuse to score judge rows against a generation folder that did not produce them.
+
+    The judge file is named by the model id alone, and two folders share one: WB_Qwen (Together, cap
+    10) and WB_Qwen_DeepInfra (cap 30) both write Qwen-Qwen3.5-9B.jsonl. Paired with the wrong folder,
+    SOP precision/recall still compute — over another run's lines — so this is checked, not assumed:
+    every judge row's `responses_config` must equal the generation rows' own config."""
+    d = os.path.join(AP, "Wonderbread_bench", wb_folder, "results", "full", task)
+    files = [f for f in os.listdir(d) if f.endswith(".jsonl")] if os.path.isdir(d) else []
+    if len(files) != 1:
+        raise SystemExit(f"{d}: expected one generation file, found {files or 'none'}")
+    gen = {json.dumps(r["config"], sort_keys=True) for r in rows(os.path.join(d, files[0])).values()}
+    judged = {json.dumps(r["config"]["responses_config"], sort_keys=True) for r in judge_rows}
+    if len(gen) != 1 or judged != gen:
+        raise SystemExit(f"Wonderbread {task}: the judge rows were not produced from {wb_folder}'s "
+                         f"generations (configs differ) — point MODELS at the folder that made them.")
+
+
+def wb_qa(stem, wb_folder):
     path = os.path.join(AP, "Wonderbread_bench", "WB_Judges", "results", "full", JUDGE, "qa", stem + ".jsonl")
+    if os.path.exists(path):
+        same_producer(rows(path).values(), wb_folder, "qa")
     rs = [r for r in rows(path).values() if r["status"] == "ok" and r["score"] is not None]
     if not rs:
         return None
@@ -86,6 +106,8 @@ def wb_sop(stem, wb_folder):
     import wb_judge
     units, _, _ = wb_judge.sop_units("full", False, 0, wb_folder)
     path = os.path.join(AP, "Wonderbread_bench", "WB_Judges", "results", "full", JUDGE, "sop", stem + ".jsonl")
+    if os.path.exists(path):
+        same_producer(rows(path).values(), wb_folder, "sop")
     rs = [r for r in rows(path).values() if r["status"] == "ok"]
     if not rs:
         return None
@@ -122,7 +144,7 @@ def main():
     T = []
     for label, mcf, wbf, stem in MODELS:
         T.append({"model": label, "mc": mc_score(stem, exclude), "gen_mc": gen_counts(mcf),
-                  "qa": wb_qa(stem) if wbf else None, "sop": wb_sop(stem, wbf) if wbf else None,
+                  "qa": wb_qa(stem, wbf) if wbf else None, "sop": wb_sop(stem, wbf) if wbf else None,
                   "gen_qa": gen_counts(wbf, "qa") if wbf else None,
                   "gen_sop": gen_counts(wbf, "sop") if wbf else None})
 
@@ -162,12 +184,18 @@ def main():
                  + (" N/A | N/A | N/A | N/A |" if na else
                     f" {n_of(r['gen_qa'])} / 120 | {n_of(r['gen_sop'])} / 486 | "
                     f"{n_of(r['gen_qa'], 'over_image_limit')} | {n_of(r['gen_sop'], 'over_image_limit')} |"))
+    cov = {r["model"]: r for r in T}
+
+    def scored(label):
+        r = cov[label]
+        return f"{n_of(r['gen_qa'])} of 120 QA and {n_of(r['gen_sop'])} of 486 SOP units"
+
     L += ["", "## Two things to read the table with", "",
           "**(a) A model's own limit means some questions could not be run.** Wonderbread questions carry "
           "many screenshots, and Qwen3.5-9B and gemma-4-31B-it accept only a fixed number of images per "
           "request. A question that needs more is never sent — it is recorded as `over_image_limit`, "
-          "not judged and not counted as a wrong answer. Qwen is scored on 84 of 120 QA and 384 of 486 "
-          "SOP units; Gemma on 115 of 120 and 482 of 486. The other models are scored on every unit, so "
+          f"not judged and not counted as a wrong answer. Qwen is scored on {scored('Qwen3.5-9B')}; "
+          f"Gemma on {scored('gemma-4-31B-it')}. The other models are scored on every unit, so "
           "a Wonderbread number is not computed over the same questions for every model; the Coverage "
           "table shows the denominator.", "",
           "**(b) A text-only model cannot complete every benchmark.** deepseek-flash takes no images, so "
