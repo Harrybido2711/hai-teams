@@ -158,7 +158,9 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    at 17–111 s a call, so ~9–10 h; per-call ceiling 600 s), then **archive** the Together judge
    files — `WB_Judges/{results,smoke}/full/haiku-5.5/{qa,sop}/Qwen-Qwen3.5-9B.jsonl`, moved to
    `WB_Judges/archive/qwen_together_2026-11/` with their paths kept, never renamed in place — since
-   both Qwen producers write that name and `load_done` refuses to resume across them. Then
+   both Qwen producers write that name and `load_done` refuses to resume across them. **Move them
+   on Quest and mirror the move locally**: judge files flow down, so a Quest-only move lets the next
+   pull overwrite the local Together file, and a local-only move leaves index 5 refusing. Then
    `sbatch --array=5 run_judge_full.sh` — Wonderbread only, ~18 h; **index 2 no longer judges
    Wonderbread**, so the two can never write one file. Estimate ≈ $5.3, almost all of it the judge.
    Then point `Results/build_judge_summary.py`'s Qwen row at `WB_Qwen_DeepInfra`; until then it

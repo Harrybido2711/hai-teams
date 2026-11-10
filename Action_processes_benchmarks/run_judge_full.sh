@@ -15,11 +15,12 @@
 # one OpenRouter key, at the five-stream ceiling in quest-cluster.md. Each task runs
 #   MultiChallenge (273 items) · Wonderbread QA (120 answers) · Wonderbread SOP (486 SOPs)
 # for its model; Deepseek has no Wonderbread folder (text-only, the user's decision) and runs
-# MultiChallenge alone, and Qwen's two benchmarks are split across indices 2 and 5 (below). SOP is ~90% of the calls (one per line, both directions, x N_REPS).
+# MultiChallenge alone, and Qwen's two benchmarks are split across indices 2 and 5 (below).
+# SOP is ~90% of the calls (one per line, both directions, x N_REPS).
 # A stage that fails or halts does not stop the next; the task exits non-zero if any stage did.
 # Submit from this folder, after the generation jobs: `--dependency=afterok:<job>:<job>...`. One
-# afterok over all nine jobs means one model's exit 1 or 2 holds back all five; if one fails, submit
-# the others with `--array=<indices>` and that model's index once it is fixed.
+# afterok over several generation jobs means one model's exit 1 or 2 holds back every index; if one
+# fails, submit the others with `--array=<indices>` and that model's index once it is fixed.
 # Arguments reach every stage: `<submit> run_judge_full.sh --limit 2` is a smoke run into smoke/.
 
 module purge
