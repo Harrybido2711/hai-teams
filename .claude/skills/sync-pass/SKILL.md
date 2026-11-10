@@ -16,8 +16,13 @@ Phase 5 · run by whoever made the change · the last step of every workflow tha
    set. No → say "layer 2 skipped: local only".
 4. **Layer 3:** `git status --short`; stage **explicit paths, only your own changes.** Another
    session may have uncommitted hunks in the same file — `git diff <file>` first; if it is mixed,
-   stage only your hunks (`git apply --cached` a patch of just them). Commit with a heredoc message,
-   then `git push origin main && git push backup main`.
+   stage only your hunks (`git apply --cached` a patch of just them). **"Your own" means edits this
+   session made — ones you can point to in your own tool calls.** A modified file in the tree is not
+   evidence it is yours, and neither is a user's question that assumes it is. For anything you did not
+   write, `ListAgents` first: if another session in this repo is busy or waiting, ask it before
+   staging. 2026-11-09: a session committed a peer's unreviewed runner and judge edits as its own
+   (`fc27e5ff`); review then found two Qwen producers able to write one judge file, fixed in `3979c63d`.
+   Commit with a heredoc message, then `git push origin main && git push backup main`.
 5. **Layer 4:** only when a model finished a benchmark and the user confirmed it → `record-results`.
 6. **Report** which layers ran and why any was skipped.
 
