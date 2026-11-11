@@ -6,14 +6,15 @@
 
 Strategy formulation. Upstream `karthikv792/LLMs-Planning`. **Scored by the VAL validator and
 upstream's own text parsers — no LLM in our scoring.** Runners for the five selected models written
-2026-11-09, smoke-tested locally; the 10% pilot waits for the user's verification. No results.
+2026-11-09, smoke-tested locally. The 10% pilot was submitted to Quest 2026-11-11 on the user's
+go-ahead (`## Run order`); not yet pulled or audited, so no recorded results.
 
 ## Paths
 
 | | Path |
 |---|---|
 | Local | `Transition_processes_benchmarks/LLMs-Planning_bench` |
-| Quest | **not present for this account** — checked 2026-11-09: this account's `Transition_processes_benchmarks/` holds only `Awareness_in_LLM`. `/projects/p32983/LLMs-Planning-main` is `cpz1698`'s copy: not ours, not touched. The first sync creates `/gpfs/projects/p32983/Transition_processes_benchmarks/LLMs-Planning_bench` |
+| Quest | `/gpfs/projects/p32983/Transition_processes_benchmarks/LLMs-Planning_bench` — created by the first sync, 2026-11-11 (it did not exist on 2026-11-09). Holds only what generation reads: `plan_eval_core.py`, the five `PLAN_*` folders, `plan-bench/prompts/`. `.env` was copied **on Quest** from `Awareness_in_LLM/.env`. `/projects/p32983/LLMs-Planning-main` is `cpz1698`'s copy: not ours, not touched |
 
 ## Layout — which of upstream's two trees is used
 
@@ -121,6 +122,17 @@ time. More shards for Qwen alone would cut that, but 5 is the standing ceiling
 `reasoning` off, so watch `finish_length` in its pilot health file.
 4. `monitor-run`. 5. `pull-results`. 6. Score locally (above); `audit-results`. The full set is
 15,568 rows, ~3,100 a shard: size its wall clock from the pilot's `latency_s_median` first.
+
+**Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
+Deepseek, 8157878 Qwen; 64 files md5-matched, Quest `load_rows` gave 1,563 / 15,568 unique uids).
+Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17 min (1,563 rows,
+0 empty, `finish_length` 0, `complete` 1); GPT's shards 0 and 1 within 36 min. **Shard cost is not
+even.** The mystery_blocksworld shards (shard 3 = mystery only) write long answers — Gemma 692
+tokens, 44 s a call, on a prompt where the 15-row smoke had medians of 1.6 s — and DeepInfra hung
+calls on Gemma and Qwen (`TIMEOUT 1/5`, 240 s / 600 s) that the retry absorbs. A shard that does not
+fit its wall time exits on SIGTERM with its rows saved; resubmit only that index with a longer
+limit (`sbatch --array=3 --time=… run_plan.sh`, command-line options override the `#SBATCH` lines).
+Qwen's first 20 rows: median 84.8 s, p90 172 s, max 259 s, all `finish=stop` — about 9 h a shard.
 
 ## Showing reasoning
 
