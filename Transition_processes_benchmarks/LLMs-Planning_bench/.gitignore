@@ -36,3 +36,9 @@ plan-bench/results/mystery_blocksworld_3/text-davinci-002/
 plan-bench/results/random_blocksworld/
 plan-bench/results/random_blocksworld_3/
 plan-bench/examples/
+
+# --- hai-teams (2026-11-09). Upstream's */*.sh above would hide our sbatch scripts.
+!PLAN_*/run_plan.sh
+# Local scorer builds (setup_scorer.sh): VAL for this platform, Python 3.12 env with tarski.
+.scorer-env/
+planner_tools/VAL/build/
