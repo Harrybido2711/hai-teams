@@ -36,7 +36,8 @@ PY=/projects/p32983/pythonenvs/hai-teams/bin/python
 # (WB_Qwen_DeepInfra). They must never both judge Wonderbread: both producers' judge files are named
 # Qwen-Qwen3.5-9B.jsonl, and two tasks writing it would leave one model's QA from one run and its SOP
 # from the other. The default array stays 0-4 (five streams, the ceiling in quest-cluster.md);
-# submit index 5 on its own with `--array=5`, after archiving the Together judge files out of
+# index 5 is judged in FIVE SHARDS instead (run_judge_wb_shards.sh, wonderbread.md step 6, 2026-11-11);
+# `--array=5` here is the single-stream path, only after archiving the Together judge files out of
 # WB_Judges/{results,smoke}/full/<judge>/{qa,sop}/ (wonderbread.md, run order step 6).
 LABEL=(GPT_5.6_Luna Gemini_Flash3.5lite_OpenRouter Qwen Gemma_DeepInfra Deepseek Qwen_DeepInfra)
 MC=(MC_GPT_5.6_Luna MC_Gemini_Flash3.5lite_OpenRouter MC_Qwen MC_Gemma_DeepInfra MC_Deepseek -)

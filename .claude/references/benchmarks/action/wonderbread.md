@@ -160,9 +160,20 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    `WB_Judges/archive/qwen_together_2026-11/` with their paths kept, never renamed in place — since
    both Qwen producers write that name and `load_done` refuses to resume across them. **Move them
    on Quest and mirror the move locally**: judge files flow down, so a Quest-only move lets the next
-   pull overwrite the local Together file, and a local-only move leaves index 5 refusing. Then
-   `sbatch --array=5 run_judge_full.sh` — Wonderbread only, ~18 h; **index 2 no longer judges
-   Wonderbread**, so the two can never write one file. Estimate ≈ $5.3, almost all of it the judge.
+   pull overwrite the local Together file, and a local-only move leaves the judge refusing. Then
+   **judge it in five shards** (the user's decision, 2026-11-11 — one stream ran 0.4 calls/s,
+   ~24 h for 33,924 SOP line calls; OpenRouter→Haiku scaled linearly to 20 streams, 0 errors):
+   `sbatch run_judge_wb_shards.sh` from `Action_processes_benchmarks/` (array 0-4, ~4.5 h each), then
+   `sbatch --export=ALL,PRODUCER=WB_Qwen_DeepInfra,TASK=sop --dependency=afterok:<array id> run_judge_wb_merge.sh` — it folds the five
+   `<producer>_shard<k>of5.jsonl` into the canonical file (`wb_judge.py --merge-shards 5`, the shard
+   files and their halt markers moving to `shards_merged/<stamp>/`) and re-runs the plain command, whose
+   exit 0 is the proof the set is complete (its log should show 0 calls). Shards **read** the canonical file for rows an
+   earlier unsharded run left (4,010 of Qwen's rep-0 rows, from the cancelled job 8127980) and never
+   write it. **Do not run `run_judge_full.sh` for this producer meanwhile**: a plain run refuses while
+   shard files exist or a shard is alive, and `Results/build_judge_summary.py` scores whatever the
+   canonical file holds, so a rebuild between "shards COMPLETED" and the merge reports a partial set as
+   complete — **index 2 no longer judges Wonderbread**, so only index 5 and the shards touch this file.
+   Estimate ≈ $5.2, almost all of it the judge.
    Then point `Results/build_judge_summary.py`'s Qwen row at `WB_Qwen_DeepInfra`; until then it
    reads `WB_Qwen`, and its `same_producer` check refuses judge rows from the other folder.
 
