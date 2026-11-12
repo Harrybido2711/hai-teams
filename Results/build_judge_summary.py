@@ -31,7 +31,9 @@ MODELS = [
     ("gpt-5.6-luna", "MC_GPT_5.6_Luna", "WB_GPT_5.6_Luna", "gpt-5.6-luna"),
     ("gemini-3.5-flash-lite", "MC_Gemini_Flash3.5lite_OpenRouter", "WB_Gemini_Flash3.5lite_OpenRouter",
      "google-gemini-3.5-flash-lite"),
-    ("Qwen3.5-9B", "MC_Qwen", "WB_Qwen", "Qwen-Qwen3.5-9B"),
+    # WB_Qwen_DeepInfra, not WB_Qwen: the Together run (cap 10) was archived on 2026-11-11 and its judge
+    # files moved aside; `same_producer` refuses the pairing the other way round.
+    ("Qwen3.5-9B", "MC_Qwen", "WB_Qwen_DeepInfra", "Qwen-Qwen3.5-9B"),
     ("gemma-4-31B-it", "MC_Gemma_DeepInfra", "WB_Gemma_DeepInfra", "google-gemma-4-31B-it"),
     ("deepseek-flash", "MC_Deepseek", None, "deepseek-flash"),
 ]
@@ -168,7 +170,9 @@ def main():
           "axes; an item's label is the majority of its 3 replicates.", "",
           "## Wonderbread (N/A = text-only model)", "",
           "QA: judge scores 1–3, **1 is best**, mean over answers and 3 replicates. SOP: precision / recall / "
-          "F1 / ordering, higher is better.", "",
+          "F1 / ordering, higher is better. Qwen3.5-9B was rerun on DeepInfra (image cap 30); six of its "
+          "482 SOP answers stopped at the output-length limit and are judged as the complete answers they "
+          "are.", "",
           "| Model | Completeness | Soundness | Clarity | Compactness | SOP precision | SOP recall | SOP F1 | SOP ordering |",
           "|---|---|---|---|---|---|---|---|---|"]
     for r in T:

@@ -163,7 +163,8 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    pull overwrite the local Together file, and a local-only move leaves the judge refusing. Then
    **judge it in five shards** (the user's decision, 2026-11-11 — one stream ran 0.4 calls/s,
    ~24 h for 33,924 SOP line calls; OpenRouter→Haiku scaled linearly to 20 streams, 0 errors):
-   `sbatch run_judge_wb_shards.sh` from `Action_processes_benchmarks/` (array 0-4, ~4.5 h each), then
+   `sbatch run_judge_wb_shards.sh` from `Action_processes_benchmarks/` (array 0-4; Qwen's took 3 h 14 m
+   to 4 h 22 m, uneven because SOP length is — the split is by unit count, not by calls), then
    `sbatch --export=ALL,PRODUCER=WB_Qwen_DeepInfra,TASK=sop --dependency=afterok:<array id> run_judge_wb_merge.sh` — it folds the five
    `<producer>_shard<k>of5.jsonl` into the canonical file (`wb_judge.py --merge-shards 5`, the shard
    files and their halt markers moving to `shards_merged/<stamp>/`) and re-runs the plain command, whose
@@ -173,9 +174,13 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    shard files exist or a shard is alive, and `Results/build_judge_summary.py` scores whatever the
    canonical file holds, so a rebuild between "shards COMPLETED" and the merge reports a partial set as
    complete — **index 2 no longer judges Wonderbread**, so only index 5 and the shards touch this file.
-   Estimate ≈ $5.2, almost all of it the judge.
-   Then point `Results/build_judge_summary.py`'s Qwen row at `WB_Qwen_DeepInfra`; until then it
-   reads `WB_Qwen`, and its `same_producer` check refuses judge rows from the other folder.
+   **Done 2026-11-11**: array 8167758 (5 × exit 0), merge 8167759 (1 m 11 s, exit 0) — 33,924 SOP rows,
+   all `ok`, 0 duplicate uids, one config, the 4,010 older rows unchanged; the re-check ran 0 calls.
+   The five shards sat on five different nodes and none refused the shared lock; that the exclusive
+   lock excludes across nodes on GPFS is still unproven — the flow does not depend on it.
+   The file's recorded cost is $5.87, the earlier partial run's rows included. The merged file is
+   md5-identical on Quest and here. `Results/build_judge_summary.py`'s Qwen row now reads
+   `WB_Qwen_DeepInfra`; its `same_producer` check refuses judge rows from the other folder.
 
 ## What its README says about showing reasoning
 

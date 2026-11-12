@@ -16,13 +16,13 @@ All five models are scored on the same 272 items: item `6765fc5e0af93a24e8fbe4ee
 
 ## Wonderbread (N/A = text-only model)
 
-QA: judge scores 1–3, **1 is best**, mean over answers and 3 replicates. SOP: precision / recall / F1 / ordering, higher is better.
+QA: judge scores 1–3, **1 is best**, mean over answers and 3 replicates. SOP: precision / recall / F1 / ordering, higher is better. Qwen3.5-9B was rerun on DeepInfra (image cap 30); six of its 482 SOP answers stopped at the output-length limit and are judged as the complete answers they are.
 
 | Model | Completeness | Soundness | Clarity | Compactness | SOP precision | SOP recall | SOP F1 | SOP ordering |
 |---|---|---|---|---|---|---|---|---|
 | gpt-5.6-luna | 1.82 | 1.59 | 1.16 | 1.36 | 0.757 | 0.876 | 0.799 | 0.696 |
 | gemini-3.5-flash-lite | 1.91 | 1.77 | 1.12 | 1.67 | 0.870 | 0.865 | 0.855 | 0.810 |
-| Qwen3.5-9B | 1.81 | 1.75 | 1.16 | 1.74 | 0.743 | 0.774 | 0.736 | 0.712 |
+| Qwen3.5-9B | 1.96 | 1.80 | 1.15 | 1.71 | 0.765 | 0.799 | 0.760 | 0.720 |
 | gemma-4-31B-it | 1.94 | 1.69 | 1.20 | 1.28 | 0.832 | 0.851 | 0.828 | 0.635 |
 | deepseek-flash | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
 
@@ -32,12 +32,12 @@ QA: judge scores 1–3, **1 is best**, mean over answers and 3 replicates. SOP: 
 |---|---|---|---|---|---|
 | gpt-5.6-luna | 272 / 273 |  120 / 120 | 486 / 486 | 0 | 0 |
 | gemini-3.5-flash-lite | 272 / 273 |  120 / 120 | 486 / 486 | 0 | 0 |
-| Qwen3.5-9B | 272 / 273 |  84 / 120 | 384 / 486 | 36 | 102 |
+| Qwen3.5-9B | 272 / 273 |  113 / 120 | 482 / 486 | 7 | 4 |
 | gemma-4-31B-it | 272 / 273 |  115 / 120 | 482 / 486 | 5 | 4 |
 | deepseek-flash | 272 / 273 |  N/A | N/A | N/A | N/A |
 
 ## Two things to read the table with
 
-**(a) A model's own limit means some questions could not be run.** Wonderbread questions carry many screenshots, and Qwen3.5-9B and gemma-4-31B-it accept only a fixed number of images per request. A question that needs more is never sent — it is recorded as `over_image_limit`, not judged and not counted as a wrong answer. Qwen is scored on 84 of 120 QA and 384 of 486 SOP units; Gemma on 115 of 120 QA and 482 of 486 SOP units. The other models are scored on every unit, so a Wonderbread number is not computed over the same questions for every model; the Coverage table shows the denominator.
+**(a) A model's own limit means some questions could not be run.** Wonderbread questions carry many screenshots, and Qwen3.5-9B and gemma-4-31B-it accept only a fixed number of images per request. A question that needs more is never sent — it is recorded as `over_image_limit`, not judged and not counted as a wrong answer. Qwen is scored on 113 of 120 QA and 482 of 486 SOP units; Gemma on 115 of 120 QA and 482 of 486 SOP units. The other models are scored on every unit, so a Wonderbread number is not computed over the same questions for every model; the Coverage table shows the denominator.
 
 **(b) A text-only model cannot complete every benchmark.** deepseek-flash takes no images, so it cannot run Wonderbread at all and shows N/A there. It is compared with the others only on MultiChallenge, and its row is not comparable across the whole suite. The same applies to any text-only model.
