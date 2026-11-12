@@ -95,8 +95,10 @@ Needs VAL and `tarski` 0.7.0, which Quest's shared env lacks: **score locally**,
   column before trusting a number. `<slug>` is the model id with `/`→`-`, `.`→`_`.
 - scoring: `<slug>_scored.jsonl`, `<slug>_scores_by_slice.csv`, `<slug>_scores_by_task.csv`.
   **The by-task table leaves out the two `obfuscated_deceptive_logistics` slices** (they score 0 for
-  every model, below); the by-slice table keeps them. A plan VAL gave no verdict for is a
-  `scorer_error` and makes the scorer exit 1; a missing PDDL file or VAL aborts it.
+  every model, below); the by-slice table keeps them. A plan on which VAL **crashes or prints
+  `Error in type-checking!`** is scored invalid with `val_crash` set (a column in both tables); VAL
+  silent for any other reason is a `scorer_error` and makes the scorer exit 1, as does a crash share
+  above 5% of the plans that reached VAL; a missing PDDL file or VAL aborts it.
 - SLURM: `log_<k>.txt` / `.err` per shard in the model folder. Halt markers are tagged by shard
   (`shard2_FAILURE_HALT.txt`). **A shard exits 1 if any of its own rows is empty or interrupted**, so
   `COMPLETED 0:0` is a usable signal; resubmitting the shard retries exactly those rows.
@@ -146,9 +148,20 @@ thought cut mid-sentence (no repetition loops; at 480 rows the other replies' co
 median 1,168, p90 2,940). Per-shard latency median 59 s (easy blocksworld shard) to 276 s (mystery shard), 5
 shards. The user raised the cap to 8,192 on 2026-11-11 (timeout 600→900 s, wall time 16→48 h) and
 the 760 rows (with their logs) were archived on Quest as `results_archive_max_tokens4096_*`, not
-mixed in, and Qwen was resubmitted as job 8223099 (5 shards). Local smoke at 8,192 on two
-mystery_blocksworld rows: both ended `stop` with `[PLAN END]`, at 2,612 and 5,293 tokens (185 s,
-315 s) — the second is one a 4,096 cap would have cut.
+mixed in, and Qwen was resubmitted as job 8223099 (5 shards, 4 h 19 min to 17 h 30 min, all
+`COMPLETED 0:0`). Local smoke at 8,192 on two mystery_blocksworld rows: both ended `stop` with
+`[PLAN END]`, at 2,612 and 5,293 tokens (185 s, 315 s) — the second is one a 4,096 cap would have cut.
+
+**The 8,192 cap still binds, audited 2026-11-12.** 1,563 rows, 0 empty, one config, but 394
+`finish=length` — 349 of the 1,513 rows in scorable slices (23.1%), **252 of 500 in
+mystery_blocksworld**, 40 of 263 in logistics, 15 of 500 in blocksworld. Those rows score 4.9% against
+54.6% for the rows that finished, and only 53 of the 349 reached `[PLAN END]`. They are long thought
+cut short, not loops (mean share of the most repeated line 1.6%). Raising 4,096→8,192 rescued 104 of
+the 227 rows the old run had truncated (36 of them correct); 123 still hit the cap. So **Qwen's
+PlanBench number is a lower bound set by the cap**, and a cap that does not bind (≥16 k, as GPT and
+Deepseek have) is 16–23 min for a reply that fills it, at this route's 12–17 tokens/s. At
+`temperature=0, seed=42` the route is not reproducible: of the 533 rows that had finished under the
+old cap, only 60 came back with identical text.
 
 ## Showing reasoning
 
@@ -170,6 +183,13 @@ for a runner to resolve at run time. Hidden reasoning is still capped per `model
   (`obj.strip.isdigit()`).
 - **A missing VAL scores everything 0 upstream** (`validate_plan` checks for "Plan valid" in empty
   output). `plan_scorer.validate` raises instead.
+- **VAL crashes on malformed plans — upstream's Linux binary too.** The first scoring pass of the
+  pilot stopped on 42 of 6,252 plans (0.7%) where VAL died with SIGSEGV (empty output) or printed
+  `Error in type-checking!`. The shipped Linux `validate`, run on Quest on the same 42 inputs, gave the
+  same two outcomes (exit 139 on 21, 255 with the message on 21), so it is not our macOS build. All 42
+  plans had a defect of their own: unbalanced parentheses, wrong arity, or an object the problem does
+  not have (Qwen's 21 were truncated rows that invented objects `f`–`i`). Upstream scores them wrong
+  too. Treated as an invalid plan with `val_crash`, not as a `scorer_error`.
 - **Upstream's stored results are not a reference.** Some prompt files were regenerated after them:
   task 3's ground truth differs on 381 of 500 rows. The self-test compares only matching rows.
 - **Upstream scores only answered rows**; ours keeps empties in `acc`.

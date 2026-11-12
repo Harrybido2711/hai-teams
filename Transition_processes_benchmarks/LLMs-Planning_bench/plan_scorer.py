@@ -93,9 +93,21 @@ _INVALID = ("Plan invalid", "Plan failed to execute", "Bad operator in plan", "B
             "Goal not satisfied")
 
 
+class PlanUnvalidatable(RuntimeError):
+    """VAL died on this plan (a signal exit) or reported `Error in type-checking!`: the plan is
+    malformed — unbalanced parentheses, wrong arity, an object the problem does not have."""
+
+
+# A crash rate above this share of the plans that reached VAL means the binary is broken, not the plans.
+MAX_VAL_CRASH_SHARE = 0.05
+
+
 def validate(domain, problem, plan_file):
-    """True / False from VAL's own verdict line. Anything else raises: upstream returned False for an
-    empty output, which is how a missing binary would score every plan 0 (utils/__init__.py:255)."""
+    """True / False from VAL's own verdict line. A malformed plan makes VAL crash or print a
+    type-checking error with no verdict; that raises `PlanUnvalidatable`, which `score_row` records as
+    an invalid plan (upstream's `"Plan valid" in output` scores it wrong too). Any other silence raises
+    a plain RuntimeError: upstream returned False for an empty output, which is how a missing binary
+    would score every plan 0 (utils/__init__.py:255)."""
     out = subprocess.run([val_binary(), domain, problem, plan_file], capture_output=True,
                          text=True, timeout=120)
     text = out.stdout + out.stderr
@@ -105,6 +117,8 @@ def validate(domain, problem, plan_file):
         return True
     if any(s in text for s in _INVALID):
         return False
+    if out.returncode < 0 or "Error in type-checking" in text:
+        raise PlanUnvalidatable(f"VAL exit {out.returncode}: {text.strip()[-120:]!r}")
     raise RuntimeError(f"VAL gave no verdict (exit {out.returncode}): {text.strip()[:200]!r}")
 
 
@@ -338,12 +352,17 @@ def score_row(domain, task, instance_id, raw, mode="lenient"):
         # sometimes achieves the goal, and "no further actions are needed" is then the right
         # answer (47 of upstream's 500 GPT-4 task-6 rows). VAL decides; empty_plan only records it.
         out["empty_plan"] = int(not llm_plan.strip())
-        if "new_instance" in inst:          # tasks 4 and 6: validate against the modified problem
-            new_domain, new_problem = os.path.join(tmp, "pr-new-domain.pddl"), os.path.join(tmp, "pr-new-problem.pddl")
-            ModelWriter(inst["new_instance"]).write_files(new_domain, new_problem)
-            valid = validate(new_domain, new_problem, plan_file)
-        else:
-            valid = validate(domain_pddl, problem, plan_file)
+        try:
+            if "new_instance" in inst:      # tasks 4 and 6: validate against the modified problem
+                new_domain, new_problem = os.path.join(tmp, "pr-new-domain.pddl"), os.path.join(tmp, "pr-new-problem.pddl")
+                ModelWriter(inst["new_instance"]).write_files(new_domain, new_problem)
+                valid = validate(new_domain, new_problem, plan_file)
+            else:
+                valid = validate(domain_pddl, problem, plan_file)
+        except PlanUnvalidatable as error:  # malformed plan: invalid, and counted in `val_crash`
+            valid = False
+            out["val_crash"] = 1
+            out["val_note"] = str(error)[:160]
         out["valid"] = int(valid)
         out["correct"] = int(valid)
         if "optimality" in task:
@@ -409,6 +428,7 @@ def score_results(model_dir, model, sample, smoke=False, mode="lenient"):
                    "acc_answered": round(sum(x["correct"] for x in answered) / len(answered), 4) if answered else "",
                    "parse_fail": sum(x["parse_fail"] for x in xs),
                    "scorer_errors": sum(1 for x in xs if x.get("scorer_error")),
+                   "val_crash": sum(1 for x in xs if x.get("val_crash")),
                    "top_parse_error": (collections.Counter(x["parse_error"].split(":")[0] for x in xs
                                                            if x.get("parse_error")).most_common(1) or [("", 0)])[0][0]}
             if key.startswith("task_3") or "/task_3" in key:
@@ -425,6 +445,14 @@ def score_results(model_dir, model, sample, smoke=False, mode="lenient"):
     if errors:
         problems.append(f"VAL gave no verdict for {sum(errors.values())} plan(s) "
                         f"({dict(errors)}) — scored 0 with scorer_error set, NOT a real score")
+    crashed = [x for x in scored if x.get("val_crash")]
+    reached = [x for x in scored if "valid" in x]
+    if reached and len(crashed) > MAX_VAL_CRASH_SHARE * len(reached):
+        problems.append(f"VAL crashed or failed type-checking on {len(crashed)} of {len(reached)} plans "
+                        f"(> {MAX_VAL_CRASH_SHARE:.0%}) — suspect the binary, not the plans")
+    if crashed:
+        print(f"  note: {len(crashed)} plan(s) made VAL crash or fail type-checking "
+              f"({dict(collections.Counter(x['slice'] for x in crashed))}) — scored invalid, `val_crash` set", flush=True)
     _write_csv(os.path.join(out_dir, f"{slug}_scores_by_slice{suffix}.csv"), by_slice)
     _write_csv(os.path.join(out_dir, f"{slug}_scores_by_task{suffix}.csv"), by_task)
     print(f"scored {len(scored)} rows of {model} [{sample}{' smoke' if smoke else ''}, {mode}] "
