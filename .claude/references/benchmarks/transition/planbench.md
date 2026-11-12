@@ -35,7 +35,7 @@ and `run_plan.sh`. Keys in the root `.env` (gitignored).
 | OpenAI | `PLAN_GPT_5.6_Luna` | `gpt-5.6-luna` | `reasoning_effort="low"` (required), `max_completion_tokens=16384`, `seed=42` |
 | Gemini | `PLAN_Gemini_Flash3.5lite_OpenRouter` | `google/gemini-3.5-flash-lite` | `reasoning.effort="minimal"` (fixed), `max_tokens=8192`, `seed=42` |
 | Gemma | `PLAN_Gemma_DeepInfra` | `google/gemma-4-31B-it` | no reasoning parameter, `temperature=0`, `max_tokens=4096`, `seed=42` |
-| Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=4096`, `seed=42`; route `deepinfra` on every row |
+| Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=8192` (**was 4096 — it bound, see Run order**), `seed=42`; route `deepinfra` on every row; call timeout 900 s |
 | Deepseek | `PLAN_Deepseek` | `deepseek-flash` | prompt ceiling as a second system message, `temperature=0`, `max_tokens=16384`, `seed=42` |
 
 **Every output cap is chosen, not measured** — raised from AwareBench's short-answer caps because an
@@ -114,12 +114,10 @@ Needs VAL and `tarski` 0.7.0, which Quest's shared env lacks: **score locally**,
 the five `PLAN_*` folders and `plan-bench/prompts/` (105 MB); copy `.env` on Quest. Generation reads
 nothing else. 3. In each `PLAN_*`: `sbatch run_plan.sh` — five shards of the pilot at once (wall
 time 4 h; the 15-row local smoke measured median latencies of 1–4 s for GPT, Gemini, Gemma, Deepseek,
-about 20–30 min a shard). **Qwen is the long pole**: its 15 smoke rows took 22 min — median 59.5 s a
-call, max 349 s (4,096 tokens, the one `length` row, on the unscorable obfuscated slice), ~12
-tokens/s on this DeepInfra route — so ~8 h a shard at 5 shards; its `run_plan.sh` keeps the 16 h wall
-time. More shards for Qwen alone would cut that, but 5 is the standing ceiling
-(`quest-cluster.md`) and raising it is the user's call. Qwen writes long visible reasoning even with
-`reasoning` off, so watch `finish_length` in its pilot health file.
+about 20–30 min a shard). **Qwen is the long pole**: ~12 tokens/s on this DeepInfra route, and it
+writes long visible reasoning even with `reasoning` off. Its `run_plan.sh` asks for 48 h, the `normal`
+partition's `MaxTime` (2 days). More shards for Qwen alone would cut that, but 5 is the standing
+ceiling (`quest-cluster.md`) and raising it is the user's call.
 4. `monitor-run`. 5. `pull-results`. 6. Score locally (above); `audit-results`. The full set is
 15,568 rows, ~3,100 a shard: size its wall clock from the pilot's `latency_s_median` first.
 
@@ -132,7 +130,25 @@ tokens, 44 s a call, on a prompt where the 15-row smoke had medians of 1.6 s —
 calls on Gemma and Qwen (`TIMEOUT 1/5`, 240 s / 600 s) that the retry absorbs. A shard that does not
 fit its wall time exits on SIGTERM with its rows saved; resubmit only that index with a longer
 limit (`sbatch --array=3 --time=… run_plan.sh`, command-line options override the `#SBATCH` lines).
-Qwen's first 20 rows: median 84.8 s, p90 172 s, max 259 s, all `finish=stop` — about 9 h a shard.
+
+**Where it ended up, 2026-11-11 22:30.** GPT and Gemini: 1,563 rows each, 0 empty. Gemma: shard 4
+reached its 4 h wall at 280/311 and was resumed unchanged (job 8215431, 1 h 09 min): 1,563 rows, 0
+empty, `complete` 1. Deepseek: 1,563 rows, **11
+empty** — all `task_2` (logistics 1, mystery_blocksworld 4, obfuscated 6), each five attempts that
+spent all 16,384 tokens on reasoning; shards 2–4 exit 1 for that reason by design. At
+`temperature=0, seed=42` a resubmit reproduces them, so the user **accepted them as no-answer rows**
+(they stay in `acc`'s denominator). Cap hits elsewhere: Deepseek 17 rows (1.1%), Gemma 28 (1.8%).
+
+**Qwen's 4,096 cap bound, and the run was replaced.** Stopped at 7 h 42 min with 760 rows, 0 empty:
+**227 (29.9%) `finish=length`, only 13 of them with `[PLAN END]`** — mystery_blocksworld 132 of 180,
+logistics 44 of 66, depots 12 of 37, blocksworld 36 of 367. The truncated replies are long chain of
+thought cut mid-sentence (no repetition loops; at 480 rows the other replies' completion tokens had
+median 1,168, p90 2,940). Per-shard latency median 59 s (easy blocksworld shard) to 276 s (mystery shard), 5
+shards. The user raised the cap to 8,192 on 2026-11-11 (timeout 600→900 s, wall time 16→48 h) and
+the 760 rows (with their logs) were archived on Quest as `results_archive_max_tokens4096_*`, not
+mixed in, and Qwen was resubmitted as job 8223099 (5 shards). Local smoke at 8,192 on two
+mystery_blocksworld rows: both ended `stop` with `[PLAN END]`, at 2,612 and 5,293 tokens (185 s,
+315 s) — the second is one a 4,096 cap would have cut.
 
 ## Showing reasoning
 

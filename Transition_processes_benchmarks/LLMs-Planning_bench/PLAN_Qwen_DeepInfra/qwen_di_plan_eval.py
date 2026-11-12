@@ -11,12 +11,16 @@ default on this route too; without the switch a one-line question ran 51 s into 
 an empty `content`. On the OpenAI SDK it must travel in `extra_body` — top-level it raises TypeError
 (`model-calls.md`, 2026-11-09). It is `fixed`: sent on every call, never negotiated away.
 
-Output cap `max_tokens=4096` (rule 2) — chosen, not measured, as twice AwareBench's 2048 because a
-PlanBench answer is a multi-step plan; the 10% pilot's `finish_length` column shows whether it binds.
+Output cap `max_tokens=8192` (rule 2). **It was 4096 first, and the pilot measured that it bound:**
+at 7 h 42 min that run had 480 rows, 131 of them (27%) `finish=length` — 49 of 60 in the
+mystery_blocksworld shard — and only 10 of the 131 reached `[PLAN END]`. They were long visible
+chain-of-thought cut mid-sentence (no repetition loops), so 4096 measured the cap, not the model.
+Doubled on the user's decision, 2026-11-11; those rows are archived, not mixed in.
 `temperature=0` and `seed=42` pinned (rules 4 and 8), the seed negotiated.
 
-This route ran 17-111 s a call on 2026-11-09 (`model-calls.md`), so the SIGALRM ceiling is 600 s,
-as in `Wonderbread_bench/WB_Qwen_DeepInfra/`.
+This route streams about 12 tokens/s, so a reply that fills 8192 tokens takes ~680 s: the SIGALRM
+ceiling is 900 s (it was 600 s at 4096, and a 4096-token reply took up to ~340 s), and the client's
+own timeout sits above that so the watchdog, not the SDK, ends a hung call.
 """
 
 import os
@@ -31,9 +35,9 @@ import plan_eval_core as core  # noqa: E402
 
 load_dotenv(core.ENV_PATH)
 client = OpenAI(api_key=os.getenv("DEEPINFRA_API_KEY"),
-                base_url="https://api.deepinfra.com/v1/openai", timeout=900, max_retries=0)
+                base_url="https://api.deepinfra.com/v1/openai", timeout=1500, max_retries=0)
 
-WANTED = {"temperature": 0, "max_tokens": 4096, "seed": 42}
+WANTED = {"temperature": 0, "max_tokens": 8192, "seed": 42}
 FIXED = {"extra_body": {"reasoning": {"enabled": False}}}
 
 
@@ -45,5 +49,5 @@ def once(messages, model, params):
 if __name__ == "__main__":
     core.run_cli(description="PlanBench — Qwen3.5-9B (DeepInfra, reasoning off)",
                  default_model="Qwen/Qwen3.5-9B", model_dir=MODEL_DIR, client=client, once=once,
-                 wanted=WANTED, fixed=FIXED, required={"max_tokens": 4096}, call_timeout=600,
+                 wanted=WANTED, fixed=FIXED, required={"max_tokens": 8192}, call_timeout=900,
                  extra_config={"route": "deepinfra"})

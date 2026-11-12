@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --mem=2GB
-#SBATCH --time=16:00:00
+#SBATCH --time=48:00:00
 #SBATCH --job-name=qwen_plan
 #SBATCH --output=log_%a.txt
 #SBATCH --error=log_%a.err
