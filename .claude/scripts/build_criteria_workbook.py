@@ -71,7 +71,13 @@ FOLDERS = {
 }
 # finished and audited, not yet confirmed by the user: (benchmark, slot) -> the run's own overall file
 UNCONFIRMED = {}
-NOT_APPLICABLE = {("DocVQA", "Deepseek"): "not applicable: an image benchmark and a text-only model"}
+# Unlike BBH, MMLU and DocVQA, these two benchmarks' rows DO carry tokens, latency and attempts — the
+# criteria have simply not been computed on them, and TASK_RUNNER's wording would be false.
+NOT_COMPUTED = {name: ("not computed yet: the rows carry tokens, latency and attempts, but no criteria "
+                       "script has been run on this benchmark", "repeats not run (phase 2)")
+                for name in ("Wonderbread", "MultiChallenge")}
+NOT_APPLICABLE = {("DocVQA", "Deepseek"): "not applicable: an image benchmark and a text-only model",
+                  ("Wonderbread", "Deepseek"): "not applicable: screenshots in every request and a text-only model"}
 
 USAGE = [  # (group, header, criteria key, number format)
     ("1 · Cost", "$ per 1k correct", "1_usd_per_1k_correct", "0.0000"),
@@ -217,7 +223,7 @@ def model_row(name, slot, acc_cols, final, aware):
             else:
                 why_stab = s["tasks"]
     else:
-        why_usage, why_stab = TASK_RUNNER, "repeats not run (phase 2)"
+        why_usage, why_stab = NOT_COMPUTED.get(name, (TASK_RUNNER, "repeats not run (phase 2)"))
     if why_usage:
         notes.append(f"1·2·3·6: {why_usage}")
     if why_stab:

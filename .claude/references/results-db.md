@@ -22,7 +22,7 @@ python3 .claude/scripts/build_results_db.py --check  # exit 1 if a source change
 
 | Table | One row per | Holds |
 |---|---|---|
-| `benchmarks` | benchmark, all ten | process group and workbook sheet; a NULL sheet has no reported result yet |
+| `benchmarks` | benchmark, all ten | process group and workbook sheet; a NULL sheet (PlanBench, Multi-party Goal Tracking) has no reported result yet |
 | `runs` | benchmark × workbook column | `model_config`; `selected` = 1 if the column is in `Final_result` |
 | `scores` | benchmark × sub-benchmark × column | `value`; `level` is `sub`, `group`, `overall` or `standalone`; `parent` names the group; `position` is the sheet order |
 | `criteria` | benchmark × selected model × task × metric | `value` or `value_text`, `reason` when blank, `source` file |
@@ -41,7 +41,11 @@ number, and why).
   pooled item-weighted, McNemar on the summed counts. Other `task` values are one task's own numbers,
   on the repeat subsample where the metric comes from repeats.
 - **`level` matters when averaging.** A `group` or `overall` row is already an aggregate of `sub` rows.
-- **`standalone` is never averaged.** `All_EM` is the one such row, so NegotiationToM has no `overall` row ([why](benchmarks/interpersonal/negotiationtom.md)).
+- **`standalone` is never averaged.** `All_EM` is one such row, so NegotiationToM has no `overall` row ([why](benchmarks/interpersonal/negotiationtom.md)); MultiChallenge's `Overall (micro)` is the other, stored beside its macro `overall`.
+- **Wonderbread's QA rows are 1–3 where 1 is best — lower is better**, the opposite of every other
+  row here; the subbench names say `(1-3, 1 = best)`. It has no `overall` row (upstream defines no
+  composite). MultiChallenge and Wonderbread are LLM-judged (Haiku 5.5), their `criteria` rows are
+  gaps with a stated reason, and a blank Deepseek on Wonderbread is a text-only ceiling.
 - **`value_text`** holds a non-numeric answer such as `not reported`.
 
 ```sql

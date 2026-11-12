@@ -59,8 +59,8 @@ drives this project, so a benchmark's folder states which team process it is evi
 
 Stated by the user, 2026-08-29; the user renamed the files on 2026-10-05 (`Results.xlsx` →
 `Tempo_results.xlsx`, `Final_Result.xlsx` → `Final_result.xlsx`) and moved both into `Results/` on
-2026-11-06. Both workbooks carry the same six sheets — `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo`,
-`NegotiationToM`, `Awareness` — and differ only in which model columns they are allowed to hold.
+2026-11-06. Both workbooks carry the same eight sheets — `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo`,
+`NegotiationToM`, `Awareness`, `MultiChallenge`, `Wonderbread` — and differ only in which model columns they are allowed to hold.
 
 **What each one is for — the user's statement, 2026-11-06.** `Tempo_results.xlsx` is the preparation
 for the result. `Final_result.xlsx` records only the selected models: each item's result and the
@@ -175,8 +175,8 @@ redone.
 | `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | no — its 60 judged rows were dropped 2026-10-05 | all five selected models, full run 2026-10-12; recorded |
 | `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval      | goal specification                         | AddleseeHQ/mpgt-eval          | no — human review                                   | none yet (vendored 2026-08-19)                                 |
 | `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | none yet                                                       |
-| `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | judge pilot done 2026-10-19 (jobs 4480407, 4482838, 4506836); judge chosen 2026-10-31: Haiku 5.5. Full run of GPT, Gemini, Qwen, Gemma (Deepseek is text-only, out) generated on Quest 2026-11-01; judging started 2026-11-04 (GPT) |
-| `Action_.../Multi-challenge_bench`               | MultiChallenge | coordination                               | ekwinox117/multi-challenge    | **yes** — every item                          | judge pilot done 2026-10-19 (jobs 4480406, 4482838); judge chosen 2026-10-31: Haiku 5.5. Full run of all five selected models generated on Quest 2026-11-01; judging started 2026-11-04 (GPT) |
+| `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | judge pilot done 2026-10-19 (jobs 4480407, 4482838, 4506836); judge chosen 2026-10-31: Haiku 5.5. Full run of GPT, Gemini, Qwen, Gemma (Deepseek is text-only: N/A) generated on Quest 2026-11-01 (Qwen rerun on DeepInfra 2026-11-09), judged by Haiku 5.5, **recorded in both workbooks 2026-11-11** |
+| `Action_.../Multi-challenge_bench`               | MultiChallenge | coordination                               | ekwinox117/multi-challenge    | **yes** — every item                          | judge pilot done 2026-10-19 (jobs 4480406, 4482838); judge chosen 2026-10-31: Haiku 5.5. Full run of all five selected models generated on Quest 2026-11-01, judged by Haiku 5.5, **recorded in both workbooks 2026-11-11** (272 of 273 items, the same for all five) |
 | `Interpersonal_.../NegotiationToM`               | NegotiationToM | conflict management                        | HKUST-KnowComp/NegotiationToM | no — EM + micro/macro F1                            | GPT, Gemini, Gemma, Qwen, Deepseek, XAI                        |
 | `Interpersonal_.../EmoBench`                     | EmoBench       | affect management                          | Sahandfer/EmoBench            | no — MCQ accuracy                                   | OpenAI, Gemini, Gemma, Qwen, Deepseek, XAI                     |
 | `Tasks_.../DocVQA`                               | DocVQA         | general task ability                       | docvqa.org (registered download; baselines at mineshmathew/DocVQA) | no — ANLS                                           | OpenAI, Gemini, Qwen, Gemma — the four that take an image       |
@@ -292,7 +292,8 @@ follows, and none holds a benchmark-specific path — so they are adapted to a t
    candidate judges (`LLM_as_judge/JUDGE_SELECTION.md` §6.4). The user chose Claude Haiku 5.5 on
    2026-10-31, and the full run's runners were written the same day: the five selected models
    generate on every item, then Haiku 5.5 grades each — Deepseek on MultiChallenge only, and
-   Qwen and Gemma within their providers' image caps on Wonderbread (the two benchmark pages).
+   Qwen and Gemma within their providers' image caps on Wonderbread (the two benchmark pages). Both
+   were graded and recorded in the workbooks on 2026-11-11, before an audit.
 4. **Provider coverage is uneven.** DocVQA has two providers where bbh and mmlu have seven; whether
    that gap is closed is a scope decision, not an oversight to fix silently.
 5. **The pre-submit Quest gate covers one benchmark.** `check_quest_sync.py` hardcodes

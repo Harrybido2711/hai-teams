@@ -5,7 +5,9 @@ three properties that decide how any work here starts:
 
 - **Both are judged by an LLM**, so neither number can be re-derived from the data. Their records are
   §7 of `LLM_as_judge/JUDGE_SELECTION.md`, and nothing from either may enter `Tempo_results.xlsx`
-  until that record is filled — the rule in its §7.1. The original judge models are retired; the
+  until that record is filled — the rule in its §7.1. It is filled (§7.2–7.4, §7.6), and the user had
+  both benchmarks recorded on 2026-11-11 with Haiku 5.5's agreement with humans still unmeasured (§8).
+  The original judge models are retired; the
   pilot that compared four replacements is its §6.4, and **the user chose Claude Haiku 5.5 on
   2026-10-31** (its §8).
 - **Their runners share one core.** `Action_processes_benchmarks/judge_core.py` holds the judge
@@ -21,5 +23,5 @@ three properties that decide how any work here starts:
 
 | Benchmark | Page | Judge covers | State |
 |---|---|---|---|
-| Wonderbread | [wonderbread.md](wonderbread.md) | QA **and** SOP Generation | pilot done 2026-10-19; full-run runners for four models (not Deepseek) written 2026-10-31, awaiting the user's verification |
-| MultiChallenge | [multichallenge.md](multichallenge.md) | every item | pilot done 2026-10-19; full-run runners for all five written 2026-10-31, awaiting the user's verification |
+| Wonderbread | [wonderbread.md](wonderbread.md) | QA **and** SOP Generation | full run done and judged; four models (Deepseek N/A, text-only); **recorded 2026-11-11**, not audited |
+| MultiChallenge | [multichallenge.md](multichallenge.md) | every item | full run done and judged; all five, on the same 272 items; **recorded 2026-11-11**, not audited |

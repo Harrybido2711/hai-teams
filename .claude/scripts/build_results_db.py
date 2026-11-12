@@ -35,13 +35,15 @@ BENCHMARKS = [
     ("BBH", "tasks", "Big Bench Hard"), ("MMLU", "tasks", "MMLU"), ("DocVQA", "tasks", "DocVQA"),
     ("EmoBench", "interpersonal", "Emo"), ("NegotiationToM", "interpersonal", "NegotiationToM"),
     ("AwareBench", "transition", "Awareness"), ("PlanBench", "transition", None),
-    ("Multi-party Goal Tracking", "transition", None), ("Wonderbread", "action", None),
-    ("MultiChallenge", "action", None),
+    ("Multi-party Goal Tracking", "transition", None), ("Wonderbread", "action", "Wonderbread"),
+    ("MultiChallenge", "action", "MultiChallenge"),
 ]
 SECTIONS = {"Emotional Understanding (EU)": "eu_overall", "Emotional Application (EA)": "ea_overall"}
 GROUP_ROWS = {"eu_overall", "ea_overall", "mission"}
 OVERALL_ROWS = {"ANLS", "Overall accuracy"}
-STANDALONE_ROWS = {"All_EM"}  # a separate metric, not NegotiationToM's total: never averaged across benchmarks
+# separate metrics, never averaged across benchmarks: All_EM is not NegotiationToM's total, and
+# MultiChallenge's micro is the same items counted another way — beside its macro, not part of it
+STANDALONE_ROWS = {"All_EM", "Overall (micro)"}
 CRITERIA = {1: "Cost", 2: "Token efficiency", 3: "Latency", 4: "Stability", 5: "Robustness", 6: "Reliability"}
 
 SCHEMA = """

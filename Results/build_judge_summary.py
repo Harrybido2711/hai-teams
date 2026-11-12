@@ -137,18 +137,24 @@ def fmt(v, nd=3):
     return "N/A" if v is None else f"{v:.{nd}f}"
 
 
+def collect(exclude):
+    """Every model's judged scores and generation counts, rebuilt from the row files on disk. The one
+    computation behind the summary and `record_haiku_judge.py`, so the two cannot disagree."""
+    return [{"model": label, "stem": stem, "mc_folder": mcf, "wb_folder": wbf,
+             "mc": mc_score(stem, exclude), "gen_mc": gen_counts(mcf),
+             "qa": wb_qa(stem, wbf) if wbf else None, "sop": wb_sop(stem, wbf) if wbf else None,
+             "gen_qa": gen_counts(wbf, "qa") if wbf else None,
+             "gen_sop": gen_counts(wbf, "sop") if wbf else None}
+            for label, mcf, wbf, stem in MODELS]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--exclude-qid", action="append", default=[SKIPPED_QID],
                     help="MC item dropped for EVERY model (default: Gemini's RECITATION item)")
     args = ap.parse_args()
     exclude = set(args.exclude_qid)
-    T = []
-    for label, mcf, wbf, stem in MODELS:
-        T.append({"model": label, "mc": mc_score(stem, exclude), "gen_mc": gen_counts(mcf),
-                  "qa": wb_qa(stem, wbf) if wbf else None, "sop": wb_sop(stem, wbf) if wbf else None,
-                  "gen_qa": gen_counts(wbf, "qa") if wbf else None,
-                  "gen_sop": gen_counts(wbf, "sop") if wbf else None})
+    T = collect(exclude)
 
     def n_of(g, k="ok"):
         return None if g is None else g.get(k, 0)

@@ -1,6 +1,6 @@
 # Wonderbread — benchmark card
 
-<!-- size-budget: 13000 -->
+<!-- size-budget: 17500 -->
 <!-- One job: Wonderbread's operating facts. Larger than the default because its data has a fetch
      path of its own, its judged scope covers two subtasks, and since 2026-10-31 it carries the
      judge pilot and the full run side by side, with the per-model image caps the full run needs
@@ -11,7 +11,8 @@ pilot** (2026-10-19) graded `gpt-5.6-luna` on a 10% sample of the two judged sub
 candidate judges, plus upstream's human-labelled samples; the user chose **Claude Haiku 5.5** on
 2026-10-31. The **full run** has four selected models — GPT, Gemini, Qwen, Gemma — answer every
 item, and Haiku 5.5 grade each; Deepseek is text-only and does not run here (the user's decision,
-2026-10-31). Generation submitted on Quest 2026-11-01 (run order below); no recorded result.
+2026-10-31). Generated on Quest 2026-11-01 (Qwen rerun on DeepInfra 2026-11-09), graded by Haiku 5.5,
+and **recorded 2026-11-11** in both workbooks and `results.db` (§ Results, below the run order).
 
 ## Paths
 
@@ -78,8 +79,8 @@ applied to Gemma the same way):
 
 | Model | Cap | QA over / 120 | SOP over / 486 (td_kf + td_kf_act) |
 |---|---|---|---|
-| Qwen3.5-9B, Together — the run judged so far | 10 | 36 | 102 (51 demos × 2) |
-| Qwen3.5-9B, DeepInfra — the rerun, `WB_Qwen_DeepInfra/` | 30 | 7 | 4 (2 demos × 2) |
+| Qwen3.5-9B, Together — archived, not in the record | 10 | 36 | 102 (51 demos × 2) |
+| Qwen3.5-9B, DeepInfra — the rerun, `WB_Qwen_DeepInfra/`, the run recorded | 30 | 7 | 4 (2 demos × 2) |
 | Gemma 4 31B, DeepInfra | 32 | 5 | 4 (2 demos × 2) |
 | GPT-5.6-Luna, Gemini 3.5 Flash-Lite | none hit | 0 | 0 |
 
@@ -151,8 +152,9 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    Gemini 6648995 (42m), Gemma 6648997 (1h56m): exit 0, every unit `ok` or over its cap exactly as
    the dry run counted. Qwen 6648996 (48m): exit 1, SOP exit 2 on 3 rows at `length` — the user's
    call, with MultiChallenge's. 0 empty rows. Pulled down md5-identical 2026-11-04.
-5. `sbatch --array=<i> run_judge_full.sh` from `Action_processes_benchmarks/`: GPT (index 0) job
-   7177159, 2026-11-04. The rest wait on the OpenRouter balance and the user's decisions.
+5. `sbatch --array=<i> run_judge_full.sh` from `Action_processes_benchmarks/`, all `ok`, 0 failed:
+   GPT 7177159 (index 0, 2026-11-04), Gemma 7221201 (3), Gemini 7470998_1 (1), Qwen's Together run
+   7470998_2 (2, superseded by step 6). Deepseek has no Wonderbread run.
 6. **Qwen's rerun on DeepInfra** (the user's decision, 2026-11-09, to lift the cap from 10 to 30 and
    keep every unit on one route): `sbatch run_wb.sh` in `WB_Qwen_DeepInfra/` (24 h — the route ran
    at 17–111 s a call, so ~9–10 h; per-call ceiling 600 s), then **archive** the Together judge
@@ -181,6 +183,35 @@ md5-identical. `python ../compare_judges.py` — `JUDGE_SELECTION.md` §6.4.
    The file's recorded cost is $5.87, the earlier partial run's rows included. The merged file is
    md5-identical on Quest and here. `Results/build_judge_summary.py`'s Qwen row now reads
    `WB_Qwen_DeepInfra`; its `same_producer` check refuses judge rows from the other folder.
+
+## Results — Haiku 5.5, recorded 2026-11-11
+
+The user asked for the record on 2026-11-11, **before an audit**; the numbers are recomputed from the
+judge rows on disk by `Results/record_haiku_judge.py` (the computation of
+`Results/build_judge_summary.py`) and live in `Final_result.xlsx` / `Tempo_results.xlsx` › `Wonderbread`,
+with `results.db` rebuilt from them. Three replicates per unit; QA is **1–3 where 1 is best**, so a
+lower QA number is better and a higher SOP number is better. There is no overall row: upstream defines
+no composite.
+
+| | Gemini | OpenAI | Qwen | Gemma | Deepseek |
+|---|--:|--:|--:|--:|--:|
+| qa_completeness (↓) | 1.9111 | 1.8194 | 1.9617 | 1.9420 | N/A |
+| qa_soundness (↓) | 1.7722 | 1.5889 | 1.7965 | 1.6899 | N/A |
+| qa_clarity (↓) | 1.1194 | 1.1639 | 1.1475 | 1.2000 | N/A |
+| qa_compactness (↓) | 1.6667 | 1.3639 | 1.7139 | 1.2783 | N/A |
+| sop_precision | 0.8695 | 0.7573 | 0.7651 | 0.8322 | N/A |
+| sop_recall | 0.8654 | 0.8761 | 0.7989 | 0.8511 | N/A |
+| sop_f1 | 0.8548 | 0.7986 | 0.7598 | 0.8283 | N/A |
+| sop_ordering | 0.8102 | 0.6956 | 0.7198 | 0.6347 | N/A |
+
+- **Not the same units for every model.** Scored on QA / SOP: Gemini and OpenAI 120 / 486, Qwen 113 /
+  482 (the DeepInfra rerun), Gemma 115 / 482. The rest are `over_image_limit`. The like-for-like
+  comparison on the subset every model answered (rule of 2026-10-31, above) is **not computed**.
+- **Deepseek is blank, not zero** — text-only, a ceiling like DocVQA's. `Haiku_judge_summary.md` prints N/A.
+- **Qwen's column is the DeepInfra rerun.** The Together run's judge files are archived and are not in
+  the record. Six of its 482 SOPs stopped at the output cap and are judged as given.
+- **Haiku 5.5's error rate against humans is unmeasured** (`JUDGE_SELECTION.md` §8): these are the
+  judge's grades, and `Provenance` says so.
 
 ## What its README says about showing reasoning
 

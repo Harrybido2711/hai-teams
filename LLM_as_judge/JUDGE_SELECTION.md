@@ -587,6 +587,10 @@ Three facts that were wrong or unknown before, all found by reading code rather 
 - **Decided 2026-10-31: the judge is Haiku 5.5** (the user; §6.4, [PILOT_FINALISTS.md](PILOT_FINALISTS.md)).
   Haiku 4.5, Sonnet 5.5 and Kimi K2.6 are out. Still open from the finalists' write-up: Haiku 5.5
   with reasoning on, over the 27 MultiChallenge items (its §6).
+- **Recorded 2026-11-11, at the user's request, before any human comparison exists.** The five
+  models' MultiChallenge and Wonderbread numbers are in both workbooks and `results.db` as Haiku
+  5.5's grades, and their `Provenance` rows say its error rate on our data is unmeasured. The §7.1
+  gate is read as met by §7.2–7.4 and §7.6; the bake-off and human labels below are still the open work.
 - **The bake-off and the human labels.** Neither exists yet. Until both do, Haiku 5.5's error rates
   on our data are unmeasured, so the corrected pass rate of §6.3 cannot be computed.
 - **Haiku 5.5 is untested anywhere.** No published evaluation of it exists.

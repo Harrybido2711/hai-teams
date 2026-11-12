@@ -1,4 +1,4 @@
-<!-- size-budget: 9000 -->
+<!-- size-budget: 11000 -->
 <!-- One job: MultiChallenge's operating facts. Larger than the default because it carries the
      judge pilot and the full run side by side, which share every path but the set, and since
      2026-11-01 the full run's per-model job record. -->
@@ -8,7 +8,8 @@ Coordination, over multi-turn conversations. Upstream `ekwinox117/multi-challeng
 every item.** The **judge pilot** (2026-10-19) graded `gpt-5.6-luna` on a 10% sample with four
 candidate judges; the user chose **Claude Haiku 5.5** on 2026-10-31. Since then all five selected
 models have a runner for the **full run** (all 273 items), and Haiku 5.5 grades each. Generated on
-Quest 2026-11-01 (run order below), not yet judged; no recorded result.
+Quest 2026-11-01 (run order below), graded by Haiku 5.5, and **recorded 2026-11-11** in both
+workbooks and `results.db` (§ Results, below the run order).
 
 ## Paths
 
@@ -101,16 +102,37 @@ arrays log to `../judge_log_<job>_<task>.txt` (pilot) and `../judge_full_log_<jo
 
    Qwen's `length` (`6765f489…`) is a repetition loop run to the cap. Deepseek's (`6765fc5e…`, a
    six-week schedule of quotes) spent 7,849 of its 8,192 tokens reasoning; Gemma answered that item
-   in 4,416, Qwen in 6,607. **Judging both as the answers the shared cap produced is the user's
-   call, pending**; until then their judges wait. Gemini's `error` on `6765fc5e…` was a 19 KB
+   in 4,416, Qwen in 6,607. Both were then **judged as the answers the cap produced** (`usable`
+   counts `length`); the user never ruled on it separately — a confirmation is still owed. Gemini's `error` on `6765fc5e…` was a 19 KB
    fragment recorded `ok` ([provider-gotchas.md](../../provider-gotchas.md) § OpenRouter): Google's
    `RECITATION` filter, deterministic, so the regenerated row is `failed` and `mc_judge` refuses the
-   set. **The user decided on 2026-11-07 that it is not scored** ("这个题目所有的benchmark都不记录评分"): `mc_judge.py --skip-qid 6765fc5e0af93a24e8fbe4ee` leaves it out, accepts only an item that has no usable response, and writes `skipped_qids` into the rows' config. Gemini is judged on 272 items; whether the other four are scored on the same 272 for the comparison is settled when the numbers are recorded. All five files and their
+   set. **The user decided on 2026-11-07 that it is not scored** ("这个题目所有的benchmark都不记录评分"): `mc_judge.py --skip-qid 6765fc5e0af93a24e8fbe4ee` leaves it out, accepts only an item that has no usable response, and writes `skipped_qids` into the rows' config. Gemini is judged on 272 items. **All five are scored on the same 272** — read from that sentence as "for every model", and recorded so 2026-11-11; that is Deepseek's `length` item too, so Qwen's `6765f489…` is the one capped answer left in. All five files and their
    logs pulled down md5-identical 2026-11-04.
-5. `sbatch --array=<i> run_judge_full.sh` from `Action_processes_benchmarks/`, per model, once both
-   benchmarks' generation is usable. GPT (index 0): job 7177159, 2026-11-04 — needs no decision and
-   fits the balance. The rest wait on OpenRouter (≈ $20 for all five, wonderbread.md § Expected
-   counts; $8.11 left at submit) and, for Gemini, Qwen and Deepseek, the decisions above.
+5. `sbatch --array=<i> run_judge_full.sh` from `Action_processes_benchmarks/`, per model — done, all
+   `ok`: GPT 7177159 (index 0), Gemma 7221201 (3), Qwen 7470998_2, Deepseek 7470998_4; Gemini's was
+   judged on its own with `--skip-qid` (`run_judge_full.sh` does not pass it; 7470998_1's log holds
+   only Wonderbread). Rows per model: 819, Gemini 816.
+
+## Results — Haiku 5.5, recorded 2026-11-11
+
+The user asked for the record on 2026-11-11, **before an audit**; recomputed from the judge rows on
+disk by `Results/record_haiku_judge.py` and kept in `Final_result.xlsx` / `Tempo_results.xlsx` ›
+`MultiChallenge`, with `results.db` rebuilt from them. Fractions; three replicates per item, an item's
+label the strict majority. **All five on the same 272 items**; the macro mean of the four axes is
+upstream's headline, the micro (all items as one pool) is stored beside it and never averaged in.
+
+| | Gemini | OpenAI | Qwen | Gemma | Deepseek |
+|---|--:|--:|--:|--:|--:|
+| INFERENCE_MEMORY (113) | 0.5044 | 0.3982 | 0.3982 | 0.5575 | 0.5664 |
+| INSTRUCTION_RETENTION (69) | 0.6957 | 0.6667 | 0.2754 | 0.6667 | 0.7536 |
+| RELIABLE_VERSION_EDITING (41) | 0.2439 | 0.3415 | 0.1951 | 0.3659 | 0.4878 |
+| SELF_COHERENCE (49 scored of 50) | 0.3673 | 0.3673 | 0.2653 | 0.3673 | 0.5102 |
+| **Overall (macro)** | 0.4528 | 0.4434 | 0.2835 | 0.4893 | **0.5795** |
+| Overall (micro) | 0.4890 | 0.4522 | 0.3125 | 0.5221 | 0.5919 |
+
+Haiku 5.5's error rate against humans is **unmeasured** (`JUDGE_SELECTION.md` §8), so these are the
+judge's grades. Qwen's column is the Together route; Deepseek's is `deepseek-flash` under a prompt
+ceiling, not upstream's no-system-prompt conversation.
 
 ## What its README says about showing reasoning
 
