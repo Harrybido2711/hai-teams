@@ -186,7 +186,14 @@ smoke's `latency_s`: Deepseek ~5 h of 12, Qwen ~11 h of 24, the others ≤ 1.1 h
 - **Deepseek:** its first two rows (`dst/basic/00`, `dst/specific/00`, passed in the smoke) spent
   all 16384 tokens on reasoning and are `failed`; later rows reasoned 2.2k–13.8k tokens even on
   windows of 3 slots. The user then set the 8192 reasoning budget (§ Model parameters), and job
-  8428390 was cancelled at 23 rows (4 `failed`) — those rows are archived on Quest, not resumed.
+  8428390 was cancelled at 23 rows (4 `failed`) — archived on Quest in
+  `MPGT_Deepseek/results_archive_max_tokens16384_20261113T0436Z/`, not resumed. **Resubmitted
+  2026-11-12 22:37 CST as job 8433789** with the budget (runner and `run_mpgt.sh` md5-matched, 21/21
+  code files). Gate at 4 and 9 min: 13 rows, all `ok`, 7 forced, none past 8192, no forced
+  answer with `reasoning_content`, no `budget_exceeded`. **Audit item:** a forced answer can
+  decline — `dst/story/00` answered "I can't reliably reconstruct the exact labels" and a list of
+  candidate labels, 0/23 unread (the smoke's forced answer to the same row scored 15/23). Count
+  forced rows with every slot unread before recording; if common, `FORCE_ANSWER` needs words.
 - **Qwen:** 2 of its first 15 rows looped to the 8192 cap — written `ok` with `finish=length`, as in
   the smoke.
 - **A `failed` row is not scored 0 yet.** `summarize` skips a non-`ok` row's slots and marks the task
