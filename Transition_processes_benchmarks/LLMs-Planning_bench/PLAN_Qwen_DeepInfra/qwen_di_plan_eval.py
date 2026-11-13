@@ -41,9 +41,21 @@ client = OpenAI(api_key=os.getenv("DEEPINFRA_API_KEY"),
 WANTED = {"temperature": 0, "max_tokens": 8192, "seed": 42}
 FIXED = {"extra_body": {"reasoning": {"enabled": False}}}
 
+# The prompt ceiling (`prompt-ceiling.md`): tells the model the budget `max_tokens` enforces, because
+# this model deliberates in its visible answer and the pilot's first 8,192 run was cut off on 23% of
+# its rows. A REQUEST, not a limit — `finish_reason` and `completion_tokens` say whether it worked.
+PROMPT_CEILING = ("Your whole reply, every bit of reasoning plus the final answer, must fit within 8192 "
+                  "tokens; anything past that is cut off and lost. Keep your reasoning short and do not "
+                  "re-check the same step again and again. As soon as you have a solution, write the "
+                  "final answer in the exact format the task asks for. If you are running out of room, "
+                  "stop reasoning and give your best answer immediately.")
+
 
 def once(messages, model, params):
-    r = client.chat.completions.create(model=model, messages=messages, **FIXED, **params)
+    # After the shared system message, before the shared user message: the shared messages are untouched.
+    r = client.chat.completions.create(
+        model=model, messages=messages[:1] + [{"role": "system", "content": PROMPT_CEILING}]
+        + messages[1:], **FIXED, **params)
     return r.choices[0].message.content, core.openai_meta(r)
 
 
@@ -51,4 +63,4 @@ if __name__ == "__main__":
     core.run_cli(description="PlanBench — Qwen3.5-9B (DeepInfra, reasoning off)",
                  default_model="Qwen/Qwen3.5-9B", model_dir=MODEL_DIR, client=client, once=once,
                  wanted=WANTED, fixed=FIXED, required={"max_tokens": 8192}, call_timeout=900,
-                 extra_config={"route": "deepinfra"})
+                 extra_config={"route": "deepinfra", "prompt_ceiling": PROMPT_CEILING})

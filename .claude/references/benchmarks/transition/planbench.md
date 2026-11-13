@@ -35,7 +35,7 @@ and `run_plan.sh`. Keys in the root `.env` (gitignored).
 | OpenAI | `PLAN_GPT_5.6_Luna` | `gpt-5.6-luna` | `reasoning_effort="low"` (required), `max_completion_tokens=16384`, `seed=42` |
 | Gemini | `PLAN_Gemini_Flash3.5lite_OpenRouter` | `google/gemini-3.5-flash-lite` | `reasoning.effort="minimal"` (fixed), `max_tokens=8192`, `seed=42` |
 | Gemma | `PLAN_Gemma_DeepInfra` | `google/gemma-4-31B-it` | no reasoning parameter, `temperature=0`, `max_tokens=4096`, `seed=42` |
-| Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=8192` (**was 4096 — it bound, see Run order**), `seed=42`; route `deepinfra` on every row; call timeout 900 s |
+| Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=8192` (**was 4096 — it bound, see Run order**), `seed=42`; **prompt ceiling** (second system message, 8192-token budget, wording in the runner and on every row's `config`); route `deepinfra` on every row; call timeout 900 s |
 | Deepseek | `PLAN_Deepseek` | `deepseek-flash` | prompt ceiling as a second system message, `temperature=0`, `max_tokens=16384`, `seed=42` |
 
 **Every output cap is chosen, not measured** — raised from AwareBench's short-answer caps because an
@@ -162,6 +162,15 @@ PlanBench number is a lower bound set by the cap**, and a cap that does not bind
 Deepseek have) is 5–23 min for a reply that fills it (16,384 tokens at 52 down to 12 tokens/s). At
 `temperature=0, seed=42` the route is not reproducible: of the 533 rows that had finished under the
 old cap, only 60 came back with identical text.
+
+**Prompt ceiling added to Qwen on the user's instruction, 2026-11-12.** A second system message tells
+it the whole reply must fit 8,192 tokens, to stop re-checking, and to answer as soon as it has a
+solution (`prompt-ceiling.md`; a request, not a limit). It changes the prompt, so **the Qwen results
+with and without it are two configurations**: the run without it is kept, not mixed in, as
+`results_archive_max_tokens8192_noceiling_20261112` (Quest and local). Probe on 20 rows, same
+parameters, before the rerun: of 12 rows the old run had cut at 8,192, **5 still hit the cap** (was
+12) and 3 were correct (was 1); 4 rows it had answered correctly stayed correct. Several finished
+at 6,700–7,300 tokens and were still wrong, so it shortens the tail without removing it.
 
 **Qwen's route speed is not a constant.** Tokens/s over rows of at least 300 tokens: median 13.9 in the
 4,096 run (p10 7.8, p90 57), 30.9 in the 8,192 run (p10 16.9, p90 56), hourly medians 16–88. The same
