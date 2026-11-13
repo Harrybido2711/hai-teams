@@ -73,11 +73,14 @@ annotation, reasoning); ours run all six (the user, 2026-11-09).
 | Gemini | `MPGT_Gemini_Flash3.5lite_OpenRouter` | OpenRouter, reasoning `{"effort": "minimal"}`, `max_tokens=8192`, `seed=42` |
 | Qwen | `MPGT_Qwen_DeepInfra` | DeepInfra, reasoning `{"enabled": False}`, `temperature=0`, `max_tokens=8192`, `seed=42` |
 | Gemma | `MPGT_Gemma_DeepInfra` | DeepInfra, `temperature=0`, `max_tokens=8192`, `seed=42` |
-| Deepseek | `MPGT_Deepseek` | `deepseek-flash`, prompt ceiling, `temperature=0`, **`max_tokens=16384`** |
+| Deepseek | `MPGT_Deepseek` | `deepseek-flash`, prompt ceiling, `temperature=0`, `seed=42`, **reasoning budget 8192**: `max_tokens=8192`, and past it a forced answer — thinking disabled, `max_tokens=4096` |
 
-**Deepseek's cap is twice the others' — the user, 2026-11-11, "raise it a bit, not too much".**
-One call annotates a whole window, and the ceiling does not keep the reasoning short: at 8192, 7 of
-12 smoke rows ended at `length` with no answer. At 16384 one in 12 still does (§ Smoke).
+**Deepseek's reasoning may not pass 8192 tokens — the user, 2026-11-12, "不能让它有太多的推理".**
+DeepSeek has no thinking budget and ignores the prompt ceiling: at `max_tokens=16384` (the user's
+2026-11-11 raise) the first full run reasoned a median ~9k tokens and 4 of 23 rows spent the whole
+cap with no answer. So a row whose first call ends at `length` gets a second call: its own reasoning
+handed back, thinking disabled, "answer now". Mechanism, probe and row fields: the runner's
+docstring. ~74% of rows are expected to be forced; `forced_answer` on the row says which.
 
 ## Scoring — `mpgt_lenient_v4`
 
@@ -148,7 +151,7 @@ score (type and speaker only) beside the headline is proposed and waits for the 
 | Gemini | 12 ok | ~2 | goal/story, goal/reasoning | 5 and 2 answers for 6 slots; goal/story's preamble holds a format example, `such as @ G ( speaker , action ( parameters ) )`, which is not read |
 | Gemma | 12 ok | ~10 | none | |
 | Qwen | 12 ok | 30–450 | 8 of 12 | echoes the input unfilled, lists every annotation of the dialogue, numbers 42 items for 23 slots, or reasons in prose without tags; goal/story looped to its 8192 cap; goal/roleplay rewrites the window and then lists answers that disagree on 3 slots — the list skips a turn, so it fills nothing (`conflict=3`) |
-| Deepseek | 11 ok, 1 `length` | 35–90 | none | reasoning 5.9k–15.8k tokens; dst/story ran out at 16384 |
+| Deepseek | 12 ok — rerun 2026-11-12 at the 8192 budget | 18–48 | none | 8 of 12 forced, every forced answer with no `reasoning_content` (67–447 tokens); no row reasoned past 8192; DST 14–15/23, as at 16384. At 16384 (2026-11-11): 11 ok, 1 `length`, reasoning 5.9k–15.8k |
 
 Every unread row was checked by hand: the model's answer, not the reader's miss. Misreads were
 looked for too: under v3 no slot of the 60 rows is read from a word without brackets or from a
@@ -164,6 +167,9 @@ committed (no benchmark's are); the 8192 Deepseek rows sit locally in
 uid `task/style/NN`; `smoke/zero-shot/` for any `--limit` run, never `results/`. sbatch logs are
 `log_<jobid>.txt`/`.err` in the model folder. Results are a model-named folder of ours; upstream ships
 none. A run exits 1 unless every unit has an `ok` row, and **2 if any row hit the output cap**.
+Deepseek's rows also say whether the reasoning budget forced the answer (`forced_answer`, most
+of them) and may end `budget_exceeded` — a forced answer that reasoned anyway. **`--summarize`
+scores every `ok` row whatever its finish**, so read `finish_reason` before a number is recorded.
 
 ## Run order
 
@@ -178,9 +184,9 @@ Each runner's `--dry-run` on Quest built 348 units. First-rows gate, two samples
 rows growing in all five, 0 empty `ok` rows, no halt marker, stderr empty. Wall time sized from the
 smoke's `latency_s`: Deepseek ~5 h of 12, Qwen ~11 h of 24, the others ≤ 1.1 h.
 - **Deepseek:** its first two rows (`dst/basic/00`, `dst/specific/00`, passed in the smoke) spent
-  all 16384 tokens on reasoning and are `failed`; the next nine were `ok`, still reasoning 2.2k–13.8k
-  tokens on windows of 3 slots. `judge_core` retries a `failed` row on resume, so a resubmit after
-  the run retries only those.
+  all 16384 tokens on reasoning and are `failed`; later rows reasoned 2.2k–13.8k tokens even on
+  windows of 3 slots. The user then set the 8192 reasoning budget (§ Model parameters), and job
+  8428390 was cancelled at 23 rows (4 `failed`) — those rows are archived on Quest, not resumed.
 - **Qwen:** 2 of its first 15 rows looped to the 8192 cap — written `ok` with `finish=length`, as in
   the smoke.
 - **A `failed` row is not scored 0 yet.** `summarize` skips a non-`ok` row's slots and marks the task
