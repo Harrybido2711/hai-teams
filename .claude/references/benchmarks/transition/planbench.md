@@ -36,7 +36,7 @@ and `run_plan.sh`. Keys in the root `.env` (gitignored).
 | Gemini | `PLAN_Gemini_Flash3.5lite_OpenRouter` | `google/gemini-3.5-flash-lite` | `reasoning.effort="minimal"` (fixed), `max_tokens=8192`, `seed=42` |
 | Gemma | `PLAN_Gemma_DeepInfra` | `google/gemma-4-31B-it` | no reasoning parameter, `temperature=0`, `max_tokens=4096`, `seed=42` |
 | Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=8192` (**was 4096 — it bound, see Run order**), `seed=42`; **prompt ceiling** (second system message, 8192-token budget, wording in the runner and on every row's `config`); route `deepinfra` on every row; call timeout 900 s |
-| Deepseek | `PLAN_Deepseek` | `deepseek-flash` | prompt ceiling as a second system message, `temperature=0`, `max_tokens=16384`, `seed=42` |
+| Deepseek | `PLAN_Deepseek` | `deepseek-flash` | prompt ceiling as a second system message (AwareBench's sentence **plus a 16,384-token budget since 2026-11-12**), `temperature=0`, `max_tokens=16384`, `seed=42` |
 
 **Every output cap is chosen, not measured** — raised from AwareBench's short-answer caps because an
 answer here is a multi-step plan. The pilot's `finish_length` column is the measurement.
@@ -137,9 +137,18 @@ limit (`sbatch --array=3 --time=… run_plan.sh`, command-line options override 
 reached its 4 h wall at 280/311 and was resumed unchanged (job 8215431, 1 h 09 min): 1,563 rows, 0
 empty, `complete` 1. Deepseek: 1,563 rows, **11
 empty** — all `task_2` (logistics 1, mystery_blocksworld 4, obfuscated 6), each five attempts that
-spent all 16,384 tokens on reasoning; shards 2–4 exit 1 for that reason by design. At
-`temperature=0, seed=42` a resubmit reproduces them, so the user **accepted them as no-answer rows**
-(they stay in `acc`'s denominator). Cap hits elsewhere: Deepseek 17 rows (1.1%), Gemma 28 (1.8%).
+spent all 16,384 tokens on reasoning; shards 2–4 exit 1 for that reason by design. The user first
+accepted them as no-answer rows, then on 2026-11-12 had the token budget added to the prompt and the
+pilot rerun — see the next paragraph. Cap hits elsewhere: Deepseek 17 rows (1.1%), Gemma 28 (1.8%).
+
+**Deepseek's prompt ceiling now states the budget, and it does not bind the reasoning.** The
+second system message was AwareBench's "Think briefly…" sentence; the user asked for the 16,384-token
+budget to be added, as for Qwen, and the pilot rerun (job 8436559). The run without the budget is kept
+as `results_archive_ceiling_without_budget_20261112`. Probe on 23 rows before the rerun: **10 of the 11
+empty rows were empty again**, with `reasoning_tokens` still 16,384; 3 of 6 rows that had returned a
+partial answer now returned none; 6 of 6 previously correct rows stayed correct (median 1,082
+tokens). Its reasoning is hidden and the request does not reach it. The levers left are a larger
+`max_tokens` or accepting the rows as no-answer; neither has been tried.
 
 **Qwen's 4,096 cap bound, and the run was replaced.** Stopped at 7 h 42 min with 760 rows, 0 empty:
 **227 (29.9%) `finish=length`, only 13 of them with `[PLAN END]`** — mystery_blocksworld 132 of 180,

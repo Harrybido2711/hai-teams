@@ -5,8 +5,10 @@ scoring) are identical for every model. The shared messages go out unchanged; th
 second system message, below.
 
 **No thinking knob exists, so the cap goes in the prompt** (`model-parameters.md` rules 1 and 5,
-`prompt-ceiling.md`) — the same wording as AwareBench's runner, written on every row through
-`extra_config`. It is a REQUEST, not a limit: verify it from `reasoning_tokens` on the rows.
+`prompt-ceiling.md`) — AwareBench's wording plus the token budget (below), written on every row
+through `extra_config`. It is a REQUEST, not a limit: verify it from `reasoning_tokens` on the rows.
+The pilot's first run used AwareBench's sentence alone; 11 task_2 rows spent all 16,384 tokens on
+reasoning and came back empty, so the user had the budget added and the pilot rerun (2026-11-12).
 
 **Output cap `max_tokens=16384` — chosen, not measured.** It bounds reasoning and answer together.
 AwareBench and MultiChallenge ran this model at 8192 on short answers; a PlanBench answer is a
@@ -37,7 +39,14 @@ client = OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"), base_url="https://api.dee
                 timeout=7200, max_retries=0)
 
 WANTED = {"temperature": 0, "max_tokens": 16384, "seed": 42}
-PROMPT_CEILING = "Think briefly. Use at most five sentences of reasoning before you answer."
+# The first sentence is AwareBench's wording. The rest states the budget `max_tokens` enforces: the
+# pilot's first run, with the first sentence alone, had 11 rows whose reasoning used all 16,384
+# tokens and left no answer. A REQUEST, not a limit — `finish_reason` and `reasoning_tokens` say
+# whether it worked.
+PROMPT_CEILING = ("Think briefly. Use at most five sentences of reasoning before you answer. Your whole "
+                  "reply, reasoning included, must fit within 16384 tokens; anything past that is cut off "
+                  "and lost. If you are running out of room, stop reasoning and give your best answer "
+                  "immediately.")
 
 
 def once(messages, model, params):
