@@ -116,8 +116,8 @@ Needs VAL and `tarski` 0.7.0, which Quest's shared env lacks: **score locally**,
 the five `PLAN_*` folders and `plan-bench/prompts/` (105 MB); copy `.env` on Quest. Generation reads
 nothing else. 3. In each `PLAN_*`: `sbatch run_plan.sh` — five shards of the pilot at once (wall
 time 4 h; the 15-row local smoke measured median latencies of 1–4 s for GPT, Gemini, Gemma, Deepseek,
-about 20–30 min a shard). **Qwen is the long pole**: ~12 tokens/s on this DeepInfra route, and it
-writes long visible reasoning even with `reasoning` off. Its `run_plan.sh` asks for 48 h, the `normal`
+about 20–30 min a shard). **Qwen is the long pole**: its replies are long (it writes visible
+reasoning even with `reasoning` off) and this DeepInfra route's speed varies — see "Qwen's route speed" below. Its `run_plan.sh` asks for 48 h, the `normal`
 partition's `MaxTime` (2 days). More shards for Qwen alone would cut that, but 5 is the standing
 ceiling (`quest-cluster.md`) and raising it is the user's call.
 4. `monitor-run`. 5. `pull-results`. 6. Score locally (above); `audit-results`. The full set is
@@ -159,9 +159,18 @@ mystery_blocksworld**, 40 of 263 in logistics, 15 of 500 in blocksworld. Those r
 cut short, not loops (mean share of the most repeated line 1.6%). Raising 4,096→8,192 rescued 104 of
 the 227 rows the old run had truncated (36 of them correct); 123 still hit the cap. So **Qwen's
 PlanBench number is a lower bound set by the cap**, and a cap that does not bind (≥16 k, as GPT and
-Deepseek have) is 16–23 min for a reply that fills it, at this route's 12–17 tokens/s. At
+Deepseek have) is 5–23 min for a reply that fills it (16,384 tokens at 52 down to 12 tokens/s). At
 `temperature=0, seed=42` the route is not reproducible: of the 533 rows that had finished under the
 old cap, only 60 came back with identical text.
+
+**Qwen's route speed is not a constant.** Tokens/s over rows of at least 300 tokens: median 13.9 in the
+4,096 run (p10 7.8, p90 57), 30.9 in the 8,192 run (p10 16.9, p90 56), hourly medians 16–88. The same
+prompt (idx 0) streamed 11 tokens/s while five of our shards ran, and 52 tokens/s twice afterwards
+with none. Replies under 60 tokens took a median 1.8 s, which is why shorter benchmarks felt fast. For
+scale, medians on the other routes: Gemma on DeepInfra 23, GPT 98, Deepseek 164, Gemini 293. How much
+is our own five streams and how much is DeepInfra's load at the hour is **not separated**. The
+pilot's shards took 4.3, 7.3, 13.5, 16.0 and 17.5 h, so the full set (10× the rows) is 43–175 h a
+shard at 5 shards.
 
 ## Showing reasoning
 

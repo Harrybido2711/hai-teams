@@ -18,8 +18,9 @@ chain-of-thought cut mid-sentence (no repetition loops), so 4096 measured the ca
 Doubled on the user's decision, 2026-11-11; those rows are archived, not mixed in.
 `temperature=0` and `seed=42` pinned (rules 4 and 8), the seed negotiated.
 
-This route streams about 12 tokens/s, so a reply that fills 8192 tokens takes ~680 s: the SIGALRM
-ceiling is 900 s (it was 600 s at 4096, and a 4096-token reply took up to ~340 s), and the client's
+This route's speed is not constant: median 14 tokens/s in the 4096 run, 31 in the 8192 run (hourly
+medians 16-88), 52 for a lone stream afterwards (`planbench.md`). At 12 tokens/s a reply that fills
+8192 tokens takes ~680 s, so the SIGALRM ceiling is 900 s (it was 600 s at 4096), and the client's
 own timeout sits above that so the watchdog, not the SDK, ends a hung call.
 """
 
