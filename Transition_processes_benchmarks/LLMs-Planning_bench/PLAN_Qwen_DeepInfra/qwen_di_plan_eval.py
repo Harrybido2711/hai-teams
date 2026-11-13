@@ -18,6 +18,13 @@ chain-of-thought cut mid-sentence (no repetition loops), so 4096 measured the ca
 Doubled on the user's decision, 2026-11-11; those rows are archived, not mixed in.
 `temperature=0` and `seed=42` pinned (rules 4 and 8), the seed negotiated.
 
+**Answer-only, by instruction** (user's decision, 2026-11-13, after two 8,192 runs — see
+`PROMPT_CEILING`): the model's long analysis is its own style with thinking off, not a switch that
+failed, and a budget sentence barely moved it (349 -> 320 truncated rows). On 60 rows, asking for the
+final answer alone cut the median reply from 4,645 to 64 tokens and the truncated rows from 24 to 2
+of the 24 that had been cut, with 23 correct against 19. Qwen is now measured like Gemma and Gemini:
+a model that answers directly.
+
 This route's speed is not constant: median 14 tokens/s in the 4096 run, 31 in the 8192 run (hourly
 medians 16-88), 52 for a lone stream afterwards (`planbench.md`). At 12 tokens/s a reply that fills
 8192 tokens takes ~680 s, so the SIGALRM ceiling is 900 s (it was 600 s at 4096), and the client's
@@ -41,14 +48,13 @@ client = OpenAI(api_key=os.getenv("DEEPINFRA_API_KEY"),
 WANTED = {"temperature": 0, "max_tokens": 8192, "seed": 42}
 FIXED = {"extra_body": {"reasoning": {"enabled": False}}}
 
-# The prompt ceiling (`prompt-ceiling.md`): tells the model the budget `max_tokens` enforces, because
-# this model deliberates in its visible answer and the pilot's first 8,192 run was cut off on 23% of
-# its rows. A REQUEST, not a limit — `finish_reason` and `completion_tokens` say whether it worked.
-PROMPT_CEILING = ("Your whole reply, every bit of reasoning plus the final answer, must fit within 8192 "
-                  "tokens; anything past that is cut off and lost. Keep your reasoning short and do not "
-                  "re-check the same step again and again. As soon as you have a solution, write the "
-                  "final answer in the exact format the task asks for. If you are running out of room, "
-                  "stop reasoning and give your best answer immediately.")
+# The answer-only instruction, carried as the project's "prompt ceiling" (`prompt-ceiling.md`).
+# With thinking off this model still writes a long analysis in its visible answer, and that is what
+# `max_tokens` cut off: 23% of the pilot's rows at 8,192 (21% with a budget sentence added). Every
+# way of switching thinking off gave the same long answers (checked 2026-11-13); asking for the answer
+# alone is what shortened them. A REQUEST, not a limit — `finish_reason` says whether it worked.
+PROMPT_CEILING = ("Do not explain, analyse or think step by step. Reply with the final answer only, in "
+                  "exactly the format the task asks for. Your whole reply must fit within 8192 tokens.")
 
 
 def once(messages, model, params):

@@ -36,7 +36,7 @@ and `run_plan.sh`. Keys in the root `.env` (gitignored).
 | OpenAI | `PLAN_GPT_5.6_Luna` | `gpt-5.6-luna` | `reasoning_effort="low"` (required), `max_completion_tokens=16384`, `seed=42` |
 | Gemini | `PLAN_Gemini_Flash3.5lite_OpenRouter` | `google/gemini-3.5-flash-lite` | `reasoning.effort="minimal"` (fixed), `max_tokens=8192`, `seed=42` |
 | Gemma | `PLAN_Gemma_DeepInfra` | `google/gemma-4-31B-it` | no reasoning parameter, `temperature=0`, `max_tokens=4096`, `seed=42` |
-| Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=8192` (**was 4096 — it bound, see Run order**), `seed=42`; **prompt ceiling** (second system message, 8192-token budget, wording in the runner and on every row's `config`); route `deepinfra` on every row; call timeout 900 s |
+| Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=8192` (**was 4096 — it bound, see Run order**), `seed=42`; **answer-only instruction since 2026-11-13** (second system message: no explanation, final answer only, 8192-token budget; wording in the runner and on every row's `config`); route `deepinfra` on every row; call timeout 900 s |
 | Deepseek | `PLAN_Deepseek` | `deepseek-flash` | prompt ceiling as a second system message (AwareBench's sentence **plus a 16,384-token budget since 2026-11-12**), `temperature=0`, `max_tokens=16384`, `seed=42` |
 
 **Every output cap is chosen, not measured** — raised from AwareBench's short-answer caps because an
@@ -117,10 +117,10 @@ Needs VAL and `tarski` 0.7.0, which Quest's shared env lacks: **score locally**,
 the five `PLAN_*` folders and `plan-bench/prompts/` (105 MB); copy `.env` on Quest. Generation reads
 nothing else. 3. In each `PLAN_*`: `sbatch run_plan.sh` — five shards of the pilot at once (wall
 time 4 h; the 15-row local smoke measured median latencies of 1–4 s for GPT, Gemini, Gemma, Deepseek,
-about 20–30 min a shard). **Qwen is the long pole**: its replies are long (it writes visible
-reasoning even with `reasoning` off) and this DeepInfra route's speed varies — see "Qwen's route speed" below. Its `run_plan.sh` asks for 48 h, the `normal`
-partition's `MaxTime` (2 days). More shards for Qwen alone would cut that, but 5 is the standing
-ceiling (`quest-cluster.md`) and raising it is the user's call.
+about 20–30 min a shard). **Qwen was the long pole** while it wrote long visible
+analysis with `reasoning` off (shards of 2–17 h, see below); since the answer-only instruction its
+replies are tens of tokens and its `run_plan.sh` asks for 6 h. This DeepInfra route's speed still
+varies — see "Qwen's route speed".
 4. `monitor-run`. 5. `pull-results`. 6. Score locally (above); `audit-results`. The full set is
 15,568 rows, ~3,100 a shard: size its wall clock from the pilot's `latency_s_median` first.
 
@@ -193,6 +193,24 @@ of 1,513 against 653 without it, but **366 rows changed verdict between the two 
 correct, 166 turned wrong), so +34 is small beside what the route varies by on its own. It is
 cheaper: summed latency 40.1 h against 57.7 h, median reply 2,385 tokens against 2,717. Task 7 fell
 to 2 of 149 (was 11). The cap still binds, so the number is still a lower bound.
+
+**Qwen's long answers fixed by an answer-only instruction, 2026-11-13.** Asked why the cap kept
+binding, I tried the other ways of switching thinking off on a short and a long (mystery) prompt:
+`reasoning.enabled=False`, `chat_template_kwargs.enable_thinking=False` and `reasoning_effort="none"`
+all gave the identical reply (784 tokens on the short one), and with no switch the thinking goes to
+`reasoning_content` and `content` stays empty. So the switch works; with thinking off this model
+writes a long analysis in the answer, which is its own style, and a budget sentence barely moves it.
+What did: *"Do not explain, analyse or think step by step. Reply with the final answer only, in
+exactly the format the task asks for. Your whole reply must fit within 8192 tokens."* On 60 rows (24
+that the budget run had truncated, 36 stratified others), against that run's own result on the same
+rows: truncated 24 → 2 of the 24 (3 of 60), median reply 4,645 → 64 tokens, median latency minutes → 4
+s, correct 19 → 23 of 60 (6 of the 24 against 1; 17 of the 36 against 18 — within the route's
+variation). "At most ten short lines of reasoning" did worse (16 correct, 5 truncated). The 3 rows
+that still hit 8,192 are plan-writing rows (tasks 1, 2 and 4) that cycle through the same actions
+without stopping — it looks like greedy decoding looping, which the cap catches. **Qwen is now measured as a model that answers directly, like Gemma
+and Gemini**, not as one that reasons in its answer; the two earlier configurations are kept as
+`results_archive_max_tokens8192_noceiling_20261112` and `results_archive_budget_prompt_20261113`.
+Rerun: job 8538373, `--time=06:00:00`.
 
 **Qwen's route speed is not a constant.** Tokens/s over rows of at least 300 tokens: median 13.9 in the
 4,096 run (p10 7.8, p90 57), 30.9 in the 8,192 run (p10 16.9, p90 56), hourly medians 16–88. The same
