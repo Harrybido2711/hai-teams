@@ -37,7 +37,7 @@ and `run_plan.sh`. Keys in the root `.env` (gitignored).
 | Gemini | `PLAN_Gemini_Flash3.5lite_OpenRouter` | `google/gemini-3.5-flash-lite` | `reasoning.effort="minimal"` (fixed), `max_tokens=8192`, `seed=42` |
 | Gemma | `PLAN_Gemma_DeepInfra` | `google/gemma-4-31B-it` | no reasoning parameter, `temperature=0`, `max_tokens=4096`, `seed=42` |
 | Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=8192` (**was 4096 — it bound, see Run order**), `seed=42`; **answer-only instruction since 2026-11-13** (second system message: no explanation, final answer only, 8192-token budget; wording in the runner and on every row's `config`); route `deepinfra` on every row; call timeout 900 s |
-| Deepseek | `PLAN_Deepseek` | `deepseek-flash` | prompt ceiling as a second system message (AwareBench's sentence **plus a 16,384-token budget since 2026-11-12**), `temperature=0`, `max_tokens=16384`, `seed=42` |
+| Deepseek | `PLAN_Deepseek` | `deepseek-flash` | prompt ceiling as a second system message (AwareBench's sentence **plus a 16,384-token budget since 2026-11-12**), `temperature=0`, `max_tokens=16384`, `seed=42`; **since 2026-11-13 a reply cut at 16,384 gets a forced answer** — its reasoning handed back, thinking disabled, `max_tokens=4096` |
 
 **Every output cap is chosen, not measured** — raised from AwareBench's short-answer caps because an
 answer here is a multi-step plan. The pilot's `finish_length` column is the measurement.
@@ -109,6 +109,17 @@ Needs VAL and `tarski` 0.7.0, which Quest's shared env lacks: **score locally**,
 - **`--slices` is refused without `--limit`**: on a real run it would rewrite the shard file without
   the rows outside the selection. A repair is a plain resubmit of the shard. SIGTERM (SLURM's wall
   limit, `scancel`) is turned into a clean exit that saves the rows already paid for.
+- **`--force-cut` calls only the stored rows that ended at `length`** (and any empty one), through
+  the runner's forced answer — for a runner whose config holds a `forced_answer`, so far Deepseek's.
+  It accepts rows stored under that config without the key and no other, copies each shard file to
+  `results_archive_before_forced_answer_<date>/` before rewriting it, and carries every kept row
+  under the new config: **all five shards must run it**, or the sample holds two configs. A forced
+  row says so (`forced_answer`, counted in the health file); **`finish_length` then counts forced
+  answers that filled their own cap**, plus cut calls that returned no reasoning to hand back — so
+  **the truncation rate is `forced_answer` rows plus `finish_length` rows**, not `length` alone. A
+  stored cut row stays in the file until its own call returns an answer. Exits: 1 for an empty row
+  or one still cut; **2 for a forced answer that filled its cap or reasoned again**
+  (`forced_reasoned`) — read those before scoring.
 - **Upstream's `results/` and `responses/` under both trees carry no model of ours** — not our numbers.
 
 ## Run order
@@ -152,9 +163,31 @@ tokens). Its reasoning is hidden and the request does not reach it. The levers l
 `max_tokens` or accepting the rows as no-answer; neither has been tried.
 **The rerun confirmed the probe** (pulled and scored 2026-11-13): 1,563 rows, one config, **17 empty
 (was 11)** — all `task_2` again (mystery_blocksworld 9, obfuscated 7, logistics 1), 9 of them the
-same rows — and 20 `finish=length` (was 17); reasoning tokens median 1,113 (was 1,185). Scorable
+same rows — and 20 `finish=length` in all (was 17): those 17 and 3 whose plan was cut after ~16,100
+reasoning tokens; reasoning tokens median 1,113 (was 1,185). Scorable
 slices: 1,392 of 1,513 correct against 1,377 without the budget, with 33 rows turning correct and 18
 turning wrong, so the difference is the route's own variation as much as the sentence.
+
+**Those 20 rows get a forced answer — the user, 2026-11-13: "如果到了那个上界依然没有想出来就直接
+回答", and only the rows that hit the cap are called, not the pilot again.** As on mpgt: the
+reasoning of a call cut at 16,384 goes back as an assistant turn with "give your final answer now",
+thinking disabled, `max_tokens=4096` (the runner's docstring has the row fields). The reasoning was
+never stored, so `--force-cut` makes both calls for those rows: the first is a new draw and may
+finish on its own. Smoke with the first cap lowered to 4,096, 2026-11-13, twice: two `task_2` rows
+forced, `stop` in 49–592 tokens, no second-call reasoning, both parsed (and wrong — a quarter of
+the budget). **Written and smoke-tested, not on Quest: waits for the user's verification.** Then:
+1. sync `plan_eval_core.py` with the Deepseek runner;
+2. in `PLAN_Deepseek`: `sbatch --output=log_force_%a.txt --error=log_force_%a.err run_plan.sh
+   --force-cut` — all five shards (0 and 1 only take the new config), and its own log names, or the
+   pilot's `log_<k>.txt` on Quest are overwritten;
+3. when all five are done, `--health-only` once: a shard that finished early wrote the health files
+   while its siblings still held the old config;
+4. after the pull, **move the three scored files of the run without the forced answer into the
+   archive folder and rescore at once** — they sit beside the repaired shards and look current.
+
+**Qwen is not included**: its pilot was
+relaunched the same day with the answer-only instruction (below), a different remedy for the same
+cut rows, and whichever of its runs is kept decides whether a forced answer is still needed.
 
 **Qwen's 4,096 cap bound, and the run was replaced.** Stopped at 7 h 42 min with 760 rows, 0 empty:
 **227 (29.9%) `finish=length`, only 13 of them with `[PLAN END]`** — mystery_blocksworld 132 of 180,

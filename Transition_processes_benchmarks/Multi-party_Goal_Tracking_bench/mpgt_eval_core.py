@@ -27,9 +27,12 @@ import argparse
 import ast
 import collections
 import difflib
+import filecmp
+import glob
 import json
 import os
 import re
+import shutil
 import sys
 import time
 
@@ -886,6 +889,131 @@ def print_summary(label, summary):
 # ---------------------------------------------------------------- the generation loop
 
 
+def _is_cut(row):
+    """A stored answer the output cap cut off and no forced answer has replaced."""
+    return (row.get("status") == "ok" and row.get("finish_reason") == "length"
+            and not row.get("forced_answer"))
+
+
+def _rewrite(path, rows):
+    """Every line of the file again, atomically — a forced answer replaces its row in place."""
+    tmp = f"{path}.tmp.{os.uname().nodename}.{os.getpid()}"
+    with open(tmp, "w") as fh:
+        for r in rows:
+            fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
+def force_cut(gen, client, model, model_dir, params, config, path, by_uid, smoke, sleep):
+    """`--force-cut`: the stored rows that ended at the output cap get the runner's forced answer
+    (`gen.force_stored`: the cut text handed back, one more call) and NOTHING else is called — the
+    user's rule, 2026-11-13: only the rows that hit the cap, not the run again.
+
+    The forced answer is part of the config, so the stored rows are under the config without it.
+    They are accepted under exactly that config and no other, the file is copied first to
+    `results_archive_before_forced_answer_<date>/`, and every row is then written under the one
+    new config. A forced call that fails leaves its stored row as it was — still cut, picked up by
+    the next `--force-cut`. Exit 1 if ANY row of the file is still cut afterwards (a failed call, or
+    a `--task`/`--styles` selection that left some out: the whole file now carries the config that
+    promises a forced answer), or on what a plain run exits 1 for — a unit with no row, a row that
+    is not `ok`, an unknown finish. Exit 2 if a row still ends at `length`: a forced answer that
+    filled its own cap (a repetition loop does)."""
+    if not os.path.exists(path):
+        raise SystemExit(f"--force-cut: {path} does not exist — there are no stored rows to force")
+    with open(path) as fh:
+        rows = [json.loads(line) for line in fh if line.strip()]
+    want = json.loads(json.dumps(config, sort_keys=True))
+    base = {k: v for k, v in want.items() if k != "forced_answer"}
+    for r in rows:
+        if r.get("config") not in (want, base):
+            stored = r.get("config") or {}
+            diff = {k: (want.get(k), stored.get(k)) for k in set(want) | set(stored)
+                    if want.get(k) != stored.get(k) and k != "forced_answer"}
+            raise SystemExit(f"{path}\n  refusing --force-cut: row {r.get('uid')} ran under a "
+                             f"different config.\n  (wanted, stored): {diff}")
+    last = {r["uid"]: i for i, r in enumerate(rows)}          # the last row per uid is the row
+    todo = [i for uid, i in last.items() if uid in by_uid and _is_cut(rows[i])]
+    upgrade = [r for r in rows if r.get("config") != want]
+    print(f"--force-cut {os.path.basename(path)}: {len(last)} stored rows, {len(todo)} cut at the "
+          f"cap to force, {len(upgrade)} row(s) under the config without the forced answer",
+          flush=True)
+    if upgrade:
+        if not smoke:
+            archive = os.path.join(model_dir, "results_archive_before_forced_answer_"
+                                   + time.strftime("%Y%m%d"), CONDITION, os.path.basename(path))
+            held = glob.glob(os.path.join(model_dir, "results_archive_before_forced_answer_*",
+                                          CONDITION, os.path.basename(path)))
+            if held and not all(filecmp.cmp(h, path, shallow=False) for h in held):
+                raise SystemExit(f"{held[0]} already exists, differs from {path}, and that file "
+                                 f"still holds rows from before the forced answer — look at both "
+                                 f"before going on")
+            if not held:           # else: a run that stopped before its first write, same file
+                os.makedirs(os.path.dirname(archive), exist_ok=True)
+                shutil.copy2(path, archive)
+                print(f"  stored rows copied to {archive}", flush=True)
+        for r in upgrade:
+            r["config"] = want
+        _rewrite(path, rows)
+
+    failed = []
+    for n, i in enumerate(todo, 1):
+        stored = rows[i]
+        uid = stored["uid"]
+        task, style, row = by_uid[uid]
+        marker = TASKS[task]["marker"]
+        built = [{"role": "user", "content": build_prompt(task, style, row["src"])}]
+        once = gen.force_stored(client, model, gen.messages(built), params, stored)
+        text, meta, status = jc.call_with_retries(once, model, model_dir)
+        if status == "ok":
+            before = score_row(row, stored["response"], marker)
+            rows[i] = dict(stored, **meta, response=text, status="ok", config=want,
+                           first_latency_s=stored.get("latency_s"),
+                           first_n_attempts=stored.get("n_attempts"))
+            _rewrite(path, rows)
+            after = score_row(row, text, marker)
+            note = (f"lenient {before['lenient']} -> {after['lenient']}/{after['slots']} "
+                    f"missing {before['missing']} -> {after['missing']}")
+        else:
+            failed.append(uid)
+            note = "stored row left as it was"
+        jc.note_outcome(status, model, model_dir)
+        print(f"  [{n}/{len(todo)}] {uid:18s} {status} forced finish={meta.get('finish_reason')} "
+              f"out={meta.get('forced_completion_tokens')} {meta.get('latency_s')}s  {note}",
+              flush=True)
+        time.sleep(sleep)
+
+    final = [rows[i] for i in last.values() if rows[i]["uid"] in by_uid]
+    forced = [r for r in final if r.get("forced_answer")]
+    finish = collections.Counter(r.get("finish_reason") for r in final)
+    print(f"\nDONE --force-cut: {len(todo) - len(failed)}/{len(todo)} forced now, {len(forced)} "
+          f"forced rows in the file  forced finish="
+          f"{dict(collections.Counter(r.get('finish_reason') for r in forced))}  "
+          f"all rows finish={dict(finish)}  calls={jc.STATS}", flush=True)
+    print_summary(os.path.relpath(path, MPGT_ROOT), summarize(final))
+    still = [rows[i]["uid"] for i in last.values() if _is_cut(rows[i])]     # the whole file
+    missing = [u for u in by_uid if u not in last]
+    not_ok = [r["uid"] for r in final if r.get("status") != "ok"]
+    odd = jc.unexpected_finish(final)
+    if still:
+        print(f"STOP: {len(still)} row(s) of the file are still cut at the cap with no forced answer "
+              f"({len(failed)} failed just now): {still[:5]} — run --force-cut again, on every task "
+              f"and style.", flush=True)
+    if missing or not_ok:
+        print(f"STOP: {len(missing)} unit(s) have no row and {len(not_ok)} row(s) are not ok "
+              f"{(missing + not_ok)[:5]} — a plain run retries those.", flush=True)
+    if odd:
+        print(f"STOP: {sum(odd.values())} ok row(s) ended with finish_reason {dict(odd)}, not a known "
+              f"complete answer — inspect them before scoring.", flush=True)
+    if still or missing or not_ok or odd:
+        sys.exit(1)
+    if finish.get("length"):
+        print(f"STOP: {finish['length']} row(s) still end at `length` — a forced answer that filled "
+              f"its own cap. Read them before scoring.", flush=True)
+        sys.exit(2)
+
+
 def run_cli(gen, model_dir, description):
     """One response per (task, style, dialogue). Exit 1 unless every unit has an `ok` row; exit 2 if
     any row hit the output cap (`finish_reason=length`) — the cap bound, and that is decided before
@@ -901,6 +1029,9 @@ def run_cli(gen, model_dir, description):
                     help="first N dialogues per task; writes smoke/, never results/")
     ap.add_argument("--sleep", type=float, default=1.0)
     ap.add_argument("--dry-run", action="store_true", help="build every prompt, call nothing")
+    ap.add_argument("--force-cut", dest="force_cut", action="store_true",
+                    help="call only the stored rows that ended at the output cap, and only their "
+                         "forced answer (a runner that defines one); every other row is kept")
     args = ap.parse_args()
 
     tasks = list(TASKS) if args.task == "all" else [args.task]
@@ -909,6 +1040,16 @@ def run_cli(gen, model_dir, description):
     if unknown:
         raise SystemExit(f"unknown style(s) {unknown}; choose from {list(STYLES)}")
     todo_units = list(units(tasks, styles, args.limit))
+    if args.force_cut and not ("forced_answer" in gen.extra_config and hasattr(gen, "force_stored")):
+        raise SystemExit("--force-cut: this runner defines no forced answer for stored rows")
+    if args.dry_run and args.force_cut:
+        path = jc.out_path(model_dir, args.limit > 0, CONDITION, f"{jc.model_slug(args.model)}.jsonl")
+        wanted = {u[0] for u in todo_units}
+        cut = [r["uid"] for r in jc.read_rows(path) if r["uid"] in wanted and _is_cut(r)]
+        for uid in cut:
+            print(uid)
+        print(f"{len(cut)} stored row(s) cut at the cap in {path}, nothing called")
+        return
     if args.dry_run:
         for uid, task, style, row in todo_units:
             msgs = gen.messages([{"role": "user", "content": build_prompt(task, style, row["src"])}])
@@ -932,6 +1073,10 @@ def run_cli(gen, model_dir, description):
                   + (" (the runner's prepare adds one: see config)" if gen.prepare else ""))
     path = jc.out_path(model_dir, smoke, CONDITION, f"{jc.model_slug(args.model)}.jsonl")
     jc.lock_output(path)
+    if args.force_cut:
+        force_cut(gen, client, args.model, model_dir, params, config, path,
+                  {u[0]: u[1:] for u in todo_units}, smoke, args.sleep)
+        return
     done = jc.load_done(path, config)
     todo = [u for u in todo_units if u[0] not in done]
     print(f"{CONDITION} {tasks} x {styles}: {len(todo_units)} units, {len(todo)} to call -> {path}",

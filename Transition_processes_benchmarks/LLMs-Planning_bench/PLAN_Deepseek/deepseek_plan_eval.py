@@ -20,6 +20,32 @@ what answered. **The answer sometimes arrives in `reasoning_content` with `conte
 back to, logged and marked (`fallback`) — never when `finish_reason` is `length`, which is a chain of
 thought cut off, not an answer.
 
+**A reply that reaches the cap gets one forced-answer turn — the user, 2026-11-13** ("如果到了那个
+上界依然没有想出来就直接回答"). The prompt ceiling does not reach the hidden reasoning: the pilot
+with the budget in the prompt still had 20 rows end at `length`, 17 of them with no answer at all.
+So, as on `MPGT_Deepseek`: a first call that ends at `length` has its `reasoning_content` handed back
+as an assistant turn, followed by FORCE_ANSWER, with thinking **disabled** and
+`max_tokens=ANSWER_MAX`. The model answers from the reasoning it had. A partial answer the cap cut
+off is not the answer; it is kept as `first_content`. A cut call that returns no reasoning has
+nothing to hand back and stays as it was (an empty `length` row).
+
+**What a row says.** A forced row carries `forced_answer: true`, `first_finish_reason`,
+`first_reasoning_tokens`, `first_content`, and the second call's `forced_finish_reason`,
+`forced_completion_tokens`, `forced_reasoning_tokens` (None when the API reports none — with
+thinking disabled it reports none) and `forced_reasoning_chars`, which must be 0: anything else is a
+forced answer that reasoned again. Its `finish_reason` is the second call's, so `length` on a forced
+row means the answer filled ANSWER_MAX. **Neither is an answer to trust unread: the core counts both
+(`forced_reasoned`, `finish_length`) and the shard exits 2.** Usage is both calls summed — of the
+last attempt, as on every PlanBench row (the core keeps the last attempt's usage, not the sum over
+retries) — so `completion_tokens` on a forced row can pass 16,384, and `n_attempts` counts attempts,
+not calls. **The truncation rate is therefore `forced_answer` rows plus `finish_reason=length` rows**,
+not `length` alone. The cut first call is kept while the core retries the row, so a retry repeats
+only the forced answer.
+
+**`--force-cut` repairs stored rows** (`plan_eval_core`): rows that ended at `length` are called
+again — both calls, since the reasoning was never stored — and every other row is kept. The first
+call is a new draw, so a row can also come back finished on its own (`forced_answer` absent).
+
 DeepSeek queues rather than refusing, hence the long client timeout; the SIGALRM ceiling is 900 s —
 16,384 tokens at ~30 tok/s with margin.
 """
@@ -49,25 +75,80 @@ PROMPT_CEILING = ("Think briefly. Use at most five sentences of reasoning before
                   "immediately.")
 
 
+ANSWER_MAX = 4096         # the forced answer's max_tokens; a plan is a few hundred tokens
+FORCE_ANSWER = ("Your thinking has reached its limit. Do not reason any further: give your final "
+                "answer now, in exactly the format the task asks for.")   # MPGT_Deepseek's, unchanged
+NO_THINKING = {"thinking": {"type": "disabled"}}
+USAGE = ("prompt_tokens", "completion_tokens", "reasoning_tokens")
+
+# The cut first call of the row being worked on. The core retries a row by calling `once` again with
+# the SAME messages list (`run_rows` builds it once per row), so keeping the one cut call means a
+# retry repeats only the forced answer. Keyed on that list object, held here so its identity cannot
+# be reused — never on the text: PlanBench ships rows with byte-identical queries (the task 5 rows
+# of blocksworld and blocksworld_3; 101 groups in the full set), and a text key would hand one
+# row's reasoning to the next.
+_kept = {}
+
+
+def _forced(sent, model, params, first, first_meta):
+    """The forced-answer call for a first call that ended at `length`: its reasoning handed back,
+    thinking disabled. Returns (answer, meta) with both calls' usage summed."""
+    second = client.chat.completions.create(
+        model=model,
+        messages=sent + [{"role": "assistant", "content": first["reasoning"]},
+                         {"role": "user", "content": FORCE_ANSWER}],
+        **dict(params, max_tokens=ANSWER_MAX), extra_body=NO_THINKING)
+    second_meta = core.openai_meta(second)
+    message = second.choices[0].message
+    meta = dict(second_meta)
+    for key in USAGE:
+        parts = [m.get(key) for m in (first_meta, second_meta) if isinstance(m.get(key), int)]
+        meta[key] = sum(parts) if parts else None
+    meta.update(forced_answer=True,
+                first_finish_reason=first_meta.get("finish_reason"),
+                first_reasoning_tokens=first_meta.get("reasoning_tokens"),
+                first_content=first["content"],
+                forced_finish_reason=second_meta.get("finish_reason"),
+                forced_completion_tokens=second_meta.get("completion_tokens"),
+                forced_reasoning_tokens=second_meta.get("reasoning_tokens"),
+                forced_reasoning_chars=len(getattr(message, "reasoning_content", None) or ""))
+    print(f"[{model}] reply reached the cap ({first_meta.get('reasoning_tokens')} reasoning "
+          f"tokens): forced answer, {meta['forced_completion_tokens']} tokens, "
+          f"finish={meta['forced_finish_reason']}, second-call reasoning "
+          f"{meta['forced_reasoning_tokens']} tokens / {meta['forced_reasoning_chars']} chars",
+          flush=True)
+    return (message.content or "").strip(), meta
+
+
 def once(messages, model, params):
     # The ceiling goes after the shared system message and before the shared user message, so the
     # shared messages themselves are untouched.
-    r = client.chat.completions.create(
-        model=model, messages=messages[:1] + [{"role": "system", "content": PROMPT_CEILING}]
-        + messages[1:], **params)
-    meta = core.openai_meta(r)
-    message = r.choices[0].message
-    content = (message.content or "").strip()
-    if not content and meta.get("finish_reason") != "length":
-        content = (getattr(message, "reasoning_content", None) or "").strip()
-        if content:
-            print(f"[{model}] content empty, fell back to reasoning_content", flush=True)
-            meta["fallback"] = "reasoning_content"
-    return content, meta
+    sent = messages[:1] + [{"role": "system", "content": PROMPT_CEILING}] + messages[1:]
+    if _kept.get("messages") is not messages:
+        _kept.clear()
+        r = client.chat.completions.create(model=model, messages=sent, **params)
+        meta = core.openai_meta(r)
+        message = r.choices[0].message
+        content = (message.content or "").strip()
+        reasoning = (getattr(message, "reasoning_content", None) or "").strip()
+        if meta.get("finish_reason") != "length" or not reasoning:
+            if not content and meta.get("finish_reason") != "length":
+                content = reasoning
+                if content:
+                    print(f"[{model}] content empty, fell back to reasoning_content", flush=True)
+                    meta["fallback"] = "reasoning_content"
+            return content, meta
+        _kept.update(messages=messages, first={"reasoning": reasoning, "content": content},
+                     meta=meta)
+    return _forced(sent, model, params, _kept["first"], _kept["meta"])
 
 
 if __name__ == "__main__":
     core.run_cli(description="PlanBench — DeepSeek flash (prompt ceiling on thinking)",
                  default_model="deepseek-flash", model_dir=MODEL_DIR, client=client, once=once,
                  wanted=WANTED, required={"max_tokens": 16384}, call_timeout=900,
-                 extra_config={"prompt_ceiling": PROMPT_CEILING})
+                 extra_config={"prompt_ceiling": PROMPT_CEILING,
+                               "forced_answer": {"prompt": FORCE_ANSWER, "max_tokens": ANSWER_MAX,
+                                                 "extra_body": NO_THINKING,
+                                                 "when": "the first call ends at length with "
+                                                         "reasoning_content"}})

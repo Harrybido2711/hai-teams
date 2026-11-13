@@ -72,7 +72,7 @@ annotation, reasoning); ours run all six (the user, 2026-11-09).
 |---|---|---|
 | GPT | `MPGT_GPT_5.6_Luna` | `gpt-5.6-luna`, `reasoning_effort="low"`, `max_completion_tokens=8192`, `seed=42` |
 | Gemini | `MPGT_Gemini_Flash3.5lite_OpenRouter` | OpenRouter, reasoning `{"effort": "minimal"}`, `max_tokens=8192`, `seed=42` |
-| Qwen | `MPGT_Qwen_DeepInfra` | DeepInfra, reasoning `{"enabled": False}`, `temperature=0`, `max_tokens=8192`, `seed=42` |
+| Qwen | `MPGT_Qwen_DeepInfra` | DeepInfra, reasoning `{"enabled": False}`, `temperature=0`, `max_tokens=8192`, `seed=42`; **since 2026-11-13 a reply cut at 8192 gets a forced answer**, `max_tokens=4096` |
 | Gemma | `MPGT_Gemma_DeepInfra` | DeepInfra, `temperature=0`, `max_tokens=8192`, `seed=42` |
 | Deepseek | `MPGT_Deepseek` | `deepseek-flash`, prompt ceiling, `temperature=0`, `seed=42`, **reasoning budget 8192**: `max_tokens=8192`, and past it a forced answer — thinking disabled, `max_tokens=4096` |
 
@@ -83,6 +83,17 @@ cap with no answer. So a row whose first call ends at `length` gets a second cal
 handed back, thinking disabled, "answer now". Mechanism, probe and row fields: the runner's
 docstring. `forced_answer` on the row says which — 216 of the full run's 348 (62%; the smoke
 suggested ~74%).
+
+**Qwen: a reply that reaches the cap is made to answer — the user, 2026-11-13, "如果到了那个上界
+依然没有想出来就直接回答".** The same second turn, Deepseek's wording, with the cut *text* handed
+back (Qwen deliberates in its answer; its thinking switch is already off, so nothing but the request
+stops it deliberating again). **Only the rows that hit the cap are called, not the run again**
+(the user, same day): `--force-cut` makes the second call alone for the stored rows that ended at
+`length`, keeps the first as `first_response`, copies the file to
+`results_archive_before_forced_answer_<date>/` first, and leaves every other row as it was but for
+`config`. Probe on 16 stored cut rows, second call only: the 14 cut mid-deliberation all ended
+`stop` in 17–612 tokens; **the 2 repetition loops looped again** — a forced answer does not rescue
+a loop, and such a row keeps `finish=length`. Mechanism and row fields: the runner's docstring.
 
 ## Scoring — `mpgt_lenient_v4`
 
@@ -170,7 +181,11 @@ uid `task/style/NN`; `smoke/zero-shot/` for any `--limit` run, never `results/`.
 `log_<jobid>.txt`/`.err` in the model folder. Results are a model-named folder of ours; upstream ships
 none. A run exits 1 unless every unit has an `ok` row, and **2 if any row hit the output cap**.
 Deepseek's rows also say whether the reasoning budget forced the answer (`forced_answer`, most
-of them) and may end `budget_exceeded` — a forced answer that reasoned anyway. **`--summarize`
+of them) and may end `budget_exceeded` — a forced answer that reasoned anyway. **On a forced row
+`finish_reason` is the second call's**: `length` there means the forced answer filled its own cap,
+and a `--force-cut` run exits 2 for it, 1 if any row of the file is still cut (a failed call, or a
+`--task`/`--styles` selection that left some out). **The truncation rate is then `forced_answer`
+rows plus `finish=length` rows**, not `length` alone. **`--summarize`
 scores every `ok` row whatever its finish**, so read `finish_reason` before a number is recorded.
 
 ## Run order
@@ -178,6 +193,10 @@ scores every `ok` row whatever its finish**, so read `finish_reason` before a nu
 1. `python test_mpgt_scorer.py` — ALL PASS, or nothing is believed.
 2. In a model folder: `python <runner> --dry-run`, then `--limit 1` (12 calls, writes `smoke/`).
 3. On Quest, after the user's verification: `sbatch run_mpgt.sh` from inside the model folder.
+4. To force stored rows cut at the cap (Qwen): `<runner> --dry-run --force-cut` lists them and calls
+   nothing; then `sbatch run_mpgt.sh --force-cut`. **Written 2026-11-13, smoke-tested on dialogue 00
+   (`dst/story/00`: `stop`, 612 tokens, 5 → 6 of 23), not on Quest — waits for the user's
+   verification.** The sync is `mpgt_eval_core.py` and the Qwen runner together.
 
 **Full run submitted 2026-11-12 21:47 CST, without a separate pilot** — 348 calls a model is less
 than PlanBench's pilot, and every model's 12-row smoke had been read by hand. Jobs 8428390 Deepseek,
@@ -236,7 +255,9 @@ The audit (`evaluator`, 60+ responses read by hand; `partial / needs-human`):
   (confounded: forcing falls on the long dialogues).
 - **Qwen reasons in `content` although `reasoning.enabled=False`.** Of its 45 capped rows, 17 are
   repetition loops and 28 are visible reasoning cut off, some with an early draft that is scored
-  (`dst/story/18`, 15/22). Counted as 0 they give 0.1680 / 0.0481; scored as stored for now — open.
+  (`dst/story/18`, 15/22). Counted as 0 they give 0.1680 / 0.0481. **Decided 2026-11-13: these 45
+  rows get a forced answer** (§ Model parameters, Run order 4); until that has run on Quest the
+  table above is the run without it.
 
 ## Showing reasoning
 

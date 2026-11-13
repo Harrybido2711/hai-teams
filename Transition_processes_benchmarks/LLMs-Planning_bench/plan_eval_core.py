@@ -18,12 +18,14 @@ ported from `Awareness_in_LLM/aware_eval_core.py`, itself from `NegotiationToM/n
 import argparse
 import collections
 import csv
+import filecmp
 import glob
 import hashlib
 import json
 import os
 import random
 import re
+import shutil
 import signal
 import socket
 import statistics
@@ -525,41 +527,84 @@ def save_rows(path, rows):
     _atomic_write(path, write)
 
 
-def load_checkpoint(path, config):
+def forced_reasoned(row):
+    """A forced answer whose call reasoned again — the one thing a forced answer may not do."""
+    return bool(row.get("forced_answer") and (row.get("forced_reasoning_chars")
+                                              or row.get("forced_reasoning_tokens")))
+
+
+def is_cut(row):
+    """A stored row the output cap cut off — answered or empty — that no forced answer replaced."""
+    return row.get("finish_reason") == "length" and not row.get("forced_answer")
+
+
+def load_checkpoint(path, config, force_cut=False):
     """Rows already done, keyed by uid — or a refusal if the stored config differs. An EMPTY row is
-    not a done row: it is returned for retry, or a plain resume would skip it forever."""
+    not a done row: it is returned for retry, or a plain resume would skip it forever.
+
+    `force_cut` (the `--force-cut` repair, the user's rule of 2026-11-13: call only the rows that
+    hit the cap, not the run again): the runner's config now holds a `forced_answer`, and the rows
+    on disk were written before it had one. Rows under exactly this config WITHOUT that key are
+    accepted and carried under the new config; a row that ended at `length` with no forced answer
+    is not done and is called again, through the runner's forced answer. Returns (done, cut,
+    copy_first): `cut` are those stored rows, which stay in the file until their own call replaces
+    them; `copy_first` says the file still holds rows from before the forced answer."""
     if not os.path.exists(path):
-        return {}
+        return ({}, {}, False) if force_cut else {}
     want = json.loads(json.dumps(config, sort_keys=True))
-    done, empty = {}, 0
+    base = {k: v for k, v in want.items() if k != "forced_answer"} if force_cut else None
+    done, cut, empty, upgraded = {}, {}, 0, 0
     with open(path) as fh:
         for line in fh:
             if not line.strip():
                 continue
             r = json.loads(line)
-            if r.get("config") != want:
+            if force_cut and r.get("config") == base and base != want:
+                r["config"] = want
+                upgraded += 1
+            elif r.get("config") != want:
                 stored = r.get("config") or {}
                 diff = {k: (want.get(k), stored.get(k)) for k in set(want) | set(stored)
                         if want.get(k) != stored.get(k)}
                 raise SystemExit(f"{path}\n  refusing to resume: stored rows ran under a different "
                                  f"config.\n  (wanted, stored): {diff}\n  Archive the results "
                                  f"directory to a timestamped name and start clean.")
-            if (str(r.get("raw_response", "")).strip()
+            if force_cut and is_cut(r):
+                cut[r["uid"]] = r
+            elif (str(r.get("raw_response", "")).strip()
                     and r.get("finish_reason") not in INTERRUPTED_FINISH):
                 done[r["uid"]] = r
             else:
                 empty += 1
-    if done or empty:
-        print(f"  resume {os.path.basename(path)}: {len(done)} done, {empty} empty row(s) to retry",
-              flush=True)
-    return done
+    if done or empty or cut:
+        print(f"  resume {os.path.basename(path)}: {len(done)} done, {empty} empty row(s) to retry"
+              + (f", {len(cut)} cut at the cap to force, {upgraded} row(s) from before the forced "
+                 f"answer" if force_cut else ""), flush=True)
+    return (done, cut, bool(upgraded)) if force_cut else done
+
+
+def archive_before_forced(model_dir, path):
+    """Copy a shard file aside before `--force-cut` rewrites it, once: its rows are the run without
+    the forced answer, and the cut rows in it are about to be replaced."""
+    name = os.path.join(os.path.basename(os.path.dirname(path)), os.path.basename(path))
+    held = glob.glob(os.path.join(model_dir, "results_archive_before_forced_answer_*", name))
+    if held:
+        if all(filecmp.cmp(h, path, shallow=False) for h in held):
+            return                 # a run that stopped before its first save: the copy is this file
+        raise SystemExit(f"{held[0]} already exists, differs from {path}, and that file still holds "
+                         f"rows from before the forced answer — look at both before going on")
+    target = os.path.join(model_dir, "results_archive_before_forced_answer_"
+                          + time.strftime("%Y%m%d"), name)
+    os.makedirs(os.path.dirname(target), exist_ok=True)
+    shutil.copy2(path, target)
+    print(f"  stored rows copied to {target}", flush=True)
 
 
 # ---------------------------------------------------------------- the run
 
 
 def run_rows(model_dir, model, once, config, sample, slices=None, shard=0, total_shards=1,
-             limit=0, save_every=20, sleep=2.0):
+             limit=0, save_every=20, sleep=2.0, force_cut=False):
     rows = load_rows(sample, slices)
     smoke = bool(limit)
     if smoke:
@@ -572,29 +617,48 @@ def run_rows(model_dir, model, once, config, sample, slices=None, shard=0, total
         rows = kept
     rows = shard_slice(rows, shard, total_shards)
     path = rows_path(results_dir(model_dir, sample, smoke), model, shard_tag(shard, total_shards))
-    done = {} if smoke else load_checkpoint(path, config)
+    if force_cut:
+        # the stored rows ARE the input, smoke or not: nothing here starts from an empty file
+        if not os.path.exists(path):
+            raise SystemExit(f"--force-cut: {path} does not exist — there are no stored rows to force")
+        done, cut, copy_first = load_checkpoint(path, config, force_cut=True)
+        if copy_first and not smoke:
+            archive_before_forced(model_dir, path)
+    else:
+        done, cut = ({} if smoke else load_checkpoint(path, config)), {}
     records = [done[r["uid"]] for r in rows if r["uid"] in done]
     todo = [r for r in rows if r["uid"] not in done]
+    # --force-cut: a stored row the cap cut stays in the file until its OWN call returns an answer.
+    # A call that fails, or a job stopped mid-loop, must not turn it into an empty row or drop it.
+    held = {r["uid"]: cut[r["uid"]] for r in todo if r["uid"] in cut}
+
+    def to_save():
+        return records + list(held.values())
     print(f"{len(rows)} rows in this {'smoke test' if smoke else 'shard'} "
           f"({len({r['slice'] for r in rows})} slices), {len(todo)} to call -> {path}", flush=True)
     try:
         for n, row in enumerate(todo, 1):
             text, meta = call_with_retries(once, build_messages(row), model, model_dir)
+            if not text and row["uid"] in held:
+                print(f"  {row['uid']}: no answer from the forced call — the stored row is kept as "
+                      f"it was", flush=True)
+                continue
+            held.pop(row["uid"], None)
             rec = {k: v for k, v in row.items() if k != "query"}
             rec.update(raw_response=text, empty=int(not text),
                        has_plan_end=int("[PLAN END]" in text.upper()) if is_plan_task(row["task"]) else None,
                        config=config, sample=sample, ts=time.strftime("%Y-%m-%dT%H:%M:%S"), **meta)
             records.append(rec)
             if n % save_every == 0:
-                save_rows(path, records)
+                save_rows(path, to_save())
                 print(f"  {len(records)}/{len(rows)}  [{row['slice']}]", flush=True)
             if text and sleep:
                 time.sleep(sleep)
     finally:
         # A halt's SystemExit, or a SIGTERM at the wall-clock limit (run_cli turns it into
         # SystemExit), must not lose the rows already paid for since the last periodic save.
-        save_rows(path, records)
-    return path, records
+        save_rows(path, to_save())
+    return path, to_save()
 
 
 # ---------------------------------------------------------------- generation health
@@ -673,6 +737,8 @@ def summarise_health(model_dir, model, sample, smoke=False):
         "finish_length": sum(1 for r in rows if str(r.get("finish_reason")) == "length"),
         "finish_interrupted": sum(1 for r in rows if str(r.get("finish_reason")) in INTERRUPTED_FINISH),
         "fallback": sum(1 for r in rows if r.get("fallback")),
+        "forced_answer": sum(1 for r in rows if r.get("forced_answer")),
+        "forced_reasoned": sum(1 for r in rows if forced_reasoned(r)),
         "configs": len(configs), "problems": " | ".join(problems),
     }
     # `complete` = every count met, no empty row, no fragment a backend cut off, one config. It does
@@ -692,6 +758,7 @@ def summarise_health(model_dir, model, sample, smoke=False):
         _atomic_write(os.path.join(out_dir, f"{slug}_{name}.csv"), write)
     print(f"\nhealth [{model}] {sample}{' smoke' if smoke else ''}: rows={n}/{expected_total} "
           f"empty={overall['empty']} length={overall['finish_length']} "
+          f"forced={overall['forced_answer']} forced_reasoned={overall['forced_reasoned']} "
           f"interrupted={overall['finish_interrupted']} configs={len(configs)} "
           f"COMPLETE={overall['complete']}", flush=True)
     for p in problems:
@@ -724,6 +791,9 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
     ap.add_argument("--sleep", type=float, default=2.0, help="seconds after every successful call")
     ap.add_argument("--health-only", dest="health_only", action="store_true",
                     help="rewrite the health files from stored rows; makes no calls")
+    ap.add_argument("--force-cut", dest="force_cut", action="store_true",
+                    help="call only the stored rows that ended at the output cap (and any empty "
+                         "one), through the runner's forced answer; every other row is kept")
     args = ap.parse_args()
     smoke = bool(args.limit)
     slices = [s.strip() for s in args.slices.split(",") if s.strip()]
@@ -744,6 +814,9 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
             raise SystemExit(1)
         return
 
+    if args.force_cut and "forced_answer" not in (extra_config or {}):
+        raise SystemExit("--force-cut: this runner defines no forced answer (no `forced_answer` in "
+                         "its config)")
     HARD_CALL_TIMEOUT = int(call_timeout)
     MARKER_PREFIX = f"shard{args.shard}_" if args.total_shards > 1 else ""
     # SLURM ends a job at its wall-clock limit (and on scancel) with SIGTERM, whose Python default
@@ -772,15 +845,32 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
         _, records = run_rows(model_dir, args.model, lambda m: once(m, args.model, params), config,
                               args.sample, slices=slices, shard=args.shard,
                               total_shards=args.total_shards, limit=args.limit,
-                              save_every=args.save_every, sleep=args.sleep)
+                              save_every=args.save_every, sleep=args.sleep,
+                              force_cut=args.force_cut)
     finally:
         print(f"\ncalls: {STATS}  elapsed {time.time() - started:.0f}s", flush=True)
     summarise_health(model_dir, args.model, args.sample, smoke)
     # Exit 1 on THIS shard's own bad rows, so SLURM does not report COMPLETED 0:0 over a shard that
     # wrote empties below the 10-in-a-row halt. Not on the health `problems`: those include sibling
     # shards still running, which is no fault of this one.
+    # A runner with a forced answer: no row may be left cut at the cap without one. Checked BEFORE
+    # the empty rows, because a plain resubmit retries an empty row but skips a cut row that has
+    # text — the advice below would then leave it cut for good (reviewer, 2026-11-13).
+    still = [r for r in records if is_cut(r)] if "forced_answer" in config else []
+    if still:
+        print(f"\n{len(still)} row(s) of this shard are cut at the cap with no forced answer — run "
+              f"the shard again WITH --force-cut (a plain resubmit skips a cut row that has text). "
+              f"First: {still[0]['uid']}", flush=True)
+        raise SystemExit(1)
     bad = [r for r in records if r.get("empty") or r.get("finish_reason") in INTERRUPTED_FINISH]
     if bad:
         print(f"\n{len(bad)} row(s) of this shard are empty or interrupted — resubmit the shard: "
               f"resume retries exactly those. First: {bad[0]['uid']}", flush=True)
         raise SystemExit(1)
+    # A forced answer that reasoned again, or filled its own cap, is not a known complete answer.
+    odd = [r for r in records if r.get("forced_answer")
+           and (r.get("finish_reason") == "length" or forced_reasoned(r))]
+    if odd:
+        print(f"\nSTOP: {len(odd)} forced answer(s) of this shard filled their own cap or reasoned "
+              f"again — read them before scoring. First: {odd[0]['uid']}", flush=True)
+        raise SystemExit(2)

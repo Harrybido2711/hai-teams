@@ -39,7 +39,7 @@ and proceeding anyway is the failure this table exists to prevent.
 | **running or analysing stability / robustness** — repeats, perturbations, `--tag` / `--subsample` / `--perturb`, `run_criteria.sh`, how flips are counted | [criteria-runs.md](criteria-runs.md) | 6 KB |
 | **the 10% sample rerun** — `sample10`, estimating a benchmark's cost from a sample, or picking up one of its work packages | [sample10-plan.md](sample10-plan.md) | 15 KB |
 | a reasoning bill that looks too high, or how a cap backfires | [reasoning-cost.md](reasoning-cost.md) | 3 KB |
-| the model offers **no thinking or output parameter**, so the cap goes in the prompt | [prompt-ceiling.md](prompt-ceiling.md) | 1 KB |
+| the model offers **no thinking or output parameter**, so the cap goes in the prompt — or rows were **cut at the cap with no answer** and need a forced one | [prompt-ceiling.md](prompt-ceiling.md) | 2 KB |
 | writing or changing an eval script — retries, checkpoints, resume, scoring, a shared core | [script-skeleton.md](script-skeleton.md) | 5 KB |
 | whether a change needs a Quest sync, or what the three sync layers oblige | [sync-and-consistency.md](sync-and-consistency.md) | 4 KB |
 | a commit blocked by the doc check, two copies of a fact, "what does this change touch" | [doc-check.md](doc-check.md) | 3 KB |
