@@ -42,6 +42,10 @@ number, and why).
   on the repeat subsample where the metric comes from repeats.
 - **`level` matters when averaging.** A `group` or `overall` row is already an aggregate of `sub` rows.
 - **`standalone` is never averaged.** `All_EM` is one such row, so NegotiationToM has no `overall` row ([why](benchmarks/interpersonal/negotiationtom.md)); MultiChallenge's `Overall (micro)` is the other, stored beside its macro `overall`.
+- **A mean across benchmarks is reported on two bases, side by side**: every benchmark with a
+  recorded score, and the benchmarks every selected model has a score on. A model with a NULL on the
+  first basis has no mean there — Deepseek is text-only, so DocVQA and Wonderbread are NULL — and is
+  never averaged over fewer benchmarks than the others. Confirmed by the user, 2026-11-13.
 - **Wonderbread's QA rows are 1–3 where 1 is best — lower is better**, the opposite of every other
   row here; the subbench names say `(1-3, 1 = best)`. It has no `overall` row (upstream defines no
   composite). MultiChallenge and Wonderbread are LLM-judged (Haiku 5.5), their `criteria` rows are
