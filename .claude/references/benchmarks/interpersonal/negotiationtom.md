@@ -67,6 +67,7 @@ A full run is **14,138 rows**: desire 4,760 + belief 4,760 + intention **4,618**
 - **`All_EM` is a separate metric, not this benchmark's total.** It is not the mean of the four columns
   above it, and NegotiationToM has no overall score. Report it beside them; never use it as the
   benchmark's result when averaging or ranking models across benchmarks. The user's rule, 2026-11-06.
+  What stands in for one: [results-db.md](../../results-db.md), last section.
 
 These are NegotiationToM's counts only. The workflows read each benchmark's counts from its own
 page; never pass these for another one.

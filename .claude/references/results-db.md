@@ -1,4 +1,7 @@
-<!-- One job: how to read and rebuild Results/results.db. -->
+<!-- size-budget: 6500 -->
+<!-- One job: how to read and rebuild Results/results.db. Larger than the default because, since
+     2026-11-13, it also carries how its scores are combined across benchmarks — put here at the
+     user's instruction. -->
 # Results database
 
 `Results/results.db` is a SQLite copy of every recorded score and the six criteria, made at the
@@ -42,20 +45,11 @@ number, and why).
   on the repeat subsample where the metric comes from repeats.
 - **`level` matters when averaging.** A `group` or `overall` row is already an aggregate of `sub` rows.
 - **`standalone` is never averaged.** `All_EM` is one such row, so NegotiationToM has no `overall` row ([why](benchmarks/interpersonal/negotiationtom.md)); MultiChallenge's `Overall (micro)` is the other, stored beside its macro `overall`.
-- **A mean across benchmarks is reported on two bases, side by side**: every benchmark with a
-  recorded score, and the benchmarks every selected model has a score on. A model with a NULL on the
-  first basis has no mean there — Deepseek is text-only, so DocVQA and Wonderbread are NULL — and is
-  never averaged over fewer benchmarks than the others. Confirmed by the user, 2026-11-13.
-- **Oracle 1 and Oracle 2 are the user's terms, defined 2026-11-13.** Oracle 1: per benchmark, the
-  highest overall score among the selected models; then the equal-weight mean over benchmarks.
-  Oracle 2: per benchmark, the highest value of each `sub` row, combined into that benchmark's
-  overall; then the same mean. The user's example was bbh, a plain mean of its rows; using each
-  benchmark's own weights where its overall is not one (EmoBench, AwareBench) is the planner's
-  reading. What stands in for the missing overall of NegotiationToM and Wonderbread is not settled.
 - **Wonderbread's QA rows are 1–3 where 1 is best — lower is better**, the opposite of every other
   row here; the subbench names say `(1-3, 1 = best)`. It has no `overall` row (upstream defines no
-  composite). MultiChallenge and Wonderbread are LLM-judged (Haiku 5.5), their `criteria` rows are
-  gaps with a stated reason, and a blank Deepseek on Wonderbread is a text-only ceiling.
+  composite; what stands in for one is below). MultiChallenge and Wonderbread are LLM-judged
+  (Haiku 5.5), their `criteria` rows are gaps with a stated reason, and a blank Deepseek on
+  Wonderbread is a text-only ceiling.
 - **`value_text`** holds a non-numeric answer such as `not reported`.
 
 ```sql
@@ -69,3 +63,32 @@ SELECT benchmark, model_column, criterion, reason FROM gaps ORDER BY 1, 2;
 
 Criteria definitions: [evaluation-criteria.md](evaluation-criteria.md) and
 [criteria-runs.md](criteria-runs.md).
+
+## Averaging across benchmarks
+
+Benchmarks weigh the same. Recorded 2026-11-13 from the user's instructions; a line that is the
+planner's choice says so.
+
+| Benchmark | A model's score |
+|---|---|
+| BBH, MMLU, EmoBench, AwareBench, MultiChallenge | its `overall` row |
+| DocVQA | `Overall accuracy` — the user asked for accuracy; it has no `sub` rows |
+| Wonderbread | mean of its eight `sub` rows, each QA row first converted to 0–1 as `(3 − x) / 2` (1 → 1.0, 2 → 0.5, 3 → 0), SOP rows as stored. Ours, not upstream's; the user had it recorded |
+| NegotiationToM | mean of its four `sub` rows, `All_EM` left out — the planner's choice, not confirmed |
+
+- **Two bases, side by side**: every benchmark with a recorded score, and the benchmarks every
+  selected model has a score on. A model with a NULL on the first basis has no mean there (Deepseek is
+  text-only: DocVQA and Wonderbread). It is never averaged over fewer benchmarks than the others, and
+  never given a 0. Confirmed by the user.
+- **Oracle 1** (the user's term): per benchmark, the highest score among the selected models; then
+  the mean over benchmarks.
+- **Oracle 2** (the user's term): per benchmark, the highest value of each `sub` row — for a
+  Wonderbread QA row, the lowest raw score — combined into that benchmark's score; then the same
+  mean. The user's example was bbh, a plain mean. Where the `overall` is not a plain mean of the `sub`
+  rows, the benchmark's own weights are used so both oracles sit on one scale — the planner's
+  reading. EmoBench: mean of EU and EA, EU weighted by items (49 / 28 / 56 / 67 in sheet order), EA
+  plain. AwareBench: five equal dimensions, mission the mean of its explicit and implicit rows. Those
+  weights reproduce every stored `overall`.
+- **Check values, 2026-11-13** (best single model / Oracle 1 / Oracle 2): on the 8 benchmarks with a
+  score, Gemma 0.7686 / 0.8058 / 0.8158; on the 6 all five models ran, Deepseek 0.7668 / 0.7842 /
+  0.7904. They move when a benchmark is recorded.

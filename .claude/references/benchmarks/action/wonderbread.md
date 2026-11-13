@@ -191,7 +191,8 @@ judge rows on disk by `Results/record_haiku_judge.py` (the computation of
 `Results/build_judge_summary.py`) and live in `Final_result.xlsx` / `Tempo_results.xlsx` › `Wonderbread`,
 with `results.db` rebuilt from them. Three replicates per unit; QA is **1–3 where 1 is best**, so a
 lower QA number is better and a higher SOP number is better. There is no overall row: upstream defines
-no composite.
+no composite. What stands in for one in a mean across benchmarks:
+[results-db.md](../../results-db.md) § Averaging across benchmarks.
 
 | | Gemini | OpenAI | Qwen | Gemma | Deepseek |
 |---|--:|--:|--:|--:|--:|
