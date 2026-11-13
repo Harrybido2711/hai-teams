@@ -110,7 +110,8 @@ def validate(domain, problem, plan_file):
     would score every plan 0 (utils/__init__.py:255)."""
     out = subprocess.run([val_binary(), domain, problem, plan_file], capture_output=True,
                          text=True, timeout=120)
-    text = out.stdout + out.stderr
+    # The plan sits in a fresh temp directory each call; its name would make every rescore differ.
+    text = (out.stdout + out.stderr).replace(os.path.dirname(os.path.abspath(plan_file)), "<tmp>")
     if "Problem in domain" in text:
         raise ScorerInfraError(f"VAL: problem in domain {domain}")
     if _VALID in text:
