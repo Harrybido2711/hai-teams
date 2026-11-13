@@ -1,0 +1,24 @@
+negotiating parameter surface for Qwen/Qwen3.5-9B ...
+  accepted: {'temperature': 0, 'max_tokens': 8192, 'seed': 42}
+313 rows in this shard (7 slices), 313 to call -> /gpfs/projects/p32983/Transition_processes_benchmarks/LLMs-Planning_bench/PLAN_Qwen_DeepInfra/results_pilot10/Qwen-Qwen3_5-9B_shard3of5.jsonl
+  20/313  [mystery_blocksworld/task_1_plan_generation]
+  40/313  [mystery_blocksworld/task_2_plan_optimality]
+  60/313  [mystery_blocksworld/task_2_plan_optimality]
+  80/313  [mystery_blocksworld/task_2_plan_optimality]
+  100/313  [mystery_blocksworld/task_3_plan_verification]
+  120/313  [mystery_blocksworld/task_3_plan_verification]
+  140/313  [mystery_blocksworld/task_4_plan_reuse]
+  160/313  [mystery_blocksworld/task_4_plan_reuse]
+  180/313  [mystery_blocksworld/task_4_plan_reuse]
+[Qwen/Qwen3.5-9B] TIMEOUT (1/5): call exceeded 900s hard limit
+  200/313  [mystery_blocksworld/task_5_plan_generalization]
+[Qwen/Qwen3.5-9B] API error (1/5): InternalServerError: Error code: 500 - {'error': {'message': 'inference error', 'type': 'api_error', 'param': None, 'code': None}}
+  220/313  [mystery_blocksworld/task_5_plan_generalization]
+  240/313  [mystery_blocksworld/task_6_replanning]
+  260/313  [mystery_blocksworld/task_6_replanning]
+  280/313  [mystery_blocksworld/task_6_replanning]
+  300/313  [mystery_blocksworld/task_7_plan_execution]
+
+calls: {'ok': 313, 'empty': 0, 'interrupted': 0, 'errors': 1, 'timeouts': 1, 'failed_rows': 0}  elapsed 47203s
+
+health [Qwen/Qwen3.5-9B] pilot10: rows=1552/1563 empty=0 length=356 interrupted=0 configs=1 COMPLETE=0

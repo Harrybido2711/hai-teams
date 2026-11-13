@@ -1,0 +1,32 @@
+{
+  "asked": {
+    "temperature": 0,
+    "max_tokens": 8192,
+    "seed": 42
+  },
+  "accepted": {
+    "temperature": 0,
+    "max_tokens": 8192,
+    "seed": 42
+  },
+  "notes": [],
+  "config": {
+    "fixed": {
+      "extra_body": {
+        "reasoning": {
+          "enabled": false
+        }
+      }
+    },
+    "model": "Qwen/Qwen3.5-9B",
+    "params": {
+      "max_tokens": 8192,
+      "seed": 42,
+      "temperature": 0
+    },
+    "prompt_ceiling": "Your whole reply, every bit of reasoning plus the final answer, must fit within 8192 tokens; anything past that is cut off and lost. Keep your reasoning short and do not re-check the same step again and again. As soon as you have a solution, write the final answer in the exact format the task asks for. If you are running out of room, stop reasoning and give your best answer immediately.",
+    "prompts": "plan-bench/prompts",
+    "route": "deepinfra",
+    "system_prompt": "You are the planner assistant who comes up with correct plans."
+  }
+}

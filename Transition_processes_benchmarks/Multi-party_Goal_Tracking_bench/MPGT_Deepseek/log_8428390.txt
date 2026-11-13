@@ -1,0 +1,34 @@
+negotiating parameter surface for deepseek-flash ...
+  accepted: {'temperature': 0, 'max_tokens': 16384, 'seed': 42}
+zero-shot ['dst', 'goal'] x ['basic', 'specific', 'story', 'roleplay', 'annotation', 'reasoning']: 348 units, 348 to call -> /gpfs/projects/p32983/Transition_processes_benchmarks/Multi-party_Goal_Tracking_bench/MPGT_Deepseek/results/zero-shot/deepseek-flash.jsonl
+[deepseek-flash] empty response (1/5) finish_reason=length completion_tokens=16384
+[deepseek-flash] 1 attempt(s) failed; row written as failed, retried on resume
+  [1/348] dst/basic/00       failed finish=length out=16384 reasoning=16384 Nones
+[deepseek-flash] empty response (1/5) finish_reason=length completion_tokens=16384
+[deepseek-flash] 1 attempt(s) failed; row written as failed, retried on resume
+  [2/348] dst/specific/00    failed finish=length out=16384 reasoning=16384 Nones
+  [3/348] dst/story/00       ok finish=stop out=14081 reasoning=13836 68.18s  lenient 15/23 exact 14 missing 0
+  [4/348] dst/roleplay/00    ok finish=stop out=10636 reasoning=10387 52.51s  lenient 15/23 exact 15 missing 0
+  [5/348] dst/annotation/00  ok finish=stop out=9337 reasoning=8912 45.15s  lenient 14/23 exact 14 missing 0
+  [6/348] dst/reasoning/00   ok finish=stop out=11424 reasoning=11020 54.48s  lenient 15/23 exact 15 missing 0
+  [7/348] dst/basic/01       ok finish=stop out=3061 reasoning=2945 16.37s  lenient 0/3 exact 0 missing 0
+  [8/348] dst/specific/01    ok finish=stop out=4776 reasoning=4673 25.33s  lenient 0/3 exact 0 missing 0
+  [9/348] dst/story/01       ok finish=stop out=13175 reasoning=13002 68.08s  lenient 0/3 exact 0 missing 0
+  [10/348] dst/roleplay/01    ok finish=stop out=4859 reasoning=4727 26.4s  lenient 1/3 exact 1 missing 0
+  [11/348] dst/annotation/01  ok finish=stop out=2335 reasoning=2235 12.77s  lenient 0/3 exact 0 missing 0
+[deepseek-flash] empty response (1/5) finish_reason=length completion_tokens=16384
+[deepseek-flash] 1 attempt(s) failed; row written as failed, retried on resume
+  [12/348] dst/reasoning/01   failed finish=length out=16384 reasoning=16384 Nones
+  [13/348] dst/basic/02       ok finish=stop out=10568 reasoning=10198 55.35s  lenient 3/10 exact 3 missing 0
+  [14/348] dst/specific/02    ok finish=stop out=8801 reasoning=8450 45.55s  lenient 3/10 exact 3 missing 0
+  [15/348] dst/story/02       ok finish=stop out=14373 reasoning=13834 77.04s  lenient 3/10 exact 3 missing 0
+  [16/348] dst/roleplay/02    ok finish=stop out=9298 reasoning=8943 53.4s  lenient 3/10 exact 3 missing 0
+  [17/348] dst/annotation/02  ok finish=stop out=2950 reasoning=2585 16.02s  lenient 3/10 exact 3 missing 0
+  [18/348] dst/reasoning/02   ok finish=stop out=10459 reasoning=10151 66.67s  lenient 3/10 exact 3 missing 0
+  [19/348] dst/basic/03       ok finish=stop out=10910 reasoning=10330 55.76s  lenient 6/18 exact 6 missing 0
+  [20/348] dst/specific/03    ok finish=stop out=9064 reasoning=8503 54.08s  lenient 7/18 exact 7 missing 0
+[deepseek-flash] empty response (1/5) finish_reason=length completion_tokens=16384
+[deepseek-flash] 1 attempt(s) failed; row written as failed, retried on resume
+  [21/348] dst/story/03       failed finish=length out=16384 reasoning=16384 Nones
+  [22/348] dst/roleplay/03    ok finish=stop out=15368 reasoning=14831 74.23s  lenient 7/18 exact 7 missing 0
+  [23/348] dst/annotation/03  ok finish=stop out=7401 reasoning=6810 33.33s  lenient 7/18 exact 6 missing 0
