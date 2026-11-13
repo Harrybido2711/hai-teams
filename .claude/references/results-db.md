@@ -46,6 +46,12 @@ number, and why).
   recorded score, and the benchmarks every selected model has a score on. A model with a NULL on the
   first basis has no mean there — Deepseek is text-only, so DocVQA and Wonderbread are NULL — and is
   never averaged over fewer benchmarks than the others. Confirmed by the user, 2026-11-13.
+- **Oracle 1 and Oracle 2 are the user's terms, defined 2026-11-13.** Oracle 1: per benchmark, the
+  highest overall score among the selected models; then the equal-weight mean over benchmarks.
+  Oracle 2: per benchmark, the highest value of each `sub` row, combined into that benchmark's
+  overall; then the same mean. The user's example was bbh, a plain mean of its rows; using each
+  benchmark's own weights where its overall is not one (EmoBench, AwareBench) is the planner's
+  reading. What stands in for the missing overall of NegotiationToM and Wonderbread is not settled.
 - **Wonderbread's QA rows are 1–3 where 1 is best — lower is better**, the opposite of every other
   row here; the subbench names say `(1-3, 1 = best)`. It has no `overall` row (upstream defines no
   composite). MultiChallenge and Wonderbread are LLM-judged (Haiku 5.5), their `criteria` rows are
