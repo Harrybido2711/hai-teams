@@ -6,8 +6,9 @@ Multi-party goal tracking, for goal specification. Upstream `AddleseeHQ/mpgt-eva
 residue reviewed by a person (`LLM_as_judge/JUDGE_SELECTION.md` §1); **no scoring code ships in the
 repo** — the `gpt/` scripts only write predictions to a CSV. **Our runners exist since 2026-11-09**:
 zero-shot, the five selected models, scored by one automatic lenient matcher instead of a person
-(the user's decisions, 2026-11-09). Smoke-tested locally 2026-11-11 (§ Smoke). **The user gave the
-go 2026-11-12; the full run of all five is on Quest (§ Run order).** No confirmed results.
+(the user's decisions, 2026-11-09). Smoke-tested locally 2026-11-11 (§ Smoke). The user gave the
+go 2026-11-12; **the full run of all five finished 2026-11-13, pulled and audited (§ Full run) —
+not confirmed by the user, so nothing is recorded.**
 
 ## Paths
 
@@ -80,7 +81,8 @@ DeepSeek has no thinking budget and ignores the prompt ceiling: at `max_tokens=1
 2026-11-11 raise) the first full run reasoned a median ~9k tokens and 4 of 23 rows spent the whole
 cap with no answer. So a row whose first call ends at `length` gets a second call: its own reasoning
 handed back, thinking disabled, "answer now". Mechanism, probe and row fields: the runner's
-docstring. ~74% of rows are expected to be forced; `forced_answer` on the row says which.
+docstring. `forced_answer` on the row says which — 216 of the full run's 348 (62%; the smoke
+suggested ~74%).
 
 ## Scoring — `mpgt_lenient_v4`
 
@@ -180,9 +182,8 @@ scores every `ok` row whatever its finish**, so read `finish_reason` before a nu
 **Full run submitted 2026-11-12 21:47 CST, without a separate pilot** — 348 calls a model is less
 than PlanBench's pilot, and every model's 12-row smoke had been read by hand. Jobs 8428390 Deepseek,
 8428392 GPT, 8428393 Gemini, 8428394 Gemma, 8428397 Qwen; a fresh start (no `results/` existed).
-Each runner's `--dry-run` on Quest built 348 units. First-rows gate, two samples at 4 and 10 min:
-rows growing in all five, 0 empty `ok` rows, no halt marker, stderr empty. Wall time sized from the
-smoke's `latency_s`: Deepseek ~5 h of 12, Qwen ~11 h of 24, the others ≤ 1.1 h.
+Each runner's `--dry-run` on Quest built 348 units; the first-rows gate passed at 4 and 10 min.
+Wall time, measured: Gemini 15 min, GPT 56 min, Gemma 1 h 35, Qwen 3 h 20, Deepseek 4 h 05.
 - **Deepseek:** its first two rows (`dst/basic/00`, `dst/specific/00`, passed in the smoke) spent
   all 16384 tokens on reasoning and are `failed`; later rows reasoned 2.2k–13.8k tokens even on
   windows of 3 slots. The user then set the 8192 reasoning budget (§ Model parameters), and job
@@ -190,15 +191,52 @@ smoke's `latency_s`: Deepseek ~5 h of 12, Qwen ~11 h of 24, the others ≤ 1.1 h
   `MPGT_Deepseek/results_archive_max_tokens16384_20261113T0436Z/`, not resumed. **Resubmitted
   2026-11-12 22:37 CST as job 8433789** with the budget (runner and `run_mpgt.sh` md5-matched, 21/21
   code files). Gate at 4 and 9 min: 13 rows, all `ok`, 7 forced, none past 8192, no forced
-  answer with `reasoning_content`, no `budget_exceeded`. **Audit item:** a forced answer can
-  decline — `dst/story/00` answered "I can't reliably reconstruct the exact labels" and a list of
-  candidate labels, 0/23 unread (the smoke's forced answer to the same row scored 15/23). Count
-  forced rows with every slot unread before recording; if common, `FORCE_ANSWER` needs words.
-- **Qwen:** 2 of its first 15 rows looped to the 8192 cap — written `ok` with `finish=length`, as in
-  the smoke.
+  answer with `reasoning_content`, no `budget_exceeded`. A forced answer can decline —
+  `dst/story/00` answered "I can't reliably reconstruct the exact labels", every slot unread (the
+  smoke's forced answer to the same row scored 15/23); counted in § Full run, and rare.
+- **Qwen:** job 8428397 shows `FAILED` in `sacct` — that is exit 2, rows at the output cap, not a
+  crash; its log ends `DONE 348/348`.
 - **A `failed` row is not scored 0 yet.** `summarize` skips a non-`ok` row's slots and marks the task
   INCOMPLETE, so a headline needs the failed rows retried to `ok` or the scorer to count them as
-  unread — the user's call, open.
+  unread — the user's call, open. No file of this run holds one.
+
+## Full run — finished 2026-11-13, audited, not confirmed
+
+All five: 348 rows, 348 uids, every row `ok`, 0 empty, one `config` and one `served_model` a file;
+pulled md5-identical (`29a65e48`). Lenient, mean of the six styles. **Layer 4 waits for the user.**
+
+| Model | DST | Goal | Reading |
+|---|---|---|---|
+| Deepseek | 0.3406 | 0.2393 | as is |
+| Gemma | 0.3308 | 0.1859 | as is |
+| GPT | 0.3273 | 0.2007 | lower bound — off-count lists, below |
+| Gemini | 0.2575 | 0.1504 | lower bound, by less than 0.02 |
+| Qwen | 0.1778 | 0.0533 | lower bound; 45 rows at the 8192 cap |
+
+Paired bootstrap over dialogues: **DST's top three are tied** (Deepseek − GPT +0.013, CI −0.015 to
++0.043); all three beat Gemini, Gemini beats Qwen. Goal: Deepseek beats GPT and Gemma, those two
+are tied, Qwen is last. Exact and lenient differ by at most 0.02.
+
+The audit (`evaluator`, 60+ responses read by hand; `partial / needs-human`):
+- **No misread.** All 175 rows read only by list or row hold their predictions in slot order.
+- **Unread slots are the model's, not the reader's** — blanks, `[MASK]` echoed back, every intent
+  on one `;` line (Qwen's dst `reasoning`, all 29 rows). Two reader gaps exist — a list item quoting
+  two turns, bullets numbered in words (`First [MASK]:`) — and cost at most 0.003.
+- **The one rule that can move a rank: an off-count list is unread whole.** A separate answer list
+  with n ≠ k answers fills nothing (one item per slot). GPT answers story and roleplay that way —
+  `goal/story/18`: 13 answers for 14 slots, 10 right by position, none credited. Placed item i →
+  slot i, GPT's DST is 0.3419, above Deepseek; goal 0.2119. Gemini 0.2601 / 0.1511, Qwen 0.1842 /
+  0.0637, Deepseek and Gemma unchanged. v4 is one rule for every model and placing is a guess;
+  **keep or align is the user's call, open.**
+- **Goal dialogues 10 and 11 hold no `@` outside the window** (11 of 225 slots a style). Outside the
+  `reasoning` style, whose prompt shows an example, no model writes the scheme for them.
+- **Deepseek's forced answers rarely decline:** 4 of 216 forced rows have every slot unread, 2 of
+  them refusals (`dst/story/00`, `/15`) — about 0.005 on DST. `FORCE_ANSWER` stays as worded. No
+  call reasoned past 8192; forced rows score 0.352 DST / 0.232 goal against 0.322 / 0.260 unforced
+  (confounded: forcing falls on the long dialogues).
+- **Qwen reasons in `content` although `reasoning.enabled=False`.** Of its 45 capped rows, 17 are
+  repetition loops and 28 are visible reasoning cut off, some with an early draft that is scored
+  (`dst/story/18`, 15/22). Counted as 0 they give 0.1680 / 0.0481; scored as stored for now — open.
 
 ## Showing reasoning
 
