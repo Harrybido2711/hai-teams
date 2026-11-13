@@ -6,16 +6,15 @@ Multi-party goal tracking, for goal specification. Upstream `AddleseeHQ/mpgt-eva
 residue reviewed by a person (`LLM_as_judge/JUDGE_SELECTION.md` §1); **no scoring code ships in the
 repo** — the `gpt/` scripts only write predictions to a CSV. **Our runners exist since 2026-11-09**:
 zero-shot, the five selected models, scored by one automatic lenient matcher instead of a person
-(the user's decisions, 2026-11-09). **Smoke-tested locally 2026-11-11 (§ Smoke): all five run end to
-end, but Deepseek still hits its cap on 1 row in 12. Not on Quest, and not until the user has
-verified the scripts.** No results.
+(the user's decisions, 2026-11-09). Smoke-tested locally 2026-11-11 (§ Smoke). **The user gave the
+go 2026-11-12; the full run of all five is on Quest (§ Run order).** No confirmed results.
 
 ## Paths
 
 | | Path |
 |---|---|
 | Local | `Transition_processes_benchmarks/Multi-party_Goal_Tracking_bench` |
-| Quest | none yet — nothing has been transferred. AwareBench's copy sits at `/gpfs/projects/p32983/Transition_processes_benchmarks/Awareness_in_LLM`, so the mirror would be beside it; confirm on Quest, never infer |
+| Quest | `/gpfs/projects/p32983/Transition_processes_benchmarks/Multi-party_Goal_Tracking_bench` — created by the first sync, 2026-11-12: every git-tracked file of the benchmark (239, md5-matched, data included). `judge_core.py` was already on Quest and identical. `.env` was copied **on Quest** from `Action_processes_benchmarks/Multi-challenge_bench/.env` |
 
 ## Layout
 
@@ -171,6 +170,22 @@ none. A run exits 1 unless every unit has an `ok` row, and **2 if any row hit th
 1. `python test_mpgt_scorer.py` — ALL PASS, or nothing is believed.
 2. In a model folder: `python <runner> --dry-run`, then `--limit 1` (12 calls, writes `smoke/`).
 3. On Quest, after the user's verification: `sbatch run_mpgt.sh` from inside the model folder.
+
+**Full run submitted 2026-11-12 21:47 CST, without a separate pilot** — 348 calls a model is less
+than PlanBench's pilot, and every model's 12-row smoke had been read by hand. Jobs 8428390 Deepseek,
+8428392 GPT, 8428393 Gemini, 8428394 Gemma, 8428397 Qwen; a fresh start (no `results/` existed).
+Each runner's `--dry-run` on Quest built 348 units. First-rows gate, two samples at 4 and 10 min:
+rows growing in all five, 0 empty `ok` rows, no halt marker, stderr empty. Wall time sized from the
+smoke's `latency_s`: Deepseek ~5 h of 12, Qwen ~11 h of 24, the others ≤ 1.1 h.
+- **Deepseek:** its first two rows (`dst/basic/00`, `dst/specific/00`, passed in the smoke) spent
+  all 16384 tokens on reasoning and are `failed`; the next nine were `ok`, still reasoning 2.2k–13.8k
+  tokens on windows of 3 slots. `judge_core` retries a `failed` row on resume, so a resubmit after
+  the run retries only those.
+- **Qwen:** 2 of its first 15 rows looped to the 8192 cap — written `ok` with `finish=length`, as in
+  the smoke.
+- **A `failed` row is not scored 0 yet.** `summarize` skips a non-`ok` row's slots and marks the task
+  INCOMPLETE, so a headline needs the failed rows retried to `ok` or the scorer to count them as
+  unread — the user's call, open.
 
 ## Showing reasoning
 
