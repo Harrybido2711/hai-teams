@@ -6,8 +6,9 @@
 
 Strategy formulation. Upstream `karthikv792/LLMs-Planning`. **Scored by the VAL validator and
 upstream's own text parsers — no LLM in our scoring.** Runners for the five selected models written
-2026-11-09, smoke-tested locally. The 10% pilot was submitted to Quest 2026-11-11 on the user's
-go-ahead (`## Run order`); not yet pulled or audited, so no recorded results.
+2026-11-09, smoke-tested locally. The 10% pilot ran on Quest 2026-11-11 to 11-13 on the user's
+go-ahead, all five models pulled and scored (`## Run order`). A pilot is a feasibility run on every
+10th instance: no recorded results, and the full set has not been submitted.
 
 ## Paths
 
@@ -149,6 +150,11 @@ empty rows were empty again**, with `reasoning_tokens` still 16,384; 3 of 6 rows
 partial answer now returned none; 6 of 6 previously correct rows stayed correct (median 1,082
 tokens). Its reasoning is hidden and the request does not reach it. The levers left are a larger
 `max_tokens` or accepting the rows as no-answer; neither has been tried.
+**The rerun confirmed the probe** (pulled and scored 2026-11-13): 1,563 rows, one config, **17 empty
+(was 11)** — all `task_2` again (mystery_blocksworld 9, obfuscated 7, logistics 1), 9 of them the
+same rows — and 20 `finish=length` (was 17); reasoning tokens median 1,113 (was 1,185). Scorable
+slices: 1,392 of 1,513 correct against 1,377 without the budget, with 33 rows turning correct and 18
+turning wrong, so the difference is the route's own variation as much as the sentence.
 
 **Qwen's 4,096 cap bound, and the run was replaced.** Stopped at 7 h 42 min with 760 rows, 0 empty:
 **227 (29.9%) `finish=length`, only 13 of them with `[PLAN END]`** — mystery_blocksworld 132 of 180,
@@ -180,6 +186,13 @@ with and without it are two configurations**: the run without it is kept, not mi
 parameters, before the rerun: of 12 rows the old run had cut at 8,192, **5 still hit the cap** (was
 12) and 3 were correct (was 1); 4 rows it had answered correctly stayed correct. Several finished
 at 6,700–7,300 tokens and were still wrong, so it shortens the tail without removing it.
+**The rerun with the ceiling** (job 8432297, shards 2 h 03 min to 13 h 25 min, all `COMPLETED 0:0`;
+pulled and scored 2026-11-13): 1,563 rows, 0 empty, one config. `finish=length` 367 (was 394) — 320
+of the 1,513 scorable rows (was 349), **mystery_blocksworld still 233 of 500** (was 252). Correct 687
+of 1,513 against 653 without it, but **366 rows changed verdict between the two runs** (200 turned
+correct, 166 turned wrong), so +34 is small beside what the route varies by on its own. It is
+cheaper: summed latency 40.1 h against 57.7 h, median reply 2,385 tokens against 2,717. Task 7 fell
+to 2 of 149 (was 11). The cap still binds, so the number is still a lower bound.
 
 **Qwen's route speed is not a constant.** Tokens/s over rows of at least 300 tokens: median 13.9 in the
 4,096 run (p10 7.8, p90 57), 30.9 in the 8,192 run (p10 16.9, p90 56), hourly medians 16–88. The same
