@@ -71,11 +71,11 @@ FOLDERS = {
 }
 # finished and audited, not yet confirmed by the user: (benchmark, slot) -> the run's own overall file
 UNCONFIRMED = {}
-# Unlike BBH, MMLU and DocVQA, these two benchmarks' rows DO carry tokens, latency and attempts — the
+# Unlike BBH, MMLU and DocVQA, these benchmarks' rows DO carry tokens, latency and attempts — the
 # criteria have simply not been computed on them, and TASK_RUNNER's wording would be false.
 NOT_COMPUTED = {name: ("not computed yet: the rows carry tokens, latency and attempts, but no criteria "
                        "script has been run on this benchmark", "repeats not run (phase 2)")
-                for name in ("Wonderbread", "MultiChallenge")}
+                for name in ("Wonderbread", "MultiChallenge", "Multi-party Goal Tracking")}
 NOT_APPLICABLE = {("DocVQA", "Deepseek"): "not applicable: an image benchmark and a text-only model",
                   ("Wonderbread", "Deepseek"): "not applicable: screenshots in every request and a text-only model"}
 

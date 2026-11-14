@@ -59,8 +59,9 @@ drives this project, so a benchmark's folder states which team process it is evi
 
 Stated by the user, 2026-08-29; the user renamed the files on 2026-10-05 (`Results.xlsx` →
 `Tempo_results.xlsx`, `Final_Result.xlsx` → `Final_result.xlsx`) and moved both into `Results/` on
-2026-11-06. Both workbooks carry the same eight sheets — `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo`,
-`NegotiationToM`, `Awareness`, `MultiChallenge`, `Wonderbread` — and differ only in which model columns they are allowed to hold.
+2026-11-06. Both workbooks carry the same nine sheets — `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo`,
+`NegotiationToM`, `Awareness`, `Multi-party Goal Tracking` (since 2026-11-13), `MultiChallenge`,
+`Wonderbread` — and differ only in which model columns they are allowed to hold.
 
 **What each one is for — the user's statement, 2026-11-06.** `Tempo_results.xlsx` is the preparation
 for the result. `Final_result.xlsx` records only the selected models: each item's result and the
@@ -173,8 +174,8 @@ redone.
 | Folder                                             | Benchmark      | Team process                               | Upstream                      | LLM judge?                                           | Result files present for                                       |
 | -------------------------------------------------- | -------------- | ------------------------------------------ | ----------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
 | `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | no — its 60 judged rows were dropped 2026-10-05 | all five selected models, full run 2026-10-12; recorded |
-| `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval      | goal specification                         | AddleseeHQ/mpgt-eval          | no — human review                                   | none yet (vendored 2026-08-19)                                 |
-| `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | none yet                                                       |
+| `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval      | goal specification                         | AddleseeHQ/mpgt-eval          | no — upstream's human review replaced by our lenient matcher (2026-11-09) | all five selected models, zero-shot full run 2026-11-13 (Qwen's rows cut at the cap given a forced answer); **recorded in both workbooks 2026-11-13** |
+| `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | 10% pilot of the five selected models done 2026-11-13; full run on Quest since 2026-11-13 (jobs 8595422–8595426), not recorded |
 | `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | judge pilot done 2026-10-19 (jobs 4480407, 4482838, 4506836); judge chosen 2026-10-31: Haiku 5.5. Full run of GPT, Gemini, Qwen, Gemma (Deepseek is text-only: N/A) generated on Quest 2026-11-01 (Qwen rerun on DeepInfra 2026-11-09), judged by Haiku 5.5, **recorded in both workbooks 2026-11-11** |
 | `Action_.../Multi-challenge_bench`               | MultiChallenge | coordination                               | ekwinox117/multi-challenge    | **yes** — every item                          | judge pilot done 2026-10-19 (jobs 4480406, 4482838); judge chosen 2026-10-31: Haiku 5.5. Full run of all five selected models generated on Quest 2026-11-01, judged by Haiku 5.5, **recorded in both workbooks 2026-11-11** (272 of 273 items, the same for all five) |
 | `Interpersonal_.../NegotiationToM`               | NegotiationToM | conflict management                        | HKUST-KnowComp/NegotiationToM | no — EM + micro/macro F1                            | GPT, Gemini, Gemma, Qwen, Deepseek, XAI                        |
@@ -286,8 +287,15 @@ follows, and none holds a benchmark-specific path — so they are adapted to a t
    criteria 4–5 need repeat runs on a subsample, not yet run; a
    known scorer gap is documented, not applied (`Awareness_in_LLM/FULL_RUN_NOTES.md`).
    `.claude/references/benchmarks/transition/awarebench.md`.
-3. **Two benchmarks have no runner.** PlanBench and Multi-party Goal Tracking are vendored but have
-   no per-provider harness, no SLURM script, and no results. Wonderbread and MultiChallenge ran
+3. **PlanBench got its runners on 2026-11-09**: `plan-bench`'s 10 tasks, the five selected models,
+   generation on Quest and scoring offline with VAL and upstream's own parsers
+   (`.claude/references/benchmarks/transition/planbench.md`); its 10% pilot (1,563 rows a model) ran
+   2026-11-11 to 11-13, and the full run is on Quest since 2026-11-13. **Multi-party Goal Tracking**
+   got its runners on 2026-11-09: zero-shot, all six upstream prompt styles, the five selected models,
+   one lenient matcher instead of upstream's human review
+   (`.claude/references/benchmarks/transition/mpgt.md`); the full run finished 2026-11-13 and is
+   recorded in both workbooks — whether an answer list with the wrong count is aligned by position
+   is the user's call, open. Wonderbread and MultiChallenge ran
    the judge pilot (2026-10-19): `gpt-5.6-luna` on a 10% sample of each, graded by the four
    candidate judges (`LLM_as_judge/JUDGE_SELECTION.md` §6.4). The user chose Claude Haiku 5.5 on
    2026-10-31, and the full run's runners were written the same day: the five selected models

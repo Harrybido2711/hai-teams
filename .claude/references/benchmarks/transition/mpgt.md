@@ -7,8 +7,9 @@ residue reviewed by a person (`LLM_as_judge/JUDGE_SELECTION.md` §1); **no scori
 repo** — the `gpt/` scripts only write predictions to a CSV. **Our runners exist since 2026-11-09**:
 zero-shot, the five selected models, scored by one automatic lenient matcher instead of a person
 (the user's decisions, 2026-11-09). Smoke-tested locally 2026-11-11 (§ Smoke). The user gave the
-go 2026-11-12; **the full run of all five finished 2026-11-13, pulled and audited (§ Full run) —
-not confirmed by the user, so nothing is recorded.**
+go 2026-11-12; **the full run of all five finished 2026-11-13, was audited (§ Full run), confirmed
+by the user and recorded the same day** — sheet `Multi-party Goal Tracking` in both workbooks and
+`results.db`, written by `Results/record_mpgt.py` (rerun it after any rescore).
 
 ## Paths
 
@@ -220,10 +221,13 @@ Wall time, measured: Gemini 15 min, GPT 56 min, Gemma 1 h 35, Qwen 3 h 20, Deeps
   INCOMPLETE, so a headline needs the failed rows retried to `ok` or the scorer to count them as
   unread — the user's call, open. No file of this run holds one.
 
-## Full run — finished 2026-11-13, audited, not confirmed
+## Full run — finished 2026-11-13, audited, confirmed and recorded
 
 All five: 348 rows, 348 uids, every row `ok`, 0 empty, one `config` and one `served_model` a file;
-pulled md5-identical (`29a65e48`). Lenient, mean of the six styles. **Layer 4 waits for the user.**
+pulled md5-identical (`29a65e48`). Lenient, mean of the six styles. **Recorded 2026-11-13** on the
+user's confirmation, Qwen's forced answers included; the table is what the workbooks hold. The
+off-count rule below is still open — choosing to align would mean a rescore and a rerun of
+`record_mpgt.py`.
 
 | Model | DST | Goal | Reading |
 |---|---|---|---|

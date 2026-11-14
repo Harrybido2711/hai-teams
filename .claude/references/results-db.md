@@ -25,7 +25,7 @@ python3 .claude/scripts/build_results_db.py --check  # exit 1 if a source change
 
 | Table | One row per | Holds |
 |---|---|---|
-| `benchmarks` | benchmark, all ten | process group and workbook sheet; a NULL sheet (PlanBench, Multi-party Goal Tracking) has no reported result yet |
+| `benchmarks` | benchmark, all ten | process group and workbook sheet; a NULL sheet (PlanBench) has no reported result yet |
 | `runs` | benchmark × workbook column | `model_config`; `selected` = 1 if the column is in `Final_result` |
 | `scores` | benchmark × sub-benchmark × column | `value`; `level` is `sub`, `group`, `overall` or `standalone`; `parent` names the group; `position` is the sheet order |
 | `criteria` | benchmark × selected model × task × metric | `value` or `value_text`, `reason` when blank, `source` file |
@@ -78,7 +78,8 @@ the workbook's `Provenance` sheet, which is the `provenance` table here:
 | AwareBench | **`overall` is five dimensions, not the `sub` rows.** `mission` is a `group` row over two `sub` rows; `mission_open-ended` is NULL for every model, its LLM-judged rows having been dropped. `perspective (2nd-order)` is 170 rows and a fifth of the score: Qwen's 0.0 is real (it declined every item) and Gemma's 0.129 is 124 declined, so both are mostly refusals. |
 | MultiChallenge | **Every cell is a judge's grade**: Haiku 5.5, three replicates, its error against human labels unmeasured, recorded before an audit. Two summary rows: the macro `overall` is the headline, `Overall (micro)` is `standalone`. 272 of 273 items are scored, and an axis holds 41–113 of them. |
 | Wonderbread | **QA rows are 1–3 where 1 is best, so lower is better** — the opposite of every other row here; SOP rows are 0–1, higher is better. A judge's grades, as MultiChallenge's. No `overall` row: upstream defines no composite (the stand-in is in the next section). Deepseek is NULL, not 0: it takes no images. Models are not scored on the same units — QA / SOP: Gemini and OpenAI 120 / 486, Qwen 113 / 482, Gemma 115 / 482. |
-| PlanBench, Multi-party Goal Tracking | No rows: nothing is recorded yet. |
+| Multi-party Goal Tracking | **Our automatic matcher, not upstream's person** (`mpgt_lenient_v4`). Two `group` rows, `dst` and `goal`, each the plain mean of six prompt-style `sub` rows; no `overall`. Low by nature — goal 0.06–0.24: models name goals in their own words. An unread slot counts as wrong, so Qwen's `dst_reasoning` 0 is an answer shape the reader cannot place. OpenAI, Gemini and Qwen are lower bounds: a list with the wrong number of answers is credited nothing (placed by position, OpenAI would lead `dst`). |
+| PlanBench | No rows: nothing is recorded yet. |
 
 **A column is a slot, not one configuration.** `runs.model_config` names what ran on each benchmark.
 Qwen's and Gemma's route and thinking setting differ between sheets
@@ -98,6 +99,7 @@ planner's choice says so.
 | DocVQA | `Overall accuracy` — the user asked for accuracy; it has no `sub` rows |
 | Wonderbread | mean of its eight `sub` rows, each QA row first converted to 0–1 as `(3 − x) / 2` (1 → 1.0, 2 → 0.5, 3 → 0), SOP rows as stored. Ours, not upstream's; the user had it recorded |
 | NegotiationToM | mean of its four `sub` rows, `All_EM` left out — the planner's choice, not confirmed |
+| Multi-party Goal Tracking | mean of its two `group` rows, `dst` and `goal` — the planner's choice, not confirmed; upstream defines no composite |
 
 - **Two bases, side by side**: every benchmark with a recorded score, and the benchmarks every
   selected model has a score on. A model with a NULL on the first basis has no mean there (Deepseek is
@@ -111,7 +113,10 @@ planner's choice says so.
   rows, the benchmark's own weights are used so both oracles sit on one scale — the planner's
   reading. EmoBench: mean of EU and EA, EU weighted by items (49 / 28 / 56 / 67 in sheet order), EA
   plain. AwareBench: five equal dimensions, mission the mean of its explicit and implicit rows. Those
-  weights reproduce every stored `overall`.
-- **Check values, 2026-11-13** (best single model / Oracle 1 / Oracle 2): on the 8 benchmarks with a
-  score, Gemma 0.7686 / 0.8058 / 0.8158; on the 6 all five models ran, Deepseek 0.7668 / 0.7842 /
-  0.7904. They move when a benchmark is recorded.
+  weights reproduce every stored `overall`. Multi-party Goal Tracking: each task the plain mean of its
+  six style rows, then the mean of the two tasks.
+- **Check values, 2026-11-13, after Multi-party Goal Tracking was recorded** (best single model /
+  Oracle 1 / Oracle 2): on the 9 benchmarks with a score, Gemma 0.7119 / 0.7485 / 0.7580; on the 7
+  all five models ran, Deepseek 0.6987 / 0.7136 / 0.7198. Before it (8 and 6): Gemma 0.7686 / 0.8058
+  / 0.8158, Deepseek 0.7668 / 0.7842 / 0.7904 — mpgt's scores (0.12–0.29) pull every mean down. They
+  move when a benchmark is recorded.

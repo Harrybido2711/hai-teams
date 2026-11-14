@@ -2,14 +2,15 @@
 
 Mission analysis, strategy formulation, goal specification. Unlike the other three folders, these
 three share almost nothing operationally — different scoring, different state, different blockers.
-Only AwareBench has produced results so far (recorded 2026-10-12).
+AwareBench (recorded 2026-10-12) and mpgt-eval (recorded 2026-11-13) have produced results;
+PlanBench's full run is on Quest.
 
 | Benchmark | Page | Scoring | What stands between here and a number |
 |---|---|---|---|
 | AwareBench | [awarebench.md](awarebench.md) | accuracy; its 60 LLM-judged rows were dropped 2026-10-05 | full run for the five selected models 2026-10-12, recorded in both workbooks; repeat runs for criteria 4–5 pending |
-| PlanBench | [planbench.md](planbench.md) | VAL/PDDL validator — no LLM | no runner of ours |
-| mpgt-eval | [mpgt.md](mpgt.md) | human review | no runner of ours |
+| PlanBench | [planbench.md](planbench.md) | VAL validator + upstream's text parsers, run offline — no LLM | runners for the five selected models, all 10 tasks, written 2026-11-09; 10% pilot done 2026-11-13; full run on Quest since 2026-11-13, then audit and the user's confirmation |
+| mpgt-eval | [mpgt.md](mpgt.md) | lenient matcher on the `[MASK]` slots — ours; upstream's was a person (2026-11-09) | full run of the five selected models, zero-shot, recorded in both workbooks 2026-11-13; open: whether an off-count answer list is aligned by position |
 
-Two of the three are scored **without a model in the loop** — a PDDL validator and a human. That
-makes them cheap to trust and expensive to run, which is the opposite of the profile everywhere else
-in this repo, and it should change how a run is planned.
+None of the three has a model in the loop when scoring — accuracy, a PDDL validator, and for mpgt
+an automatic matcher where upstream had a person. A number here can always be recomputed from the
+stored responses.

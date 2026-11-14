@@ -35,11 +35,15 @@ BENCHMARKS = [
     ("BBH", "tasks", "Big Bench Hard"), ("MMLU", "tasks", "MMLU"), ("DocVQA", "tasks", "DocVQA"),
     ("EmoBench", "interpersonal", "Emo"), ("NegotiationToM", "interpersonal", "NegotiationToM"),
     ("AwareBench", "transition", "Awareness"), ("PlanBench", "transition", None),
-    ("Multi-party Goal Tracking", "transition", None), ("Wonderbread", "action", "Wonderbread"),
-    ("MultiChallenge", "action", "MultiChallenge"),
+    ("Multi-party Goal Tracking", "transition", "Multi-party Goal Tracking"),
+    ("Wonderbread", "action", "Wonderbread"), ("MultiChallenge", "action", "MultiChallenge"),
 ]
-SECTIONS = {"Emotional Understanding (EU)": "eu_overall", "Emotional Application (EA)": "ea_overall"}
-GROUP_ROWS = {"eu_overall", "ea_overall", "mission"}
+# a section header row (no values) -> the group row its sub rows belong to; mpgt's labels are
+# written by Results/record_mpgt.py
+SECTIONS = {"Emotional Understanding (EU)": "eu_overall", "Emotional Application (EA)": "ea_overall",
+            "Dialogue state tracking (DST), zero-shot": "dst (mean of 6 styles)",
+            "Goal tracking, zero-shot": "goal (mean of 6 styles)"}
+GROUP_ROWS = {"eu_overall", "ea_overall", "mission", "dst (mean of 6 styles)", "goal (mean of 6 styles)"}
 OVERALL_ROWS = {"ANLS", "Overall accuracy"}
 # separate metrics, never averaged across benchmarks: All_EM is not NegotiationToM's total, and
 # MultiChallenge's micro is the same items counted another way — beside its macro, not part of it

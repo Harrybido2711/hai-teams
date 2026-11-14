@@ -31,7 +31,10 @@ smoke rows before anyone submits.
 - **EmoBench GPT; NegotiationToM GPT and Gemini:** already measured on the full run.
 - **MultiChallenge, Wonderbread:** their runners write the per-row fields, so WP7 computes these from
   the full-run rows. Keep generation cost and judge cost as separate numbers.
-- **PlanBench, Multi-party Goal Tracking:** no runner and no results.
+- **Multi-party Goal Tracking:** full run recorded 2026-11-13. Its rows carry tokens, latency and
+  attempts, as MultiChallenge's and Wonderbread's do; no criteria have been computed on them yet.
+- **PlanBench:** full run on Quest since 2026-11-13, not recorded. Its own 10% pilot (every 10th
+  instance, `planbench.md`) is a feasibility run, not this plan's sample.
 - **DocVQA Deepseek:** text-only model, cannot take an image.
 
 Criteria 4 and 5 are out of scope. They need repeats and perturbations, which one sampled pass cannot
