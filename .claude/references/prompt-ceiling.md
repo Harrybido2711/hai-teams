@@ -39,10 +39,15 @@ that deliberates in its answer — goes back as an assistant message, followed b
 reached its limit. Do not reason any further: give your final answer now, in exactly the format the
 task asks for."*, with thinking disabled where a switch exists and a small `max_tokens`.
 
+- **On PlanBench a retry comes first — the user, 2026-11-13** ("让他第二次重新跑的时候，不要超出这个思考
+  的上限…如果说他就是不受约束，那就直接回答"): a cut row is called again fresh, told it overran and must
+  stay inside the limit; only if that is cut too is it forced. `plan_eval_core.CutRetry`. MPGT's
+  runners force on the first cut, as they ran before that rule.
 - **It is part of the config** (`forced_answer`), and every forced row says so and keeps the first
   call's finish and token count — a forced answer is a different measurement from a free one.
 - **For rows already on disk, call only those rows** (`--force-cut`), never the run again — the
   user, 2026-11-13. The stored file is copied aside first and the other rows change in `config` only.
 - **It does not rescue a repetition loop**: handed its own loop, the model loops again.
 - Where it exists and what each row carries: the runner's docstring — `MPGT_Deepseek`,
-  `MPGT_Qwen_DeepInfra`, `PLAN_Deepseek`; counts and probes on those benchmarks' pages.
+  `MPGT_Qwen_DeepInfra`; `CutRetry` for `PLAN_Qwen_DeepInfra` and `PLAN_Deepseek`; counts and
+  probes on those benchmarks' pages.

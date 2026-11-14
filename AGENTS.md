@@ -79,7 +79,7 @@ follow, Codex included. A workflow named beside one runs that whole stretch in C
 | A provider refuses the health-check probe | probe with the real prompt builders (`NegotiationToM/preflight.py` is the pattern) | `provider-gotchas.md` |
 | A resumed run "finished" in seconds | stale checkpoint. After any prompt or decoding change, archive (timestamped), never resume | **`submit-run`** step 2; `script-skeleton.md` §6 |
 | Empty rows never get retried | resume marks every uid done, empty or not. Prune them first (`NegotiationToM/prune_failed_rows.py`) | **`submit-run`** step 2; `script-skeleton.md` §6 |
-| Rows ended at `finish_reason=length` — cut mid-reasoning, or empty with the whole cap spent thinking | do not rerun the model and do not just raise the cap: give those rows a forced answer, and call only them (`--force-cut`) | `prompt-ceiling.md` § When the ceiling does not bind; the benchmark's page |
+| Rows ended at `finish_reason=length` — cut mid-reasoning, or empty with the whole cap spent thinking | do not rerun the model and do not just raise the cap: give those rows a forced answer (on PlanBench a stricter retry first), and call only them (`--force-cut`) | `prompt-ceiling.md` § When the ceiling does not bind; the benchmark's page |
 | A sharded summary holds one category | untagged shard outputs overwrote each other | `script-skeleton.md` §7b |
 
 ### Scores

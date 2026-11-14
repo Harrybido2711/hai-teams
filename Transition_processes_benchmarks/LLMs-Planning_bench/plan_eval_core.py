@@ -490,10 +490,19 @@ def shard_tag(shard, total_shards):
     return f"_shard{shard}of{total_shards}" if total_shards > 1 else ""
 
 
-def shard_slice(rows, shard, total_shards):
-    """Contiguous block of the idx-ordered rows; idx was assigned over the whole sample first."""
+def shard_slice(rows, shard, total_shards, interleave=False):
+    """Which of the idx-ordered rows one shard calls; idx was assigned over the whole sample first.
+
+    The pilot's shards are contiguous blocks, and stay so: its stored shard files (and `--force-cut`
+    on them) depend on that. The full set is INTERLEAVED — every `total_shards`-th row — because
+    contiguous blocks put whole domains in one shard: in the pilot the mystery_blocksworld shards
+    took 4-6x the others, so at 10x the rows the longest Qwen shard would have been ~131 h against
+    ~88 h interleaved (Gemma 41 h against 22 h), the other shards' streams idle meanwhile — both
+    before CutRetry's second and third calls, which in Qwen's pilot would have added up to ~60%."""
     if total_shards <= 1:
         return list(rows)
+    if interleave:
+        return list(rows)[shard::total_shards]
     size = (len(rows) + total_shards - 1) // total_shards
     return list(rows)[shard * size: min((shard + 1) * size, len(rows))]
 
@@ -538,6 +547,148 @@ def is_cut(row):
     return row.get("finish_reason") == "length" and not row.get("forced_answer")
 
 
+# ---------------------------------------------------------------- a reply cut at the output cap
+
+# The config keys the cut-at-the-cap handling adds. `--force-cut` carries a stored row written
+# without them under the config that has them (load_checkpoint).
+CUT_KEYS = ("forced_answer", "cut_retry")
+USAGE_KEYS = ("prompt_tokens", "completion_tokens", "reasoning_tokens")
+
+
+def rearm_call_timeout():
+    """Give the next HTTP call inside one `once` its own HARD_CALL_TIMEOUT. call_with_retries arms
+    the alarm once per attempt and clears it when `once` returns, so a re-arm cannot outlive it.
+    Only while call_with_retries' handler is installed: a probe calling `once` directly would get an
+    alarm under SIGALRM's default handler, which kills the process."""
+    if (hasattr(signal, "SIGALRM") and HARD_CALL_TIMEOUT
+            and signal.getsignal(signal.SIGALRM) is _raise_timeout):
+        signal.alarm(HARD_CALL_TIMEOUT)
+
+
+def _usage_sum(metas):
+    out = {}
+    for key in USAGE_KEYS:
+        parts = [m.get(key) for m in metas if isinstance(m.get(key), int)]
+        out[key] = sum(parts) if parts else None
+    return out
+
+
+class CutRetry:
+    """What a row whose reply hits the output cap gets — the user, 2026-11-13: "对于那种就是跑一次直接
+    撞到上限的问题…让他第二次重新跑的时候，不要超出这个思考的上限。…如果说他就是不受约束，那就直接回答".
+
+    1. **The call as configured**, with the runner's prompt ceiling as a second system message. A
+       reply that ends any way but `length` is the row's answer, as on every other model.
+    2. **Cut at the cap: called again, fresh**, with `retry_ceiling` in place of the ceiling — the
+       model is told its first attempt overran the limit and must stay inside it. A reply that ends
+       any way but `length` is the answer. The row carries `cut_retry: true` and `first_*`, among
+       them `first_response`, the cut call's answer text in full (its `content`, not the reasoning
+       handed back): scored on its own it gives the single-call result GPT, Gemini and Gemma are
+       measured by, and nothing else can (reviewer, 2026-11-13).
+    3. **Cut again: the forced answer.** What the second attempt wrote goes back as an assistant
+       turn, then `force_prompt`; the runner makes that call with its small answer cap and thinking
+       off where a switch exists. The row carries `forced_answer: true`, `retry_*` (with
+       `retry_response`, in full) and `forced_*`; its `finish_reason` is the forced call's, so
+       `length` there means the answer filled its cap.
+
+    **The truncation rate is the `cut_retry` rows** — every row whose first call was cut; the
+    forced ones and the ones still `length` are among them. `latency_s` is the last attempt's, as on
+    every row; `first_latency_s`, `retry_latency_s` and `forced_latency_s` time each call, so a stage
+    kept from an earlier attempt is still timed. `served_model` and `backend` are the last call's.
+
+    A second attempt that is cut with nothing to hand back stays a cut row (`finish_reason=length`,
+    no `forced_answer`): the shard exits 1 and `--force-cut` calls it again from step 1.
+
+    `call(sent, stage) -> (answer, handback, meta)` is the runner's client call, stage "first",
+    "retry" or "forced": `answer` is the text that would be the row's response, `handback` what goes
+    back if the reply was cut — the visible text, or `reasoning_content` for a model that hides its
+    reasoning — and `meta` is openai_meta's plus `reasoning_chars`, the length of any
+    `reasoning_content` (which a forced answer must not have: `forced_reasoned`).
+
+    Usage on the row is every call of the attempt summed, so `completion_tokens` can pass the cap; a
+    row's calls are one to three. The finished calls of the row being worked on are kept, so a retry
+    by call_with_retries (a timeout, an exception, an empty answer) repeats only the stage that
+    failed. Kept by the identity of the messages list run_rows builds once per row — held here, so
+    that identity cannot be reused — never by text: PlanBench ships rows with byte-identical queries
+    (101 groups in the full set), and a text key would hand one row's reasoning to the next."""
+
+    def __init__(self, ceiling, retry_ceiling, force_prompt, answer_max):
+        self.ceiling, self.retry_ceiling = ceiling, retry_ceiling
+        self.force_prompt, self.answer_max = force_prompt, answer_max
+        self._kept = {}
+
+    @staticmethod
+    def with_system(messages, text):
+        """After the shared system message, before the shared user message: those stay untouched."""
+        return messages[:1] + [{"role": "system", "content": text}] + messages[1:]
+
+    def config(self, **forced_extra):
+        """The keys this adds to the runner's extra_config — on every row's `config`."""
+        return {"prompt_ceiling": self.ceiling,
+                "cut_retry": {"prompt": self.retry_ceiling, "when": "the first call ends at length"},
+                "forced_answer": dict({"prompt": self.force_prompt, "max_tokens": self.answer_max,
+                                       "when": "the second call also ends at length, with text to "
+                                               "hand back"}, **forced_extra)}
+
+    def __call__(self, messages, call, model=""):
+        kept = self._kept
+        if kept.get("messages") is not messages:
+            kept.clear()
+            kept["messages"] = messages
+        if "first" not in kept:
+            started = time.time()
+            answer, handback, meta = call(self.with_system(messages, self.ceiling), "first")
+            meta.pop("reasoning_chars", None)
+            if meta.get("finish_reason") != "length":
+                return answer, meta
+            kept["first"] = (answer, meta, round(time.time() - started, 2))
+            print(f"[{model}] reply reached the cap ({meta.get('completion_tokens')} tokens): "
+                  f"called again with the retry ceiling", flush=True)
+            rearm_call_timeout()
+        first_text, first_meta, first_latency = kept["first"]
+        marks = {"cut_retry": True,
+                 "first_finish_reason": first_meta.get("finish_reason"),
+                 "first_completion_tokens": first_meta.get("completion_tokens"),
+                 "first_reasoning_tokens": first_meta.get("reasoning_tokens"),
+                 "first_latency_s": first_latency,
+                 "first_response": first_text}
+        retry_sent = self.with_system(messages, self.retry_ceiling)
+        if "retry" not in kept:
+            started = time.time()
+            answer, handback, meta = call(retry_sent, "retry")
+            meta.pop("reasoning_chars", None)
+            retry_latency = round(time.time() - started, 2)
+            if meta.get("finish_reason") != "length" or not handback.strip():
+                out = dict(meta, **_usage_sum([first_meta, meta]), **marks, retry_latency_s=retry_latency)
+                print(f"[{model}] retry: {meta.get('completion_tokens')} tokens, "
+                      f"finish={meta.get('finish_reason')}", flush=True)
+                return answer, out
+            kept["retry"] = (answer, handback, meta, retry_latency)
+            print(f"[{model}] retry reached the cap too ({meta.get('completion_tokens')} tokens): "
+                  f"forced answer", flush=True)
+            rearm_call_timeout()
+        retry_text, retry_handback, retry_meta, retry_latency = kept["retry"]
+        started = time.time()
+        answer, _, meta = call(retry_sent + [{"role": "assistant", "content": retry_handback},
+                                             {"role": "user", "content": self.force_prompt}], "forced")
+        reasoning_chars = meta.pop("reasoning_chars", 0) or 0
+        out = dict(meta, **_usage_sum([first_meta, retry_meta, meta]), **marks)
+        out.update(retry_finish_reason=retry_meta.get("finish_reason"),
+                   retry_completion_tokens=retry_meta.get("completion_tokens"),
+                   retry_reasoning_tokens=retry_meta.get("reasoning_tokens"),
+                   retry_latency_s=retry_latency,
+                   retry_response=retry_text,
+                   forced_latency_s=round(time.time() - started, 2),
+                   forced_answer=True,
+                   forced_finish_reason=meta.get("finish_reason"),
+                   forced_completion_tokens=meta.get("completion_tokens"),
+                   forced_reasoning_tokens=meta.get("reasoning_tokens"),
+                   forced_reasoning_chars=reasoning_chars)
+        print(f"[{model}] forced answer: {meta.get('completion_tokens')} tokens, "
+              f"finish={meta.get('finish_reason')}, reasoning {reasoning_chars} chars", flush=True)
+        return answer, out
+
+
 def load_checkpoint(path, config, force_cut=False):
     """Rows already done, keyed by uid — or a refusal if the stored config differs. An EMPTY row is
     not a done row: it is returned for retry, or a plain resume would skip it forever.
@@ -546,13 +697,13 @@ def load_checkpoint(path, config, force_cut=False):
     hit the cap, not the run again): the runner's config now holds a `forced_answer`, and the rows
     on disk were written before it had one. Rows under exactly this config WITHOUT that key are
     accepted and carried under the new config; a row that ended at `length` with no forced answer
-    is not done and is called again, through the runner's forced answer. Returns (done, cut,
+    is not done and is called again, through the runner's CutRetry from its first call. Returns (done, cut,
     copy_first): `cut` are those stored rows, which stay in the file until their own call replaces
     them; `copy_first` says the file still holds rows from before the forced answer."""
     if not os.path.exists(path):
         return ({}, {}, False) if force_cut else {}
     want = json.loads(json.dumps(config, sort_keys=True))
-    base = {k: v for k, v in want.items() if k != "forced_answer"} if force_cut else None
+    base = {k: v for k, v in want.items() if k not in CUT_KEYS} if force_cut else None
     done, cut, empty, upgraded = {}, {}, 0, 0
     with open(path) as fh:
         for line in fh:
@@ -615,7 +766,7 @@ def run_rows(model_dir, model, once, config, sample, slices=None, shard=0, total
                 kept.append(r)
                 per[r["slice"]] += 1
         rows = kept
-    rows = shard_slice(rows, shard, total_shards)
+    rows = shard_slice(rows, shard, total_shards, interleave=(sample == "full"))
     path = rows_path(results_dir(model_dir, sample, smoke), model, shard_tag(shard, total_shards))
     if force_cut:
         # the stored rows ARE the input, smoke or not: nothing here starts from an empty file
@@ -626,6 +777,14 @@ def run_rows(model_dir, model, once, config, sample, slices=None, shard=0, total
             archive_before_forced(model_dir, path)
     else:
         done, cut = ({} if smoke else load_checkpoint(path, config)), {}
+    # A stored row this shard would not call is a file written under other shard boundaries (e.g. a
+    # contiguous full-set shard before interleaving). Saving would drop it without a word — the
+    # reviewer dropped 2,491 of 3,114 paid rows that way, 2026-11-13 — so refuse instead.
+    foreign = (set(done) | set(cut)) - {r["uid"] for r in rows}
+    if foreign:
+        raise SystemExit(f"{path}\n  holds {len(foreign)} row(s) that are not in this shard "
+                         f"(first: {sorted(foreign)[0]}) — written under other shard boundaries. "
+                         f"Saving would drop them; archive the file and look at it first.")
     records = [done[r["uid"]] for r in rows if r["uid"] in done]
     todo = [r for r in rows if r["uid"] not in done]
     # --force-cut: a stored row the cap cut stays in the file until its OWN call returns an answer.
@@ -737,6 +896,7 @@ def summarise_health(model_dir, model, sample, smoke=False):
         "finish_length": sum(1 for r in rows if str(r.get("finish_reason")) == "length"),
         "finish_interrupted": sum(1 for r in rows if str(r.get("finish_reason")) in INTERRUPTED_FINISH),
         "fallback": sum(1 for r in rows if r.get("fallback")),
+        "cut_retry": sum(1 for r in rows if r.get("cut_retry")),
         "forced_answer": sum(1 for r in rows if r.get("forced_answer")),
         "forced_reasoned": sum(1 for r in rows if forced_reasoned(r)),
         "configs": len(configs), "problems": " | ".join(problems),
@@ -758,7 +918,7 @@ def summarise_health(model_dir, model, sample, smoke=False):
         _atomic_write(os.path.join(out_dir, f"{slug}_{name}.csv"), write)
     print(f"\nhealth [{model}] {sample}{' smoke' if smoke else ''}: rows={n}/{expected_total} "
           f"empty={overall['empty']} length={overall['finish_length']} "
-          f"forced={overall['forced_answer']} forced_reasoned={overall['forced_reasoned']} "
+          f"cut_retry={overall['cut_retry']} forced={overall['forced_answer']} forced_reasoned={overall['forced_reasoned']} "
           f"interrupted={overall['finish_interrupted']} configs={len(configs)} "
           f"COMPLETE={overall['complete']}", flush=True)
     for p in problems:
@@ -793,7 +953,8 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
                     help="rewrite the health files from stored rows; makes no calls")
     ap.add_argument("--force-cut", dest="force_cut", action="store_true",
                     help="call only the stored rows that ended at the output cap (and any empty "
-                         "one), through the runner's forced answer; every other row is kept")
+                         "one), through the runner's CutRetry from its first call; every other row "
+                         "is kept")
     args = ap.parse_args()
     smoke = bool(args.limit)
     slices = [s.strip() for s in args.slices.split(",") if s.strip()]

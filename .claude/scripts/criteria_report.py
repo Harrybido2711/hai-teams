@@ -155,7 +155,10 @@ def usage_criteria(rows, price_label):
     n = len(rows)
     out.update({"6_parse_ok_rate": round(1 - sum(not r["parse_ok"] for r in rows) / n, 4),
                 "6_empty_rate": round(sum(1 for r in rows if not str(r.get("raw") or "").strip()) / n, 4),
-                "6_truncation_rate": round(sum(r.get("finish_reason") == "length" for r in rows) / n, 4),
+                # a row the cap cut and a later call answered (PlanBench `cut_retry`, a forced answer)
+                # was still truncated: `finish_reason` alone would count it as finished
+                "6_truncation_rate": round(sum(r.get("finish_reason") == "length" or bool(r.get("cut_retry"))
+                                               or bool(r.get("forced_answer")) for r in rows) / n, 4),
                 "6_retried_row_rate": round(sum((r.get("n_attempts") or 1) > 1 for r in rows) / n, 4)})
     return out
 
