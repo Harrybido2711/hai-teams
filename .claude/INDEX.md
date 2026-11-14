@@ -42,7 +42,7 @@ page, and carrying one across benchmarks is the mistake that split is there to p
 - **Running now:** nothing is assumed. Check, don't remember — `monitor-run`, or `squeue -u uwr0681`.
 - **All ten benchmarks have a knowledge-base page and runners.** PlanBench's and mpgt's were written
   2026-11-09: mpgt's full run is recorded (2026-11-13); PlanBench's full run is on Quest since
-  2026-11-13, after its 10% pilot. Wonderbread and MultiChallenge
+  2026-11-13, after its 10% pilot, which is recorded as a pilot. Wonderbread and MultiChallenge
   ran the **judge pilot** (2026-10-19), and the user chose **Claude Haiku 5.5** as the judge on
   2026-10-31 (`LLM_as_judge/JUDGE_SELECTION.md` §8). Their **full-run** runners — the five selected
   models generate, Haiku 5.5 grades (Deepseek on MultiChallenge only) — were verified by the user

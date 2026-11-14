@@ -59,9 +59,15 @@ drives this project, so a benchmark's folder states which team process it is evi
 
 Stated by the user, 2026-08-29; the user renamed the files on 2026-10-05 (`Results.xlsx` →
 `Tempo_results.xlsx`, `Final_Result.xlsx` → `Final_result.xlsx`) and moved both into `Results/` on
-2026-11-06. Both workbooks carry the same nine sheets — `Big Bench Hard`, `MMLU`, `DocVQA`, `Emo`,
-`NegotiationToM`, `Awareness`, `Multi-party Goal Tracking` (since 2026-11-13), `MultiChallenge`,
-`Wonderbread` — and differ only in which model columns they are allowed to hold.
+2026-11-06. Both workbooks carry the same ten benchmark sheets — `Big Bench Hard`, `MMLU`, `DocVQA`,
+`Emo`, `NegotiationToM`, `Awareness`, `Multi-party Goal Tracking` and `PlanBench (pilot)` (both since
+2026-11-13; the second is the 10% pilot, not the full run), `MultiChallenge`, `Wonderbread` — and
+differ only in which model columns they are allowed to hold.
+
+**One row on every sheet is highlighted: that benchmark's result** (the user, 2026-11-13).
+`Final_result.xlsx` opens on a `Summary` sheet, those ten rows copied. `Results/result_rows.py` writes
+both and is rerun after any recorder; which row it is on each sheet, and the three that are ours:
+`.claude/references/results-db.md` § Averaging across benchmarks.
 
 **What each one is for — the user's statement, 2026-11-06.** `Tempo_results.xlsx` is the preparation
 for the result. `Final_result.xlsx` records only the selected models: each item's result and the
@@ -175,7 +181,7 @@ redone.
 | -------------------------------------------------- | -------------- | ------------------------------------------ | ----------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
 | `Transition_.../Awareness_in_LLM`                | AwareBench     | mission analysis, formulation and planning | HowieHwong/Awareness-in-LLM   | no — its 60 judged rows were dropped 2026-10-05 | all five selected models, full run 2026-10-12; recorded |
 | `Transition_.../Multi-party_Goal_Tracking_bench` | mpgt-eval      | goal specification                         | AddleseeHQ/mpgt-eval          | no — upstream's human review replaced by our lenient matcher (2026-11-09) | all five selected models, zero-shot full run 2026-11-13 (Qwen's rows cut at the cap given a forced answer); **recorded in both workbooks 2026-11-13** |
-| `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | 10% pilot of the five selected models done 2026-11-13; full run on Quest since 2026-11-13 (jobs 8595422–8595426), not recorded |
+| `Transition_.../LLMs-Planning_bench`             | PlanBench      | strategy formulation                       | karthikv792/LLMs-Planning     | no — VAL/PDDL validator                             | 10% pilot of the five selected models done 2026-11-13 and **recorded as a pilot** in both workbooks the same day (sheet `PlanBench (pilot)`); full run on Quest since 2026-11-13 (jobs 8595422–8595426), not recorded |
 | `Action_.../Wonderbread_bench`                   | Wonderbread    | monitoring progress toward goals           | HazyResearch/wonderbread      | **yes** — QA, SOP generation, SOP improvement | judge pilot done 2026-10-19 (jobs 4480407, 4482838, 4506836); judge chosen 2026-10-31: Haiku 5.5. Full run of GPT, Gemini, Qwen, Gemma (Deepseek is text-only: N/A) generated on Quest 2026-11-01 (Qwen rerun on DeepInfra 2026-11-09), judged by Haiku 5.5, **recorded in both workbooks 2026-11-11** |
 | `Action_.../Multi-challenge_bench`               | MultiChallenge | coordination                               | ekwinox117/multi-challenge    | **yes** — every item                          | judge pilot done 2026-10-19 (jobs 4480406, 4482838); judge chosen 2026-10-31: Haiku 5.5. Full run of all five selected models generated on Quest 2026-11-01, judged by Haiku 5.5, **recorded in both workbooks 2026-11-11** (272 of 273 items, the same for all five) |
 | `Interpersonal_.../NegotiationToM`               | NegotiationToM | conflict management                        | HKUST-KnowComp/NegotiationToM | no — EM + micro/macro F1                            | GPT, Gemini, Gemma, Qwen, Deepseek, XAI                        |

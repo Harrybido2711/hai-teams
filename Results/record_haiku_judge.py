@@ -13,8 +13,10 @@ stops the run. Re-running replaces those two sheets and those Provenance rows an
 The numbers are `build_judge_summary.collect()`, the computation behind `Haiku_judge_summary.md`:
 rebuilt from the judge rows on disk, never from another summary. MultiChallenge values are fractions
 (0.4 = 40 %) like every other sheet. Wonderbread QA is judged 1-3 where **1 is best**, so the row
-labels carry the direction; SOP is higher-is-better. Wonderbread has no composite upstream, so it has
-no overall row. Then `python3 .claude/scripts/build_results_db.py` rebuilds `results.db` from these.
+labels carry the direction; SOP is higher-is-better. Wonderbread has no composite upstream, so this
+script writes it no overall row: its highlighted `Overall Score (…)` is ours, added by
+`Results/result_rows.py`, which also highlights MultiChallenge's — run it after this, then
+`python3 .claude/scripts/build_results_db.py` rebuilds `results.db` from these.
 """
 import argparse
 import collections
@@ -146,7 +148,8 @@ def provenance(T):
          "of every other row in this workbook (the labels say so); each row is the mean over answers and "
          "replicates. SOP generation — one call per line in both directions; precision, recall, F1 and "
          "ordering from wb_eval_core.sop_metrics, higher is better, mean over SOPs and replicates. Upstream "
-         "defines no composite, so there is no overall row. Haiku 5.5's error rate against human labels is "
+         "defines no composite: the highlighted Overall Score row is ours, the QA rows put on 0-1 first (READ "
+         "FIRST, result row). Haiku 5.5's error rate against human labels is "
          "UNMEASURED (JUDGE_SELECTION.md §8). SOP Improvement is out of scope (§7.5)."),
         ("Wonderbread", "coverage — not the same units for every model",
          "Gemini, OpenAI 120 QA / 486 SOP; Qwen 113 / 482; Gemma 115 / 482",
@@ -240,8 +243,8 @@ def diff(before_path, after_wb):
     before = load_workbook(before_path)
     notes = []
     kept = [s for s in after_wb.sheetnames if s not in SHEETS]
-    assert [s for s in before.sheetnames] == kept, f"sheet order changed: {before.sheetnames} -> {kept}"
-    for name in before.sheetnames:
+    assert [s for s in before.sheetnames if s not in SHEETS] == kept, f"sheet order changed: {before.sheetnames} -> {kept}"
+    for name in kept:                                # on a re-run our own two sheets exist before, too
         a, b = before[name], after_wb[name]
         rows = a.max_row if name != "Provenance" else a.max_row
         changed = 0

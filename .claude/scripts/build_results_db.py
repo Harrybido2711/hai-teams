@@ -7,6 +7,9 @@
 The database is derived and never edited by hand. Sources, never another summary of them:
 - scores: Results/Tempo_results.xlsx and Results/Final_result.xlsx. `selected` means the column
   exists in Final_result. A Final_result cell that differs from Tempo_results stops the build.
+- a benchmark's result row: the one highlighted row of its sheet (Results/result_rows.py writes the
+  highlight). A sheet without exactly one, two workbooks that disagree on it, or a `Summary` cell
+  that differs from its sheet stops the build.
 - criteria: the same files and the same reading code as build_criteria_workbook.py, so the database
   and Criteria_results.xlsx cannot compute a criterion differently.
 
@@ -34,7 +37,7 @@ OUT = os.path.join(ROOT, "Results", "results.db")
 BENCHMARKS = [
     ("BBH", "tasks", "Big Bench Hard"), ("MMLU", "tasks", "MMLU"), ("DocVQA", "tasks", "DocVQA"),
     ("EmoBench", "interpersonal", "Emo"), ("NegotiationToM", "interpersonal", "NegotiationToM"),
-    ("AwareBench", "transition", "Awareness"), ("PlanBench", "transition", None),
+    ("AwareBench", "transition", "Awareness"), ("PlanBench", "transition", "PlanBench (pilot)"),
     ("Multi-party Goal Tracking", "transition", "Multi-party Goal Tracking"),
     ("Wonderbread", "action", "Wonderbread"), ("MultiChallenge", "action", "MultiChallenge"),
 ]
@@ -45,6 +48,8 @@ SECTIONS = {"Emotional Understanding (EU)": "eu_overall", "Emotional Application
             "Goal tracking, zero-shot": "goal (mean of 6 styles)"}
 GROUP_ROWS = {"eu_overall", "ea_overall", "mission", "dst (mean of 6 styles)", "goal (mean of 6 styles)"}
 OVERALL_ROWS = {"ANLS", "Overall accuracy"}
+RESULT_FILL = "FFE699"   # the fill of a sheet's result row — written by Results/result_rows.py, read here
+SUMMARY = "Summary"      # Final_result's first sheet: the result rows copied, one line a benchmark
 # separate metrics, never averaged across benchmarks: All_EM is not NegotiationToM's total, and
 # MultiChallenge's micro is the same items counted another way — beside its macro, not part of it
 STANDALONE_ROWS = {"All_EM", "Overall (micro)"}
@@ -54,7 +59,8 @@ SCHEMA = """
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE sources (path TEXT PRIMARY KEY, md5 TEXT NOT NULL);
 CREATE TABLE benchmarks (
-    benchmark TEXT PRIMARY KEY, process_group TEXT NOT NULL, workbook_sheet TEXT);
+    benchmark TEXT PRIMARY KEY, process_group TEXT NOT NULL, workbook_sheet TEXT,
+    result_row TEXT);                -- the sheet's highlighted row: the benchmark's one number
 CREATE TABLE runs (
     benchmark TEXT NOT NULL REFERENCES benchmarks, model_column TEXT NOT NULL,
     model_config TEXT, selected INTEGER NOT NULL, PRIMARY KEY (benchmark, model_column));
@@ -81,6 +87,10 @@ CREATE TABLE provenance (
 CREATE VIEW final_scores AS
     SELECT s.benchmark, s.subbench, s.parent, s.level, s.model_column, r.model_config, s.value
     FROM scores s JOIN runs r USING (benchmark, model_column) WHERE r.selected = 1;
+CREATE VIEW final_results AS
+    SELECT b.benchmark, b.process_group, b.result_row, s.model_column, r.model_config, s.value
+    FROM benchmarks b JOIN scores s ON s.benchmark = b.benchmark AND s.subbench = b.result_row
+    JOIN runs r ON r.benchmark = s.benchmark AND r.model_column = s.model_column WHERE r.selected = 1;
 CREATE VIEW gaps AS
     SELECT benchmark, model_column, criterion_no, criterion, COUNT(*) AS metrics, MIN(reason) AS reason
     FROM criteria WHERE task = 'ALL' AND value IS NULL AND value_text IS NULL
@@ -113,9 +123,50 @@ def read_sheet(path, sheet):
     return list(rows[0][1:]), dict(zip(rows[0][1:], rows[1][1:])), [r for r in rows[2:] if r[0]]
 
 
+def highlighted(cell):
+    rgb = cell.fill.fgColor.rgb if cell.fill.fill_type == "solid" else None
+    return isinstance(rgb, str) and rgb[-6:] == RESULT_FILL
+
+
+def result_row(sheet):
+    """The label of the sheet's one highlighted row, the same in both workbooks."""
+    found = {}
+    for path in (cw.TEMPO, cw.FINAL):
+        ws = load_workbook(path)[sheet]
+        hits = [ws.cell(r, 1).value for r in range(3, ws.max_row + 1) if highlighted(ws.cell(r, 1))]
+        if len(hits) != 1:
+            raise SystemExit(f"{rel(path)} › {sheet}: {len(hits)} highlighted result rows, expected 1 — "
+                             "run python3 Results/result_rows.py")
+        found[path] = hits[0]
+    if found[cw.TEMPO] != found[cw.FINAL]:
+        raise SystemExit(f"{sheet}: result row is {found[cw.TEMPO]!r} in Tempo_results and "
+                         f"{found[cw.FINAL]!r} in Final_result")
+    return found[cw.FINAL]
+
+
+def check_summary(db):
+    """Final_result's Summary sheet is a copy of the result rows; a cell that differs stops the build."""
+    ws = load_workbook(cw.FINAL, data_only=True)[SUMMARY]
+    head = [c.value for c in ws[1]]
+    by_sheet = {sheet: (name, label) for name, _, sheet, label in db.execute("SELECT * FROM benchmarks") if sheet}
+    seen = []
+    for row in ws.iter_rows(min_row=3, values_only=True):
+        if not row[0]:
+            continue
+        name, label = by_sheet[row[0]]
+        seen.append(row[0])
+        stored = dict(db.execute("SELECT model_column, value FROM final_results WHERE benchmark = ?", (name,)))
+        shown = {h: (None if v == "N/A" else v) for h, v in zip(head, row) if h in stored}
+        if row[2] != label or shown != stored:
+            raise SystemExit(f"{SUMMARY} › {row[0]}: shows {row[2]!r} {shown}, the sheet has {label!r} {stored} "
+                             "— run python3 Results/result_rows.py")
+    if sorted(seen) != sorted(by_sheet):
+        raise SystemExit(f"{SUMMARY}: lists {seen}, the workbook's benchmark sheets are {sorted(by_sheet)}")
+
+
 def classify(label, section):
     """(level, parent) of one workbook row. Labels are matched exactly, never by substring."""
-    if label == "Overall Score" or label.startswith("Overall Score (macro-avg") or label in OVERALL_ROWS:
+    if label == "Overall Score" or label.startswith("Overall Score (") or label in OVERALL_ROWS:
         return "overall", None
     if label in STANDALONE_ROWS:
         return "standalone", None
@@ -220,13 +271,20 @@ def build(path):
     db.executescript(SCHEMA)
     db.executemany("INSERT INTO sources VALUES (?,?)", [(rel(p), md5(p)) for p in source_files()])
     db.execute("INSERT INTO meta VALUES ('built_by', '.claude/scripts/build_results_db.py')")
-    db.executemany("INSERT INTO benchmarks VALUES (?,?,?)", BENCHMARKS)
+    db.executemany("INSERT INTO benchmarks VALUES (?,?,?,?)",
+                   [(name, group, sheet, result_row(sheet) if sheet else None) for name, group, sheet in BENCHMARKS])
     with open(cw.AWARE_CSV) as fh:
         aware = {r["slot"]: r for r in csv.DictReader(fh)}
     for name, _, sheet in BENCHMARKS:
         if sheet:
             load_scores(db, name, sheet)
             load_criteria(db, name, sheet, aware)
+    bad = db.execute("SELECT b.benchmark, b.result_row FROM benchmarks b WHERE b.result_row IS NOT NULL AND NOT EXISTS "
+                     "(SELECT 1 FROM scores s WHERE s.benchmark = b.benchmark AND s.subbench = b.result_row "
+                     "AND s.level = 'overall')").fetchall()
+    if bad:
+        raise SystemExit(f"highlighted row is not an overall row: {bad}")
+    check_summary(db)
     load_provenance(db, "Tempo_results", cw.TEMPO)
     load_provenance(db, "Final_result", cw.FINAL)
     db.commit()

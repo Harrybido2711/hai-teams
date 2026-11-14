@@ -14,8 +14,9 @@ from, and a difference stops the run. Re-running replaces that sheet and those r
 The numbers are `mpgt_eval_core.summarize` on each model's rows on disk — the benchmark's one scorer,
 `mpgt_lenient_v4` — never another summary. A style is slots correct / slots, an unread slot counted
 wrong; `dst` and `goal` are the plain mean of the six styles, as the benchmark page reports them.
-Upstream defines no composite, so there is no overall row. Then
-`python3 .claude/scripts/build_results_db.py` rebuilds `results.db` from these.
+Upstream defines no composite, so this script writes no overall row: the sheet's highlighted
+`Overall Score (mean of dst and goal)` is ours, added by `Results/result_rows.py` — run it after
+this, then `python3 .claude/scripts/build_results_db.py` rebuilds `results.db` from these.
 """
 import argparse
 import collections
@@ -116,7 +117,8 @@ def provenance(data):
          "lenient matcher on the [MASK] slots — upstream's metric is exact match with the residue reviewed by a "
          "person, and upstream ships no scoring code. Zero-shot only; six upstream prompt styles x 29 dialogues "
          "per task, 389 DST and 225 goal slots a style. A style is slots correct / slots, an unread slot counted "
-         "wrong; dst and goal are the plain mean of the six styles. No overall row: upstream defines no composite."),
+         "wrong; dst and goal are the plain mean of the six styles. Upstream defines no composite: the highlighted "
+         "Overall Score row is ours, the mean of dst and goal (READ FIRST, result row)."),
         (SHEET, "off-count lists — three columns are lower bounds",
          "v4 reads a separate answer list only when it has one answer per slot",
          "A list with n != k answers is credited nothing, even where its items are right by position. OpenAI "
@@ -222,7 +224,7 @@ def diff(before_path, after_wb):
     before = load_workbook(before_path)
     notes = []
     kept = [s for s in after_wb.sheetnames if s != SHEET]
-    assert before.sheetnames == kept, f"sheet order changed: {before.sheetnames} -> {kept}"
+    assert [s for s in before.sheetnames if s != SHEET] == kept, f"sheet order changed: {before.sheetnames} -> {kept}"
     for name in before.sheetnames:
         if name == SHEET:
             continue

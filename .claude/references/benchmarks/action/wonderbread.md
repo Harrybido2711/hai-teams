@@ -190,9 +190,9 @@ The user asked for the record on 2026-11-11, **before an audit**; the numbers ar
 judge rows on disk by `Results/record_haiku_judge.py` (the computation of
 `Results/build_judge_summary.py`) and live in `Final_result.xlsx` / `Tempo_results.xlsx` › `Wonderbread`,
 with `results.db` rebuilt from them. Three replicates per unit; QA is **1–3 where 1 is best**, so a
-lower QA number is better and a higher SOP number is better. There is no overall row: upstream defines
-no composite. What stands in for one in a mean across benchmarks:
-[results-db.md](../../results-db.md) § Averaging across benchmarks.
+lower QA number is better and a higher SOP number is better. Upstream defines no composite: the
+sheet's highlighted `Overall Score` row is ours, on 0–1 with the QA rows converted first
+([results-db.md](../../results-db.md) § Averaging across benchmarks), and is not in the table below.
 
 | | Gemini | OpenAI | Qwen | Gemma | Deepseek |
 |---|--:|--:|--:|--:|--:|

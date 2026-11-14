@@ -8,7 +8,22 @@ Strategy formulation. Upstream `karthikv792/LLMs-Planning`. **Scored by the VAL 
 upstream's own text parsers — no LLM in our scoring.** Runners for the five selected models written
 2026-11-09, smoke-tested locally. The 10% pilot ran on Quest 2026-11-11 to 11-13 on the user's
 go-ahead, all five models pulled and scored (`## Run order`). A pilot is a feasibility run on every
-10th instance: no recorded results, and the full set has not been submitted.
+10th instance; **the user had it recorded as a pilot on 2026-11-13** (below). The full set is on
+Quest since the same day and is not recorded.
+
+## Pilot results — recorded 2026-11-13 as `PlanBench (pilot)`
+
+Both workbooks and `results.db`, written by `Results/record_planbench.py` from each model's
+`<slug>_scored.jsonl` (then `Results/result_rows.py`). Correct of the 1,513 scored pilot rows — the
+sheet's highlighted row; per-task cells and each column's caveats are in the workbook.
+
+| Gemini | OpenAI | Qwen | Gemma | Deepseek |
+|--:|--:|--:|--:|--:|
+| 653 · 0.4316 | 1,189 · 0.7859 | 687 · 0.4541 | 848 · 0.5605 | 1,392 · 0.9200 |
+
+Qwen's is `results_archive_budget_prompt_20261113`, the configuration kept for the full run, without
+its retry: a lower bound set by the cap. **When the full run is recorded**, point the script's
+`SOURCE` at `results/`, rename its `SHEET` and the entry in `build_results_db.BENCHMARKS`, rerun.
 
 ## Paths
 

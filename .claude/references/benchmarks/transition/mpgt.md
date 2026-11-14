@@ -9,7 +9,8 @@ zero-shot, the five selected models, scored by one automatic lenient matcher ins
 (the user's decisions, 2026-11-09). Smoke-tested locally 2026-11-11 (§ Smoke). The user gave the
 go 2026-11-12; **the full run of all five finished 2026-11-13, was audited (§ Full run), confirmed
 by the user and recorded the same day** — sheet `Multi-party Goal Tracking` in both workbooks and
-`results.db`, written by `Results/record_mpgt.py` (rerun it after any rescore).
+`results.db`, written by `Results/record_mpgt.py` (rerun it after any rescore, then
+`Results/result_rows.py`, which adds the sheet's highlighted `Overall Score`, the mean of dst and goal).
 
 ## Paths
 

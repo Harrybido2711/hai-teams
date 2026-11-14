@@ -75,7 +75,7 @@ UNCONFIRMED = {}
 # criteria have simply not been computed on them, and TASK_RUNNER's wording would be false.
 NOT_COMPUTED = {name: ("not computed yet: the rows carry tokens, latency and attempts, but no criteria "
                        "script has been run on this benchmark", "repeats not run (phase 2)")
-                for name in ("Wonderbread", "MultiChallenge", "Multi-party Goal Tracking")}
+                for name in ("Wonderbread", "MultiChallenge", "Multi-party Goal Tracking", "PlanBench")}
 NOT_APPLICABLE = {("DocVQA", "Deepseek"): "not applicable: an image benchmark and a text-only model",
                   ("Wonderbread", "Deepseek"): "not applicable: screenshots in every request and a text-only model"}
 
