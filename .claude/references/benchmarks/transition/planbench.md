@@ -162,6 +162,12 @@ transferred). A shard file holding rows of another shard is now refused, not sil
 | Deepseek | 8595425 | normal, 2 days | the same, `--time=2-00:00:00` |
 | Qwen | 8595426 | long, 7 days | the same, `--partition=long --time=7-00:00:00` |
 
+**First-rows gate passed, 19:58 (33 min):** every shard of every model writing, 0 empty, one config
+each, no halt marker, every `log_full_*.err` empty. Rows: Gemini 3,180, GPT 1,860, Gemma 1,000 (one
+`length`, no retry by design), Deepseek 920, Qwen 240. Qwen's `CutRetry` at work: 5 rows cut at
+8,192, four answered by the retry in 872–1,319 tokens, one forced in 22 tokens with no reasoning.
+All still in blocksworld, the easiest domain — the rates are not yet a finish-time estimate.
+
 **Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
 Deepseek, 8157878 Qwen; 64 files md5-matched, Quest `load_rows` gave 1,563 / 15,568 unique uids).
 Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17 min (1,563 rows,
