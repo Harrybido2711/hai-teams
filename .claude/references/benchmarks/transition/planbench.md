@@ -245,6 +245,19 @@ and Gemini**, not as one that reasons in its answer; the two earlier configurati
 `results_archive_max_tokens8192_noceiling_20261112` and `results_archive_budget_prompt_20261113`.
 Rerun: job 8538373, `--time=06:00:00`.
 
+**That rerun's outcome, 2026-11-13: the cap almost stopped binding and the score fell.** Five shards
+`COMPLETED 0:0` in 0.6–2.8 h; 1,563 rows, 0 empty, one config; pulled md5-identical and scored.
+Against the budget-prompt run on the same rows: `length` 367 → 90 rows, median reply 2,385 → 62
+tokens, summed latency 40.1 → 6.5 h — and **correct 687 → 448 of 1,513 (0.454 → 0.296)**, 144 rows
+turned correct and 383 turned wrong. The loss is in the tasks that write a plan: task 1 64 → 7,
+task 2 35 → 8, task 4 99 → 14, task 5 39 → 5, task 6 74 → 23, task 8_3 94 → 57 (8_1 96 → 122, 8_2
+76 → 97, task 3 and 7 unchanged). It is not the reader: of the 325 plan rows that turned wrong, 296
+ended `stop` with a plan extracted, and VAL rejects the plan (4 read by hand — a short, plausible,
+wrong plan). On the 1,193 rows the budget run did not cut, 664 → 382; on the 320 it cut, 23 → 66.
+The 60-row probe's "17 of the 36 against 18" did not carry over. **Which configuration is Qwen's is
+not decided** — answer-only (0.296, 5.8% cut) or the archived budget-prompt run (0.454 as a lower
+bound, 23.5% cut), whose 367 cut rows a forced answer could then fill. The user's call.
+
 **Qwen's route speed is not a constant.** Tokens/s over rows of at least 300 tokens: median 13.9 in the
 4,096 run (p10 7.8, p90 57), 30.9 in the 8,192 run (p10 16.9, p90 56), hourly medians 16–88. The same
 prompt (idx 0) streamed 11 tokens/s while five of our shards ran, and 52 tokens/s twice afterwards
