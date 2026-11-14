@@ -168,6 +168,15 @@ each, no halt marker, every `log_full_*.err` empty. Rows: Gemini 3,180, GPT 1,86
 8,192, four answered by the retry in 872–1,319 tokens, one forced in 22 tokens with no reasoning.
 All still in blocksworld, the easiest domain — the rates are not yet a finish-time estimate.
 
+**Gemini stopped on OpenRouter credit, 22:09 (2 h 43 min):** all five shards wrote
+`shardN_BILLING_HALT.txt` and exited 1 on the second 402 wording ("can only afford 7203"); the
+account read `total_credits` 65, `total_usage` 65.11. 15,356 of 15,568 rows, md5-pulled and
+committed; one empty row (the call the halt interrupted, retried on resume). **All 213 missing rows
+are `obfuscated_deceptive_logistics`** (task 1: 23, task 2: 190), which score 0 by construction
+(Traps), so every by-task row is complete. They cost ~$0.2 at its 263 task-1 rows' tokens; once
+credit is added the same command resumes. Qwen at 22:28: 1,020 rows, `cut_retry` 87, forced 38 —
+plan_optimality cuts 17% of rows against task 1's 1.2%, and ~40% of its retries are cut again.
+
 **Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
 Deepseek, 8157878 Qwen; 64 files md5-matched, Quest `load_rows` gave 1,563 / 15,568 unique uids).
 Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17 min (1,563 rows,
@@ -309,6 +318,12 @@ for a runner to resolve at run time. Hidden reasoning is still capped per `model
   The by-task tables leave these slices out; the by-slice tables show them. Whether to repair the
   parser or drop the slice is the user's call. `text_to_state_obfuscated` has a second bug
   (`obj.strip.isdigit()`).
+- **49 of `blocksworld_3/task_3_plan_verification_with_llm_plans`'s 99 golds are `null`.** In
+  `plan-bench/prompts/` the other 50 read "The above plan is invalid…"; on the null ones
+  `parse_output` crashes (`AttributeError: 'NoneType' … 'split'`) and the row scores 0 with
+  `parse_fail` 1 — the same instances for every model (pilot ids 2, 22, 72 on all four scored).
+  Whether null means the LLM plan is valid is **unestablished**: VAL on the plan inside each query
+  would settle it. Until the user decides, that task's accuracy is out of 99 with 49 unscorable.
 - **A missing VAL scores everything 0 upstream** (`validate_plan` checks for "Plan valid" in empty
   output). `plan_scorer.validate` raises instead.
 - **VAL crashes on malformed plans — upstream's Linux binary too.** The first scoring pass of the
