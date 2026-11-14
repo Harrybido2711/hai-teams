@@ -50,6 +50,9 @@ GROUP_ROWS = {"eu_overall", "ea_overall", "mission", "dst (mean of 6 styles)", "
 OVERALL_ROWS = {"ANLS", "Overall accuracy"}
 RESULT_FILL = "FFE699"   # the fill of a sheet's result row — written by Results/result_rows.py, read here
 SUMMARY = "Summary"      # Final_result's first sheet: the result rows copied, one line a benchmark
+# the reference prints the same rows as a table; --check compares it with the database
+DOC = os.path.join(ROOT, ".claude", "references", "results-db.md")
+DOC_HEAD = "| Benchmark | Gemini | OpenAI | Qwen | Gemma | Deepseek |"
 # separate metrics, never averaged across benchmarks: All_EM is not NegotiationToM's total, and
 # MultiChallenge's micro is the same items counted another way — beside its macro, not part of it
 STANDALONE_ROWS = {"All_EM", "Overall (micro)"}
@@ -294,8 +297,41 @@ def build(path):
     db.close()
 
 
+def doc_table(path):
+    """Cells of results-db.md's result table that differ from `final_results`. The reference prints
+    each benchmark's result row for the reader; a printed number nobody rechecks is how a summary
+    goes stale, so the check compares every one."""
+    db = sqlite3.connect(path)
+    stored = {}
+    for name, column, value in db.execute("SELECT benchmark, model_column, value FROM final_results"):
+        stored.setdefault(name, {})[column] = value
+    db.close()
+    with open(DOC) as fh:
+        lines = fh.read().splitlines()
+    start = next((i for i, line in enumerate(lines) if line.startswith(DOC_HEAD)), None)
+    if start is None:
+        return [f"no result table: no line starts with {DOC_HEAD!r}"]
+    columns = [c.strip() for c in lines[start].strip("|").split("|")][1:6]
+    shown = {}
+    for line in lines[start + 2:]:
+        if not line.startswith("|"):
+            break
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        shown[cells[0].split(" (")[0]] = dict(zip(columns, cells[1:6]))   # "PlanBench (pilot)" is PlanBench
+    bad = []
+    for name in sorted(stored.keys() | shown.keys()):
+        for column in columns:
+            value = stored.get(name, {}).get(column)
+            want = "N/A" if value is None else f"{value:.4f}"
+            got = shown.get(name, {}).get(column)
+            if got != want:
+                bad.append(f"{name} › {column}: shows {got}, the database has {want}")
+    return bad
+
+
 def check(path):
-    """Compare the sources recorded at build time with the files on disk."""
+    """Compare the sources recorded at build time with the files on disk, then the result table
+    printed in results-db.md with the database."""
     if not os.path.exists(path):
         print(f"missing: {rel(path)}")
         return 1
@@ -307,7 +343,12 @@ def check(path):
     for p in stale:
         print(f"stale: {p}")
     print(f"{rel(path)}: {'out of date, rebuild it' if stale else 'up to date'} ({len(current)} sources)")
-    return 1 if stale else 0
+    drift = [] if stale else doc_table(path)
+    for line in drift:
+        print(f"stale: {rel(DOC)} result table — {line}")
+    if not stale:
+        print(f"{rel(DOC)}: result table {'differs from the database, update it' if drift else 'matches the database'}")
+    return 1 if stale or drift else 0
 
 
 def main():
@@ -327,6 +368,8 @@ def main():
         if os.path.exists(tmp):
             os.unlink(tmp)
     print(f"written: {args.out}")
+    for line in doc_table(args.out):
+        print(f"update {rel(DOC)}, result table — {line}")
 
 
 if __name__ == "__main__":
