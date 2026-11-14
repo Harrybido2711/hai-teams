@@ -200,6 +200,15 @@ that wrote a plan and no verdict — no answer, so wrong, not a formatting penal
 `logistics/task_2_plan_optimality` (37% of its 285), 62 forced — every forced answer `stop`, 263–819
 tokens, no reasoning, none empty.
 
+**Deepseek stopped on DeepSeek balance, 03:40 (8 h 14 min):** all five shards wrote
+`shardN_BILLING_HALT.txt` on `402 insufficient_balance_error` and exited 1; `/user/balance` read
+`total_balance` −0.04, `is_available` False. 10,025 of 15,568 rows, 0 empty, `cut_retry` 215,
+forced 137; md5-pulled (16 files) and committed. The 5,543 missing rows are the rest of
+mystery_blocksworld from task 2 on, all of mystery_blocksworld_3 and both obfuscated slices — about
+4.9 M prompt and 18.9 M completion tokens at the pilot's per-slice means (the run's own where a
+slice has ≥20 rows), ~$12 off-peak to ~$24 peak before `CutRetry`'s extra calls. Spent so far:
+14.1 M prompt, 22.9 M completion. Once topped up the same command resumes.
+
 **Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
 Deepseek, 8157878 Qwen; 64 files md5-matched, Quest `load_rows` gave 1,563 / 15,568 unique uids).
 Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17 min (1,563 rows,

@@ -1,0 +1,39 @@
+{
+  "asked": {
+    "temperature": 0,
+    "max_tokens": 16384,
+    "seed": 42
+  },
+  "accepted": {
+    "temperature": 0,
+    "max_tokens": 16384,
+    "seed": 42
+  },
+  "notes": [],
+  "config": {
+    "cut_retry": {
+      "prompt": "Your previous attempt at this task reasoned past the 16384-token limit and was cut off before it gave an answer. This time you must stay within the limit: keep your reasoning under 8000 tokens, do not re-check steps you have already settled, and stop reasoning as soon as you have a plan. Your whole reply, reasoning included, must fit within 16384 tokens.",
+      "when": "the first call ends at length"
+    },
+    "fixed": {},
+    "forced_answer": {
+      "extra_body": {
+        "thinking": {
+          "type": "disabled"
+        }
+      },
+      "max_tokens": 4096,
+      "prompt": "Your thinking has reached its limit. Do not reason any further: give your final answer now, in exactly the format the task asks for.",
+      "when": "the second call also ends at length, with text to hand back"
+    },
+    "model": "deepseek-flash",
+    "params": {
+      "max_tokens": 16384,
+      "seed": 42,
+      "temperature": 0
+    },
+    "prompt_ceiling": "Think briefly. Use at most five sentences of reasoning before you answer. Your whole reply, reasoning included, must fit within 16384 tokens; anything past that is cut off and lost. If you are running out of room, stop reasoning and give your best answer immediately.",
+    "prompts": "plan-bench/prompts",
+    "system_prompt": "You are the planner assistant who comes up with correct plans."
+  }
+}
