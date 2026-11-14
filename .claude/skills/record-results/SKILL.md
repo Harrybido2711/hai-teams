@@ -23,13 +23,18 @@ Layer 4 · run by `executor` or the planner · used by `finish-run`.
 6. **Result rows:** `python3 Results/result_rows.py` — a recorder recreates its sheet without the
    highlight; this recomputes the three result rows that are ours, highlights each sheet's one
    result row and refreshes `Final_result`'s `Summary`. The database build stops until it has run.
-7. **Rebuild the database:** `python3 .claude/scripts/build_results_db.py`, then `--check`.
-8. **`sync-pass`.**
+7. **Rebuild the database:** `python3 .claude/scripts/build_results_db.py`.
+8. **The handed-out summary:** `python3 Results/summary_tables.py` refills the number tables of
+   `Results/RESULTS_SUMMARY.md`; read its prose for sentences this run made false (a pilot replaced,
+   a count changed). It names the workbook and nothing else local — keep it so. Then
+   `build_results_db.py --check`, which fails while the summary is behind the database.
+9. **`sync-pass`.**
 
 ## Done when
 
 Page, both workbooks and `Provenance` agree, the cell diff shows only intended changes, every sheet
-has its one highlighted result row, `results.db` is rebuilt, and the commit is on both remotes.
+has its one highlighted result row, `results.db` is rebuilt, the summary's tables match it, and the
+commit is on both remotes.
 
 ## Never
 

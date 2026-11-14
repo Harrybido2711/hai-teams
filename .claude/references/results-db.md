@@ -1,8 +1,7 @@
-<!-- size-budget: 13000 -->
+<!-- size-budget: 12500 -->
 <!-- One job: how to read and rebuild Results/results.db. Larger than the default because, since
-     2026-11-13, it also carries what to watch in each benchmark's rows, how scores are combined
-     across benchmarks and the table of each benchmark's result — all put here at the user's
-     instruction, for all ten benchmarks. -->
+     2026-11-13, it also carries what to watch in each benchmark's rows and how scores are combined
+     across benchmarks — both put here at the user's instruction — for all ten benchmarks. -->
 # Results database
 
 `Results/results.db` is a SQLite copy of every recorded score and the six criteria, made at the
@@ -21,7 +20,7 @@ sheet without exactly one highlighted result row, or a `Summary` cell that diffe
 ```bash
 python3 .claude/scripts/build_results_db.py          # rebuild, after any change to a source
 python3 .claude/scripts/build_results_db.py --check  # exit 1 if a source changed since the build,
-                                                     # or the result table below differs from it
+                                                     # or the handed-out summary is behind it
 ```
 
 ## Tables
@@ -100,27 +99,24 @@ confirmed.
 
 Benchmarks weigh the same, and a model's score on one is its result row: `SELECT * FROM
 final_results`. Recorded 2026-11-13 from the user's instructions; a line that is the planner's choice
-says so. A row marked **ours** has no composite upstream: `Results/result_rows.py` computes it from
-the sheet's own rows and writes it into the sheet.
+says so. A row marked **ours** has no composite upstream. `Results/result_rows.py` computes three of
+them from the sheet's own rows and writes them into the sheet; PlanBench's comes from its recorder.
 
-The table is `final_results` as it stands, put here at the user's request (2026-11-13), in sheet
-order. **`build_results_db.py --check` fails when a number here differs from the database** — update
-the cell, never the check.
+| Benchmark | Its result row |
+|---|---|
+| BBH, MMLU, EmoBench, AwareBench, MultiChallenge | the `Overall Score` row the sheet was recorded with |
+| DocVQA | `Overall accuracy` — the user asked for accuracy; `ANLS`, the other `overall` row, stays beside it |
+| PlanBench | **ours**: correct ÷ rows over its task rows, pooled (upstream reports each task on its own) — **the pilot** until the full run is recorded |
+| Wonderbread | **ours**: mean of its eight `sub` rows, each QA row first converted to 0–1 as `(3 − x) / 2` (1 → 1.0, 2 → 0.5, 3 → 0), SOP rows as stored. The user had it recorded |
+| NegotiationToM | **ours**: mean of its four `sub` rows, `All_EM` left out — the planner's choice, not confirmed |
+| Multi-party Goal Tracking | **ours**: mean of its two `group` rows, `dst` and `goal` — the planner's choice, not confirmed |
 
-| Benchmark | Gemini | OpenAI | Qwen | Gemma | Deepseek | Its result row |
-|---|--:|--:|--:|--:|--:|---|
-| BBH | 0.9375 | 0.9349 | 0.9339 | 0.9684 | 0.9616 | `Overall Score`: mean of the 20 tasks |
-| MMLU | 0.9135 | 0.9176 | 0.8802 | 0.9071 | 0.9174 | `Overall Score`: mean of the 13 subjects |
-| DocVQA | 0.9686 | 0.9288 | 0.9705 | 0.9405 | N/A | `Overall accuracy` — the user asked for accuracy; `ANLS`, the other `overall` row, stays beside it |
-| EmoBench | 0.6975 | 0.6875 | 0.6350 | 0.7450 | 0.6725 | `Overall Score`: mean of the EU and EA groups |
-| NegotiationToM | 0.5570 | 0.5788 | 0.5029 | 0.5477 | 0.5538 | **ours**: mean of its four `sub` rows, `All_EM` left out — the planner's choice, not confirmed |
-| AwareBench | 0.7936 | 0.7909 | 0.6912 | 0.7897 | 0.9159 | `Overall Score`: mean of the five dimensions |
-| Multi-party Goal Tracking | 0.2040 | 0.2640 | 0.1177 | 0.2583 | 0.2900 | **ours**: mean of its two `group` rows, `dst` and `goal` — the planner's choice, not confirmed |
-| PlanBench (pilot) | 0.4316 | 0.7859 | 0.4541 | 0.5605 | 0.9200 | correct ÷ rows over its task rows, pooled: 1,513 rows — **the pilot** until the full run is recorded |
-| MultiChallenge | 0.4528 | 0.4434 | 0.2835 | 0.4893 | 0.5795 | `Overall Score`: macro mean of the 4 axes |
-| Wonderbread | 0.7707 | 0.7699 | 0.7167 | 0.7614 | N/A | **ours**: mean of its eight `sub` rows, each QA row first converted to 0–1 as `(3 − x) / 2` (1 → 1.0, 2 → 0.5, 3 → 0), SOP rows as stored. The user had it recorded |
-
-N/A: Deepseek is text-only and these two benchmarks send images.
+**The numbers themselves are printed in one place, `Results/RESULTS_SUMMARY.md`** — the summary
+written to be handed to other people (the user, 2026-11-14): the ten results, each benchmark's
+cautions, the means and both oracles. Its prose is hand-written; `python3 Results/summary_tables.py`
+fills its two number tables from this database, and `--check` here fails until it has been rerun.
+**It names the workbook and nothing else local** — no path, script, database, cluster or job — so
+nothing from this file is pasted into it unread.
 
 - **Two bases, side by side**: every benchmark with a recorded score, and the benchmarks every
   selected model has a score on. A model with a NULL on the first basis has no mean there (Deepseek is
@@ -137,8 +133,7 @@ N/A: Deepseek is text-only and these two benchmarks send images.
   weights reproduce every stored `overall`. Multi-party Goal Tracking: each task the plain mean of its
   six style rows, then the mean of the two tasks. PlanBench: a task row weighs its row count (the
   pilot's, in sheet order: 199, 149, 149, 10, 149, 112, then 149 five times).
-- **Check values, 2026-11-13, all ten sheets, PlanBench as its pilot** (best single model / Oracle 1
-  / Oracle 2): on the 10 benchmarks, OpenAI 0.7102 / 0.7656 / 0.7742; on the 8 all five models ran,
-  Deepseek 0.7263 / 0.7394 / 0.7448. Without the pilot (9 and 7): Gemma 0.7119 / 0.7485 / 0.7580,
-  Deepseek 0.6987 / 0.7136 / 0.7198. mpgt's scores (0.12–0.29) pull every mean down. They move when a
-  benchmark is recorded.
+- **The values** — each model's mean and both oracles, on both bases, with PlanBench's pilot and
+  without — are the summary's second generated table. `summary_tables.py` holds the weights above and
+  stops when they no longer reproduce a stored result row, as they will not once PlanBench's full
+  run replaces the pilot's row counts.

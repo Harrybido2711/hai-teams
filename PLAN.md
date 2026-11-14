@@ -47,6 +47,7 @@ hai-teams/
 │   ├── Tempo_results.xlsx               every model ever run — the wide record, where results land first
 │   ├── Final_result.xlsx                the selected models (five since 2026-10-05) — what gets reported
 │   ├── results.db                       every score and the six criteria for querying — built, never hand-edited (`.claude/references/results-db.md`)
+│   ├── RESULTS_SUMMARY.md               the summary handed to people outside the project: the ten results, each benchmark's cautions, the means and oracles — names the workbook and nothing else local; its number tables are filled by `summary_tables.py`
 │   └── ROUTER_RESEARCH.pdf              Router_research/ROUTER_RESEARCH.md rendered by its `build_pdf.py`; rebuild after editing the .md
 ├── Criteria_results.xlsx                accuracy beside the six criteria, per benchmark × selected model — built, never hand-edited (`.claude/references/criteria-runs.md`)
 └── quest_pull.log                       gitignored
@@ -237,6 +238,7 @@ Each file is authoritative on one thing; nothing is duplicated between them.
 | `.claude/references/benchmarks/<group>/<name>.md`    | per-benchmark operating detail: Quest path, layout, verified counts, output naming, run order, its own traps — one page for each of the ten, plus a group page for what a process folder's benchmarks share. The rest of `.claude/` is benchmark-agnostic on purpose |
 | `LLM_as_judge/JUDGE_SELECTION.md`                    | the main judge document: which benchmarks need a judge, the literature, the chosen judges and the pilot comparing them, and the filled judge record (§7) — the PDFs are in `LLM_as_judge/papers/` |
 | `LLM_as_judge/PILOT_FINALISTS.md`                    | the judge pilot's finalists — Kimi K2.6, Haiku 4.5, Haiku 5.5 — side by side, and the case for and against Haiku 5.5 |
+| `Results/RESULTS_SUMMARY.md`                         | the results to hand to someone outside the project — how to read `Final_result.xlsx`, what to watch on each benchmark, the averages; written for that reader, with nothing local in it but the workbook's name |
 | `Router_research/ROUTER_RESEARCH.md`                 | choosing or building a router over the five selected models: the three recommended, what routing can gain on our rows (measured offline), and how to tell a router works |
 | `Interpersonal_.../NegotiationToM/negotiation.md`    | current NegotiationToM results, dataset traps, reasoning-token cost, silent-failure catalogue                                                 |
 | `Interpersonal_.../NegotiationToM/ISSUES.md`         | problems already hit, what was rejected, what shipped                                                                                         |
