@@ -18,6 +18,11 @@ Same for output length where `max_tokens` is unavailable or unsafe to set tightl
 - **A request, not a limit.** Verify from `usage.completion_tokens_details.reasoning_tokens`, never
   from how long the answer looks.
 - **It changes the prompt, so it changes the measurement.** Record the wording with the score.
+- **"Answer only" is not a ceiling for a model that deliberates in its answer — it removes the
+  reasoning.** PlanBench Qwen, thinking off, 2026-11-13: the cut rows nearly vanished and the
+  plan-writing score fell by over two thirds (counts: `planbench.md`, "That rerun's outcome"). Use
+  the forced answer below instead. A probe drawn from rows that were cut overstates any remedy (they
+  were wrong because they were cut); judge it on rows that finished, enough per task to see a drop.
 
 Which models this applies to is the last column of the table in
 [model-parameters.md](model-parameters.md) — anything reading *No* or *not established*. **An

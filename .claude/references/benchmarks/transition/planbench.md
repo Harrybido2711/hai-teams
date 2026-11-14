@@ -36,7 +36,7 @@ and `run_plan.sh`. Keys in the root `.env` (gitignored).
 | OpenAI | `PLAN_GPT_5.6_Luna` | `gpt-5.6-luna` | `reasoning_effort="low"` (required), `max_completion_tokens=16384`, `seed=42` |
 | Gemini | `PLAN_Gemini_Flash3.5lite_OpenRouter` | `google/gemini-3.5-flash-lite` | `reasoning.effort="minimal"` (fixed), `max_tokens=8192`, `seed=42` |
 | Gemma | `PLAN_Gemma_DeepInfra` | `google/gemma-4-31B-it` | no reasoning parameter, `temperature=0`, `max_tokens=4096`, `seed=42` |
-| Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=8192` (**was 4096 — it bound, see Run order**), `seed=42`; **answer-only instruction since 2026-11-13** (second system message: no explanation, final answer only, 8192-token budget; wording in the runner and on every row's `config`); route `deepinfra` on every row; call timeout 900 s |
+| Qwen | `PLAN_Qwen_DeepInfra` | `Qwen/Qwen3.5-9B` | `extra_body.reasoning.enabled=False` (fixed), `temperature=0`, `max_tokens=8192` (**was 4096 — it bound, see Run order**), `seed=42`; **answer-only instruction since 2026-11-13** (second system message: no explanation, final answer only, 8192-token budget; wording in the runner and on every row's `config`) — **which configuration is kept is open, see "That rerun's outcome"**; route `deepinfra` on every row; call timeout 900 s |
 | Deepseek | `PLAN_Deepseek` | `deepseek-flash` | prompt ceiling as a second system message (AwareBench's sentence **plus a 16,384-token budget since 2026-11-12**), `temperature=0`, `max_tokens=16384`, `seed=42`; **since 2026-11-13 a reply cut at 16,384 gets a forced answer** — its reasoning handed back, thinking disabled, `max_tokens=4096` |
 
 **Every output cap is chosen, not measured** — raised from AwareBench's short-answer caps because an
@@ -227,7 +227,8 @@ correct, 166 turned wrong), so +34 is small beside what the route varies by on i
 cheaper: summed latency 40.1 h against 57.7 h, median reply 2,385 tokens against 2,717. Task 7 fell
 to 2 of 149 (was 11). The cap still binds, so the number is still a lower bound.
 
-**Qwen's long answers fixed by an answer-only instruction, 2026-11-13.** Asked why the cap kept
+**Qwen's long answers shortened by an answer-only instruction, 2026-11-13 — and its plans lost with
+them (rerun below).** Asked why the cap kept
 binding, I tried the other ways of switching thinking off on a short and a long (mystery) prompt:
 `reasoning.enabled=False`, `chat_template_kwargs.enable_thinking=False` and `reasoning_effort="none"`
 all gave the identical reply (784 tokens on the short one), and with no switch the thinking goes to
@@ -254,7 +255,10 @@ task 2 35 → 8, task 4 99 → 14, task 5 39 → 5, task 6 74 → 23, task 8_3 9
 76 → 97, task 3 and 7 unchanged). It is not the reader: of the 325 plan rows that turned wrong, 296
 ended `stop` with a plan extracted, and VAL rejects the plan (4 read by hand — a short, plausible,
 wrong plan). On the 1,193 rows the budget run did not cut, 664 → 382; on the 320 it cut, 23 → 66.
-The 60-row probe's "17 of the 36 against 18" did not carry over. **Which configuration is Qwen's is
+The 60-row probe's "17 of the 36 against 18" did not carry over. The two earlier runs differed by
+166 and 200 rows, so 383/144 is not the route's variation. Of the 90 rows still cut, none is correct
+and 77 are loops (under 30% distinct lines in their last 60). Plan-writing tasks together: Qwen 114
+of 907 (was 405), against Deepseek 877, GPT 724, Gemma 463, Gemini 300. **Which configuration is Qwen's is
 not decided** — answer-only (0.296, 5.8% cut) or the archived budget-prompt run (0.454 as a lower
 bound, 23.5% cut), whose 367 cut rows a forced answer could then fill. The user's call.
 
