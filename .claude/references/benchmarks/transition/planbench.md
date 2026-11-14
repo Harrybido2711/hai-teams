@@ -192,6 +192,14 @@ are `obfuscated_deceptive_logistics`** (task 1: 23, task 2: 190), which score 0 
 credit is added the same command resumes. Qwen at 22:28: 1,020 rows, `cut_retry` 87, forced 38 —
 plan_optimality cuts 17% of rows against task 1's 1.2%, and ~40% of its retries are cut again.
 
+**GPT finished, 2026-11-14 ~01:50** (job 8595422, all shards `COMPLETED 0:0` in 6 h 19–6 h 29 min):
+15,568 rows, 0 empty, no `length`, `complete` 1, every `.err` empty; 18 files pulled md5-identical
+and scored. Not yet confirmed by the user. Its 88 task-3 `parse_fail` (79 in logistics) are replies
+that wrote a plan and no verdict — no answer, so wrong, not a formatting penalty. **Deepseek's
+`CutRetry` binds on one slice:** at 02:03, 114 rows cut at 16,384, 105 of them in
+`logistics/task_2_plan_optimality` (37% of its 285), 62 forced — every forced answer `stop`, 263–819
+tokens, no reasoning, none empty.
+
 **Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
 Deepseek, 8157878 Qwen; 64 files md5-matched, Quest `load_rows` gave 1,563 / 15,568 unique uids).
 Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17 min (1,563 rows,
