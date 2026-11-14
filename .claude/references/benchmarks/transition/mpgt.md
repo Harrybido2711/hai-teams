@@ -194,9 +194,10 @@ scores every `ok` row whatever its finish**, so read `finish_reason` before a nu
 2. In a model folder: `python <runner> --dry-run`, then `--limit 1` (12 calls, writes `smoke/`).
 3. On Quest, after the user's verification: `sbatch run_mpgt.sh` from inside the model folder.
 4. To force stored rows cut at the cap (Qwen): `<runner> --dry-run --force-cut` lists them and calls
-   nothing; then `sbatch run_mpgt.sh --force-cut`. **Written 2026-11-13, smoke-tested on dialogue 00
-   (`dst/story/00`: `stop`, 612 tokens, 5 → 6 of 23), not on Quest — waits for the user's
-   verification.** The sync is `mpgt_eval_core.py` and the Qwen runner together.
+   nothing; then `sbatch run_mpgt.sh --force-cut`. The sync is `mpgt_eval_core.py` and the Qwen
+   runner together. **Ran 2026-11-13 as job 8610516** on the user's go (21/21 code files
+   md5-matched; Quest's `--dry-run --force-cut` listed 45): 17 min 36 s, exit 2 — forced answers
+   that filled their own cap, not a crash (§ Full run).
 
 **Full run submitted 2026-11-12 21:47 CST, without a separate pilot** — 348 calls a model is less
 than PlanBench's pilot, and every model's 12-row smoke had been read by hand. Jobs 8428390 Deepseek,
@@ -230,7 +231,7 @@ pulled md5-identical (`29a65e48`). Lenient, mean of the six styles. **Layer 4 wa
 | Gemma | 0.3308 | 0.1859 | as is |
 | GPT | 0.3273 | 0.2007 | lower bound — off-count lists, below |
 | Gemini | 0.2575 | 0.1504 | lower bound, by less than 0.02 |
-| Qwen | 0.1778 | 0.0533 | lower bound; 45 rows at the 8192 cap |
+| Qwen | 0.1791 | 0.0563 | lower bound; 45 rows cut at 8192 forced, 18 still at the cap (loops) |
 
 Paired bootstrap over dialogues: **DST's top three are tied** (Deepseek − GPT +0.013, CI −0.015 to
 +0.043); all three beat Gemini, Gemini beats Qwen. Goal: Deepseek beats GPT and Gemma, those two
@@ -245,7 +246,7 @@ The audit (`evaluator`, 60+ responses read by hand; `partial / needs-human`):
   with n ≠ k answers fills nothing (one item per slot). GPT answers story and roleplay that way —
   `goal/story/18`: 13 answers for 14 slots, 10 right by position, none credited. Placed item i →
   slot i, GPT's DST is 0.3419, above Deepseek; goal 0.2119. Gemini 0.2601 / 0.1511, Qwen 0.1842 /
-  0.0637, Deepseek and Gemma unchanged. v4 is one rule for every model and placing is a guess;
+  0.0637 (on its rows before the forced answer), Deepseek and Gemma unchanged. v4 is one rule for every model and placing is a guess;
   **keep or align is the user's call, open.**
 - **Goal dialogues 10 and 11 hold no `@` outside the window** (11 of 225 slots a style). Outside the
   `reasoning` style, whose prompt shows an example, no model writes the scheme for them.
@@ -256,8 +257,18 @@ The audit (`evaluator`, 60+ responses read by hand; `partial / needs-human`):
 - **Qwen reasons in `content` although `reasoning.enabled=False`.** Of its 45 capped rows, 17 are
   repetition loops and 28 are visible reasoning cut off, some with an early draft that is scored
   (`dst/story/18`, 15/22). Counted as 0 they give 0.1680 / 0.0481. **Decided 2026-11-13: these 45
-  rows get a forced answer** (§ Model parameters, Run order 4); until that has run on Quest the
-  table above is the run without it.
+  rows get a forced answer** (§ Model parameters, Run order 4).
+- **Qwen's forced answers, job 8610516 — 0.1778 / 0.0533 before, 0.1791 / 0.0563 after.** Pulled
+  md5-identical; the other 303 rows byte-identical, one `config`, `first_response` equal to the
+  stored response on all 45; the file before is `results_archive_before_forced_answer_20261113/`.
+  **27 ended `stop`** (42–1,186 tokens): DST 23 → 26 of 111 slots, goal 7 → 10 of 124. **18 filled
+  ANSWER_MAX and are loops** — the same annotations cycled, or the dialogue written on past the
+  window — and gained 1 slot of 242; the probe's "a forced answer does not rescue a loop" held.
+  One row lost: `dst/story/18`'s scored draft (15/22) is now `first_response`, and its forced answer
+  lists 26 tags for 22 slots, unread whole by the off-count rule. Every forced row with a slot left
+  unread was read by hand (13): off-count lists (`goal/story/13`, 6 for 7), the masked utterances
+  written instead of goals, turns left bare or `[MASK]` kept, names without the scheme's shape —
+  the model's answer, not the reader's miss.
 
 ## Showing reasoning
 
