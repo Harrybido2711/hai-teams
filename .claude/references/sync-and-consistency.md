@@ -65,8 +65,9 @@ asking a second time** (the user's rule, 2026-11-06).
 3. **`Results/Final_result.xlsx`** — only if the model is selected — `PLAN.md` names which. A model that is not selected never
    earns a cell here, and a blank stays blank until the *selected* model runs.
 
-Then rebuild `Results/results.db` from them — [results-db.md](results-db.md). So does any other edit
-to a workbook or a criteria file.
+Then run `python3 Results/result_rows.py` — a recorder recreates its sheet without the highlighted
+result row, and the build refuses a sheet that lacks one — and rebuild `Results/results.db` from them:
+[results-db.md](results-db.md). So does any other edit to a workbook or a criteria file.
 
 **Rebuild the cells from the result files on disk, never from another summary.** Aggregate the
 per-task output, not a roll-up written by a previous run: bbh's slot-level `*_bbh_overall.csv` was
