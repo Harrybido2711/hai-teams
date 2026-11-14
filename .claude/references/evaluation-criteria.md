@@ -41,7 +41,7 @@ recovered afterwards.
 | `prompt_tokens`, `completion_tokens` | the provider's usage object, through the shared core's `usage_from()` — it already folds each SDK's naming, and Gemini's separate `thoughts_token_count`, into one count |
 | `reasoning_tokens` | the provider's reasoning breakdown where it reports one; empty, not 0, where it does not |
 | `latency_s` | the successful call alone, back-off excluded |
-| `finish_reason` | as returned; `length` is a truncation |
+| `finish_reason` | as returned; `length` is a truncation — and so is a row marked `cut_retry` or `forced_answer`, whose later call ended `stop` |
 | `n_attempts` | calls spent on this row, retries included |
 | `parse_ok` | whether the parser produced a prediction |
 
