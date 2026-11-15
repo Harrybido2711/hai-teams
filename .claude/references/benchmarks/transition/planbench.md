@@ -225,6 +225,14 @@ mystery_blocksworld, 900 mystery_blocksworld_3, 492 obfuscated, 22 logistics —
 21.7 M completion at the run's per-slice means, **~$4.5 at DeepInfra's $0.10/$0.15** (read
 2026-11-15); spent so far 15.4 M / 25.9 M, ~$5.4.
 
+**Resumed 2026-11-15 16:38 after the user topped up all three accounts** ("接着上次没有跑完的跑就可以";
+OpenRouter 9.89 left, DeepSeek 19.95, DeepInfra answered a probe): `plan_eval_core.py` transferred,
+64 files md5-matched; each model's original command plus `--open-mode=append` so the first logs
+stay — Gemini 8870964, Deepseek 8870965, Qwen 8870966 (long, 7 days), Gemma 8870967 (`--array=4`).
+Every shard cleared its own halt marker and called only the missing rows. **Gemini and Gemma were
+complete by 16:49:** 15,568 rows each, 0 empty, `complete` 1, one config; pulled md5-identical and
+scored — Gemini 6,329 / 15,076 (0.420), Gemma 8,304 / 15,076 (0.551). Not yet confirmed by the user.
+
 **Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
 Deepseek, 8157878 Qwen; 64 files md5-matched, Quest `load_rows` gave 1,563 / 15,568 unique uids).
 Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17 min (1,563 rows,

@@ -165,3 +165,13 @@ negotiating parameter surface for google/gemini-3.5-flash-lite ...
 [google/gemini-3.5-flash-lite] API error (3/5): APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 8192 tokens, but can only afford 7203. To increase, visit https://openrouter.ai/settings/credits and add more credits', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None, 'previous_errors': [{'code': 402, 'message': 'This request requires more credits, or fewer max_tokens. You requested up to 8192 tokens, but can only afford 7203. To increase, visit https://openrouter.ai/settings/credits and add more credits'}]}}, 'user_id': 'user_3IFyiDI4GXhS6DqSSh2TjG7l0wS'}
 
 calls: {'ok': 3090, 'empty': 0, 'interrupted': 0, 'errors': 8, 'timeouts': 0, 'failed_rows': 0}  elapsed 9786s
+[startup] cleared stale shard0_BILLING_HALT.txt
+negotiating parameter surface for google/gemini-3.5-flash-lite ...
+  accepted: {'max_tokens': 8192, 'seed': 42}
+  resume google-gemini-3_5-flash-lite_shard0of5.jsonl: 3090 done, 0 empty row(s) to retry
+3114 rows in this shard (53 slices), 24 to call -> /gpfs/projects/p32983/Transition_processes_benchmarks/LLMs-Planning_bench/PLAN_Gemini_Flash3.5lite_OpenRouter/results/google-gemini-3_5-flash-lite_shard0of5.jsonl
+  3110/3114  [obfuscated_deceptive_logistics/task_2_plan_optimality]
+
+calls: {'ok': 24, 'empty': 0, 'interrupted': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 92s
+
+health [google/gemini-3.5-flash-lite] full: rows=15459/15568 empty=0 length=4 cut_retry=0 forced=0 forced_reasoned=0 interrupted=0 configs=1 COMPLETE=0

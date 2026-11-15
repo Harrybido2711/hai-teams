@@ -177,3 +177,12 @@ calls: {'ok': 3112, 'empty': 0, 'interrupted': 0, 'errors': 0, 'timeouts': 14, '
 health [google/gemma-4-31B-it] full: rows=15568/15568 empty=1 length=373 cut_retry=0 forced=0 forced_reasoned=0 interrupted=0 configs=1 COMPLETE=0
 
 1 row(s) of this shard are empty or interrupted — resubmit the shard: resume retries exactly those. First: mystery_blocksworld|task_8_1_goal_shuffling|74
+negotiating parameter surface for google/gemma-4-31B-it ...
+  accepted: {'temperature': 0, 'max_tokens': 4096, 'seed': 42}
+  resume google-gemma-4-31B-it_shard4of5.jsonl: 3112 done, 1 empty row(s) to retry
+3113 rows in this shard (53 slices), 1 to call -> /gpfs/projects/p32983/Transition_processes_benchmarks/LLMs-Planning_bench/PLAN_Gemma_DeepInfra/results/google-gemma-4-31B-it_shard4of5.jsonl
+[google/gemma-4-31B-it] TIMEOUT (1/5): call exceeded 240s hard limit
+
+calls: {'ok': 1, 'empty': 0, 'interrupted': 0, 'errors': 0, 'timeouts': 1, 'failed_rows': 0}  elapsed 335s
+
+health [google/gemma-4-31B-it] full: rows=15568/15568 empty=0 length=373 cut_retry=0 forced=0 forced_reasoned=0 interrupted=0 configs=1 COMPLETE=1
