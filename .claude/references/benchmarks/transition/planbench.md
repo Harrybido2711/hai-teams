@@ -209,6 +209,22 @@ mystery_blocksworld from task 2 on, all of mystery_blocksworld_3 and both obfusc
 slice has ≥20 rows), ~$12 off-peak to ~$24 peak before `CutRetry`'s extra calls. Spent so far:
 14.1 M prompt, 22.9 M completion. Once topped up the same command resumes.
 
+**Gemma finished but one row, 2026-11-14 ~16:30** (job 8595424): shards 0–3 `COMPLETED 0:0` in
+20 h 06–20 h 15 min; shard 4 exit 1 after 20 h 59 min on one empty row
+(`mystery_blocksworld|task_8_1_goal_shuffling|74`, five calls past the 240 s hard limit; 37 such
+timeouts in the run, the rest answered on retry). 15,568 rows, 373 `length` (185 of them
+obfuscated); 18 files md5-pulled and scored interim: 8,304 of 15,076 by-task rows (0.551; pilot
+0.561). Resubmitting shard 4 alone (`--array=4`) refills the row. Not yet confirmed by the user.
+
+**Qwen stopped on DeepInfra balance, 2026-11-15 03:05 (31 h 40 min)** — as `FAILURE_HALT`, because
+DeepInfra's 402 wording was not a billing signature (provider-gotchas.md § Classifying a refusal;
+added to `plan_eval_core.py` the same day, not yet on Quest). 9,252 rows, 45 empty (retried on
+resume), `cut_retry` 609, forced 337; 11 `length` rows are forced answers that filled the 4,096
+cap, so shards will exit 2 at the end. 16 files md5-pulled. 6,361 rows left: 4,947
+mystery_blocksworld, 900 mystery_blocksworld_3, 492 obfuscated, 22 logistics — ~11.9 M prompt,
+21.7 M completion at the run's per-slice means, **~$4.5 at DeepInfra's $0.10/$0.15** (read
+2026-11-15); spent so far 15.4 M / 25.9 M, ~$5.4.
+
 **Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
 Deepseek, 8157878 Qwen; 64 files md5-matched, Quest `load_rows` gave 1,563 / 15,568 unique uids).
 Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17 min (1,563 rows,

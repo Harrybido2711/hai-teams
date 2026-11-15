@@ -144,3 +144,11 @@ N" once it cannot cover one. `neg_eval_core.py` and `judge_core.py` retry the fi
 second, which stopped judge job 4482838 cleanly (2026-10-19, no failed rows); `aware_eval_core.py`
 matches neither and stopped only at `FAILURE_HALT` (2026-10-12). Before a run whose estimate nears
 the balance: `GET https://openrouter.ai/api/v1/credits` (`total_credits`, `total_usage`).
+
+**DeepInfra's out-of-balance 402 reads "You need positive balance to do inference. Please add
+balance manually or setup top-up"** (`invalid_request_error`, no code) — none of the older
+signatures. PlanBench's Qwen full run met it 2026-11-15 and stopped only at `FAILURE_HALT`, 10 rows
+× 5 attempts a shard, 45 rows written empty (retried on resume). `"positive balance"` is in
+`plan_eval_core.py`'s `BILLING_SIGNATURES` from then; **`neg_eval_core.py`, `judge_core.py` and
+`aware_eval_core.py` still lack it** — add it before their next DeepInfra run (Gemma, Qwen). DeepSeek's
+balance: `GET https://api.deepseek.com/user/balance` (`total_balance`, `is_available`).

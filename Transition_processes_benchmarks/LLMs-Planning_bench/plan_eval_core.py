@@ -176,6 +176,10 @@ BILLING_SIGNATURES = (
     # § Classifying a refusal). Without them Gemini running dry retries ~2 minutes a row and stops
     # as FAILURE_HALT, not BILLING_HALT.
     "requires more credits", "can only afford", "openrouter_credits",
+    # DeepInfra's out-of-balance 402: "You need positive balance to do inference. Please add balance
+    # manually or setup top-up". Missing here, Qwen's full run (2026-11-15) retried it 5 times a row
+    # for 10 rows a shard and stopped as FAILURE_HALT with 45 empty rows instead of BILLING_HALT.
+    "positive balance",
 )
 # A backend that cut the answer off — not the model, not the cap. OpenRouter normalises an upstream
 # failure to finish_reason "error" on HTTP 200 with the fragment as content (Gemini, MultiChallenge
