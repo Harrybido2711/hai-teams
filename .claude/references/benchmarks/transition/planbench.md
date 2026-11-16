@@ -233,6 +233,24 @@ Every shard cleared its own halt marker and called only the missing rows. **Gemi
 complete by 16:49:** 15,568 rows each, 0 empty, `complete` 1, one config; pulled md5-identical and
 scored — Gemini 6,329 / 15,076 (0.420), Gemma 8,304 / 15,076 (0.551). Not yet confirmed by the user.
 
+**Deepseek 14 rows short on DeepSeek balance again, 2026-11-16 00:35** (job 8870965, 7 h 05–7 h 57
+min): shards 0 and 4 `COMPLETED 0:0`, shards 1–3 `shardN_BILLING_HALT.txt` and exit 1, balance −0.00.
+15,554 of 15,568 rows, 0 empty, one config, `cut_retry` 437, forced 279; one forced answer filled its
+4,096 cap (mystery_blocksworld_3 task 2, shard 3), so shard 3 exits 2 once resumed. **The 14 missing
+rows are all obfuscated_deceptive_logistics task 2**, outside the by-task table, so the score is
+already final: **13,876 / 15,076 (0.920; pilot 0.920)**. 18 files md5-pulled. The $19.95 covered
+5,529 rows; DeepSeek's peak window (01–04 and 06–10 UTC on weekdays, 19:00–22:00 and 00:00–04:00 CST)
+doubled the price of most of the second half. Once topped up, resubmit `--array=1-3` — 14 rows at about
+17k completion tokens each, under $0.5. Not yet confirmed by the user.
+
+**Qwen at 9,627 rows the same hour** (job 8870966, all five shards running): 2 empty rows, 30
+`length` rows that are all forced answers filling the 4,096 cap (20 in mystery_blocksworld task 1).
+Since the resume the route has streamed about 24 tokens/s a stream, half the first run's rate, and
+answered some calls with `429 engine_overloaded` (provider-gotchas.md § Classifying a refusal). The
+two empty rows are mystery task 1 rows that spent all five attempts on it; the shard's resubmit refills
+them. Mystery task 1 cuts 63% of rows and averages 355 s a row. About 5,900 rows are left, which is
+3–4 days at this speed and within the 7-day wall.
+
 **Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
 Deepseek, 8157878 Qwen; 64 files md5-matched, Quest `load_rows` gave 1,563 / 15,568 unique uids).
 Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17 min (1,563 rows,

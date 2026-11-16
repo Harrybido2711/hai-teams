@@ -152,3 +152,8 @@ signatures. PlanBench's Qwen full run met it 2026-11-15 and stopped only at `FAI
 `plan_eval_core.py`'s `BILLING_SIGNATURES` from then; **`neg_eval_core.py`, `judge_core.py` and
 `aware_eval_core.py` still lack it** — add it before their next DeepInfra run (Gemma, Qwen). DeepSeek's
 balance: `GET https://api.deepseek.com/user/balance` (`total_balance`, `is_available`).
+
+**DeepInfra also answers `429` "Model busy, retry later" (`engine_overloaded`) when the model is loaded.**
+This is a throttle, not billing, and is retried. On the evening of 2026-11-15 it came with Qwen streaming
+at half the previous day's tokens/s. Five in a row write the row empty — 2 PlanBench rows that night —
+so that shard exits 1 and its resubmit refills them.
