@@ -126,37 +126,37 @@ WP3. What is MMLU's own:
   them and exits 1 unless the merged ids are exactly the sample's. Logs: absolute paths in the
   model folder, appended. Halt markers `sample10_[shard<N>_]*_HALT.txt`, a smoke's
   `smoke_sample10_*`; each run clears only its own prefix.
-- **Calls run serially in the main thread** — the watchdog is SIGALRM and re-arms for each
-  `CutRetry` stage — so `--workers` above 1 is refused; parallelism is the 5 shards. Exit codes: 1
-  failed or cut rows (resubmit), 2 an odd forced answer, 3 thinking came back on — reasoning text,
-  reasoning tokens or inline `<think>` (Qwen, Gemma: the shard stops at that row and leaves
-  `*_THINKING_HALT.txt`; a resubmit that finds such a stored row stops again before any call).
+- **Calls run serially in the main thread** (SIGALRM watchdog, re-armed per `CutRetry` stage);
+  `--workers` above 1 is refused. Exit 1: failed or cut rows (resubmit); 2: an odd forced answer;
+  3: thinking came back on — reasoning text, tokens or inline `<think>` (Qwen, Gemma: the shard stops
+  at that row, writes `*_THINKING_HALT.txt`; a resubmit finding such a row stops before any call).
 - **Rows add** `pred_letter`, `parse_ok`, `failed`, the per-row usage fields, `served_model`,
   `backend`, `reasoning_chars`, `think_tag_calls`, `halted`, `CutRetry`'s marks, `sample`, `ts`. `config` is a JSON object here, a
   flat string on legacy rows. **`parse_ok`** = the one scorer, asked about each option in turn,
   accepts at least one — so a row scored 1 is always `parse_ok`.
-- **What a row cost.** `*_tokens` are the answering attempt's. `billed_prompt_tokens`,
-  `billed_completion_tokens`, `billed_reasoning_tokens`, `billed_cost` (OpenRouter) and
-  `billed_estimated_cost` (DeepInfra) sum every HTTP call of the row, failed attempts and every stage
-  included, None where no call reported one; `last_call_cost` / `last_call_estimated_cost` are the
-  last call's alone. `attempts_without_usage` counts HTTP calls that returned no usage;
-  `reasoning_chars` sums every call's reasoning text.
-- **Calls and time.** An answered row made `n_attempts + cut_retry + forced_answer` HTTP calls.
-  `latency_s` times the answering attempt only — a `CutRetry` stage kept from an earlier one is not
-  in it (`first_`/`retry_latency_s` is). A row failed after a cut first stage has no `first_*`.
+- **What a row cost.** `*_tokens` are the answering attempt's; `billed_{prompt,completion,
+  reasoning}_tokens`, `billed_cost` (OpenRouter), `billed_estimated_cost` (DeepInfra) sum every HTTP
+  call of the row, failed ones and every stage included (None if none reported); `last_call_*` is the
+  last call's. `attempts_without_usage`: calls that returned no usage; `reasoning_chars`: every
+  call's reasoning text.
+- **Calls and time.** An answered row made `n_attempts + cut_retry + forced_answer` calls.
+  `latency_s` is the answering attempt's alone, without a stage kept from an earlier one (that is in
+  `first_`/`retry_latency_s`). A row failed after a cut first stage has no `first_*`.
 - **A resubmit keeps a row's history.** A stored failed or cut row stays in the file until a new row
   replaces it; the new row's `billed_*` and `attempts_without_usage` are cumulative over every run,
   `n_attempts` is this run's, and `prior_n_attempts`, `prior_failed_runs` (earlier runs that ended
   failed *or* cut), `resumed_after_failure` record the earlier runs. A stored cut row whose re-call
   fails is replaced by the failed row — its bill intact, and still loud (failed, exit 1).
 - **A stopped run still writes the row it was on** — SIGTERM, a billing, quota or malformed-request
-  halt, FAILURE_HALT. Stopped mid-call: a failed row marked `halted`, with every call it was
-  billed; stopped after the call returned: the answered row. The file's bill equals what was billed.
+  halt, FAILURE_HALT. Mid-call: a failed row marked `halted`, with every call it was billed; after
+  the call returned: the answered row. The file's bill equals what was billed.
+  **Known limits:** a second SIGTERM during recovery or the final save can lose unsaved rows; a stop
+  after a call returned but before `call_with_retries` returns is written failed and `halted`, then
+  re-called; a kill in `create` before the request leaves may overcount `attempts_without_usage` by 1.
 - **Without `--sample` nothing changed**: `test_sample10.py` checks the legacy code, files and
   requests byte for byte against `1cc5bbd5`.
-- **Smoke, 2026-11-15** (`--limit 3`, 39 rows a model, all exit 0, one config): Qwen's and Gemma's
-  rows are from the final code (`reasoning_chars` 0); GPT's, Gemini's and Deepseek's predate the
-  last field renames, their requests byte-identical to the final code's.
+- **Smoke, 2026-11-15** (`--limit 3`, 39 rows each, all exit 0): Qwen's and Gemma's rows are from
+  the final code; the others' predate the last field renames, with identical requests.
 
 ## Its own traps
 

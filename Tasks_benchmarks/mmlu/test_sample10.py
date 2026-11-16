@@ -1631,6 +1631,128 @@ def test_held_row_windows():
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def _line_of(func, text, occurrence=1):
+    """The source line number of the `occurrence`-th line of `func` containing `text`."""
+    import inspect
+    lines, start = inspect.getsourcelines(func)
+    hits = [start + k for k, line in enumerate(lines) if text in line]
+    assert len(hits) >= occurrence, (func.__name__, text, len(hits))
+    return hits[occurrence - 1]
+
+
+def _stop_at(func_name, line, nth):
+    """A sys.settrace hook raising SystemExit(143) the nth time `line` of `func_name` is about to run
+    — how a SIGTERM handler lands at an eval-breaker check before that line."""
+    hits = [0]
+
+    def local(frame, event, arg):
+        if event == "line" and frame.f_lineno == line:
+            hits[0] += 1
+            if hits[0] == nth:
+                raise SystemExit(143)
+        return local
+
+    def tracer(frame, event, arg):
+        return local if frame.f_code.co_name == func_name else None
+    return tracer
+
+
+def _stop_rows(core, md, subj, ids, tracer, billed):
+    """Run one subject, every row answering with a distinct bill (50 + idx), under `tracer`."""
+    data = core.load_subject(subj)
+
+    class C:
+        class chat:
+            class completions:
+                @staticmethod
+                def create(model, messages, **kw):
+                    q = messages[-1]["content"]
+                    i = next(i for i in ids[subj] if data[i]["question"] in q)
+                    billed[0] += 50 + i
+                    return fake_response("Final Answer: B", 0, 50 + i)
+    _, sha = core.load_sample("sample10")
+    cfg = {"model": "fake", "params": {"seed": 42}, "prompt": "v2", "sample": "sample10",
+           "sample_sha1": sha}
+    core._recent.clear()
+    core._consecutive[0] = 0
+    sys.settrace(tracer)
+    try:
+        core.run_sample_subjects(md, "fake", plain_once(core, C), cfg, "sample10", ids, [subj],
+                                 save_every=100)
+    except SystemExit:
+        pass
+    finally:
+        sys.settrace(None)
+    raw = open(os.path.join(md, "results_sample10", subj, "fake.jsonl")).read().splitlines()
+    return [json.loads(l) for l in raw]
+
+
+def test_stop_before_the_call_reads_no_old_ledger():
+    """S1, from the reviewer's stopline_probe: a stop landing just before a row's call starts must
+    write nothing for that row — not a failed row carrying the previous row's bill."""
+    core = load_core()
+    tmp = tempfile.mkdtemp(prefix="mmlu_s1_")
+    try:
+        ids, _ = core.load_sample("sample10")
+        subj, billed = "Business_ethics", [0]
+        line = _line_of(core.run_sample_subjects, "text, meta = call_with_retries(")
+        rows = _stop_rows(core, tmp, subj, ids, _stop_at("run_sample_subjects", line, 3), billed)
+        assert [r["idx"] for r in rows] == ids[subj][:2], [r["idx"] for r in rows]
+        assert not any(r.get("halted") for r in rows)
+        assert sum(r["billed_completion_tokens"] for r in rows) == billed[0]
+        # and call_with_retries itself: a stop at its entry, after its own reset, finds no ledger —
+        # even when the caller does not reset (a direct caller, or the loop's reset removed)
+        md = os.path.join(tmp, "unit")
+        os.makedirs(md)
+        msgs = core.build_messages(core.load_subject(subj)[0])
+        client = ScriptedClient([fake_response("Final Answer: B", 10, 20)])
+        core.call_with_retries(plain_once(core, client), msgs, "m", md)
+        assert core.halted_meta(SystemExit(143)) is not None      # row A's ledger, kept on exit
+        entry = _line_of(core.call_with_retries, "_require_watchdog()")
+        sys.settrace(_stop_at("call_with_retries", entry, 1))
+        try:
+            core.call_with_retries(plain_once(core, ScriptedClient([])), msgs, "m", md)
+            raise AssertionError("the stop did not land")
+        except SystemExit as stop:
+            sys.settrace(None)
+            assert core.halted_meta(stop) is None, "row B would carry row A's bill"
+        finally:
+            sys.settrace(None)
+        ok(f"B24 S1 stop just before row #3's call: rows {[r['idx'] for r in rows]} written, none for "
+           f"#3, file billed {billed[0]} = provider billed; a stop at call_with_retries' entry finds "
+           f"no earlier row's ledger")
+    finally:
+        sys.settrace(None)
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def test_stop_around_the_append_writes_the_row_once():
+    """S2, from the reviewer's stopline_probe: a stop landing at the append, or just after it, writes
+    the row exactly once — counted on the raw lines of the file."""
+    core = load_core()
+    tmp = tempfile.mkdtemp(prefix="mmlu_s2_")
+    try:
+        ids, _ = core.load_sample("sample10")
+        subj = "Business_ethics"
+        append_line = _line_of(core.run_sample_subjects, "records.append(row)")
+        after_line = _line_of(core.run_sample_subjects, "held.pop(i, None)")
+        assert after_line == append_line + 1
+        notes = []
+        for label, line in (("at the append", append_line), ("just after it", after_line)):
+            md = os.path.join(tmp, label.replace(" ", "_"))
+            billed = [0]
+            rows = _stop_rows(core, md, subj, ids, _stop_at("run_sample_subjects", line, 3), billed)
+            idxs = [r["idx"] for r in rows]
+            assert idxs == ids[subj][:3], (label, idxs)            # raw lines: #3 once, no duplicate
+            assert not rows[2]["failed"] and not rows[2].get("halted")
+            assert sum(r["billed_completion_tokens"] for r in rows) == billed[0]
+            notes.append(f"{label}: {len(idxs)} raw lines, {len(set(idxs))} idx, billed {billed[0]}")
+        ok("B25 S2 stop around row #3's append writes it once, answered — " + "; ".join(notes))
+    finally:
+        sys.settrace(None)
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def test_sbatch_scripts():
     """Each run_mmlu_sample10.sh runs in its own folder wherever it is submitted from, logs to
     absolute paths there in append mode, and runs the sample, sharded, unbuffered."""
@@ -1678,5 +1800,7 @@ if __name__ == "__main__":
     test_thinking_row_stops_resubmit()
     test_in_flight_row_is_billed()
     test_held_row_windows()
+    test_stop_before_the_call_reads_no_old_ledger()
+    test_stop_around_the_append_writes_the_row_once()
     test_sbatch_scripts()
     print(f"\n{len(PASSED)} checks passed")

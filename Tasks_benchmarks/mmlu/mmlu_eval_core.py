@@ -1429,14 +1429,19 @@ def run_sample_subjects(model_dir, model_id, once, config, sample, ids_by_subjec
             for k, (i, ex) in enumerate(todo, 1):
                 messages = build_messages(ex)    # once per row: CutRetry keys its state on this list
                 prior = held.get(i)
-                text, meta, appended = None, None, False
+                text, meta = None, None
+                # A stop before this row's call starts must not find the last row's ledger and write
+                # its bill onto this idx; call_with_retries clears it again on entry.
+                _LEDGER.last = None
+                # Whether this row is already in `records`, by count — no flag, so a stop landing
+                # between the append and anything after it cannot get the row appended twice.
+                n_before = len(records)
                 try:
                     text, meta = call_with_retries(once, messages, model_id, model_dir)
                     row = sample_row(i, ex, text, meta, config, sample)
                     if prior is not None:
                         row = fold_history(row, prior)
                     records.append(row)
-                    appended = True
                     held.pop(i, None)
                 except BaseException as stop:
                     # SIGTERM, or a billing/quota/malformed halt, stopped this row. Its calls were
@@ -1445,7 +1450,7 @@ def run_sample_subjects(model_dir, model_id, once, config, sample, ids_by_subjec
                     # kill landed while its row was being written: the row is written as answered.
                     # If not, it was stopped mid-call: a failed row marked `halted`, from the ledger
                     # call_with_retries keeps on exit.
-                    if not appended:
+                    if len(records) == n_before:
                         recovered = meta if meta is not None else halted_meta(stop)
                         if recovered is not None:
                             row = sample_row(i, ex, text or "", recovered, config, sample)
