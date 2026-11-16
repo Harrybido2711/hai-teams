@@ -36,10 +36,12 @@ timeout) — must be ended by the SIGALRM watchdog. Without the SDK, B4 is skipp
 """
 
 import argparse
+import collections
 import contextlib
 import csv
 import hashlib
 import importlib.util
+import inspect
 import io
 import json
 import os
@@ -487,8 +489,9 @@ def _test_b(core, root):
     srows = [json.loads(line) for line in open(os.path.join(smoke, "test-fake-model-1_0.jsonl"))]
     need = set(core.USAGE_FIELDS) | set(core.BILLED_FIELDS) | set(core.RESUME_FIELDS) | {
         "parse_ok", "questionId", "stratum", "idx", "score", "anls", "seed", "config", "empty",
-        "reasoning_chars"}
-    check("B2 every row carries every per-row field", len(srows) == 3 and all(need <= set(r) for r in srows),
+        "reasoning_chars", "think_tag_calls", "halted"}
+    check("B2 every row carries every per-row field; `halted` is None on a row nothing interrupted",
+          len(srows) == 3 and all(need <= set(r) for r in srows) and all(r["halted"] is None for r in srows),
           str([sorted(need - set(r)) for r in srows]))
     check("B2 rows are the first 3 sample questions, keyed by questionId",
           [r["questionId"] for r in srows] == [str(r["example"]["questionId"]) for r in rows[:3]])
@@ -592,7 +595,8 @@ def _test_b(core, root):
           "and writes the halting row as failed (5 rows)",
           "aborting" in str(code) and os.path.exists(os.path.join(mdir, "sample10_shard0_FATAL_HALT.txt"))
           and len(fr) == 5 and n["k"] == 5 and sum(r["empty"] for r in fr) == 1
-          and fr[-1]["empty"] == 1 and str(fr[-1]["error"]).startswith("interrupted: SystemExit"),
+          and fr[-1]["empty"] == 1 and str(fr[-1]["error"]).startswith("interrupted: SystemExit")
+          and str(fr[-1]["halted"]).startswith("SystemExit: aborting") and fr[0]["halted"] is None,
           f"{code}; calls {n['k']}; rows {len(fr)}")
     check("B7 ... the halting call is counted once as a call without usage (not by both handlers), "
           "n_attempts 1", fr[-1]["attempts_without_usage"] == 1 and fr[-1]["n_attempts"] == 1,
@@ -881,7 +885,7 @@ def _test_resume_history(core, root, rows):
           and o.get("billed_completion_tokens") == before[other]["billed_completion_tokens"] == 81920
           and o.get("prior_n_attempts") == 5 and o.get("prior_failed_runs") == 1 and o.get("n_attempts") == 1
           and o.get("attempts_without_usage") == 1 and o.get("resumed_after_failure") is True
-          and str(o.get("error")).startswith("interrupted: SystemExit"),
+          and str(o.get("error")).startswith("interrupted: SystemExit") and o.get("halted") == "SystemExit: 143",
           f"exit {code}; rows {len(after)}; " + json.dumps({k: o.get(k) for k in (
               "empty", "billed_completion_tokens", "n_attempts", "attempts_without_usage", "error",
               *core.RESUME_FIELDS)}))
@@ -990,6 +994,45 @@ def _test_interrupted_rows(core, root, shard_rows, rows_of):
           f"{str(code)[:80]}; rows {len(f)}")
     core._recent.clear()
     core._consecutive[0] = 0
+
+    # Killed at `held.pop(qid, None)`: the new row is already in `records` and the stored one still in
+    # `held`. Two guards keep the row written once — to_save() skips a held row already replaced, and
+    # the in-flight recovery skips a row already in records — and only RAW LINES can show a duplicate:
+    # a qid-keyed dict keeps one of them. The reviewer's probe_w3_lines.py (2026-11-15), folded in.
+    mdir = os.path.join(root, "M_kill_at_pop")
+    os.makedirs(mdir)
+    path = os.path.join(mdir, "results_sample10", "test-fake-model-1_0_shard3of20.jsonl")
+    run_s(core, mdir, make_once(fail), shard=3, total_shards=20)
+    src, start = inspect.getsourcelines(core.run_sample)
+    pop_line = [start + i for i, text in enumerate(src) if "held.pop(qid, None)" in text][0]
+    fired = []
+
+    def tracer(frame, event, arg):
+        if frame.f_code is not core.run_sample.__code__:
+            return None
+
+        def local(fr, ev, a):
+            if ev == "line" and fr.f_lineno == pop_line and not fired:
+                fired.append(fr.f_lineno)
+                raise SystemExit(143)           # the SIGTERM handler's exit, at that very line
+            return local
+        return local
+    sys.settrace(tracer)
+    try:
+        code, out = run_s(core, mdir, make_once(lambda q, k: fake_resp("Final Answer: x", completion=50)),
+                          shard=3, total_shards=20)
+    finally:
+        sys.settrace(None)
+    lines = [json.loads(line) for line in open(path)]
+    counts = collections.Counter(r["questionId"] for r in lines)
+    dups = {q: n for q, n in counts.items() if n > 1}
+    mine = [r for r in lines if r["questionId"] == doomed]
+    check(f"B14 killed AT held.pop (exit {code}): {len(lines)} raw lines for {len(counts)} questions, no "
+          f"duplicate; the doomed row once, answered, billed 81,970 summed over its lines",
+          code == 143 and fired and len(lines) == len(counts) == len(shard_rows) and not dups
+          and len(mine) == 1 and mine[0]["empty"] == 0
+          and sum(r["billed_completion_tokens"] or 0 for r in mine) == 81920 + 50,
+          f"fired {fired}; duplicates {dups}; doomed lines {len(mine)}")
 
 
 def _test_ledger_more(core, root):

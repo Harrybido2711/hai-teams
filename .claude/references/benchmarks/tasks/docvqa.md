@@ -67,37 +67,39 @@ quota, so the runner deletes both from the environment before building the clien
 
 For criteria 1·2·3·6 ([sample10-plan.md](../../sample10-plan.md) WP4): **539 of the 5,349 questions**,
 9 strata by `question_types[0]`, the same `questionId`s for GPT, Gemini, Qwen and Gemma.
-`core.run_sample` writes `<model folder>/results_sample10/` (`smoke_sample10/` under `--limit`) and
-**never reads or writes `results/`**; every row carries the per-row usage fields, plus `billed_*`
-(tokens, `billed_cost`, `billed_estimated_cost`) and `attempts_without_usage` — every HTTP call's
-cost, not just the answer's, and cumulative over a row's earlier failed runs (`prior_n_attempts`,
-`prior_failed_runs`, `resumed_after_failure`). Runners: `--sample`
-added to `DOCVQA_GPT_5.6_Luna`, and three folders that exist only for it. `run_docvqa_sample10.sh` in
-each is one job, no array. **Each runs today's settled config (D1 = B), not the condition behind its
-reported number** — Gemini on OpenRouter, Qwen and Gemma on DeepInfra; each runner's docstring says
-what differs. Without `--sample` nothing changed: `test_docvqa_sample10.py` runs the path against
-commit `1cc5bbd5` and compares every file byte for byte. **`parse_ok`** means the extractor gave
-a non-empty answer; it falls back to the whole reply without `Final Answer:`, as every DocVQA score
-did, so `has_marker` is the strict reading. `parse_ok` false means score 0 and ANLS 0: `load_sample`
-refuses an empty gold answer, the one case where ANLS credits an empty reply.
+`core.run_sample` writes `<model folder>/results_sample10/` (`smoke_sample10/` under `--limit`), **never
+`results/`**. Rows carry the per-row usage fields plus `billed_*` (tokens, `billed_cost`,
+`billed_estimated_cost`) and `attempts_without_usage`: every HTTP call's cost, cumulative over a row's
+earlier failed runs (`prior_n_attempts`, `prior_failed_runs`, `resumed_after_failure`). Runners:
+`--sample` in `DOCVQA_GPT_5.6_Luna` and three sample-only folders, each `run_docvqa_sample10.sh` one
+job. **Each runs today's settled config (D1 = B), not the reported number's** — Gemini on
+OpenRouter, Qwen and Gemma on DeepInfra; each runner's docstring says what differs. Without `--sample`
+nothing changed: `test_docvqa_sample10.py` compares every file with commit `1cc5bbd5`. **`parse_ok`**: the
+extractor gave a non-empty answer (the whole reply if no `Final Answer:`, as every score here;
+`has_marker` is the strict reading). False means score 0 and ANLS 0: `load_sample` refuses an empty
+gold answer, where ANLS would credit an empty reply.
 
-- **Never smoke the full-run path with `--limit` alone.** Without `--sample`, `--limit` writes the
-  untagged filename into `results/`, over the merged full-run file — kept, as that path must not change.
+- **Never smoke the full-run path with `--limit` alone**: it writes the untagged filename into
+  `results/`, over the merged full-run file — kept, as that path must not change.
 - **One message layout for all four**: page, then text, as GPT's full run; Qwen's and Gemma's
   reported runs sent the text first.
-- **Question 59607 is in the sample**: one of Gemini's five deterministic `MALFORMED_RESPONSE`
-  rows on the native route. If it reproduces, its row is written empty and the job exits 1.
-- **Gemini sends no `provider.require_parameters`**, so OpenRouter could silently drop a setting no
-  backend supports. Kept: it is the settled config every benchmark uses (2026-11-15).
-- **Qwen and Gemma halt at the first row showing thinking** (reasoning text, a think tag inline in
-  `content`, or reasoning tokens): `sample10_THINKING_HALT.txt`, exit 3; the marker names
-  `results_sample10/` (`smoke_sample10/`) as the directory to archive. A resubmit on the same config
-  halts before calling any row; only the one-call negotiation probe runs, as the config comes from it.
-- **A halt or SIGTERM writes the row in flight as failed** (`error` starts `interrupted:`), so its
-  billed calls stay in the file and fold into the next run of it.
-- **A row's HTTP calls in one run: `n_attempts + cut_retry + forced_answer`** (true = 1). One short
-  if no attempt returned after a cut first call (no `cut_retry` then; `billed_*` holds it).
-  `attempts_without_usage` counts calls, not attempts.
+- **Question 59607 is in the sample** (a deterministic Gemini `MALFORMED_RESPONSE` on the native
+  route): if it reproduces, its row is empty and the job exits 1.
+- **Gemini sends no `provider.require_parameters`**: OpenRouter could drop an unsupported setting
+  silently; kept, as settled for every benchmark (2026-11-15).
+- **Qwen and Gemma halt at the first row showing thinking** (reasoning text, an inline think tag, or
+  reasoning tokens): `sample10_THINKING_HALT.txt`, exit 3, naming `results_sample10/` to archive. A
+  resubmit on the same config halts before any row; only the one-call negotiation probe runs.
+- **A halt or SIGTERM writes the row in flight as failed** (`halted`: the stop, e.g. `SystemExit:
+  143`), so its billed calls stay in the file and fold into its next run.
+- **A row's HTTP calls in one run: `n_attempts + cut_retry + forced_answer`** (true = 1), one short
+  if no attempt returned after a cut first call. `attempts_without_usage` counts calls.
+
+**Known limits:** a kill between `call_with_retries` returning and `inflight.update` (a few bytecodes)
+loses that run's billed calls for the row, though the stored row is kept · an interrupted row's
+`n_attempts` counts the attempt in flight · a row killed after its answer was read but before the call
+returned is written failed and called again, both bills recorded · `THINK_TAG` matches only
+`<think>`, `</think>`, `<|think|>`, `<|/think|>`.
 
 ## Expected counts
 

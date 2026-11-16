@@ -510,7 +510,7 @@ PROMPT_SHA1 = hashlib.sha1(PROMPT.encode("utf-8")).hexdigest()
 SAMPLE_FIELDS = ["questionId", "idx", "stratum", "question", "gold_answers", "image_path",
                  "model_response", "final_answer", "score", "anls", "parse_ok", "has_marker",
                  "empty", "error", *USAGE_FIELDS, *BILLED_FIELDS, *RESUME_FIELDS, "reasoning_chars",
-                 "think_tag_calls",
+                 "think_tag_calls", "halted",
                  "backend", "last_call_cost", "last_call_estimated_cost", "seed", "cut_retry",
                  "forced_answer", "sample", "scorer", "ts", "config"]
 
@@ -945,6 +945,7 @@ def call_with_retries(once, messages, model, model_dir, tries=5, fatal=()):
         _close_failed_call(ledger)
         _LEDGER.interrupted = dict(meta or {}, latency_s=None, n_attempts=attempt + 1,
                                    error=f"interrupted: {type(stop).__name__}: {stop}"[:400],
+                                   halted=f"{type(stop).__name__}: {stop}"[:400],
                                    **_billed(ledger))
         raise
     finally:
@@ -1278,7 +1279,9 @@ def sample_row(row, text, meta, config, sample, params, prior=None):
            "parse_ok": bool(fa.strip()),
            "has_marker": bool(re.search(r"Final Answer:", text or "", re.IGNORECASE)),
            "empty": int(not text), "error": meta.pop("error", None)}
-    for key in (*USAGE_FIELDS, *BILLED_FIELDS, "reasoning_chars", "think_tag_calls"):
+    # `halted`: None, or the stop that interrupted this row's call ("SystemExit: 143") on the failed
+    # row written when a run stops mid-call — the same name as in the MMLU and BBH cores.
+    for key in (*USAGE_FIELDS, *BILLED_FIELDS, "reasoning_chars", "think_tag_calls", "halted"):
         rec[key] = meta.pop(key, None)
     rec.update(meta)
     rec.update(prior_n_attempts=0, prior_failed_runs=0, resumed_after_failure=False)
