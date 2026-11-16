@@ -1,10 +1,27 @@
-<!-- size-budget: 15500 -->
+<!-- size-budget: 18000 -->
 <!-- One job: the 10% sample rerun, split into work packages separate agents can take. Larger than
      the default because each package must stand alone for an agent with no other context. Delete
      this file once the run is recorded and its lasting facts have moved to their references. -->
 # 10% sample rerun: plan and work packages
 
-Requested by the user, 2026-11-06. **Status: plan only. Nothing is written, nothing is run.**
+Requested by the user, 2026-11-06. **Status, 2026-11-15: BBH, MMLU and DocVQA started** (the user's
+order of that day). WP1 done for those three; WP2–WP4 being written, one agent per benchmark.
+EmoBench and NegotiationToM (WP5, WP6) not started.
+
+**Decided by the user, 2026-11-15:** fraction **10%**; D1 = **B, today's settled config**; D2 =
+**DeepInfra for Qwen and Gemma**. What B means for each model, as the runners must set it:
+
+| Model | Route | Settled config (template: the `PLAN_<Model>` runner in `LLMs-Planning_bench/`) |
+|---|---|---|
+| GPT | OpenAI | `gpt-5.6-luna`, `reasoning_effort="low"`, `seed=42`, `max_completion_tokens` |
+| Gemini | **OpenRouter** (not the native route MMLU and DocVQA were reported on) | `reasoning: {effort: minimal}`, `seed=42`, `max_tokens` |
+| Qwen | DeepInfra | `reasoning: {enabled: false}`, `temperature=0`, `seed=42`, `max_tokens=8192`, prompt ceiling, `CutRetry` |
+| Gemma | DeepInfra | **no reasoning parameter**, `temperature=0`, `seed=42`, `max_tokens` |
+| Deepseek | DeepSeek | `deepseek-flash`, `temperature=0`, `seed=42`, `max_tokens`, prompt ceiling, `CutRetry` (the user's rule of 2026-11-13) |
+
+One prompt per benchmark for all five models — MMLU's `PROMPT_V2` included, so Deepseek leaves v1.
+The sample therefore measures a config that differs from several reported numbers; the drift check
+(§ How the estimate works) is what says by how much.
 
 **Goal.** Get criteria 1, 2, 3 and 6 ([evaluation-criteria.md](evaluation-criteria.md)) for the
 model × benchmark cells that have none, without rerunning whole benchmarks. Run a random 10% of each
@@ -140,8 +157,11 @@ WP2–WP7 can run at the same time because they own different files.
 
 ## WP1 · Draw the samples
 
-Write `.claude/scripts/build_sample10.py` to produce `sample10.json` beside each benchmark's data:
-`{seed, fraction, created, strata: {name: {N, n, ids}}}`.
+**Done for BBH, MMLU and DocVQA, 2026-11-15:** `.claude/scripts/build_sample10.py` writes
+`Tasks_benchmarks/{bbh,mmlu,DocVQA}/sample10.json` — at the benchmark root, **not in `data/`**,
+where bbh and mmlu would list it as a task. `--check` proves the files byte-identical to a rebuild.
+Format `{benchmark, seed, fraction, rule, created, total_N, total_n, strata: {name: {N, n, ids}}}`;
+each stratum has its own generator, seeded `"<seed>/<benchmark>/<stratum>"`.
 
 | Benchmark | Stratum | Id |
 |---|---|---|
