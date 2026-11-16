@@ -18,6 +18,17 @@ Same `WANTED` as the MMLU and EmoBench runners, so the model's config is the sam
 for: at 10 shards with 3 retries an item, the retries spent the day's request quota and left 3,021
 of 5,349 rows empty (`OPENAI_EVAL_NOTES.md`). Five shards, a 2.5 s sleep, and `fatal` markers on the
 cap refusals are the fix — do not raise the shard count.
+
+**`--sample sample10`: the 10% sample rerun** (`sample10-plan.md` WP4, the user's D1 = B, today's
+settled config). 539 questions from `../sample10.json` through `core.run_sample`, written to
+`results_sample10/` (`smoke_sample10/` under `--limit`) — never `results/`. Same model, `WANTED`,
+prompt, image message and `FATAL` as the full run, plus the per-row usage fields; its own client
+with `max_retries=0` so `n_attempts` and `latency_s` are true (`script-skeleton.md` §4), and
+`required` pins `reasoning_effort="low"` and the cap. **`max_completion_tokens=16384` is chosen,
+not measured** — carried from this runner's full run (0 empty of 5,349; that run kept no
+`finish_reason`, so whether the cap ever bound is unestablished — the sample's rows will say).
+Without `--sample` nothing here changed: the `client`, `call` and the block under `__main__` after
+the `--sample` branch are what produced `results/`.
 """
 
 import argparse
@@ -66,6 +77,21 @@ def call(prompt, image_path):
     return core.retry(once, label="luna-docvqa", fatal=FATAL)
 
 
+def run_sample(args):
+    """The --sample path. Its own client, built only here, so a run without --sample constructs
+    exactly the client it always did. SIGALRM at 240 s sits below the client's 300 s timeout."""
+    sample_client = OpenAI(api_key=core.require_key("OPENAI_API_KEY"), timeout=300, max_retries=0)
+
+    def once(messages, model, params):
+        r = sample_client.chat.completions.create(model=model, messages=messages, **params)
+        meta = core.openai_meta(r)          # first: it books the bill even if `choices` is empty
+        return r.choices[0].message.content, meta
+
+    core.run_sample(args, model_dir=MODEL_DIR, client=sample_client, once=once, wanted=WANTED,
+                    route="openai", fatal=FATAL, call_timeout=240,
+                    required={"reasoning_effort": "low", "max_completion_tokens": 16384})
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Run DocVQA for gpt-5.6-luna (OpenAI platform).")
     ap.add_argument("--model", default=DEFAULT_MODEL,
@@ -82,7 +108,11 @@ if __name__ == "__main__":
     ap.add_argument("--total-shards", dest="total_shards", type=int, default=1,
                     help="how many shards the work is split across. 5 is this benchmark's measured "
                          "ceiling and a fix, not a convention — see OPENAI_EVAL_NOTES.md")
+    core.add_sample_args(ap)
     args = ap.parse_args()
+    if args.sample:
+        core.check_sample_args(ap, args)
+        run_sample(args)          # ends in SystemExit; nothing below runs
 
     MODEL = args.model
     print("negotiating parameter surface for %s ..." % MODEL, flush=True)

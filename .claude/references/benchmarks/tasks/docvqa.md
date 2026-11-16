@@ -1,10 +1,11 @@
 # DocVQA — benchmark card
 
-<!-- size-budget: 7000 -->
+<!-- size-budget: 9500 -->
 <!-- One job — the operational card: paths, layout, counts, results, traps. Method went to
      docvqa-method.md and the matcher to docvqa-scoring.md. Over the 5 KB nudge because six runners
      in two generations share one folder, and the paragraph saying which is which is what stops a
-     reader copying the wrong one. -->
+     reader copying the wrong one. Raised to 9500 on 2026-11-15 for the sample path's section: its
+     three traps are about this folder's files and belong on this card. -->
 
 Document visual question answering. Upstream docvqa.org. Scored by **ANLS**, no LLM judge.
 
@@ -37,6 +38,9 @@ DocVQA/
 ├── docvqa_eval_core.py · merge_docvqa_shards.py      the shared core, added 2026-09-10
 ├── DOCVQA_GPT_5.6_Luna/ · DOCVQA_Gemini_Flash3.5lite_Google/
 │   └── <vendor>_docvqa_eval.py · run_docvqa.sh · results/
+├── DOCVQA_{Gemini_Flash3.5lite_OpenRouter,Qwen_DeepInfra,Gemma_DeepInfra}/   10% sample only
+│   └── <vendor>_docvqa_eval.py · run_docvqa_sample10.sh · results_sample10/
+├── sample10.json · test_docvqa_sample10.py           the 10% sample and its offline test
 ├── docvqa_output/docvqa_validation.json · images/    the data — 3.5 GB, mostly page images
 ├── openai_partial_results/                           shard state from the interrupted run
 ├── OpenAI_tesing/                                    retry probes (sic — the folder is misspelled)
@@ -57,6 +61,32 @@ benchmarks. Two things about that key are worth knowing: Quest's `DocVQA/.env` d
 until 2026-09-10, and the SDK will silently prefer an ambient `GOOGLE_API_KEY` or `GEMINI_API_KEY`
 over the one you pass — on Quest that would have picked up the 2.5 run's `AIzaSy` key, a different
 quota, so the runner deletes both from the environment before building the client.
+
+## The 10% sample path (`--sample sample10`, 2026-11-15)
+
+For criteria 1·2·3·6 ([sample10-plan.md](../../sample10-plan.md) WP4): **539 of the 5,349 questions**,
+9 strata by `question_types[0]`, the same `questionId`s for GPT, Gemini, Qwen and Gemma.
+`core.run_sample` writes `<model folder>/results_sample10/` (`smoke_sample10/` under `--limit`) and
+**never reads or writes `results/`**; every row carries the per-row usage fields, plus `billed_*` and
+`attempts_without_usage` — every attempt's cost, not just the answer's. Runners: `--sample`
+added to `DOCVQA_GPT_5.6_Luna`, and three folders that exist only for it. `run_docvqa_sample10.sh` in
+each is one job, no array. **Each runs today's settled config (D1 = B), not the condition behind its
+reported number** — Gemini on OpenRouter, Qwen and Gemma on DeepInfra; each runner's docstring says
+what differs. Without `--sample` nothing changed: `test_docvqa_sample10.py` runs the path against
+commit `1cc5bbd5` and compares every file byte for byte. **`parse_ok`** means the extractor gave
+a non-empty answer; it falls back to the whole reply without `Final Answer:`, as every DocVQA score
+did, so `has_marker` is the strict reading.
+
+- **Never smoke the full-run path with `--limit` alone.** Without `--sample`, `--limit` writes the
+  untagged filename into `results/`, over the merged full-run file. That is how it was before; it
+  is kept, not fixed, because that path must not change.
+- **One message layout for all four**: the page, then the text (what GPT's full run sent). Qwen's
+  and Gemma's reported runs sent the text first.
+- **Question 59607 is in the sample.** On the native route it was one of Gemini's five deterministic
+  `MALFORMED_RESPONSE` rows; if it reproduces, its row is written empty and the job exits 1.
+- **Gemini sends no `provider.require_parameters`**, so OpenRouter could drop a setting no backend
+  supports without saying so. Kept as the settled config every benchmark uses (2026-11-15).
+- **Gemma exits 3 if a row carries reasoning text**: thinking came back on, which no resubmit fixes.
 
 ## Expected counts
 

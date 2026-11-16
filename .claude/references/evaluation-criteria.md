@@ -49,6 +49,12 @@ recovered afterwards.
 
 - **Never count tokens from `raw_response`.** Hidden reasoning tokens are billed and are not in it,
   so a tokenizer count undercounts a reasoning model's cost several-fold.
+- **A row's token fields are its answered call's; a failed attempt's billed tokens vanish** unless
+  summed. An empty HTTP 200 that spent 16,384 reasoning tokens, then a 50-token answer, records 50.
+  The 10% sample cores (bbh, mmlu, DocVQA, 2026-11-15) add `billed_{prompt,completion,reasoning}_tokens`
+  — every attempt and `CutRetry` stage with a usage object — and `attempts_without_usage`; cost
+  uses those. `plan_eval_core.py` and `aware_eval_core.py` do not have them, so their cost is a
+  floor; rows with `n_attempts > 1` bound the gap. Found by review, 2026-11-15.
 - **`n_attempts` and `latency_s` are wrong while the SDK retries by itself** — the values look
   plausible and nothing is logged. Client setting: [script-skeleton.md](script-skeleton.md) §4.
 - **`parse_ok` needs a non-empty string**, not just a present key: `{"answer": null}` is no prediction.
