@@ -18,6 +18,18 @@ reproduce, so the answering backend is recorded per row, not per run.
 
 **Prompt v2 by default**: choices labelled `A.`-`D.`, answer as a letter. MMLU shipped with two
 prompts and four of its seven runners used this one; a single letter is also unambiguous to score.
+
+**`--sample sample10` runs the 10% sample rerun instead** (`.claude/references/sample10-plan.md`,
+WP3), on this OpenRouter route — the settled one (D1 = B), not the native Google route the reported
+MMLU number came from (`MMLU_Gemini_Flash3.5lite_Google/`). The 401 items of `../sample10.json`, written
+to `results_sample10/` (a `--limit` smoke to `smoke_sample10/`), with the per-row usage fields and the
+answering `backend` on every row. **This folder's `results/` is the record of the broken 2026-08-30
+run and a sample run never reads or writes it**: the branch is taken before anything below the
+argument parser runs, so `negotiated_params.json` and `backend_providers.json` there are untouched
+too. Config: `reasoning.effort="minimal"` in `extra_body` (fixed: sent on every call, never
+negotiated), `seed=42`, `max_tokens=8192` — **the cap is chosen, not measured** (bbh's and
+PlanBench's declared cap); `finish_reason` on the rows says whether it binds. Its own client, with
+`max_retries=0`.
 """
 
 import argparse
@@ -66,6 +78,24 @@ def call(prompt):
     return core.retry(once, label="gemini35lite")
 
 
+def run_sample10(args):
+    """The --sample path. Its own client: max_retries=0, because the SDK's hidden retries would make
+    n_attempts and latency_s lie (script-skeleton.md §4). The backend comes back per call in
+    core.openai_meta, so nothing here is shared between threads."""
+    sample_client = OpenAI(base_url="https://openrouter.ai/api/v1",
+                           api_key=os.getenv("OPENROUTER_API_KEY"), timeout=400, max_retries=0)
+    fixed = {"extra_body": EXTRA_BODY}
+
+    def once(messages, model, params):
+        r = core.create(sample_client, model=model, messages=messages, **fixed, **params)
+        meta = core.openai_meta(r)       # first: the usage is billed even if the body is malformed
+        return r.choices[0].message.content, meta
+
+    return core.run_sample(args, model_dir=MODEL_DIR, client=sample_client, once=once,
+                           wanted=WANTED, fixed=fixed, required=dict(WANTED), call_timeout=300,
+                           extra_config={"route": "openrouter"})
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Run MMLU for Gemini 3.5 Flash-Lite (OpenRouter).")
     ap.add_argument("--model", default=DEFAULT_MODEL,
@@ -86,7 +116,10 @@ if __name__ == "__main__":
     ap.add_argument("--workers", type=int, default=1,
                     help="concurrent request streams. 5 is this project's standing limit and a "
                          "measured fix, not a convention - see quest-cluster.md")
+    core.add_sample_args(ap)
     args = ap.parse_args()
+    if args.sample:
+        raise SystemExit(run_sample10(args))
 
     MODEL = args.model
     subjects = core.SUBJECTS if args.subject == "all" else [s.strip() for s in args.subject.split(",")]

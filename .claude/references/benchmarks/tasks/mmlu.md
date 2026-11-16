@@ -1,11 +1,13 @@
 # MMLU — benchmark card
 
-<!-- size-budget: 7000 -->
+<!-- size-budget: 12500 -->
 <!-- One job — the card for one benchmark — and it runs long for reasons bbh's does: nine slots,
      two coexisting layouts, two prompts that are not interchangeable, two scorers still in play,
      and a broken run kept as a record beside the folder that finished it. Raised 2026-09-07 when
      the results table landed; the split that would shrink it is a scoring page like bbh's, and
-     that is worth doing when the uniform rescore happens, not before. -->
+     that is worth doing when the uniform rescore happens, not before. Raised to 12500 on
+     2026-11-15 for the 10% sample section (moves out when the sample is recorded and
+     sample10-plan.md is retired) and the two open scorer gaps (go when the user decides them). -->
 
 General task ability, multiple choice. Accuracy. No LLM judge.
 
@@ -21,7 +23,8 @@ General task ability, multiple choice. Accuracy. No LLM judge.
 
 `MMLU_<Slot>/` per model, holding `<vendor>_mmlu_eval.py`, `run_mmlu.sh` and
 `results/<Subject>/<model-slug>.{jsonl,csv}` + `_overall.csv`. The 13 subject JSONs live in `data/`
-and a shared `mmlu_eval_core.py` owns the scorer, both prompts and the write path.
+and a shared `mmlu_eval_core.py` owns the scorer, both prompts and the write path — and, in its
+last section, the 10% sample harness (§ The 10% sample rerun).
 
 **Two layouts coexist, and only the newest slots use the one described above.** The seven older
 slots are flat — `<vendor>_<Subject>.csv` beside a `<vendor>_overall_results.csv` roll-up — while
@@ -91,7 +94,9 @@ v1 (Deepseek, GPT-4o-mini, Gemini-2.5) shows the choices as a raw list and asks 
 **text**; v2 (Gemma, Llama, Qwen, XAI) labels them `A.`–`D.` and asks for a **letter**. Four runners
 were asked for a letter and three for the text — a materially different task, not a formatting
 difference. **New runs default to v2**, which leaves Deepseek alone on v1 among the six. The prompt
-version is part of the run config and a resume across a change of it is refused.
+version is part of the run config and a resume across a change of it is refused. **The 10% sample
+runs v2 for all five, Deepseek included** (the user, 2026-11-15) — its Deepseek accuracy is not the
+reported v1 number's like for like.
 
 ## Scoring — one matcher, imported, for every model
 
@@ -101,8 +106,68 @@ of seven providers, accepted a letter, an index or letter-plus-text. Seven branc
 the same choice a different way; the two loosest fire only when the model emitted `Final Answer:`.
 Built on the lessons bbh paid for across five scorer versions — [bbh-scoring.md](bbh-scoring.md).
 
+## The 10% sample rerun — written 2026-11-15, not submitted
+
+The plan, its decisions and each model's settled config: [sample10-plan.md](../../sample10-plan.md),
+WP3. What is MMLU's own:
+
+| Model | Folder | Runner |
+|---|---|---|
+| GPT | `MMLU_GPT_5.6_Luna` | `gpt56luna_mmlu_eval.py --sample sample10` |
+| Gemini | `MMLU_Gemini_Flash3.5lite_OpenRouter` — OpenRouter, not the route of the reported number; its `results/` stays the broken run's record | `gemini35lite_mmlu_eval.py --sample sample10` |
+| Qwen | `MMLU_Qwen_DeepInfra` (new; `MMLU_Qwen/` untouched) | `qwen_di_mmlu_sample.py` — prompt ceiling, `CutRetry` |
+| Gemma | `MMLU_Gemma_DeepInfra` (new; `MMLU_Gemma/` untouched) | `gemma_di_mmlu_sample.py` |
+| Deepseek | `MMLU_Deepseek`, beside the legacy script | `deepseek_mmlu_sample.py` — prompt ceiling, `CutRetry` |
+
+- **401 items in 13 strata**, from `sample10.json`; `idx` indexes the whole subject.
+- **Output** `results_sample10/<Subject>/<slug>[_shardNof5].{jsonl,csv}` + `_overall.csv`, roll-up
+  `<slug>_mmlu_overall.csv`; a `--limit` smoke goes to `smoke_sample10/`. Never `results/`. Each
+  folder's `run_mmlu_sample10.sh` runs 5 shards; `merge_mmlu_shards.py --sample sample10` merges
+  them and exits 1 unless the merged ids are exactly the sample's. Logs: absolute paths in the
+  model folder, appended. Halt markers `sample10_[shard<N>_]*_HALT.txt`, a smoke's
+  `smoke_sample10_*`; each run clears only its own prefix.
+- **Calls run serially in the main thread** — the watchdog is SIGALRM and re-arms for each
+  `CutRetry` stage — so `--workers` above 1 is refused; parallelism is the 5 shards. Exit codes: 1
+  failed or cut rows (resubmit), 2 an odd forced answer, 3 thinking came back on — reasoning text,
+  reasoning tokens or inline `<think>` (Qwen, Gemma: the shard stops at that row and leaves
+  `*_THINKING_HALT.txt`; a resubmit that finds such a stored row stops again before any call).
+- **Rows add** `pred_letter`, `parse_ok`, `failed`, the per-row usage fields, `served_model`,
+  `backend`, `reasoning_chars`, `think_tag_calls`, `halted`, `CutRetry`'s marks, `sample`, `ts`. `config` is a JSON object here, a
+  flat string on legacy rows. **`parse_ok`** = the one scorer, asked about each option in turn,
+  accepts at least one — so a row scored 1 is always `parse_ok`.
+- **What a row cost.** `*_tokens` are the answering attempt's. `billed_prompt_tokens`,
+  `billed_completion_tokens`, `billed_reasoning_tokens`, `billed_cost` (OpenRouter) and
+  `billed_estimated_cost` (DeepInfra) sum every HTTP call of the row, failed attempts and every stage
+  included, None where no call reported one; `last_call_cost` / `last_call_estimated_cost` are the
+  last call's alone. `attempts_without_usage` counts HTTP calls that returned no usage;
+  `reasoning_chars` sums every call's reasoning text.
+- **Calls and time.** An answered row made `n_attempts + cut_retry + forced_answer` HTTP calls.
+  `latency_s` times the answering attempt only — a `CutRetry` stage kept from an earlier one is not
+  in it (`first_`/`retry_latency_s` is). A row failed after a cut first stage has no `first_*`.
+- **A resubmit keeps a row's history.** A stored failed or cut row stays in the file until a new row
+  replaces it; the new row's `billed_*` and `attempts_without_usage` are cumulative over every run,
+  `n_attempts` is this run's, and `prior_n_attempts`, `prior_failed_runs` (earlier runs that ended
+  failed *or* cut), `resumed_after_failure` record the earlier runs. A stored cut row whose re-call
+  fails is replaced by the failed row — its bill intact, and still loud (failed, exit 1).
+- **A stopped run still writes the row it was on** — SIGTERM, a billing, quota or malformed-request
+  halt, FAILURE_HALT. Stopped mid-call: a failed row marked `halted`, with every call it was
+  billed; stopped after the call returned: the answered row. The file's bill equals what was billed.
+- **Without `--sample` nothing changed**: `test_sample10.py` checks the legacy code, files and
+  requests byte for byte against `1cc5bbd5`.
+- **Smoke, 2026-11-15** (`--limit 3`, 39 rows a model, all exit 0, one config): Qwen's and Gemma's
+  rows are from the final code (`reasoning_chars` 0); GPT's, Gemini's and Deepseek's predate the
+  last field renames, their requests byte-identical to the final code's.
+
 ## Its own traps
 
 - **The rescore scripts are the cheap path.** A scoring change does not need a rerun: `*_rescore.py`
   re-derives the numbers from stored responses. Check for one before spending a provider call.
 - **A `dotenv/` directory sits among the provider subdirectories** — it is not a provider.
+- **Two scorer gaps in `mmlu_lenient_v1`, open since 2026-11-15 — the user decides.** A fix to
+  either is a new scorer version and a rescore of every model.
+  - **`Final Answer: <D>` scores 0 even when D is right.** v2's template ends `"Final Answer: <A, B,
+    C, or D>"` and some models keep the brackets, which are not stripped, so the row is also a parse
+    failure. Gemma on DeepInfra: 3 to 6 of 39 rows in each of three smokes (`<A>`, `<D>`), most of
+    them right — all 3 in the last. Stored rows: 4 of Gemma's, 1 of Qwen's.
+  - **A reply with no marker that starts "A " scores as choosing A.** Branch 4 (letter then text)
+    runs before the `has_marker` guard, on the whole response — so "A company's duty…" names A.

@@ -16,6 +16,16 @@ points (`.claude/references/model-parameters.md`).
 
 **Prompt v2 by default**: choices labelled `A.`-`D.`, answer as a letter. MMLU shipped with two
 prompts and four of its seven runners used this one; a single letter is also unambiguous to score.
+
+**`--sample sample10` runs the 10% sample rerun instead** (`.claude/references/sample10-plan.md`,
+WP3): the 401 items of `../sample10.json`, written to `results_sample10/` (a `--limit` smoke to
+`smoke_sample10/`), never `results/`, with the per-row usage fields on every row. It branches off
+before anything below the argument parser runs, so without `--sample` this file behaves exactly as
+it did. Its config is the settled one (`model-parameters.md` § Settled — the project's GPT), the same
+three values `WANTED` asks for, all three pinned by `required`: `reasoning_effort="low"`, `seed=42`,
+`max_completion_tokens=16384` — **the cap is chosen, not measured** (bbh's and PlanBench's declared
+cap for this model); `finish_reason` on the rows says whether it binds. It uses its own client with
+`max_retries=0`, so `n_attempts` and `latency_s` are true; the legacy client keeps its settings.
 """
 
 import argparse
@@ -51,6 +61,21 @@ def call(prompt):
     return core.retry(once, label="gpt56luna")
 
 
+def run_sample10(args):
+    """The --sample path. Its own client: max_retries=0, because the SDK's hidden retries would make
+    n_attempts and latency_s lie; the core makes up to 5 attempts itself (script-skeleton.md §4)."""
+    sample_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=900, max_retries=0)
+
+    def once(messages, model, params):
+        r = core.create(sample_client, model=model, messages=messages, **params)
+        meta = core.openai_meta(r)       # first: the usage is billed even if the body is malformed
+        return r.choices[0].message.content, meta
+
+    return core.run_sample(args, model_dir=MODEL_DIR, client=sample_client, once=once,
+                           wanted=WANTED, required=dict(WANTED), call_timeout=600,
+                           extra_config={"route": "openai"})
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Run MMLU for GPT-5.6-Luna.")
     ap.add_argument("--model", default=DEFAULT_MODEL,
@@ -71,7 +96,10 @@ if __name__ == "__main__":
     ap.add_argument("--workers", type=int, default=1,
                     help="concurrent request streams. 5 is this project's standing limit and a "
                          "measured fix, not a convention - see quest-cluster.md")
+    core.add_sample_args(ap)
     args = ap.parse_args()
+    if args.sample:
+        raise SystemExit(run_sample10(args))
 
     MODEL = args.model
     subjects = core.SUBJECTS if args.subject == "all" else [s.strip() for s in args.subject.split(",")]

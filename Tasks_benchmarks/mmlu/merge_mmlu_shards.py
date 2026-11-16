@@ -13,6 +13,11 @@ safe rather than merely convenient:
   wrote; the merged file must contain each item once.
 * **The merged file is written under the plain, untagged name**, which is what every reader —
   the workbook updater, the rescorer — already expects.
+
+**`--sample sample10` merges a 10% sample run instead** (`results_sample10/`, through
+`mmlu_eval_core.merge_sample`): expected counts are the sample's, and a subject whose merged ids are
+not exactly the sample file's, whose rows ran under two configs or that holds a failed row is
+reported and exits 1 the same way. Without `--sample` the merge is the one above, unchanged.
 """
 
 import argparse
@@ -65,9 +70,27 @@ if __name__ == "__main__":
     ap.add_argument("--model-dir", required=True)
     ap.add_argument("--total-shards", dest="total_shards", type=int, default=5)
     ap.add_argument("--subject", default="all")
+    ap.add_argument("--sample", default=None, choices=sorted(core.SAMPLES),
+                    help="merge results_<sample>/ instead of results/")
     args = ap.parse_args()
 
     subjects = core.SUBJECTS if args.subject == "all" else [s.strip() for s in args.subject.split(",")]
+    if args.sample:
+        summaries, problems = core.merge_sample(args.model_dir, args.model, args.sample,
+                                                args.total_shards, subjects)
+        for s in summaries:
+            print(f"  {s['subject']:28s} n={s['n']:3d}/{s['expected']:3d} score={s['average_score']} "
+                  f"failed={s['failed']} parse_fail={s['parse_fail']} length={s['finish_length']}")
+        means = [x["average_score"] for x in summaries if x["average_score"] != ""]
+        if means:
+            print(f"\nmerged {len(summaries)} subject(s) of {args.sample}, macro-avg "
+                  f"{sum(means)/len(means):.4f} (a sample macro, not the full-run estimate)")
+        if problems:
+            print("\nPROBLEMS — the numbers above are partial:")
+            for subj, msg in problems:
+                print(f"  {subj}: {msg}")
+            sys.exit(1)
+        sys.exit(0)
     summaries, problems = [], []
     for subj in subjects:
         s, miss = merge_subject(args.model_dir, subj, args.model, args.total_shards)
