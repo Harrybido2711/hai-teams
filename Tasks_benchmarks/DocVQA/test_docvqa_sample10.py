@@ -24,8 +24,12 @@ with `git show` and run beside the working copies on identical inputs:
 **B — the sample path's guarantees**, with fake clients: the sample file against the data, the
 output directories, the per-row fields, n_attempts and latency_s under retries, a failed row
 written as failed, resume, refusals, halts and their smoke_ prefix, CutRetry, the billed usage of
-every attempt (B9), numeric statuses as whole words (B10), Gemma's thinking check (B11) and
-`--save-every` (B12). **B4 needs the real openai SDK**: a local server that takes the request and
+every attempt (B9), numeric statuses as whole words (B10), Gemma's thinking check (B11),
+`--save-every` (B12), a failed row's history across resubmits and a resubmit killed mid-row (B13,
+B14, and the row in flight when a resubmit is killed or the run halts), billed costs (B15), Qwen's
+and Gemma's thinking signals, inline think tags included (B16), calls without usage counted per HTTP
+call, CutRetry stages included, never twice (B17), and parse_ok False meaning score 0 and ANLS 0 (B18).
+B11 also checks that the first row showing thinking halts the run with THINKING_HALT.txt. **B4 needs the real openai SDK**: a local server that takes the request and
 never finishes answering — silent, and keep-alive (a byte every 0.5 s, which defeats the SDK's own
 timeout) — must be ended by the SIGALRM watchdog. Without the SDK, B4 is skipped and the exit is 2.
 **C — the prompt**: `core.build_prompt` against the prompt in each of the four standalone runners.
@@ -481,7 +485,7 @@ def _test_b(core, root):
     check("B2 --limit 3: exit 0, writes only smoke_sample10/",
           code == 0 and sorted(os.listdir(mdir)) == ["smoke_sample10"], f"exit {code}; {os.listdir(mdir)}\n{out[-500:]}")
     srows = [json.loads(line) for line in open(os.path.join(smoke, "test-fake-model-1_0.jsonl"))]
-    need = set(core.USAGE_FIELDS) | set(core.BILLED_FIELDS) | {
+    need = set(core.USAGE_FIELDS) | set(core.BILLED_FIELDS) | set(core.RESUME_FIELDS) | {
         "parse_ok", "questionId", "stratum", "idx", "score", "anls", "seed", "config", "empty",
         "reasoning_chars"}
     check("B2 every row carries every per-row field", len(srows) == 3 and all(need <= set(r) for r in srows),
@@ -584,9 +588,15 @@ def _test_b(core, root):
     code, out = run_s(core, mdir, capped, shard=0, total_shards=20, fatal=fatal)
     fr = [json.loads(line) for line in open(os.path.join(mdir, "results_sample10",
                                                          "test-fake-model-1_0_shard0of20.jsonl"))]
-    check("B7 a fatal marker stops at once, writes sample10_shard0_FATAL_HALT.txt, keeps the 4 rows done",
+    check("B7 a fatal marker stops at once, writes sample10_shard0_FATAL_HALT.txt, keeps the 4 rows done "
+          "and writes the halting row as failed (5 rows)",
           "aborting" in str(code) and os.path.exists(os.path.join(mdir, "sample10_shard0_FATAL_HALT.txt"))
-          and len(fr) == 4 and n["k"] == 5, f"{code}; calls {n['k']}; rows {len(fr)}")
+          and len(fr) == 5 and n["k"] == 5 and sum(r["empty"] for r in fr) == 1
+          and fr[-1]["empty"] == 1 and str(fr[-1]["error"]).startswith("interrupted: SystemExit"),
+          f"{code}; calls {n['k']}; rows {len(fr)}")
+    check("B7 ... the halting call is counted once as a call without usage (not by both handlers), "
+          "n_attempts 1", fr[-1]["attempts_without_usage"] == 1 and fr[-1]["n_attempts"] == 1,
+          json.dumps({k: fr[-1].get(k) for k in ("attempts_without_usage", "n_attempts", "error")}))
 
     def broke(messages, model, params):
         raise RuntimeError("Error code: 402 - {'error': {'message': 'You need positive balance to do "
@@ -700,20 +710,54 @@ def _test_b(core, root):
     check("B10 ... and in a run, that 500 was retried, not halted (answered on attempt 3, exit 0)",
           code500 == 0 and "MALFORMED REQUEST" not in out500 and "API error (1/5)" in out500, out500[-300:])
 
-    # Gemma: reasoning text on any row means thinking came back on -> said, and exit 3
-    thinking = scripted(core, [fake_resp("Final Answer: x", completion=30, reasoning_text="Let me look...")])
+    # Qwen, Gemma: the first row showing thinking stops the run (marker, save, exit 3)
+    calls = []
+
+    def thinks_from(n_ok):
+        def once(messages, model, params):
+            calls.append(qid_of(messages))
+            r = fake_resp("Final Answer: x", completion=30,
+                          reasoning_text="Let me look..." if len(calls) > n_ok else None)
+            meta = core.openai_meta(r)
+            return r.choices[0].message.content, meta
+        return once
     mdir = os.path.join(root, "M_think")
     os.makedirs(mdir)
-    code, out = run_s(core, mdir, thinking, limit=2, forbid_reasoning=True)
-    with open(os.path.join(mdir, "smoke_sample10", "test-fake-model-1_0_overall.csv")) as fh:
-        allrow = [r for r in csv.DictReader(fh) if r["stratum"] == "ALL"]
-    check("B11 forbid_reasoning: rows with reasoning_chars > 0 -> the summary says so and the job exits 3",
-          code == 3 and "THINKING CAME BACK ON" in out and "reasoning_chars>0: 2" in out
-          and allrow and allrow[0]["reasoning_chars_rows"] == "2", f"exit {code}\n{out[-500:]}")
+    code, out = run_s(core, mdir, thinks_from(0), limit=3, forbid_reasoning=True)
+    srows = [json.loads(line) for line in open(os.path.join(mdir, "smoke_sample10", "test-fake-model-1_0.jsonl"))]
+    check("B11 smoke: the first row with reasoning text halts at once — 1 call of 3, the row saved, "
+          "smoke_sample10_THINKING_HALT.txt, exit 3",
+          code == 3 and len(calls) == 1 and len(srows) == 1 and srows[0]["reasoning_chars"] == 14
+          and os.path.exists(os.path.join(mdir, "smoke_sample10_THINKING_HALT.txt"))
+          and not os.path.exists(os.path.join(mdir, "sample10_THINKING_HALT.txt"))
+          and "THINKING CAME BACK ON" in out, f"exit {code}; calls {len(calls)}\n{out[-400:]}")
+    calls.clear()
+    mdir = os.path.join(root, "M_think_run")
+    os.makedirs(mdir)
+    code, out = run_s(core, mdir, thinks_from(2), shard=3, total_shards=20, forbid_reasoning=True)
+    rr = [json.loads(line) for line in open(os.path.join(mdir, "results_sample10",
+                                                         "test-fake-model-1_0_shard3of20.jsonl"))]
+    check("B11 real run: thinking on the 3rd row stops it there — 3 calls of 27, 3 rows saved, "
+          "sample10_shard3_THINKING_HALT.txt, exit 3",
+          code == 3 and len(calls) == 3 and len(rr) == 3
+          and os.path.exists(os.path.join(mdir, "sample10_shard3_THINKING_HALT.txt")),
+          f"exit {code}; calls {len(calls)}; rows {len(rr)}")
+    calls.clear()
+    stored = open(os.path.join(mdir, "results_sample10", "test-fake-model-1_0_shard3of20.jsonl")).read()
+    os.remove(os.path.join(mdir, "sample10_shard3_THINKING_HALT.txt"))
+    code, out = run_s(core, mdir, thinks_from(99), shard=3, total_shards=20, forbid_reasoning=True)
+    check("B11 ... a resubmit on the same config halts before its first call: 0 calls, marker rewritten, "
+          "file unchanged, exit 3",
+          code == 3 and len(calls) == 0
+          and os.path.exists(os.path.join(mdir, "sample10_shard3_THINKING_HALT.txt"))
+          and open(os.path.join(mdir, "results_sample10", "test-fake-model-1_0_shard3of20.jsonl")).read() == stored,
+          f"exit {code}; calls {len(calls)}\n{out[-300:]}")
+    calls.clear()
     mdir = os.path.join(root, "M_think_ok")
     os.makedirs(mdir)
-    code, out = run_s(core, mdir, thinking, limit=1)
-    check("B11 without forbid_reasoning the same rows exit 0 (only Gemma sets it)", code == 0, f"exit {code}")
+    code, out = run_s(core, mdir, thinks_from(0), limit=2)
+    check("B11 without forbid_reasoning the same rows run through and exit 0 (only Qwen and Gemma set it)",
+          code == 0 and len(calls) == 2, f"exit {code}")
 
     # --save-every below 1 is refused at parsing
     ap = core.sample_parser("t", "test/fake-model-1.0")
@@ -726,16 +770,343 @@ def _test_b(core, root):
     check("B12 --save-every 0 is refused by the sample parser (exit 2)",
           refused == 2 and "must be 1 or more" in err.getvalue(), err.getvalue()[-200:])
 
+    _test_resume_history(core, root, rows)
+    _test_ledger_more(core, root)
+    _test_parse_ok(core, rows)
+
+
+def _test_parse_ok(core, rows):
+    """parse_ok False must mean score 0 AND ANLS 0. Score: score_response returns 0 for an empty
+    extraction. ANLS: anls_score gives an empty prediction 1.0 against an empty gold answer, so
+    load_sample refuses a question that has one."""
+    replies = ("", "   ", "Final Answer:", "Final Answer:   \n", "Final Answer: wrong", "no marker at all")
+    violations, n = [], 0
+    for row in rows:
+        gold = row["example"]["answers"]
+        for reply in replies + (f"Final Answer: {gold[0]}", gold[0], f"It says {gold[0]}"):
+            text = reply.strip()
+            rec = core.sample_row(row, text, {}, {}, "sample10", {})
+            n += 1
+            if not rec["parse_ok"] and (rec["score"] != 0 or rec["anls"] != 0):
+                violations.append((rec["questionId"], reply))
+    check(f"B18 parse_ok False => score 0 and ANLS 0, over {n:,} replies to the 539 sample questions",
+          not violations, str(violations[:5]))
+    real = core.load_data
+    try:
+        first = str(rows[0]["example"]["questionId"])
+        core.load_data = lambda: [dict(ex, answers=[""]) if str(ex["questionId"]) == first else ex
+                                  for ex in real()]
+        try:
+            core.load_sample("sample10")
+            refused = ""
+        except SystemExit as e:
+            refused = str(e)
+    finally:
+        core.load_data = real
+    check("B18 a sample question with an empty gold answer is refused at load (ANLS would credit an "
+          "empty reply)", "gold answer is empty" in refused, refused[-200:])
+
+
+def _test_resume_history(core, root, rows):
+    """The reviewer's resume_probe.py (MMLU, 2026-11-15), adapted: a row that fails 5 times at 16,384
+    billed tokens a call, then answers on the resubmit."""
+    shard_rows = rows[3::20]
+    doomed = str(shard_rows[1]["example"]["questionId"])
+    other = str(shard_rows[4]["example"]["questionId"])
+    mode = {"fail": {doomed}, "kill": set()}
+
+    def once(messages, model, params):
+        q = qid_of(messages)
+        if q in mode["kill"]:
+            raise SystemExit(143)                      # SIGTERM mid-row, as run_sample turns it
+        r = (fake_resp("", completion=16384, finish="length") if q in mode["fail"]   # billed, empty
+             else fake_resp("Final Answer: x", completion=50))
+        meta = core.openai_meta(r)
+        return r.choices[0].message.content, meta
+
+    def rows_of(path):
+        return {json.loads(line)["questionId"]: json.loads(line) for line in open(path)}
+
+    mdir = os.path.join(root, "M_hist")
+    os.makedirs(mdir)
+    path = os.path.join(mdir, "results_sample10", "test-fake-model-1_0_shard3of20.jsonl")
+    code1, _ = run_s(core, mdir, once, shard=3, total_shards=20)
+    r1 = rows_of(path)
+    d1 = r1[doomed]
+    check(f"B13 run 1: the doomed row fails 5 times, billed 5 x 16,384 = 81,920 (exit {code1})",
+          code1 == 1 and d1["empty"] == 1 and d1["n_attempts"] == 5 and d1["billed_completion_tokens"] == 81920
+          and d1["prior_failed_runs"] == 0 and d1["resumed_after_failure"] is False,
+          json.dumps({k: d1.get(k) for k in ("empty", "n_attempts", "billed_completion_tokens")}))
+    code2, _ = run_s(core, mdir, once, shard=3, total_shards=20)          # resubmit, still failing
+    d2 = rows_of(path)[doomed]
+    check("B13 run 2 fails again: billed 163,840 over both runs, n_attempts 5 (this run), "
+          "prior_n_attempts 5, prior_failed_runs 1",
+          code2 == 1 and d2["empty"] == 1 and d2["billed_completion_tokens"] == 163840
+          and d2["n_attempts"] == 5 and d2["prior_n_attempts"] == 5 and d2["prior_failed_runs"] == 1
+          and d2["resumed_after_failure"] is True,
+          json.dumps({k: d2.get(k) for k in ("billed_completion_tokens", "n_attempts", *core.RESUME_FIELDS)}))
+    mode["fail"] = set()
+    code3, _ = run_s(core, mdir, once, shard=3, total_shards=20)          # resubmit, now it answers
+    r3 = rows_of(path)
+    d3 = r3[doomed]
+    check("B13 run 3 answers: n_attempts 1, completion_tokens 50, billed 163,890 (every run), "
+          "prior_n_attempts 10, prior_failed_runs 2, resumed_after_failure",
+          code3 == 0 and d3["empty"] == 0 and d3["n_attempts"] == 1 and d3["completion_tokens"] == 50
+          and d3["billed_completion_tokens"] == 163890 and d3["billed_prompt_tokens"] == 11000
+          and d3["prior_n_attempts"] == 10 and d3["prior_failed_runs"] == 2
+          and d3["resumed_after_failure"] is True and d3["attempts_without_usage"] == 0,
+          json.dumps({k: d3.get(k) for k in ("n_attempts", "completion_tokens", *core.BILLED_FIELDS,
+                                             *core.RESUME_FIELDS)}))
+    billed_rows = sum(r["billed_completion_tokens"] for r in r3.values())
+    check(f"B13 the file's billed total is what the three runs actually cost ({billed_rows:,})",
+          billed_rows == 163840 + 50 + 50 * (len(r3) - 1) and len(r3) == len(shard_rows))
+    check("B13 a row that never failed carries prior 0 / 0 / false",
+          all(r["prior_n_attempts"] == 0 and r["prior_failed_runs"] == 0 and r["resumed_after_failure"] is False
+              for q, r in r3.items() if q != doomed))
+
+    # killed in the middle of a resubmit: a stored failed row must still be in the file
+    mdir = os.path.join(root, "M_kill")
+    os.makedirs(mdir)
+    path = os.path.join(mdir, "results_sample10", "test-fake-model-1_0_shard3of20.jsonl")
+    mode.update(fail={doomed, other}, kill=set())
+    run_s(core, mdir, once, shard=3, total_shards=20)
+    before = rows_of(path)
+    mode.update(fail=set(), kill={other})            # the resubmit answers `doomed`, dies on `other`
+    code, out = run_s(core, mdir, once, shard=3, total_shards=20)
+    after = rows_of(path)
+    o = after.get(other, {})
+    check(f"B14 resubmit killed mid-row (exit {code}): every row still in the file ({len(after)} of "
+          f"{len(shard_rows)}); the row it died on is replaced by a failed row with its history folded in",
+          code == 143 and len(after) == len(shard_rows) and o.get("empty") == 1
+          and o.get("billed_completion_tokens") == before[other]["billed_completion_tokens"] == 81920
+          and o.get("prior_n_attempts") == 5 and o.get("prior_failed_runs") == 1 and o.get("n_attempts") == 1
+          and o.get("attempts_without_usage") == 1 and o.get("resumed_after_failure") is True
+          and str(o.get("error")).startswith("interrupted: SystemExit"),
+          f"exit {code}; rows {len(after)}; " + json.dumps({k: o.get(k) for k in (
+              "empty", "billed_completion_tokens", "n_attempts", "attempts_without_usage", "error",
+              *core.RESUME_FIELDS)}))
+    check("B14 ... and the row it finished first was replaced, with its history folded in",
+          after[doomed]["empty"] == 0 and after[doomed]["billed_completion_tokens"] == 81920 + 50
+          and after[doomed]["prior_n_attempts"] == 5 and after[doomed]["resumed_after_failure"] is True)
+    _test_interrupted_rows(core, root, shard_rows, rows_of)
+
+
+def _test_interrupted_rows(core, root, shard_rows, rows_of):
+    """The reviewer's probe_ledger.py P1-P3 (2026-11-15): calls billed in the row in flight when a
+    resubmit is killed or the run halts. Each asserts the file's billed total equals what was billed."""
+    doomed = str(shard_rows[1]["example"]["questionId"])
+    billed = {"tokens": 0}
+
+    def make_once(script):
+        """script(q, k) -> response or exception, k = this question's call number in this run."""
+        seen = {}
+
+        def once(messages, model, params):
+            q = qid_of(messages)
+            k = seen[q] = seen.get(q, 0) + 1
+            step = script(q, k)
+            if isinstance(step, BaseException):
+                raise step
+            billed["tokens"] += step.usage.completion_tokens if step.usage else 0
+            meta = core.openai_meta(step)
+            return step.choices[0].message.content, meta
+        return once
+
+    def file_billed(path):
+        return sum(r["billed_completion_tokens"] or 0 for r in rows_of(path).values())
+
+    # P1: the resubmit is killed in its 3rd attempt on the stored failed row, after 2 billed attempts
+    mdir = os.path.join(root, "M_kill_billed")
+    os.makedirs(mdir)
+    path = os.path.join(mdir, "results_sample10", "test-fake-model-1_0_shard3of20.jsonl")
+    billed["tokens"] = 0
+    fail = lambda q, k: fake_resp("", completion=16384, finish="length") if q == doomed \
+        else fake_resp("Final Answer: x", completion=50)
+    run_s(core, mdir, make_once(fail), shard=3, total_shards=20)
+    kill3 = lambda q, k: (SystemExit(143) if k >= 3 else fake_resp("", completion=16384, finish="length"))
+    code, _ = run_s(core, mdir, make_once(kill3), shard=3, total_shards=20)
+    d = rows_of(path)[doomed]
+    check(f"B14 killed in attempt 3 after 2 billed attempts (exit {code}): billed 5x + 2x 16,384 = 114,688, "
+          f"n_attempts 3 (the 3rd was sent), 1 call without usage, prior 5 / 1",
+          code == 143 and d["billed_completion_tokens"] == 114688 and d["n_attempts"] == 3
+          and d["attempts_without_usage"] == 1 and d["prior_n_attempts"] == 5 and d["prior_failed_runs"] == 1
+          and file_billed(path) == billed["tokens"],
+          json.dumps({k: d.get(k) for k in ("billed_completion_tokens", "n_attempts", "attempts_without_usage",
+                                             *core.RESUME_FIELDS)}) + f" file {file_billed(path)} vs {billed['tokens']}")
+    code, _ = run_s(core, mdir, make_once(lambda q, k: fake_resp("Final Answer: x", completion=50)),
+                    shard=3, total_shards=20)
+    d = rows_of(path)[doomed]
+    check(f"B14 ... it answers on the next resubmit: billed 114,738 = what was billed (file total "
+          f"{file_billed(path):,} = {billed['tokens']:,}), prior_n_attempts 8, prior_failed_runs 2",
+          code == 0 and d["billed_completion_tokens"] == 114738 and d["prior_n_attempts"] == 8
+          and d["prior_failed_runs"] == 2 and file_billed(path) == billed["tokens"])
+
+    # P3: SIGTERM inside sample_row, after the call returned — the stored row must not be deleted
+    for label, times in (("once", 1), ("every time", 10 ** 6)):
+        mdir = tempfile.mkdtemp(dir=root, prefix="M_kill_row_")
+        path = os.path.join(mdir, "results_sample10", "test-fake-model-1_0_shard3of20.jsonl")
+        billed["tokens"] = 0
+        run_s(core, mdir, make_once(fail), shard=3, total_shards=20)
+        stored = rows_of(path)[doomed]
+        real_score, left = core.score_response, {"n": times}
+
+        def score_then_sigterm(text, gold):
+            if text and left["n"] > 0:
+                left["n"] -= 1
+                raise SystemExit(143)          # what the SIGTERM handler raises, inside sample_row
+            return real_score(text, gold)
+        core.score_response = score_then_sigterm
+        try:
+            code, out = run_s(core, mdir, make_once(lambda q, k: fake_resp("Final Answer: x", completion=50)),
+                              shard=3, total_shards=20)
+        finally:
+            core.score_response = real_score
+        after = rows_of(path)
+        if times == 1:
+            ok = (after[doomed]["empty"] == 0 and after[doomed]["billed_completion_tokens"] == 81920 + 50
+                  and after[doomed]["resumed_after_failure"] is True)
+            what = "the answered call is written, its history folded in"
+        else:
+            ok = after.get(doomed) == stored
+            what = "writing it fails too, so the stored row is kept as it was"
+        check(f"B14 SIGTERM inside sample_row ({label}, exit {code}): all {len(after)} rows kept; {what}",
+              code == 143 and len(after) == len(shard_rows) and ok, out[-300:])
+
+    # P2: a FAILURE halt (10 consecutive failed rows) — the 10th row and its billed calls are kept
+    core._recent.clear()
+    core._consecutive[0] = 0
+    mdir = os.path.join(root, "M_failure_halt")
+    os.makedirs(mdir)
+    path = os.path.join(mdir, "results_sample10", "test-fake-model-1_0_shard3of20.jsonl")
+    billed["tokens"] = 0
+    code, out = run_s(core, mdir, make_once(lambda q, k: fake_resp("", completion=1000, finish="length")),
+                      shard=3, total_shards=20)
+    f = rows_of(path)
+    check(f"B14 FAILURE halt after 10 failed rows: 10 rows in the file, the halting row included; file "
+          f"billed {file_billed(path):,} = actually billed {billed['tokens']:,}",
+          "stopped on failure" in str(code) and len(f) == 10 and all(r["empty"] for r in f.values())
+          and file_billed(path) == billed["tokens"] == 50000
+          and os.path.exists(os.path.join(mdir, "sample10_shard3_FAILURE_HALT.txt")),
+          f"{str(code)[:80]}; rows {len(f)}")
+    core._recent.clear()
+    core._consecutive[0] = 0
+
+
+def _test_ledger_more(core, root):
+    def one_row(once, **kw):
+        mdir = tempfile.mkdtemp(dir=root, prefix="M_led_")
+        code, out = run_s(core, mdir, once, limit=1, **kw)
+        path = os.path.join(mdir, "smoke_sample10", "test-fake-model-1_0.jsonl")
+        line = open(path).readline() if os.path.exists(path) else ""
+        return code, out, (json.loads(line) if line.strip() else {})
+
+    def priced(text, cost=None, estimated=None, **kw):
+        r = fake_resp(text, **kw)
+        if cost is not None:
+            r.usage.cost = cost
+        if estimated is not None:
+            r.usage.estimated_cost = estimated
+        return r
+
+    # costs: summed over every call; the per-call field is the last call's
+    code, out, r = one_row(scripted(core, [priced("", cost=0.0012, completion=4000),
+                                           priced("Final Answer: x", cost=0.0003, completion=50)]))
+    check("B15 OpenRouter cost: billed_cost 0.0015 over both calls, last_call_cost 0.0003, "
+          "billed_estimated_cost None (never reported)",
+          code == 0 and r["billed_cost"] == 0.0015 and r["last_call_cost"] == 0.0003
+          and r["billed_estimated_cost"] is None and "cost" not in r,
+          json.dumps({k: r.get(k) for k in ("billed_cost", "last_call_cost", "billed_estimated_cost")}))
+    code, out, r = one_row(scripted(core, [priced("", estimated=0.00002, completion=10),
+                                           priced("Final Answer: x", estimated=0.00001, completion=10)]))
+    check("B15 DeepInfra estimated_cost: billed 0.00003, last_call_estimated_cost 0.00001, billed_cost None",
+          code == 0 and r["billed_estimated_cost"] == 0.00003 and r["last_call_estimated_cost"] == 0.00001
+          and r["billed_cost"] is None,
+          json.dumps({k: r.get(k) for k in ("billed_estimated_cost", "last_call_estimated_cost", "billed_cost")}))
+
+    # Qwen: reasoning text in a CutRetry stage that is not the answering one still counts
+    cut = core.CutRetry("CEILING", "RETRY", "FORCE", 99)
+    stages = {"first": [fake_resp("partial", completion=8192, finish="length", reasoning_text="thinking..")],
+              "retry": [fake_resp("Final Answer: x", completion=60, reasoning_text="")]}
+
+    def staged(sent, stage):
+        step = stages[stage].pop(0)
+        meta = core.openai_meta(step)
+        text = step.choices[0].message.content
+        return text, text, meta
+    code, out, r = one_row(lambda m, model, params: cut(m, staged, model), extra_config=cut.config(),
+                           forbid_reasoning=True)
+    check("B16 Qwen: reasoning text only in the cut first stage -> reasoning_chars 10 on the row, exit 3",
+          code == 3 and r.get("reasoning_chars") == 10 and r.get("cut_retry")
+          and r.get("reasoning_tokens") is None and "THINKING CAME BACK ON" in out,
+          f"exit {code}; reasoning_chars {r.get('reasoning_chars')}\n{out[-300:]}")
+    code, out, r = one_row(scripted(core, [fake_resp("Final Answer: x", completion=30, reasoning=12)]),
+                           forbid_reasoning=True)
+    check("B16 Gemma: reasoning_tokens 12 with no reasoning text -> exit 3",
+          code == 3 and r.get("reasoning_chars") == 0 and r.get("reasoning_tokens") == 12
+          and "THINKING CAME BACK ON" in out, f"exit {code}\n{out[-300:]}")
+    code, out, r = one_row(scripted(core, [fake_resp("Final Answer: x", completion=30, reasoning=0)]),
+                           forbid_reasoning=True)
+    check("B16 reasoning_tokens 0 and no text -> exit 0", code == 0, f"exit {code}")
+
+    # P4: `once` raises after openai_meta booked the call (HTTP 200, usage, `choices` empty)
+    n4 = {"k": 0}
+
+    def once4(messages, model, params):
+        n4["k"] += 1
+        r = fake_resp("", completion=7) if n4["k"] == 1 else fake_resp("Final Answer: x", completion=50)
+        if n4["k"] == 1:
+            r.choices = []
+        meta = core.openai_meta(r)
+        return r.choices[0].message.content, meta          # IndexError on the first, as every runner's
+    code, out, r = one_row(once4)
+    check("B17 a call that returned usage and then raised (empty choices) is billed and NOT counted as "
+          "without usage: billed 57, attempts_without_usage 0",
+          code == 0 and r["billed_completion_tokens"] == 57 and r["attempts_without_usage"] == 0
+          and r["n_attempts"] == 2, json.dumps({k: r.get(k) for k in ("billed_completion_tokens",
+                                                                       "attempts_without_usage", "n_attempts")}))
+
+    # inline thinking: a think tag in `content`, in any of NEG_Gemma_DeepInfra's four spellings
+    tags = ["<think>", "</think>", "<|think|>", "<|/think|>", "< / THINK >", "<Think>"]
+    plain = ["thinking about it", "<thinking>", "I think so", "think>", "<thin k>"]
+    check("B16 THINK_TAG matches the four spellings (any case, inner spaces) and not plain text",
+          all(core.THINK_TAG.search(t) for t in tags) and not any(core.THINK_TAG.search(t) for t in plain),
+          str([(t, bool(core.THINK_TAG.search(t))) for t in tags + plain]))
+    for content in ("<think>Let me look at the table.</think>Final Answer: x",
+                    "the totals row reads 4,000</think>\nFinal Answer: x",
+                    "<|think|>scan the header<|/think|>Final Answer: x"):
+        code, out, r = one_row(scripted(core, [fake_resp(content, completion=30, reasoning=0)]),
+                               forbid_reasoning=True)
+        check(f"B16 inline thinking {content[:22]!r}..., reasoning_tokens 0, no reasoning field -> exit 3",
+              code == 3 and r.get("think_tag_calls") == 1 and "THINKING CAME BACK ON" in out,
+              f"exit {code}\n{out[-300:]}")
+    code, out, r = one_row(scripted(core, [fake_resp("<think>x</think>Final Answer: x", completion=30)]))
+    check("B16 ... without forbid_reasoning (GPT, Gemini) it is recorded, not halted",
+          code == 0 and r.get("think_tag_calls") == 1, f"exit {code}")
+
+    # attempts_without_usage counts HTTP calls, CutRetry stages included
+    cut = core.CutRetry("CEILING", "RETRY", "FORCE", 99)
+    stages = {"first": [fake_resp("partial", finish="length", usage=False)],
+              "retry": [fake_resp("partial two", completion=70, finish="length")],
+              "forced": [fake_resp("Final Answer: x", usage=False)]}
+    code, out, r = one_row(lambda m, model, params: cut(m, staged, model), extra_config=cut.config())
+    check("B17 one attempt, three calls, two of them without usage -> attempts_without_usage 2, "
+          "n_attempts 1 (calls = n_attempts + cut_retry + forced_answer = 3)",
+          code == 0 and r["attempts_without_usage"] == 2 and r["n_attempts"] == 1
+          and r.get("cut_retry") and r.get("forced_answer") and r["billed_completion_tokens"] == 70,
+          json.dumps({k: r.get(k) for k in ("attempts_without_usage", "n_attempts", "billed_completion_tokens",
+                                             "cut_retry", "forced_answer")}))
+
 
 # ---------------------------------------------------------------- B4: the watchdog, on a blocked socket
 
 
 def _read_request(conn):
+    """One whole request off `conn`; False when the client closed it first."""
     buf = b""
     while b"\r\n\r\n" not in buf:
         data = conn.recv(65536)
         if not data:
-            return
+            return False
         buf += data
     head, body = buf.split(b"\r\n\r\n", 1)
     length = 0
@@ -745,26 +1116,49 @@ def _read_request(conn):
     while len(body) < length:
         data = conn.recv(65536)
         if not data:
-            return
+            return False
         body += data
+    return True
+
+
+class _Server(socket.socket):
+    """socket.socket has __slots__; this can carry the request counter."""
 
 
 def mock_server(mode):
     """A local HTTP server that takes a request and never finishes answering it.
 
+    "cut-then-keepalive": the first request is answered at once, finish_reason "length" with usage
+    100 / 8,192 (a reply cut at the cap); every later one is "keepalive" — the reviewer's
+    `wd_cutretry_probe.py` (MMLU, 2026-11-15).
     "silent": reads the request, sends nothing. "keepalive": sends the headers of a chunked 200, then a
     one-byte chunk every 0.5 s for ever — each chunk resets the client's read timeout, so the SDK's
     own `timeout=400` never fires and only the SIGALRM watchdog can end the call. The keep-alive case
     is the reviewer's `watchdog_probe.py` (2026-11-15), folded in here so the proof travels with the
     code; its TLS variant needs a certificate and is not repeated."""
-    srv = socket.socket()
+    srv = _Server()
     srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     srv.bind(("127.0.0.1", 0))
     srv.listen(8)
+    served = srv.served = [0]                      # requests read in full, for the test to count
 
     def handle(conn):
         try:
-            _read_request(conn)
+            # Every request on the connection, not just the first: the SDK reuses a keep-alive
+            # connection, so the retry after a cut reply arrives on the same socket.
+            while _read_request(conn):
+                served[0] += 1
+                if not (mode == "cut-then-keepalive" and served[0] == 1):
+                    break
+                body = json.dumps({"id": "x", "object": "chat.completion", "created": 0, "model": "m",
+                                   "choices": [{"index": 0, "finish_reason": "length",
+                                                "message": {"role": "assistant", "content": "partial ..."}}],
+                                   "usage": {"prompt_tokens": 100, "completion_tokens": 8192,
+                                             "total_tokens": 8292}}).encode()
+                conn.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: %d"
+                             b"\r\n\r\n" % len(body) + body)
+            else:
+                return                                 # closed before a full request arrived
             if mode == "silent":
                 time.sleep(3600)
             conn.sendall(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n"
@@ -850,6 +1244,40 @@ def test_watchdog(base, new_src):
           and str(r.get("error")).startswith("timeout") and r.get("attempts_without_usage") == 5
           and r.get("billed_completion_tokens") is None and took < 30,
           f"exit {code}; {json.dumps({k: r.get(k) for k in ('empty', 'n_attempts', 'error', 'attempts_without_usage')})}")
+    srv.close()
+
+    # the real Qwen runner's `once` (CutRetry): the first call is cut at the cap, the retry hangs
+    qwen_src = open(os.path.join(HERE, "DOCVQA_Qwen_DeepInfra", "qwen_di_docvqa_eval.py"), "rb").read()
+    os.makedirs(os.path.join(root, "DOCVQA_Qwen_DeepInfra"))
+    with open(os.path.join(root, "DOCVQA_Qwen_DeepInfra", "qwen_di_docvqa_eval.py"), "wb") as fh:
+        fh.write(qwen_src)
+    os.environ.setdefault("DEEPINFRA_API_KEY", "test-key")   # the client is replaced before any call
+    sys.modules.pop("docvqa_eval_core", None)                 # the runner must import THIS root's core
+    spec = importlib.util.spec_from_file_location(
+        "qwen_runner_under_test", os.path.join(root, "DOCVQA_Qwen_DeepInfra", "qwen_di_docvqa_eval.py"))
+    qwen = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(qwen)
+    sys.modules.pop("docvqa_eval_core", None)
+    qcore = qwen.core
+    no_backoff(qcore)
+    qcore.HARD_CALL_TIMEOUT = 2
+    srv = mock_server("cut-then-keepalive")
+    qwen.client = openai.OpenAI(base_url=f"http://127.0.0.1:{srv.getsockname()[1]}/v1", api_key="k",
+                                timeout=1500, max_retries=0)
+    ex = qcore.load_data()[0]
+    started = time.time()
+    with contextlib.redirect_stdout(io.StringIO()) as out:
+        text, meta = qcore.call_with_retries(lambda m: qwen.once(m, "Qwen/Qwen3.5-9B", dict(qwen.WANTED)),
+                                             qcore.build_messages(ex), "qwen", mdir, tries=2)
+    took = time.time() - started
+    check(f"B4 Qwen CutRetry: cut first call kept, each retry stage ended by the re-armed watchdog "
+          f"({srv.served[0]} requests, {took:.1f} s)",
+          text == "" and meta.get("n_attempts") == 2 and srv.served[0] == 3
+          and meta.get("billed_prompt_tokens") == 100 and meta.get("billed_completion_tokens") == 8192
+          and meta.get("attempts_without_usage") == 2 and "hard limit" in str(meta.get("error"))
+          and 3.5 <= took < 15,
+          json.dumps({k: meta.get(k) for k in ("n_attempts", "billed_prompt_tokens", "billed_completion_tokens",
+                                                "attempts_without_usage", "error")}) + out.getvalue()[-300:])
     srv.close()
     guard.cancel()
 

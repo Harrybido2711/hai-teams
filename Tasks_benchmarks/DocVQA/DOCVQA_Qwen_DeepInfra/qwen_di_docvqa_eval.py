@@ -15,7 +15,12 @@ this model's addition, made here and never in the core.
 **Settled config** (template: `PLAN_Qwen_DeepInfra`). Reasoning off by the provider's switch,
 `reasoning={"enabled": False}`, in `extra_body` (top-level it raises TypeError on the OpenAI SDK) and
 `fixed`, so never negotiated away — thinking is ON by default on this route too. `temperature=0`,
-`seed=42` (negotiated). **`max_tokens=8192` is chosen, not measured for DocVQA**: PlanBench measured
+`seed=42` (negotiated). **Checked, not assumed** (`forbid_reasoning=True`): DeepInfra reports no
+`reasoning_tokens` for this model, so the signals are `reasoning_chars` — the reasoning text of every
+call of the row, CutRetry stages and failed attempts included — and `think_tag_calls`, a think tag
+inline in a reply's content. A row with either means thinking came
+back on: the run stops at that row, writes `sample10_THINKING_HALT.txt` and exits 3, as Gemma's does.
+**`max_tokens=8192` is chosen, not measured for DocVQA**: PlanBench measured
 that 4096 bound for multi-step plans and the user doubled it (2026-11-11); a DocVQA answer is a
 short span, so it is headroom here, not a measurement.
 
@@ -89,4 +94,4 @@ if __name__ == "__main__":
     core.sample_main(description="DocVQA 10% sample — Qwen3.5-9B (DeepInfra, reasoning off)",
                      default_model="Qwen/Qwen3.5-9B", model_dir=MODEL_DIR, client=client, once=once,
                      wanted=WANTED, fixed=FIXED, required={"max_tokens": 8192}, route="deepinfra",
-                     call_timeout=900, extra_config=CUT.config())
+                     call_timeout=900, extra_config=CUT.config(), forbid_reasoning=True)

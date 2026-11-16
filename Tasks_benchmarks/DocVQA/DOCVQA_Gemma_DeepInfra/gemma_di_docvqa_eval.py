@@ -17,8 +17,12 @@ ON (`model-calls.md`). `temperature=0` and `seed=42` set even where they equal a
 the seed is negotiated, because whether DeepInfra honours it is unestablished (rule 8).
 **`max_tokens=4096` is chosen, not measured** — PlanBench's cap for this model; a DocVQA answer is a
 short span, so a `length` finish would mean thinking came back on or the model looped.
-**`reasoning_chars` must stay 0 on every row** (`forbid_reasoning=True`): a row with reasoning text
-means thinking came back on, and the run's summary says so and the job exits 3.
+**Thinking must stay off on every row** (`forbid_reasoning=True`): a row with reasoning text
+(`reasoning_chars`, summed over every call of the row), a think tag inline in a reply
+(`think_tag_calls` — the four spellings NEG_Gemma_DeepInfra strips), or reasoning tokens
+(`reasoning_tokens`, `billed_reasoning_tokens` > 0 — DeepInfra reports 0 for this model) means it
+came back on: the run
+stops at that row, writes `sample10_THINKING_HALT.txt` and exits 3.
 
 One image a request — far below DeepInfra's 32-image cap for this model (`provider-gotchas.md`);
 the largest sample page is 3.1 MB, sent as stored.

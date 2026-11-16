@@ -22,7 +22,8 @@
 # Arguments after the script name reach the runner: `sbatch run_docvqa_sample10.sh --limit 20` is a
 # pilot, written to smoke_sample10/. Resume is a plain resubmit: done rows are skipped, empty rows
 # called again. Exit 1 = some rows empty (resubmit); exit 2 = a forced answer to read before scoring;
-# exit 3 = thinking came back on (Gemma only: a config failure, do not resubmit).
+# exit 3 = thinking came back on (Qwen and Gemma: stops at the first such row, writes
+# sample10_THINKING_HALT.txt; a config failure, do not resubmit).
 # Halt markers land in this folder as sample10_*_HALT.txt (a --limit run's as smoke_sample10_*).
 # Logs: absolute paths in THIS folder, so two models never share one, wherever sbatch runs from;
 # append mode, so a resubmit adds to the last run's log instead of erasing it.

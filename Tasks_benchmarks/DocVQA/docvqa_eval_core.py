@@ -472,11 +472,12 @@ def negotiate(client, model, wanted, verbose=True):
 #
 # What is ported from `LLMs-Planning_bench/plan_eval_core.py`, and kept in step with it by hand:
 # the billing / daily-quota / failure halts, `call_with_retries`, `openai_meta`, `negotiate`
-# (here `negotiate_params`) and `CutRetry`. Two deliberate differences, both because DocVQA has no
-# shared system message: `CutRetry.with_system` puts the ceiling FIRST, as the only system message;
-# and `openai_meta` also records `reasoning_chars`, which CutRetry keeps rather than pops on the
-# first and second call, so every model's rows carry it (Gemma's thinking must stay off, and a
-# non-zero count is how a row would show it had not).
+# (here `negotiate_params`) and `CutRetry`. Differences from there: `CutRetry.with_system` puts the
+# ceiling FIRST, as the only system message (DocVQA has none to follow); `openai_meta` books every
+# response onto a per-row ledger (BILLED_FIELDS, and `reasoning_chars` summed over every response of
+# the row — Qwen's and Gemma's thinking must stay off, and a non-zero count is how a row shows it did
+# not); and a resubmit keeps a stored failed row until its new row replaces it, folding its history
+# in (RESUME_FIELDS).
 
 SAMPLES = {"sample10": os.path.join(DOCVQA_ROOT, "sample10.json")}
 
@@ -485,14 +486,20 @@ SAMPLES = {"sample10": os.path.join(DOCVQA_ROOT, "sample10.json")}
 USAGE_FIELDS = ("prompt_tokens", "completion_tokens", "reasoning_tokens", "latency_s",
                 "finish_reason", "n_attempts", "served_model")
 # What the row COST, beside what the answer used (the fields above keep their meaning: the answered
-# call's, or for a CutRetry row its stages summed). Summed over every attempt and every CutRetry stage
-# whose response carried a usage object — empty and interrupted replies included, since they are
-# billed. An attempt that was retried after an HTTP 200 empty reply with 16,384 reasoning tokens would
-# otherwise leave a row saying 50. `billed_*` is None when no response reported that count;
-# `attempts_without_usage` counts attempts ended by an exception or timeout, or answered without a
-# usage object — their billing is unknown, not zero. Same names in the BBH and MMLU cores.
+# call's, or for a CutRetry row its stages summed). Summed over every HTTP call of the row — every
+# attempt and every CutRetry stage — whose response carried a usage object, empty and interrupted
+# replies included, since they are billed. An attempt retried after an HTTP 200 empty reply with
+# 16,384 reasoning tokens would otherwise leave a row saying 50. `billed_cost` sums OpenRouter's
+# `usage.cost`, `billed_estimated_cost` DeepInfra's `usage.estimated_cost`. Each `billed_*` is None
+# when no call reported it. `attempts_without_usage` counts every HTTP call — CutRetry stages
+# included — that returned no usage object or ended in an exception or timeout: its bill is
+# unknown, not zero. **Cumulative across runs of the row**: a row that failed and was called again on
+# a resubmit carries its earlier runs folded in (RESUME_FIELDS). Same names in the BBH and MMLU cores.
 BILLED_FIELDS = ("billed_prompt_tokens", "billed_completion_tokens", "billed_reasoning_tokens",
-                 "attempts_without_usage")
+                 "billed_cost", "billed_estimated_cost", "attempts_without_usage")
+# A row called again after it was stored failed. `n_attempts` stays this run's; `prior_n_attempts` is
+# the sum over the earlier runs and `prior_failed_runs` their count. 0, 0, False on every other row.
+RESUME_FIELDS = ("prior_n_attempts", "prior_failed_runs", "resumed_after_failure")
 
 # How the image travels — one layout for every model, recorded in each row's config. It is what the
 # OpenAI slot already sent (`DOCVQA_GPT_5.6_Luna`): the stored PNG bytes unchanged, base64, at
@@ -502,8 +509,9 @@ PROMPT_SHA1 = hashlib.sha1(PROMPT.encode("utf-8")).hexdigest()
 
 SAMPLE_FIELDS = ["questionId", "idx", "stratum", "question", "gold_answers", "image_path",
                  "model_response", "final_answer", "score", "anls", "parse_ok", "has_marker",
-                 "empty", "error", *USAGE_FIELDS, *BILLED_FIELDS, "reasoning_chars", "backend",
-                 "cost", "seed", "cut_retry",
+                 "empty", "error", *USAGE_FIELDS, *BILLED_FIELDS, *RESUME_FIELDS, "reasoning_chars",
+                 "think_tag_calls",
+                 "backend", "last_call_cost", "last_call_estimated_cost", "seed", "cut_retry",
                  "forced_answer", "sample", "scorer", "ts", "config"]
 
 
@@ -541,6 +549,11 @@ def load_sample(name):
             idx, ex = by_id[str(qid)]
             if (ex.get("question_types") or [None])[0] != stratum:
                 problems.append(f"{qid}: question_types[0]={ex.get('question_types')} != {stratum}")
+            # anls_score gives an EMPTY prediction 1.0 against an empty gold answer, which would put
+            # ANLS > 0 on a row with parse_ok False. None of the 5,349 has one (checked 2026-11-15);
+            # refusing it here makes "parse_ok False => score 0 and ANLS 0" a guarantee, not luck.
+            if any(normalize(g) == "" for g in ex.get("answers") or []):
+                problems.append(f"{qid}: a gold answer is empty, and ANLS would credit an empty reply")
             rows.append({"idx": idx, "stratum": stratum, "example": ex})
     if len(rows) != spec.get("total_n") or len({r["idx"] for r in rows}) != len(rows):
         problems.append(f"{len(rows)} rows, {len({r['idx'] for r in rows})} distinct, "
@@ -635,10 +648,12 @@ def is_fatal_request(error):
 
 
 STATS = {"ok": 0, "empty": 0, "interrupted": 0, "errors": 0, "timeouts": 0, "failed_rows": 0}
-HALT_MARKERS = ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt", "FATAL_HALT.txt")
+HALT_MARKERS = ("BILLING_HALT.txt", "QUOTA_HALT.txt", "FAILURE_HALT.txt", "FATAL_HALT.txt",
+                "THINKING_HALT.txt")
 # `sample10_` and, with more than one shard, `shard2_`: a sample run's marker can never be mistaken
-# for (or cleared by) another run's. Set by run_sample.
+# for (or cleared by) another run's. Set by run_sample, with the output directory a halt names.
 MARKER_PREFIX = ""
+SAMPLE_OUT_DIR = ""
 
 
 def _halt(kind, marker_name, detail, model, model_dir):
@@ -656,6 +671,36 @@ def _halt(kind, marker_name, detail, model, model_dir):
         print(f"[{model}] could not write {marker}: {error}", flush=True)
     print(f"\n!!! {kind} HALT [{model}] {stamp}\n{detail}\n", file=sys.stderr, flush=True)
     raise SystemExit(f"aborting: {model} stopped on {kind.lower()}. {advice}")
+
+
+def write_thinking_marker(row, model, model_dir):
+    """THINKING_HALT.txt, for a row that shows thinking on a model that must run with it off; returns
+    the one-line detail."""
+    marker = os.path.join(model_dir, MARKER_PREFIX + "THINKING_HALT.txt")
+    detail = (f"questionId {row['questionId']}: reasoning_chars {row.get('reasoning_chars')}, "
+              f"think_tag_calls {row.get('think_tag_calls')}, reasoning_tokens "
+              f"{row.get('reasoning_tokens')}, billed_reasoning_tokens {row.get('billed_reasoning_tokens')}")
+    archive = SAMPLE_OUT_DIR or "the results_<sample>/ directory"
+    stamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        with open(marker, "w") as fh:
+            fh.write(f"{stamp}  model={model}  reason=THINKING\n{detail}\n\nThis model must run with "
+                     f"thinking off and a request turned it on. Fix the runner, move {archive} to a "
+                     f"timestamped name, and rerun; a plain resubmit on this config halts again.\n")
+    except OSError as error:
+        print(f"[{model}] could not write {marker}: {error}", flush=True)
+    print(f"\n!!! THINKING HALT [{model}] {stamp}\nSTOP: THINKING CAME BACK ON — {detail}\n",
+          file=sys.stderr, flush=True)
+    print(f"STOP: THINKING CAME BACK ON — {detail}; wrote {os.path.basename(marker)}", flush=True)
+    return detail
+
+
+def thinking_halt(row, model, model_dir):
+    """A model that must run with thinking off (Qwen, Gemma) returned a row showing thinking: write
+    THINKING_HALT.txt and stop with exit 3 at once — every further row would run on a config already
+    known to be wrong. run_sample's `finally` saves the rows, this one included."""
+    write_thinking_marker(row, model, model_dir)
+    raise SystemExit(3)
 
 
 def halt_on_billing(error, model, model_dir):
@@ -730,37 +775,77 @@ def retry_delay(error, attempt, default=5.0):
 # ---- billed usage: one ledger per row, booked by openai_meta as each response arrives
 
 _LEDGER = threading.local()      # per thread, so a row's bill can never be booked to another row's
+# An opening or closing think tag inside `content`, in any of the four spellings NEG_Gemma_DeepInfra
+# strips (`<think>`, `</think>`, `<|think|>`, `<|/think|>`, any case, inner spaces allowed): a model
+# that thinks inline, with no reasoning field and no reasoning tokens reported.
+THINK_TAG = re.compile(r"<\|?\s*/?\s*think\s*\|?>", re.IGNORECASE)
 
 
-def _book_usage(usage):
-    """Book one HTTP response's usage onto the row being called. openai_meta calls this for every
-    response it reads — the one function every runner's response passes through — so each response
-    is counted exactly once, whatever happens to it next: an empty or interrupted reply that is
+def _start_call():
+    """A new HTTP call of the open row begins: each attempt, and each CutRetry stage. It stays open
+    until openai_meta books its response; a failure that finds it open adds one call without usage,
+    and one that finds it closed adds none — the bill of a response already booked is known, even if
+    `once` raised on reading it (HTTP 200, usage present, `choices` empty)."""
+    ledger = getattr(_LEDGER, "row", None)
+    if ledger is not None:
+        ledger["call_open"] = True
+
+
+def _close_failed_call(ledger):
+    if ledger["call_open"]:
+        ledger["without_usage"] += 1
+        ledger["call_open"] = False
+
+
+def take_interrupted():
+    """The meta call_with_retries stashed when an exception it does not handle (a halt's SystemExit,
+    SIGTERM's) ended a row mid-way, or None — read once, so it cannot be applied to another row."""
+    stash, _LEDGER.interrupted = getattr(_LEDGER, "interrupted", None), None
+    return stash
+_LEDGER_KEYS = {"prompt": "billed_prompt_tokens", "completion": "billed_completion_tokens",
+                "reasoning": "billed_reasoning_tokens", "cost": "billed_cost",
+                "estimated_cost": "billed_estimated_cost"}
+
+
+def _book(usage, reasoning_chars, think_tag=0):
+    """Book one HTTP response onto the row being called. openai_meta calls this for every response
+    it reads — the one function every runner's response passes through — so each response is
+    counted exactly once, whatever happens to it next: an empty or interrupted reply that is
     retried, or a CutRetry stage kept for the next attempt (counting from the returned meta instead
-    would miss a stage whose attempt later raised, and count a kept stage twice). Outside
-    call_with_retries (the negotiation probe) nothing is open and nothing is booked."""
+    would miss a stage whose attempt later raised, and count a kept stage twice). A response with
+    no usage object is a call whose bill is unknown. Outside call_with_retries (the negotiation
+    probe) nothing is open and nothing is booked."""
     ledger = getattr(_LEDGER, "row", None)
     if ledger is None:
         return
+    ledger["call_open"] = False                    # this call answered: its bill, if any, is below
+    ledger["responses"] += 1
+    ledger["reasoning_chars"] += reasoning_chars
+    ledger["think_tag_calls"] += think_tag
     if usage is None:
-        ledger["missing"] = True
+        ledger["without_usage"] += 1
         return
-    ledger["booked"] += 1
     details = getattr(usage, "completion_tokens_details", None)
     for key, value in (("prompt", getattr(usage, "prompt_tokens", None)),
                        ("completion", getattr(usage, "completion_tokens", None)),
-                       ("reasoning", getattr(details, "reasoning_tokens", None))):
-        if isinstance(value, int):
+                       ("reasoning", getattr(details, "reasoning_tokens", None)),
+                       ("cost", getattr(usage, "cost", None)),                       # OpenRouter
+                       ("estimated_cost", getattr(usage, "estimated_cost", None))):  # DeepInfra
+        kinds = (int, float) if key in ("cost", "estimated_cost") else (int,)   # tokens are counts
+        if isinstance(value, kinds) and not isinstance(value, bool):
             ledger[key].append(value)
 
 
 def _billed(ledger):
     def total(values):
-        return sum(values) if values else None
-    return {"billed_prompt_tokens": total(ledger["prompt"]),
-            "billed_completion_tokens": total(ledger["completion"]),
-            "billed_reasoning_tokens": total(ledger["reasoning"]),
-            "attempts_without_usage": ledger["attempts_without_usage"]}
+        return round(sum(values), 10) if values else None
+    out = {field: total(ledger[key]) for key, field in _LEDGER_KEYS.items()}
+    out["attempts_without_usage"] = ledger["without_usage"]
+    # Every response of the row — every attempt, every CutRetry stage — not just the one that
+    # answered: thinking that came back on in a failed attempt or a cut stage is still thinking.
+    out["reasoning_chars"] = ledger["reasoning_chars"]
+    out["think_tag_calls"] = ledger["think_tag_calls"]
+    return out
 
 
 def call_with_retries(once, messages, model, model_dir, tries=5, fatal=()):
@@ -772,35 +857,37 @@ def call_with_retries(once, messages, model, model_dir, tries=5, fatal=()):
     rather than spending attempts against a wall — DocVQA's own incident was a daily-cap refusal
     retried until 3,021 of 5,349 rows were empty (`OPENAI_EVAL_NOTES.md`).
 
-    The returned meta carries BILLED_FIELDS on every path: what every attempt cost, beside the
-    usage of the call that answered."""
+    The returned meta carries BILLED_FIELDS on every path — what every HTTP call of this run of the
+    row cost, beside the usage of the call that answered — and `reasoning_chars` summed over every
+    response. An attempt that raised ends in exactly one call that returned nothing (the exception
+    propagates from it), so it adds one call without usage; an attempt that returned but booked no
+    response at all (a `once` that skips openai_meta) adds one too, since at least one call ran."""
     meta, last_error = {}, None
-    ledger = {"prompt": [], "completion": [], "reasoning": [], "attempts_without_usage": 0}
+    ledger = {key: [] for key in _LEDGER_KEYS}
+    ledger.update(responses=0, without_usage=0, reasoning_chars=0, think_tag_calls=0, call_open=False)
     _LEDGER.row = ledger
-
-    def close_attempt(returned):
-        # An attempt that raised has at least one call whose bill is unknown; one that returned
-        # without booking a usage object (or with a call that had none) likewise.
-        if not returned or ledger["missing"] or not ledger["booked"]:
-            ledger["attempts_without_usage"] += 1
-
+    _LEDGER.interrupted = None
+    attempt = -1
     try:
         for attempt in range(tries):
             started = time.time()
             wait = 5.0
-            ledger["booked"], ledger["missing"] = 0, False
+            booked_before = ledger["responses"]
             has_alarm = hasattr(signal, "SIGALRM")
             previous = signal.signal(signal.SIGALRM, _raise_timeout) if has_alarm else None
             try:
                 if has_alarm:
                     signal.alarm(HARD_CALL_TIMEOUT)
+                _start_call()
                 try:
                     text, meta = once(messages)
                 finally:
                     if has_alarm:
                         signal.alarm(0)
                         signal.signal(signal.SIGALRM, previous)
-                close_attempt(True)
+                ledger["call_open"] = False
+                if ledger["responses"] == booked_before:
+                    ledger["without_usage"] += 1
                 # latency_s is this successful attempt alone; n_attempts every call spent on the row.
                 # Both are honest only because every client is built with max_retries=0
                 # (script-skeleton.md §4).
@@ -823,12 +910,12 @@ def call_with_retries(once, messages, model, model_dir, tries=5, fatal=()):
                       f"finish_reason={meta.get('finish_reason')} "
                       f"completion_tokens={meta.get('completion_tokens')}", flush=True)
             except CallTimeout as error:
-                close_attempt(False)
+                _close_failed_call(ledger)
                 STATS["timeouts"] += 1
                 last_error = f"timeout: {error}"
                 print(f"[{model}] TIMEOUT ({attempt + 1}/{tries}): {error}", flush=True)
             except Exception as error:
-                close_attempt(False)
+                _close_failed_call(ledger)
                 STATS["errors"] += 1
                 last_error = f"{type(error).__name__}: {str(error)[:400]}"
                 print(f"[{model}] API error ({attempt + 1}/{tries}): {type(error).__name__}: {error}",
@@ -849,39 +936,57 @@ def call_with_retries(once, messages, model, model_dir, tries=5, fatal=()):
         note_outcome(False, model, model_dir)
         print(f"[{model}] all {tries} attempts failed; row written empty, retried on resume", flush=True)
         return "", dict(meta or {}, latency_s=None, n_attempts=tries, error=last_error, **_billed(ledger))
+    except BaseException as stop:
+        # A halt's SystemExit (billing, quota, fatal, malformed, failure) or SIGTERM's ends the row
+        # mid-way. The calls already made are billed: stash the row's meta for run_sample to write it
+        # as a failed row (folded on the next resume), then let the exit go on. A call still open is
+        # one whose bill is unknown — _close_failed_call counts it, and only it, so a call an inner
+        # handler already counted is not counted twice.
+        _close_failed_call(ledger)
+        _LEDGER.interrupted = dict(meta or {}, latency_s=None, n_attempts=attempt + 1,
+                                   error=f"interrupted: {type(stop).__name__}: {stop}"[:400],
+                                   **_billed(ledger))
+        raise
     finally:
         _LEDGER.row = None
 
 
 def openai_meta(response):
     """What an OpenAI-compatible response says about itself — written onto every row, because a
-    truncation, a reasoning bill or a backend switch is invisible in the text."""
+    truncation, a reasoning bill or a backend switch is invisible in the text. Also books the
+    response onto the row's ledger (`_book`), first, so the bill is kept whatever happens next."""
     usage = getattr(response, "usage", None)
-    _book_usage(usage)                                   # the row's bill, whatever happens next
-    details = getattr(usage, "completion_tokens_details", None)
     choice = response.choices[0] if getattr(response, "choices", None) else None
+    message = getattr(choice, "message", None)
+    reasoning = getattr(message, "reasoning_content", None) or getattr(message, "reasoning", None)
+    reasoning_chars = len(reasoning) if isinstance(reasoning, str) else 0
+    content = getattr(message, "content", None)
+    think_tag = int(isinstance(content, str) and bool(THINK_TAG.search(content)))
+    _book(usage, reasoning_chars, think_tag)
+    details = getattr(usage, "completion_tokens_details", None)
     finish = getattr(choice, "finish_reason", None)
     finish = getattr(finish, "value", finish)
-    message = getattr(choice, "message", None)
 
     def as_int(value):
         return value if isinstance(value, int) else None
 
-    reasoning = getattr(message, "reasoning_content", None) or getattr(message, "reasoning", None)
     meta = {
         "finish_reason": None if finish is None else str(finish),
         "prompt_tokens": as_int(getattr(usage, "prompt_tokens", None)),
         "completion_tokens": as_int(getattr(usage, "completion_tokens", None)),
         "reasoning_tokens": as_int(getattr(details, "reasoning_tokens", None)),
         "served_model": str(getattr(response, "model", "") or "") or None,
-        "reasoning_chars": len(reasoning) if isinstance(reasoning, str) else 0,
+        "reasoning_chars": reasoning_chars,       # this call's; call_with_retries puts the row's sum
+        "think_tag_calls": think_tag,             # likewise
     }
     provider = getattr(response, "provider", None)       # OpenRouter's answering backend
     if provider:
         meta["backend"] = str(provider)
-    cost = getattr(usage, "cost", None)                  # OpenRouter's per-call bill
-    if isinstance(cost, (int, float)):
-        meta["cost"] = cost
+    # This call's bill only — the row's, every call summed, is billed_cost / billed_estimated_cost.
+    for field, key in (("last_call_cost", "cost"), ("last_call_estimated_cost", "estimated_cost")):
+        value = getattr(usage, key, None)
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            meta[field] = value
     return meta
 
 
@@ -990,7 +1095,8 @@ class CutRetry:
 
     Two differences, both noted at the top of this section: the ceiling is the FIRST message (there
     is no shared system message to follow), and `reasoning_chars` stays on the first and second
-    call's meta instead of being popped.
+    call's meta instead of being popped — though the row's value is call_with_retries' sum over
+    every response, stages and failed attempts included.
 
     `call(sent, stage) -> (answer, handback, meta)`, stage "first", "retry" or "forced". Finished
     calls of the row being worked on are kept by the identity of the messages list run_sample builds
@@ -1021,6 +1127,7 @@ class CutRetry:
             kept["messages"] = messages
         if "first" not in kept:
             started = time.time()
+            _start_call()
             answer, handback, meta = call(self.with_system(messages, self.ceiling), "first")
             if meta.get("finish_reason") != "length":
                 return answer, meta
@@ -1038,6 +1145,7 @@ class CutRetry:
         retry_sent = self.with_system(messages, self.retry_ceiling)
         if "retry" not in kept:
             started = time.time()
+            _start_call()
             answer, handback, meta = call(retry_sent, "retry")
             retry_latency = round(time.time() - started, 2)
             if meta.get("finish_reason") != "length" or not handback.strip():
@@ -1051,6 +1159,7 @@ class CutRetry:
             rearm_call_timeout()
         retry_text, retry_handback, retry_meta, retry_latency = kept["retry"]
         started = time.time()
+        _start_call()
         answer, _, meta = call(retry_sent + [{"role": "assistant", "content": retry_handback},
                                              {"role": "user", "content": self.force_prompt}], "forced")
         reasoning_chars = meta.pop("reasoning_chars", 0) or 0
@@ -1087,12 +1196,17 @@ def _canonical(obj):
 
 
 def load_sample_checkpoint(path, config):
-    """Rows already done, keyed by questionId — or a refusal if the stored config differs. An EMPTY or
-    interrupted row is not a done row: it is called again, or a plain resume would skip it forever."""
+    """(done, failed), each keyed by questionId — or a refusal if the stored config differs.
+
+    An EMPTY or interrupted row is not a done row: it is called again, or a plain resume would skip
+    it forever. But it is not thrown away either: run_sample keeps it in the file until the new row
+    replaces it, and the new row folds its history in (`fold_prior`). Dropped at load, a resubmit
+    killed mid-row would delete it from the file, and one that answered would claim `n_attempts=1`
+    and one call's bill for a row that had already cost five (reviewer, 2026-11-15)."""
     if not os.path.exists(path):
-        return {}
+        return {}, {}
     want = _canonical(config)
-    done, empty = {}, 0
+    done, failed = {}, {}
     with open(path) as fh:
         for line in fh:
             if not line.strip():
@@ -1109,11 +1223,33 @@ def load_sample_checkpoint(path, config):
                     and r.get("finish_reason") not in INTERRUPTED_FINISH):
                 done[str(r["questionId"])] = r
             else:
-                empty += 1
-    if done or empty:
-        print(f"  resume {os.path.basename(path)}: {len(done)} done, {empty} empty row(s) to retry",
-              flush=True)
-    return done
+                failed[str(r["questionId"])] = r
+    if done or failed:
+        print(f"  resume {os.path.basename(path)}: {len(done)} done, {len(failed)} failed row(s) to call "
+              f"again (kept in the file until replaced)", flush=True)
+    return done, failed
+
+
+def _add(a, b):
+    """None means no call reported it; a sum of two reports keeps ints as ints."""
+    if a is None:
+        return b
+    if b is None:
+        return a
+    total = a + b
+    return total if isinstance(total, int) else round(total, 10)
+
+
+def fold_prior(rec, prior):
+    """`rec`, this run's row, replaces `prior`, the stored failed row: BILLED_FIELDS become cumulative
+    over every run of the row (prior's are already cumulative over the runs before it), `n_attempts`
+    stays this run's, and RESUME_FIELDS say how much came before."""
+    for key in BILLED_FIELDS:
+        rec[key] = _add(prior.get(key), rec.get(key))
+    rec["prior_n_attempts"] = (prior.get("prior_n_attempts") or 0) + (prior.get("n_attempts") or 0)
+    rec["prior_failed_runs"] = (prior.get("prior_failed_runs") or 0) + 1
+    rec["resumed_after_failure"] = True
+    return rec
 
 
 def save_sample_rows(path, rows):
@@ -1123,8 +1259,9 @@ def save_sample_rows(path, rows):
     _atomic_write(path, write)
 
 
-def sample_row(row, text, meta, config, sample, params):
-    """One result row. Scored by the same `score_response` / `anls_score` as every other run here."""
+def sample_row(row, text, meta, config, sample, params, prior=None):
+    """One result row. Scored by the same `score_response` / `anls_score` as every other run here.
+    `prior` is the stored failed row this one replaces, if any (`fold_prior`)."""
     ex = row["example"]
     gold = ex["answers"]
     if isinstance(gold, str):          # as `run` does — the JSON stores lists, but keep the guard
@@ -1141,12 +1278,20 @@ def sample_row(row, text, meta, config, sample, params):
            "parse_ok": bool(fa.strip()),
            "has_marker": bool(re.search(r"Final Answer:", text or "", re.IGNORECASE)),
            "empty": int(not text), "error": meta.pop("error", None)}
-    for key in (*USAGE_FIELDS, *BILLED_FIELDS, "reasoning_chars"):
+    for key in (*USAGE_FIELDS, *BILLED_FIELDS, "reasoning_chars", "think_tag_calls"):
         rec[key] = meta.pop(key, None)
     rec.update(meta)
+    rec.update(prior_n_attempts=0, prior_failed_runs=0, resumed_after_failure=False)
     rec.update(seed=params.get("seed"), sample=sample, scorer=SCORER_VERSION,
                ts=time.strftime("%Y-%m-%dT%H:%M:%S"), config=config)
-    return rec
+    return fold_prior(rec, prior) if prior else rec
+
+
+def shows_thinking(r):
+    """Reasoning text on any response of the row, a think tag inline in any reply's content, or
+    reasoning tokens reported for it: thinking was on."""
+    return ((r.get("reasoning_chars") or 0) > 0 or (r.get("think_tag_calls") or 0) > 0
+            or (r.get("reasoning_tokens") or 0) > 0 or (r.get("billed_reasoning_tokens") or 0) > 0)
 
 
 def _median(values):
@@ -1174,15 +1319,16 @@ def write_sample_files(out_dir, model, records, tag=""):
     groups["ALL"] = ordered
 
     def total(rs, key):
-        vals = [r.get(key) for r in rs if isinstance(r.get(key), int)]
-        return sum(vals) if vals else ""
+        vals = [r.get(key) for r in rs
+                if isinstance(r.get(key), (int, float)) and not isinstance(r.get(key), bool)]
+        return (sum(vals) if all(isinstance(v, int) for v in vals) else round(sum(vals), 10)) if vals else ""
 
     def write_overall(fh):
         w = csv.writer(fh)
         w.writerow(["model", "stratum", "n", "accuracy", "anls", "empty", "no_marker", "parse_fail",
                     "finish_length", "cut_retry", "forced_answer", "retried_rows", "prompt_tokens",
                     "completion_tokens", "reasoning_tokens", *BILLED_FIELDS, "reasoning_chars_rows",
-                    "latency_median_s", "scorer"])
+                    "thinking_rows", "resumed_rows", "latency_median_s", "scorer"])
         for name, rs in groups.items():
             n = len(rs)
             w.writerow([model, name, n,
@@ -1199,12 +1345,15 @@ def write_sample_files(out_dir, model, records, tag=""):
                         total(rs, "reasoning_tokens"),
                         *(total(rs, key) for key in BILLED_FIELDS),
                         sum(1 for r in rs if (r.get("reasoning_chars") or 0) > 0),
+                        sum(1 for r in rs if shows_thinking(r)),
+                        sum(1 for r in rs if r.get("resumed_after_failure")),
                         _median([r["latency_s"] for r in rs if isinstance(r.get("latency_s"), (int, float))]),
                         SCORER_VERSION])
     _atomic_write(os.path.join(out_dir, f"{slug}_overall.csv"), write_overall)
     n = len(ordered)
     return {"n": n, "empty": sum(r["empty"] for r in ordered),
             "reasoning_chars_rows": sum(1 for r in ordered if (r.get("reasoning_chars") or 0) > 0),
+            "thinking_rows": sum(1 for r in ordered if shows_thinking(r)),
             "accuracy": round(sum(r["score"] for r in ordered) / n, 4) if n else "",
             "anls": round(sum(r["anls"] for r in ordered) / n, 4) if n else ""}
 
@@ -1259,10 +1408,12 @@ def run_sample(args, *, model_dir, client, once, wanted, route, fixed=None, requ
                call_timeout=300, extra_config=None, fatal=(), forbid_reasoning=False):
     """`once(messages, model, params) -> (text, meta)`. Ends with SystemExit, every applicable message
     printed first and the code the most serious of them: 3 when `forbid_reasoning` and a row carries
-    reasoning text (thinking came back on — a config failure, which no resubmit fixes), 1 when any
-    row is empty (resubmit: resume calls exactly those), 2 when a forced answer filled its own cap or
-    reasoned again (read it before scoring), else 0."""
-    global HARD_CALL_TIMEOUT, MARKER_PREFIX
+    reasoning text or reasoning tokens (`shows_thinking`: thinking came back on — a config failure,
+    which no resubmit fixes; the loop stops at the first such row, writing THINKING_HALT.txt), 1 when
+    any row is empty (resubmit: resume calls exactly those, folding
+    each one's earlier runs into its new row), 2 when a forced answer filled its own cap or reasoned
+    again (read it before scoring), else 0."""
+    global HARD_CALL_TIMEOUT, MARKER_PREFIX, SAMPLE_OUT_DIR
     sample, model, smoke = args.sample, args.model, bool(args.limit)
     if args.total_shards < 1 or not 0 <= args.shard < args.total_shards:
         raise SystemExit(f"--shard {args.shard} is outside --total-shards {args.total_shards}")
@@ -1283,6 +1434,7 @@ def run_sample(args, *, model_dir, client, once, wanted, route, fixed=None, requ
     # run's marker (reviewer, 2026-11-15).
     MARKER_PREFIX = (("smoke_" if smoke else "") + f"{sample}_"
                      + (f"shard{args.shard}_" if args.total_shards > 1 else ""))
+    SAMPLE_OUT_DIR = os.path.basename(sample_dir(model_dir, sample, smoke)) + "/"
     # SLURM ends a job at its wall-clock limit (and on scancel) with SIGTERM, whose default kills the
     # process WITHOUT running `finally`; as SystemExit, the final save below still happens.
     signal.signal(signal.SIGTERM, lambda signum, frame: sys.exit(143))
@@ -1305,9 +1457,9 @@ def run_sample(args, *, model_dir, client, once, wanted, route, fixed=None, requ
     _atomic_write(os.path.join(out_dir, f"{model_slug(model)}_negotiated_params.json"),
                   lambda fh: json.dump({"asked": wanted, "accepted": params, "notes": notes,
                                         "config": config}, fh, indent=2))
-    done = {} if smoke else load_sample_checkpoint(path, config)
+    done, failed = ({}, {}) if smoke else load_sample_checkpoint(path, config)
     mine = {str(r["example"]["questionId"]) for r in rows}
-    foreign = set(done) - mine
+    foreign = (set(done) | set(failed)) - mine
     if foreign:
         raise SystemExit(f"{path}\n  holds {len(foreign)} row(s) not in this shard (first: "
                          f"{sorted(foreign)[0]}) — written under other shard boundaries. Saving would "
@@ -1315,17 +1467,42 @@ def run_sample(args, *, model_dir, client, once, wanted, route, fixed=None, requ
     records = [done[str(r["example"]["questionId"])] for r in rows
                if str(r["example"]["questionId"]) in done]
     todo = [r for r in rows if str(r["example"]["questionId"]) not in done]
+    # A stored failed row stays in the file until its new row replaces it: a resubmit killed (or
+    # halted) before reaching it, or in the middle of it, must not delete it.
+    held = {q: failed[q] for q in (str(r["example"]["questionId"]) for r in todo) if q in failed}
+
+    def to_save():
+        # A held row whose new row is already in `records` is not written twice.
+        replaced = {r["questionId"] for r in records}
+        return records + [r for q, r in held.items() if q not in replaced]
+    stored_thinking = [r for r in to_save() if shows_thinking(r)] if forbid_reasoning else []
+    if stored_thinking:
+        # A resubmit after a THINKING halt, same config: the stored row is the evidence already. Stop
+        # before calling anything, rather than run the rest of the shard on it. (A fixed runner has a
+        # different config, which load_sample_checkpoint refuses to resume.)
+        thinking_halt(stored_thinking[0], model, model_dir)
     print(f"{len(rows)} sample rows in this {'smoke test' if smoke else 'shard'}, {len(todo)} to call "
           f"-> {path}", flush=True)
     started = time.time()
+    inflight = {}                                      # the row being called, until it is in records
     try:
         for n, row in enumerate(todo, 1):
+            qid = str(row["example"]["questionId"])
+            inflight = {"row": row, "qid": qid}
+            take_interrupted()                             # nothing stale can attach to this row
             messages = build_messages(row["example"])          # built once per row: CutRetry keys on it
             text, meta = call_with_retries(lambda m: once(m, model, params), messages, model,
                                            model_dir, fatal=fatal)
-            records.append(sample_row(row, text, meta, config, sample, params))
+            inflight.update(text=text, meta=meta)
+            # get, append, THEN pop: an exit between any two of these must not lose the stored row
+            rec = sample_row(row, text, meta, config, sample, params, prior=held.get(qid))
+            records.append(rec)
+            held.pop(qid, None)
+            inflight = {}
+            if forbid_reasoning and shows_thinking(rec):
+                thinking_halt(rec, model, model_dir)           # exit 3 now; `finally` saves this row
             if n % args.save_every == 0:
-                save_sample_rows(path, records)
+                save_sample_rows(path, to_save())
                 print(f"  {len(records)}/{len(rows)}  [{row['stratum']}]", flush=True)
             if text and args.sleep:
                 time.sleep(args.sleep)
@@ -1334,26 +1511,42 @@ def run_sample(args, *, model_dir, client, once, wanted, route, fixed=None, requ
         # A second SIGTERM (a wrapper forwarding one, scancel twice) would interrupt this save itself
         # and leave only a .tmp file — seen on a local smoke, 2026-11-15 — so ignore it from here.
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
-        save_sample_rows(path, records)
-        summary = write_sample_files(out_dir, model, records, tag)
+        # The row in flight when a halt or SIGTERM struck: its calls are billed, so it is written —
+        # as answered if its call had returned, else failed from call_with_retries' stash — folding
+        # the stored failed row it replaces, if any. A resume folds it again in turn.
+        if inflight and inflight["qid"] not in {r["questionId"] for r in records}:
+            try:
+                got = ((inflight["text"], inflight["meta"]) if "meta" in inflight
+                       else ("", take_interrupted()))
+                if got[1] is not None:
+                    records.append(sample_row(inflight["row"], got[0], got[1], config, sample, params,
+                                              prior=held.get(inflight["qid"])))
+                    held.pop(inflight["qid"], None)
+            except BaseException as error:             # the save below must happen regardless
+                print(f"[{model}] could not write the row in flight ({inflight['qid']}): "
+                      f"{type(error).__name__}: {error}; its stored row, if any, is kept", flush=True)
+        save_sample_rows(path, to_save())
+        summary = write_sample_files(out_dir, model, to_save(), tag)
         print(f"\ncalls: {STATS}  elapsed {time.time() - started:.0f}s\n"
               f"rows: n={summary['n']} empty={summary['empty']} acc={summary['accuracy']} "
-              f"anls={summary['anls']} reasoning_chars>0: {summary['reasoning_chars_rows']}",
-              flush=True)
+              f"anls={summary['anls']} reasoning_chars>0: {summary['reasoning_chars_rows']} "
+              f"thinking (reasoning text, think tags or tokens): {summary['thinking_rows']}", flush=True)
+    final = to_save()
     codes = []
-    thinking = [r for r in records if (r.get("reasoning_chars") or 0) > 0]
+    # A backstop: the loop halts at the first such row it calls, and a stored one halts the run before
+    # its first call; nothing should reach here.
+    thinking = [r for r in final if shows_thinking(r)]
     if forbid_reasoning and thinking:
-        print(f"\nSTOP: THINKING CAME BACK ON — {len(thinking)} of {len(records)} row(s) carry reasoning "
-              f"text (reasoning_chars > 0), and this model must run with thinking off. A request "
-              f"parameter turned it on; fix the runner, archive this directory, rerun. First: "
-              f"{thinking[0]['questionId']} ({thinking[0]['reasoning_chars']} chars)", flush=True)
+        write_thinking_marker(thinking[0], model, model_dir)
+        print(f"{len(thinking)} of {len(final)} row(s) carry reasoning text or reasoning tokens; fix the "
+              f"runner, archive this directory, rerun.", flush=True)
         codes.append(3)
-    bad = [r for r in records if r["empty"]]
+    bad = [r for r in final if r["empty"]]
     if bad:
         print(f"\n{len(bad)} row(s) of this shard are empty — resubmit: resume calls exactly those. "
               f"First: {bad[0]['questionId']} ({bad[0].get('error')})", flush=True)
         codes.append(1)
-    odd = [r for r in records if r.get("forced_answer")
+    odd = [r for r in final if r.get("forced_answer")
            and (r.get("finish_reason") == "length" or r.get("forced_reasoning_chars"))]
     if odd:
         print(f"\nSTOP: {len(odd)} forced answer(s) filled their own cap or reasoned again — read "

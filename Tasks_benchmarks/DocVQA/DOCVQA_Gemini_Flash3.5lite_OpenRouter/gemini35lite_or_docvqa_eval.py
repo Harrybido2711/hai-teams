@@ -17,8 +17,9 @@ is the template): thinking at `reasoning: {effort: "minimal"}` — the floor, th
 **`max_tokens=8192` is chosen, not measured**: the cap bbh and PlanBench declare for this model.
 DocVQA answers are a short span, so a `length` finish here would mean something is wrong.
 
-**OpenRouter switches backend mid-run** (Google AI Studio / Vertex), so the answering backend and
-the per-call `cost` are written on every row. **One sample question is a known hard failure on the
+**OpenRouter switches backend mid-run** (Google AI Studio / Vertex), so the answering backend is
+written on every row, with OpenRouter's `usage.cost`: `last_call_cost` for the answering call and
+`billed_cost` summed over every call of the row. **One sample question is a known hard failure on the
 native route**: 59607 came back `MALFORMED_RESPONSE` with no output part, deterministically, in the
 full run (`docvqa.md`). If it reproduces here it is written as a failed row, not dropped.
 
