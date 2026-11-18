@@ -425,3 +425,24 @@ negotiating parameter surface for deepseek-flash ...
 [deepseek-flash] API error (1/5): APIStatusError: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: f82e0cee-8934-4136-8b03-3655cb6451b3)', 'type': 'insufficient_balance_error', 'param': None, 'code': 'invalid_request_error'}}
 
 calls: {'ok': 1119, 'empty': 0, 'interrupted': 0, 'errors': 1, 'timeouts': 0, 'failed_rows': 0}  elapsed 28543s
+[startup] cleared stale shard1_BILLING_HALT.txt
+negotiating parameter surface for deepseek-flash ...
+  accepted: {'temperature': 0, 'max_tokens': 16384, 'seed': 42}
+  resume deepseek-flash_shard1of5.jsonl: 3110 done, 0 empty row(s) to retry
+3114 rows in this shard (53 slices), 4 to call -> /gpfs/projects/p32983/Transition_processes_benchmarks/LLMs-Planning_bench/PLAN_Deepseek/results/deepseek-flash_shard1of5.jsonl
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 525 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 413 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 416 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 476 tokens, finish=stop, reasoning 0 chars
+
+calls: {'ok': 4, 'empty': 0, 'interrupted': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 1178s
+
+health [deepseek-flash] full: rows=15560/15568 empty=0 length=1 cut_retry=443 forced=285 forced_reasoned=0 interrupted=0 configs=1 COMPLETE=0

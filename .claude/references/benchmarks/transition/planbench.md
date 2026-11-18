@@ -240,8 +240,20 @@ min): shards 0 and 4 `COMPLETED 0:0`, shards 1–3 `shardN_BILLING_HALT.txt` and
 rows are all obfuscated_deceptive_logistics task 2**, outside the by-task table, so the score is
 already final: **13,876 / 15,076 (0.920; pilot 0.920)**. 18 files md5-pulled. The $19.95 covered
 5,529 rows; DeepSeek's peak window (01–04 and 06–10 UTC on weekdays, 19:00–22:00 and 00:00–04:00 CST)
-doubled the price of most of the second half. Once topped up, resubmit `--array=1-3` — 14 rows at about
-17k completion tokens each, under $0.5. Not yet confirmed by the user.
+doubled the price of most of the second half.
+
+**Deepseek complete, 2026-11-18 17:08**, after the user's top-up (balance 1.91). The 64 files were
+md5-matched first. Job 9292805 used `--array=1-3`, `--open-mode=append` and `--time=04:00:00` and
+called only the 14 missing rows. Every one was cut twice and then forced, with 299–585-token answers.
+Shards 1–2 finished `COMPLETED 0:0` in 10–20 min. Shard 3 exited 2 after 39 min: its one forced answer
+that filled the cap is a "feast / overcome" loop with no `[PLAN END]`, scored wrong.
+- 15,568 rows, 0 empty, `complete` 1, one config.
+- `cut_retry` 451, forced 293.
+- One `reasoning_content` fallback: blocksworld task 3 #38 in the first run, which stopped with empty
+  content.
+
+The 18 files were md5-pulled and rescored. The score is unchanged at **13,876 / 15,076 (0.920)**. Not
+yet confirmed by the user.
 
 **Qwen at 9,627 rows the same hour** (job 8870966, all five shards running): 2 empty rows, 30
 `length` rows that are all forced answers filling the 4,096 cap (20 in mystery_blocksworld task 1).

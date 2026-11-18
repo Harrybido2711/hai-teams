@@ -409,3 +409,38 @@ negotiating parameter surface for deepseek-flash ...
 [deepseek-flash] API error (1/5): APIStatusError: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: 8ae3460d-422b-44f4-99c5-cdb1c205bad7)', 'type': 'insufficient_balance_error', 'param': None, 'code': 'invalid_request_error'}}
 
 calls: {'ok': 1100, 'empty': 0, 'interrupted': 0, 'errors': 1, 'timeouts': 0, 'failed_rows': 0}  elapsed 28478s
+[startup] cleared stale shard3_BILLING_HALT.txt
+negotiating parameter surface for deepseek-flash ...
+  accepted: {'temperature': 0, 'max_tokens': 16384, 'seed': 42}
+  resume deepseek-flash_shard3of5.jsonl: 3105 done, 0 empty row(s) to retry
+3113 rows in this shard (53 slices), 8 to call -> /gpfs/projects/p32983/Transition_processes_benchmarks/LLMs-Planning_bench/PLAN_Deepseek/results/deepseek-flash_shard3of5.jsonl
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 312 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 339 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 463 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 299 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 512 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 522 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 363 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 381 tokens, finish=stop, reasoning 0 chars
+
+calls: {'ok': 8, 'empty': 0, 'interrupted': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 2323s
+
+health [deepseek-flash] full: rows=15568/15568 empty=0 length=1 cut_retry=451 forced=293 forced_reasoned=0 interrupted=0 configs=1 COMPLETE=1
+
+STOP: 1 forced answer(s) of this shard filled their own cap or reasoned again — read them before scoring. First: mystery_blocksworld_3|task_2_plan_optimality|39

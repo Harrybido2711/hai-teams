@@ -403,3 +403,18 @@ negotiating parameter surface for deepseek-flash ...
 [deepseek-flash] API error (1/5): APIStatusError: Error code: 402 - {'error': {'message': 'Insufficient Balance (request_id: ecde81aa-a7f4-497c-a352-7018eae1fe34)', 'type': 'insufficient_balance_error', 'param': None, 'code': 'invalid_request_error'}}
 
 calls: {'ok': 1116, 'empty': 0, 'interrupted': 0, 'errors': 1, 'timeouts': 0, 'failed_rows': 0}  elapsed 28588s
+[startup] cleared stale shard2_BILLING_HALT.txt
+negotiating parameter surface for deepseek-flash ...
+  accepted: {'temperature': 0, 'max_tokens': 16384, 'seed': 42}
+  resume deepseek-flash_shard2of5.jsonl: 3112 done, 0 empty row(s) to retry
+3114 rows in this shard (53 slices), 2 to call -> /gpfs/projects/p32983/Transition_processes_benchmarks/LLMs-Planning_bench/PLAN_Deepseek/results/deepseek-flash_shard2of5.jsonl
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 469 tokens, finish=stop, reasoning 0 chars
+[deepseek-flash] reply reached the cap (16384 tokens): called again with the retry ceiling
+[deepseek-flash] retry reached the cap too (16384 tokens): forced answer
+[deepseek-flash] forced answer: 585 tokens, finish=stop, reasoning 0 chars
+
+calls: {'ok': 2, 'empty': 0, 'interrupted': 0, 'errors': 0, 'timeouts': 0, 'failed_rows': 0}  elapsed 611s
+
+health [deepseek-flash] full: rows=15556/15568 empty=0 length=1 cut_retry=439 forced=281 forced_reasoned=0 interrupted=0 configs=1 COMPLETE=0
