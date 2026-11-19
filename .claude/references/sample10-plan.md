@@ -1,12 +1,13 @@
-<!-- size-budget: 18000 -->
+<!-- size-budget: 19000 -->
 <!-- One job: the 10% sample rerun, split into work packages separate agents can take. Larger than
      the default because each package must stand alone for an agent with no other context. Delete
      this file once the run is recorded and its lasting facts have moved to their references. -->
 # 10% sample rerun: plan and work packages
 
-Requested by the user, 2026-11-06. **Status, 2026-11-15: BBH, MMLU and DocVQA started** (the user's
-order of that day). WP1 done for those three; WP2–WP4 being written, one agent per benchmark.
-EmoBench and NegotiationToM (WP5, WP6) not started.
+Requested by the user, 2026-11-06. **Status, 2026-11-19: BBH, MMLU and DocVQA written and reviewed
+`safe-to-run`, waiting for the user's verification** (WP9). WP1–WP4 and their WP8 done; nothing is
+on Quest. Open with the user: MMLU's scorer gives `Final Answer: <B>` 0 ([mmlu.md](benchmarks/tasks/mmlu.md)).
+EmoBench, NegotiationToM and the report (WP5, WP6, WP7) not started.
 
 **Decided by the user, 2026-11-15:** fraction **10%**; D1 = **B, today's settled config**; D2 =
 **DeepInfra for Qwen and Gemma**. What B means for each model, as the runners must set it:
@@ -178,35 +179,25 @@ Record rows per task, because the scaling needs them.
 **Done:** counts match § What runs, rerunning the script gives byte-identical files, every id exists in
 the data. Commit before WP2–WP6 begin, as they all read these files.
 
-## WP2 · BBH
+## WP2–WP4 · BBH, MMLU, DocVQA — done 2026-11-19
 
-All five runners import `bbh_eval_core.py`, so most of the work is in the core. Two things stop the
-fields being captured today: `call(prompt)` returns only a string, and `core.retry` hides attempts.
+Written as the package text asked, except where the user's decisions of 2026-11-15 overrode it: Qwen
+and Gemma run from new `*_DeepInfra` folders (the legacy folders are untouched), and one prompt per
+benchmark replaces "match the reported run's prompt byte for byte". Each benchmark's page holds its
+runners, output, exit codes and known limits; the row fields, including the billed ledger shared by
+all three cores, are in [evaluation-criteria.md](evaluation-criteria.md) § Per-row fields.
 
-- Add `--sample` to the core and the five current runners (`BBH_GPT_5.6_Luna`,
-  `BBH_Gemini_Flash3.5lite_OpenRouter`, `BBH_Qwen`, `BBH_Gemma`, `BBH_Deepseek`).
-- Follow `call_with_retries` and `openai_meta` in `aware_eval_core.py`: `once` returns text and meta,
-  and the core adds `latency_s` and `n_attempts`. Metadata must stay with its own row under `--workers`.
-- Establish what produced the BBH Qwen and Gemma numbers (D1) from their `config` column and report it.
-- Remember both item loops in `run_tasks`, the threaded one and the serial one.
+| WP | Page section | Commits | Test | Jobs |
+|---|---|---|---|---|
+| 2 BBH | [bbh.md](benchmarks/tasks/bbh.md) § The 10% sample rerun | `3c268659` | `test_bbh_sample10.py` ALL PASSED (A–D) | one per model |
+| 3 MMLU | [mmlu.md](benchmarks/tasks/mmlu.md) § The 10% sample rerun | `e797ebae`, `d2eb63af` | `test_sample10.py` 37/37 | 5-shard array + `merge_mmlu_shards.py --sample sample10` |
+| 4 DocVQA | [docvqa.md](benchmarks/tasks/docvqa.md) § The 10% sample path | `a5f20074`, `9987ec5c`, `a044a395` | `test_docvqa_sample10.py` 109/109 | one per model |
 
-## WP3 · MMLU
-
-- **Core-based:** `MMLU_GPT_5.6_Luna` and the Gemini runner. Same change as WP2. Which Gemini route
-  follows D1.
-- **Legacy, no core:** `MMLU_Qwen`, `MMLU_Gemma`, `MMLU_Deepseek`. Leave those scripts untouched and add
-  a thin core-based `*_mmlu_sample.py` beside each, plus an sbatch script.
-- **Prompt must match the reported run.** Qwen and Gemma use the text of `PROMPT_V2`; Deepseek's looks
-  like `PROMPT_V1`. Compare rendered prompts byte for byte with the legacy script and show the result.
-
-## WP4 · DocVQA
-
-- **Core-based:** `DOCVQA_GPT_5.6_Luna`, `DOCVQA_Gemini_Flash3.5lite_Google`.
-- **Legacy:** `qwen_DocVQA/qwen_eval.py`, `gemma_DocVQA/gemma_eval_half{1,2}.py`. Add thin core-based
-  sample runners; the core's prompt is documented as byte-for-byte theirs, so verify it.
-- Read [docvqa.md](benchmarks/tasks/docvqa.md) § traps first: shards share one daily quota, and empty
-  rows must be counted.
-- Local smoke needs the images; they are already in the local tree.
+Common to all three: calls run serially on the main thread, where the SIGALRM watchdog works.
+Exit 1 means failed or cut rows, so resubmit. Exit 2 means a forced answer to read. Exit 3 means
+Qwen or Gemma came back thinking: **archive `results_sample10/`, do not resubmit**, since the
+config is no longer the settled one. Smoke rows are in each folder's `smoke_sample10/`, not
+committed.
 
 ## WP5 · EmoBench
 
@@ -244,6 +235,9 @@ Write `.claude/scripts/sample10_report.py` to read `results_sample10/` and outpu
 - Apply § How the estimate works: scaling by stratum, intervals, drift check. Legacy rows may have no
   `idx`, so match on question text and report any that do not match.
 - Compare tokens only within a model family; compare across families in dollars and seconds.
+- Cost comes from the `billed_*` tokens. `billed_cost` and `billed_estimated_cost` are the
+  provider's own dollars, a check on the price table. Report format compliance from `has_marker`
+  beside `parse_ok` ([evaluation-criteria.md](evaluation-criteria.md) § Traps).
 - **Before submit:** use the smoke rows to project each cell's sample cost and full-run estimate, as a
   table for the user. Three rows is a rough guide, so flag it as such, especially for thinking-on cells.
 - Compute D3's MultiChallenge and Wonderbread figures here, once judging has finished.
@@ -268,10 +262,18 @@ these guarantees:
 only, to avoid crossed syncs. Follow [quest-cluster.md](quest-cluster.md) and the `quest-sync` and
 `submit-run` skills.
 
-- Check `squeue` first. A judging run may be on the same keys.
-- Transfer core, runners, sbatch scripts and `sample10.json` as one set, per benchmark, with `md5sum` on
-  both sides. **The pre-submit hook only checks NegotiationToM**, so its pass proves nothing elsewhere,
-  and it does not cover `*.json`.
+- Check `squeue` first. A judging run may be on the same keys — PlanBench's Qwen uses this
+  DeepInfra key.
+- **DeepInfra's balance first.** PlanBench's Qwen stopped on it on 2026-11-18; Qwen and Gemma here
+  draw on the same account. Also, before the first submit: Quest's `.env` files have
+  `DEEPINFRA_API_KEY`, `OPENROUTER_API_KEY` and `DEEPSEEK_API_KEY` (a missing key fails loudly at
+  startup), and no `results_sample10/` exists there yet.
+- Transfer each benchmark as one set, with `md5sum` on both sides. The set is the core, every
+  runner and `run_*_sample10.sh`, `sample10.json` and the test, plus `merge_mmlu_shards.py` for
+  MMLU: 13 files for bbh, 14 for MMLU, 11 for DocVQA (`git diff --name-only 1cc5bbd5 HEAD --
+  Tasks_benchmarks/`, without the README). **The pre-submit hook only checks NegotiationToM**, so
+  its pass proves nothing elsewhere, and it does not cover `*.json`. On Quest the bbh test's
+  Part A prints SKIPPED, because it needs git; only "ALL PASSED" is the full proof.
 - Submit one small benchmark and model first, confirm its first rows, then the rest. Per-key limits
   apply; do not stack several models on one key.
 

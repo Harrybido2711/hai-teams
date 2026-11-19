@@ -1,8 +1,9 @@
-<!-- size-budget: 11000 -->
+<!-- size-budget: 11500 -->
 <!-- One invocation recipe per model in use; it grows when a model is adopted, which is the
      file working. Recipes are measured, so they carry the probe that established them. Raised to
      8500 on 2026-10-31 for the pointer to the per-route image caps, to 10500 on 2026-11-04 for
-     Qwen's second route, and to 11000 on 2026-11-09 for that route's real-screenshot probe. -->
+     Qwen's second route, to 11000 on 2026-11-09 for that route's real-screenshot probe, and to
+     11500 on 2026-11-19 for its missing reasoning count, which a thinking-off check depends on. -->
 # How to call each model
 
 Which client, `base_url`, key, model id, and the non-optional parameters. Limits a runner must set:
@@ -89,6 +90,9 @@ Probed 2026-11-04, `temperature=0`, the project's existing key:
 - **Slow, and not because of the request.** 2026-11-09: 17–46 s for a 12-token reply, 25–111 s per
   Wonderbread unit with or without images — while Gemma on the same key and route answered in 0.3 s.
   The 11-04 probe saw 1.0 s, so this varies by day; time a call before sizing a job's wall clock.
+- **No `reasoning_tokens` in its usage with reasoning off**: None on all 14,984 PlanBench rows
+  (2026-11-18); whether it reports one with thinking on is unestablished. So a missing count is no
+  evidence thinking stayed off — a thinking-off check reads the reasoning text and `<think>` tags.
 - **Price $0.10/M in, $0.15/M out** (the call's `usage.estimated_cost` and the dashboard agree;
   Together's was $0.17/$0.25). `PRICES` in `criteria_report.py` has only the `@together` label —
   add `qwen3.5-9b@deepinfra` with the first priced run.

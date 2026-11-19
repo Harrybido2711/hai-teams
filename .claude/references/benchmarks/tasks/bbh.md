@@ -101,16 +101,9 @@ per model in [bbh-parameters.md](bbh-parameters.md) § The 10% sample rerun.
 | Deepseek | `BBH_Deepseek`, beside the legacy runner | `deepseek_bbh_sample.py` |
 
 - **A sample run reads and writes only `results_sample10/`** (`smoke_sample10/` under `--limit`),
-  `results/`'s layout; `idx` indexes the whole task. Each row has the per-row fields of
-  [evaluation-criteria.md](../../evaluation-criteria.md) plus `billed_*`, `billed_cost`,
-  `billed_estimated_cost`, `attempts_without_usage`, `reasoning_chars`, `think_tag_calls`,
-  `halted`, `last_call_cost`, `last_call_estimated_cost`, `prior_n_attempts`, `prior_failed_runs`,
-  `resumed_after_failure` —
-  defined in the comment above `BILLED_KEYS` in `bbh_eval_core.py`, names shared with MMLU and
-  DocVQA. `billed_*` sum every call of every run of the row, booked as each response arrives (a
-  reply with usage but no `choices` is billed, and counted once); the plain token fields are the
-  answering attempt's. **True HTTP calls on an answered row = `n_attempts` + `cut_retry` +
-  `forced_answer`** (`attempts_without_usage` counts calls, not attempts).
+  `results/`'s layout; `idx` indexes the whole task. Each row has the per-row fields and the
+  billed ledger of [evaluation-criteria.md](../../evaluation-criteria.md) § Per-row fields, booked
+  as each response arrives: a reply with usage but no `choices` is billed, once.
 - **`parse_ok` = the scorer extracted a prediction**: the text after `Final Answer:`, or with no
   marker the whole response, which the matcher can still credit (a bare `(B)` scores 1). So it is
   never False on a row scored 1. "Did the model finish" is `no_marker`, as before.
@@ -140,6 +133,11 @@ per model in [bbh-parameters.md](bbh-parameters.md) § The 10% sample rerun.
   appended to `log_sample10.*` in the folder). Exit 1 = failed or unfinished rows (resubmit), 2 = a
   forced answer to read, 3 = thinking came back. **Not on Quest yet**; whether Quest's `.env` has
   `DEEPINFRA_API_KEY` and `OPENROUTER_API_KEY`, and `/projects` resolves as written, is unverified.
+- **Known limits** (final review, 2026-11-19; none blocking): a SIGTERM inside
+  `run_sample_tasks`' end-of-task `finally` (about 1.4 ms a task) or during a halt's unwinding drops
+  the rows since the last save *with their bill* — resume calls them again, so the file ends
+  complete and the bill short, by at most 19 rows' worth. The fix, if it is ever wanted:
+  `signal.pthread_sigmask` blocking SIGTERM around that write.
 
 ## Its own traps
 

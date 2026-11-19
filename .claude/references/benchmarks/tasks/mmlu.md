@@ -134,13 +134,9 @@ WP3. What is MMLU's own:
   `backend`, `reasoning_chars`, `think_tag_calls`, `halted`, `CutRetry`'s marks, `sample`, `ts`. `config` is a JSON object here, a
   flat string on legacy rows. **`parse_ok`** = the one scorer, asked about each option in turn,
   accepts at least one — so a row scored 1 is always `parse_ok`.
-- **What a row cost.** `*_tokens` are the answering attempt's; `billed_{prompt,completion,
-  reasoning}_tokens`, `billed_cost` (OpenRouter), `billed_estimated_cost` (DeepInfra) sum every HTTP
-  call of the row, failed ones and every stage included (None if none reported); `last_call_*` is the
-  last call's. `attempts_without_usage`: calls that returned no usage; `reasoning_chars`: every
-  call's reasoning text.
-- **Calls and time.** An answered row made `n_attempts + cut_retry + forced_answer` calls.
-  `latency_s` is the answering attempt's alone, without a stage kept from an earlier one (that is in
+- **What a row cost:** the billed ledger, [evaluation-criteria.md](../../evaluation-criteria.md)
+  § Per-row fields.
+- **Time.** `latency_s` is the answering attempt's alone, without a stage kept from an earlier one (that is in
   `first_`/`retry_latency_s`). A row failed after a cut first stage has no `first_*`.
 - **A resubmit keeps a row's history.** A stored failed or cut row stays in the file until a new row
   replaces it; the new row's `billed_*` and `attempts_without_usage` are cumulative over every run,

@@ -1,4 +1,6 @@
-<!-- size-budget: 8500 -->
+<!-- size-budget: 11000 -->
+<!-- Raised from 8500 on 2026-11-19 for the billed ledger: six field rows that cost per correct
+     answer depends on, shared by three cores, and kept here rather than once per benchmark page. -->
 <!-- One job: the criteria, the per-row fields that feed them, and their traps. -->
 # Evaluation criteria beyond accuracy
 
@@ -12,8 +14,9 @@ runner. NegotiationToM's core writes them for any runner that calls `enable_row_
 `NEG_GPT_5.6_Luna` and `NEG_Gemini_Flash3.5lite_OpenRouter`; the older NEG runners do not opt in,
 because they leave the SDK's own retries on and their `n_attempts` would undercount. AwareBench's
 core writes them for all five of its runners, and its full run (2026-10-12) has them on every
-row — the first benchmark where criteria 1–3 and 6 exist for all five models. No other runner
-writes them. Rows already on disk therefore **cannot** produce
+row — the first benchmark where criteria 1–3 and 6 exist for all five models. Since then the
+10% sample runners of bbh, MMLU and DocVQA ([sample10-plan.md](sample10-plan.md)) write them and
+the billed ledger below — written 2026-11-15, not yet run. No other runner writes them. Rows already on disk therefore **cannot** produce
 criteria 1–3 per item. A run made before a runner was updated says so; it does not get an estimate.
 Criteria 1, 2, 3 and 6 are computed on every benchmark by one function and one price table,
 `usage_criteria()` and `PRICES` in `.claude/scripts/criteria_report.py` — how to run it:
@@ -23,7 +26,7 @@ Criteria 1, 2, 3 and 6 are computed on every benchmark by one function and one p
 
 | # | Criterion | Metric | Computed as | Needs |
 |---|---|---|---|---|
-| 1 | **Cost** | $ per correct answer | Σ(`prompt_tokens`·p_in + `completion_tokens`·p_out) / 1e6 ÷ #correct | the normal run |
+| 1 | **Cost** | $ per correct answer | Σ(`prompt_tokens`·p_in + `completion_tokens`·p_out) / 1e6 ÷ #correct — the `billed_*` tokens where a row has them | the normal run |
 | 2 | **Token efficiency** | mean and p95 output tokens per item, reasoning included | over `completion_tokens`; also the mean on wrong items ÷ the mean on right ones (overthinking) | the normal run |
 | 3 | **Latency** | p50 / p95 seconds per call | over `latency_s` | the normal run |
 | 4 | **Stability** | share of items whose answer is identical across k = 5 repeats | per item, then averaged; report pass^k beside pass@1 | extra runs, subsample |
@@ -45,16 +48,37 @@ recovered afterwards.
 | `n_attempts` | calls spent on this row, retries included |
 | `parse_ok` | whether the parser produced a prediction |
 
+**The billed ledger** — written by the 10% sample cores of bbh, MMLU and DocVQA (2026-11-15), the
+same names and meanings in all three; edge cases in the comment above `BILLED_KEYS` in
+`bbh_eval_core.py`. The fields above keep their meaning (the answering call's); these say what the
+row cost.
+
+| Field | Meaning |
+|---|---|
+| `billed_prompt_tokens`, `billed_completion_tokens`, `billed_reasoning_tokens` | summed over **every HTTP call of the row that returned usage** — failed, empty and interrupted attempts, every `CutRetry` stage, each once — and over every run of the row: a resubmit folds the stored row in. Reasoning is None when no call reported a count |
+| `billed_cost`, `billed_estimated_cost` | the same sum of OpenRouter's `usage.cost` and DeepInfra's `usage.estimated_cost`, the provider's own dollars; None where never reported. `last_call_cost`, `last_call_estimated_cost` are the answering call's |
+| `attempts_without_usage` | HTTP calls that returned no usage — a timeout, an exception, a reply without a usage object — stages included, so it counts calls, not attempts |
+| `prior_n_attempts`, `prior_failed_runs`, `resumed_after_failure` | the row's earlier runs that ended failed or cut; `n_attempts` is this run's alone |
+| `reasoning_chars`, `think_tag_calls` | reasoning text summed over the row's calls; calls with a `<think>` tag in `content`. With the reasoning tokens, what the Qwen and Gemma thinking-off halt reads |
+| `halted` | None, or the stop that ended the run while this row's call was open (`SystemExit: 143`) |
+
+An answered row made `n_attempts + cut_retry + forced_answer` HTTP calls. **Exact except at a
+stop:** a SIGTERM landing in a window of microseconds to milliseconds — a response that arrived and
+was not yet booked, the end-of-task write — undercounts `billed_*`, never overcounts, and can leave
+`attempts_without_usage` or `n_attempts` 1 high. No row is lost or written twice (bbh, 32,999
+injected kill points, 2026-11-19; MMLU's and DocVQA's limits are on their pages).
+
 ## Traps
 
 - **Never count tokens from `raw_response`.** Hidden reasoning tokens are billed and are not in it,
   so a tokenizer count undercounts a reasoning model's cost several-fold.
 - **A row's token fields are its answered call's; a failed attempt's billed tokens vanish** unless
   summed. An empty HTTP 200 that spent 16,384 reasoning tokens, then a 50-token answer, records 50.
-  The 10% sample cores (bbh, mmlu, DocVQA, 2026-11-15) add `billed_{prompt,completion,reasoning}_tokens`
-  — every attempt and `CutRetry` stage with a usage object — and `attempts_without_usage`; cost
-  uses those. `plan_eval_core.py` and `aware_eval_core.py` do not have them, so their cost is a
-  floor; rows with `n_attempts > 1` bound the gap. Found by review, 2026-11-15.
+  Cost uses the billed ledger where a row has it. `plan_eval_core.py` and `aware_eval_core.py` do
+  not, so their cost is a floor; rows with `n_attempts > 1` bound the gap. Found by review, 2026-11-15.
+- **`parse_ok` is as lenient as the scorer.** On bbh and DocVQA a reply with no `Final Answer:` is
+  parsed whole, so a reply cut mid-reasoning is `parse_ok`; MMLU's means some option was accepted.
+  Report format compliance from `has_marker` beside it, never from `parse_ok` alone.
 - **`n_attempts` and `latency_s` are wrong while the SDK retries by itself** — the values look
   plausible and nothing is logged. Client setting: [script-skeleton.md](script-skeleton.md) §4.
 - **`parse_ok` needs a non-empty string**, not just a present key: `{"answer": null}` is no prediction.

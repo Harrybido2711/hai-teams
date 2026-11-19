@@ -1,6 +1,6 @@
 # Eval script skeleton
 
-<!-- size-budget: 8500 -->
+<!-- size-budget: 9000 -->
 <!-- One job: the runner shape, as a numbered checklist a diff is checked against. It grew when
      rule 7 stopped being a style note and became the fairness rule, which needs its evidence,
      and again when 7b took the sharding pattern from NegotiationToM. -->
@@ -121,6 +121,7 @@ These are settled; a change that breaks one is wrong unless it argues otherwise 
 | An empty API response is retryable, not a scored zero | HTTP 200 + empty body raises nothing |
 | Every `except` block logs the exception | otherwise a `TypeError` is retried as a network fault and scores 0 |
 | A timeout exception derives from `BaseException` | `except Exception` in each runner would swallow it |
+| An error is classified by its status code, or a bounded match (`\b401\b`), never a bare digit substring | `"401" in text` matches a token count such as 14,012 or a request id and halts the run as an auth failure; `"500"` retries a 400 naming a limit of 5000. `plan_eval_core.py` and `aware_eval_core.py` still match bare substrings (`AUTH_MARKERS`, `_TRANSIENT`; found 2026-11-15, not fixed) |
 | Job scripts `export PYTHONUNBUFFERED=1` | or the log is empty while the job runs |
 | Shard outputs carry a shard tag | untagged `_overall.csv` files overwrite each other |
 | Every row carries the per-row usage fields of [evaluation-criteria.md](evaluation-criteria.md) | cost per correct answer, latency and stability are per-item; a run-level total in memory gives none of them |
