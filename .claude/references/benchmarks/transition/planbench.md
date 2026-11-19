@@ -263,6 +263,19 @@ two empty rows are mystery task 1 rows that spent all five attempts on it; the s
 them. Mystery task 1 cuts 63% of rows and averages 355 s a row. About 5,900 rows are left, which is
 3–4 days at this speed and within the 7-day wall.
 
+**Qwen stopped on DeepInfra balance again, 2026-11-18 23:48** (job 8870966, 3 d 7 h). All five
+shards wrote `shardN_BILLING_HALT.txt` and exited 1. The 402 "positive balance" wording was classified
+as billing this time.
+- State: 14,984 rows, 26 empty (429 or timeout on every attempt), 73 `length`, `cut_retry` 3,216,
+  forced 2,256, one config. 16 files md5-pulled.
+- 610 rows left. 130 count toward the score: the tails of mystery_blocksworld and
+  mystery_blocksworld_3, plus the 26 empty rows. 480 are obfuscated_deceptive_logistics, outside the
+  by-task table.
+- Expected spend: about 4.0 M prompt and 6.9 M completion tokens, with the obfuscated rows guessed at
+  12k each because the run has too few of them. That is about $1.4–2.5.
+
+Once topped up, resubmit all five shards on `long` with `--open-mode=append`.
+
 **Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
 Deepseek, 8157878 Qwen; 64 files md5-matched, Quest `load_rows` gave 1,563 / 15,568 unique uids).
 Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17 min (1,563 rows,
