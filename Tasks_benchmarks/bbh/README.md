@@ -123,20 +123,30 @@ bbh/
 ├── bbh_eval_core.py           the one scorer, the task list, the prompt, the write path
 ├── data/<task>.json  × 20     shared by every runner
 ├── .env                       all provider keys
+├── sample10.json              the 10% sample: 484 ids, per task (.claude/scripts/build_sample10.py)
+├── test_bbh_sample10.py       the sample path's tests, and the proof the legacy path is unchanged
 ├── BBH_<Slot>/                Deepseek · Gemma · Qwen · XAI · Kimi · Llama
 │   │                          · Gemini_Flash2.5 · GPT_4o_mini      (superseded, but with results)
-│   │                          · Gemini_Flash3.5lite_OpenRouter · GPT_5.6_Luna
-│   │                                                              (current, NOT YET RUN)
+│   │                          · Gemini_Flash3.5lite_OpenRouter · GPT_5.6_Luna     (current pair)
+│   │                          · Qwen_DeepInfra · Gemma_DeepInfra   (sample rerun only, 2026-11-15)
 │   ├── <vendor>_bbh_eval.py   a client and a `call`; no scorer
 │   ├── run_bbh.sh             --model <id> --task all
 │   ├── log.txt / log.err
-│   └── results/
-│       ├── <task>/            one directory per sub-task, 20 of them
-│       │   ├── <model-slug>.jsonl        one JSON record per item
-│       │   ├── <model-slug>.csv          idx, question, gold_answer, model_response,
-│       │   │                             final_answer, has_marker, score, config
-│       │   └── <model-slug>_overall.csv  n, average, no_marker, empty, scorer, config
-│       └── <model-slug>_bbh_overall.csv  every task plus a macro-average
+│   ├── results/
+│   │   ├── <task>/            one directory per sub-task, 20 of them
+│   │   │   ├── <model-slug>.jsonl        one JSON record per item
+│   │   │   ├── <model-slug>.csv          idx, question, gold_answer, model_response,
+│   │   │   │                             final_answer, has_marker, score, config
+│   │   │   └── <model-slug>_overall.csv  n, average, no_marker, empty, scorer, config
+│   │   └── <model-slug>_bbh_overall.csv  every task plus a macro-average
+│   │
+│   │   the five selected models only — the 10% sample rerun (`--sample sample10`):
+│   ├── <vendor>_bbh_sample.py one for Qwen_DeepInfra, Gemma_DeepInfra and Deepseek; GPT and
+│   │                          Gemini take `--sample` on their `_bbh_eval.py` instead
+│   ├── run_bbh_sample10.sh    --sample sample10 --prompt v1; logs to log_sample10.{txt,err}
+│   ├── smoke_sample10/        a `--limit` run of it
+│   └── results_sample10/      the same layout as results/, plus the per-row usage fields; the
+│                              roll-up is rebuilt from every task file and says `complete`
 └── bin/ · dotenv/ · python_dotenv-1.1.1.dist-info/   a pip install vendored in place
 ```
 

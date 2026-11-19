@@ -1,9 +1,11 @@
 # BBH — model call parameters, as they are today
 
-<!-- size-budget: 7000 -->
+<!-- size-budget: 10000 -->
 <!-- One job: the as-is parameter record for eight runners. The prose that would be cut to fit
      is the two-values-were-wrong note and the not-yet-confirmed note, which are the reasons
-     the page is trustworthy at all. Ten rows now, not eight. -->
+     the page is trustworthy at all. Ten rows now, not eight. Raised to 10000 on 2026-11-15 for
+     the sample rerun's five configs, which are the first capped bbh runs and belong beside the
+     uncapped ones they will be compared with. -->
 
 This is the **as-is record** for bbh's ten runners — eight with results, and the two current-model slots added 2026-08-29 that have none. What every runner *must* be changed to is
 [model-parameters.md](../../model-parameters.md), which is keyed by model and covers every
@@ -74,3 +76,28 @@ response is in [reasoning-cost.md](../../reasoning-cost.md).
 **This is deliberately still open.** Setting the caps changes what the models emit, which would make
 new numbers incomparable with the 4,833 rows already on disk. Cap them when bbh is re-run, not
 before.
+
+## The 10% sample rerun — five settled configs, 2026-11-15
+
+What `--sample sample10` sends (bbh.md § The 10% sample rerun). **These are not the configs of
+the reported rows in the table above** — the user chose today's settled configs (D1 = B,
+`sample10-plan.md`), copied from each model's `PLAN_<Model>` runner in `LLMs-Planning_bench/`. So
+this is the first bbh run that caps anything, and it answers the "cap them when bbh is re-run" above
+for these five. **Every cap is chosen, not measured on bbh.** Each run writes what was accepted to
+`<slug>_negotiated_params.json` beside its rows; read that, not this table, once it has run.
+
+| Model | Route | Runner | `temperature` | output cap | `seed` | thinking | prompt ceiling + CutRetry | watchdog / client timeout |
+|---|---|---|---|---|---|---|---|---|
+| `gpt-5.6-luna` | OpenAI | `BBH_GPT_5.6_Luna/gpt56luna_bbh_eval.py --sample` | — | `max_completion_tokens=16384` | 42 | `reasoning_effort="low"`, required | no | 600 / 900 s |
+| `google/gemini-3.5-flash-lite` | OpenRouter | `BBH_Gemini_Flash3.5lite_OpenRouter/gemini35lite_bbh_eval.py --sample` | — | `max_tokens=8192` | 42 | `reasoning: {effort: minimal}`, fixed | no | 300 / 400 s |
+| `Qwen/Qwen3.5-9B` | DeepInfra | `BBH_Qwen_DeepInfra/qwen_di_bbh_sample.py` | `0` | `max_tokens=8192` | 42 | `reasoning: {enabled: false}`, fixed; any reasoning back halts the run, exit 3 | yes | 900 / 1500 s |
+| `google/gemma-4-31B-it` | DeepInfra | `BBH_Gemma_DeepInfra/gemma_di_bbh_sample.py` | `0` | `max_tokens=4096` | 42 | **none passed** — one would turn thinking on; any reasoning back halts the run, exit 3 | no | 240 / 300 s |
+| `deepseek-flash` | DeepSeek | `BBH_Deepseek/deepseek_bbh_sample.py` | `0` | `max_tokens=16384` | 42 | no knob; the forced answer sends `thinking: disabled` | yes | 900 / 7200 s |
+
+All five: client `max_retries=0` and five attempts in `bbh_eval_core.call_with_retries`, prompt
+`v1` (what both core-based runners' reported rows used — GPT's `web_of_lies` excepted, on `v2`), one
+serial job with every call on the main thread, where the SIGALRM watchdog works (`--workers` is
+refused for `--sample`). The ceiling and CutRetry texts are PlanBench's word for word, except that Deepseek's
+retry ceiling says "as soon as you have an answer" where PlanBench's says "a plan"; all of them are
+on every row's `config`.
+

@@ -14,6 +14,15 @@ run; and dropping `reasoning_effort` because one value was refused would run all
 model's default `medium`, uncapped. `core.negotiate` handles both cases and prints what it settled
 on. Never set `reasoning_effort="none"` — that is removal, not a cap, and costs 9-11 points
 (`.claude/references/model-parameters.md`).
+
+**`--sample sample10` is the 10% sample rerun (2026-11-15), and nothing else changes without it.**
+It runs only the items in `<bbh>/sample10.json` into `results_sample10/` (`smoke_sample10/` under
+`--limit`), never `results/`, through `bbh_eval_core.run_sample`: a second client built
+`max_retries=0` so `n_attempts` and `latency_s` are true, five attempts in the core's loop, and the
+per-row usage fields on every row. Its config is the settled one, PlanBench's
+(`PLAN_GPT_5.6_Luna`): the same `WANTED` as below, with `reasoning_effort` and the cap `required` so
+negotiation cannot swap them. The cap `max_completion_tokens=16384` is chosen, not measured — bbh's
+full run at it had `no_marker=0`, which says it did not bind there.
 """
 
 import argparse
@@ -53,6 +62,25 @@ def call(prompt):
     return core.retry(once, label="gpt56luna")
 
 
+def run_sample(args, tasks):
+    """`--sample`: the settled config through the core's guarded loop. Returns the exit code."""
+    # max_retries=0: the SDK's own hidden retries would make n_attempts and latency_s lie
+    # (script-skeleton.md §4). Timeouts are PLAN_GPT_5.6_Luna's: the watchdog (600 s) fires first.
+    sample_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"), timeout=900, max_retries=0)
+
+    def sample_once(messages, model, params):
+        r = sample_client.chat.completions.create(model=model, messages=messages, **params)
+        meta = core.openai_meta(r)        # first: it books the bill before choices[0] can raise
+        return r.choices[0].message.content, meta
+
+    return core.run_sample(MODEL_DIR, args.model, client=sample_client, once=sample_once,
+                           wanted=WANTED, sample=args.sample, tasks=tasks,
+                           required={"reasoning_effort": "low", "max_completion_tokens": 16384},
+                           extra_config={"route": "openai"}, call_timeout=600, limit=args.limit,
+                           workers=args.workers, prompt_version=args.prompt, shard=args.shard,
+                           total_shards=args.total_shards, sleep_between=args.sleep)
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Run BIG-Bench Hard for GPT-5.6-Luna.")
     ap.add_argument("--model", default=DEFAULT_MODEL,
@@ -74,6 +102,10 @@ if __name__ == "__main__":
                     help="concurrent request streams. 5 is this project's standing limit and a "
                          "measured fix, not a convention — see quest-cluster.md. Concurrency does "
                          "not change the requests-per-day total, only how fast they are spent")
+    ap.add_argument("--sample", default="",
+                    help="e.g. sample10: only the items of <bbh>/<name>.json, with the per-row usage "
+                         "fields, into results_<name>/ — never results/. Omitted, the run is exactly "
+                         "what it was before this flag existed")
     args = ap.parse_args()
 
     MODEL = args.model
@@ -81,6 +113,8 @@ if __name__ == "__main__":
     unknown = [t for t in tasks if t not in core.TASKS]
     if unknown:
         raise SystemExit("unknown task(s): %s\nknown: %s" % (unknown, core.TASKS))
+    if args.sample:
+        sys.exit(run_sample(args, tasks))
 
     print("negotiating parameter surface for %s ..." % MODEL, flush=True)
     PARAMS, notes = core.negotiate(client, MODEL, WANTED)
