@@ -84,6 +84,11 @@ the rows already in the checkpoint were produced under the old one and resume wi
 Archive to a timestamped directory instead — a result set holding two configurations is worse than
 redoing the rows. Say which you did and why.
 
+**Do not count on a SIGTERM handler's final save.** On PlanBench, `scancel` has never once
+triggered it (2026-11-19): each shard kept only its last periodic save. Any core whose design
+relies on a stop writing the row in flight is untested on Quest until a cancelled job shows that
+row. Cause and evidence: [planbench.md](benchmarks/transition/planbench.md), `--slices` bullet.
+
 ## SLURM
 
 ```bash

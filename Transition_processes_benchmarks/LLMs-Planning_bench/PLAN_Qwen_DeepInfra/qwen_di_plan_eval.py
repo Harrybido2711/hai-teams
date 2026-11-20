@@ -21,7 +21,9 @@ of rows cut); doubled on the user's decision, 2026-11-11. `temperature=0` and `s
 configuration of the pilot that scored 687 of 1,513, archived as `results_archive_budget_prompt_
 20261113`. An answer-only instruction was tried instead on 2026-11-13 and cut its plans: 448 of 1,513,
 plan-writing tasks 405 -> 114 of 907 (`planbench.md`); that run is archived as
-`results_archive_answer_only_20261113`.
+`results_archive_answer_only_20261113`. From 2026-11-19 the sentence names a budget — reasoning
+under 4000 tokens, 2000 on the retry — on the user's instruction, for the full set's last 390 rows
+only (resubmit with `--carry-prompt-change`); see the comment on `PROMPT_CEILING`.
 
 **A reply cut at the cap: called again, then forced** (`core.CutRetry`, the user's rule of
 2026-11-13). In that pilot 367 of 1,563 rows ended at `length`. Such a row is called again, fresh,
@@ -56,18 +58,21 @@ FIXED = {"extra_body": {"reasoning": {"enabled": False}}}
 
 # The prompt ceiling (`prompt-ceiling.md`): tells the model the budget `max_tokens` enforces, because
 # this model deliberates in its visible answer. A REQUEST, not a limit — `finish_reason` and
-# `completion_tokens` say whether it worked. Unchanged from the 2026-11-12 pilot, word for word.
+# `completion_tokens` say whether it worked. The 2026-11-12 wording said only "Keep your reasoning
+# short"; on 2026-11-19 the user had it name a number (4000 tokens here, 2000 on the retry) for the
+# rows still to run. The 15,178 full-set rows written before keep the old wording and their own
+# config (`--carry-prompt-change`, plan_eval_core.load_checkpoint) — planbench.md has the split.
 PROMPT_CEILING = ("Your whole reply, every bit of reasoning plus the final answer, must fit within 8192 "
-                  "tokens; anything past that is cut off and lost. Keep your reasoning short and do not "
-                  "re-check the same step again and again. As soon as you have a solution, write the "
-                  "final answer in the exact format the task asks for. If you are running out of room, "
-                  "stop reasoning and give your best answer immediately.")
+                  "tokens; anything past that is cut off and lost. Keep your reasoning under 4000 tokens "
+                  "and do not re-check the same step again and again. As soon as you have a solution, "
+                  "write the final answer in the exact format the task asks for. If you are running out "
+                  "of room, stop reasoning and give your best answer immediately.")
 # The second call of a row whose first reply was cut at the cap: the user asked that it be told not
 # to exceed the limit this time. It keeps the reasoning (an answer-only instruction removed it) and
-# asks for half the budget, so the answer has room after it.
+# asks for half the first call's budget, so the answer has room after it.
 RETRY_CEILING = ("Your previous attempt at this task reasoned past the 8192-token limit and was cut off "
                  "before it gave an answer. This time you must stay within the limit: keep your "
-                 "reasoning under 4000 tokens, do not re-check steps you have already settled, and if "
+                 "reasoning under 2000 tokens, do not re-check steps you have already settled, and if "
                  "you notice you are repeating yourself, stop at once. Then write the final answer in "
                  "the exact format the task asks for.")
 ANSWER_MAX = 4096         # the forced answer's max_tokens; MPGT's forced answers were <= 612 tokens

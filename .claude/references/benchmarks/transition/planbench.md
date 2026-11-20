@@ -122,8 +122,13 @@ Needs VAL and `tarski` 0.7.0, which Quest's shared env lacks: **score locally**,
   200, with a fragment as content) or `insufficient_system_resource` (DeepSeek) is retried, and if
   every attempt ends so the row is written empty.
 - **`--slices` is refused without `--limit`**: on a real run it would rewrite the shard file without
-  the rows outside the selection. A repair is a plain resubmit of the shard. SIGTERM (SLURM's wall
-  limit, `scancel`) is turned into a clean exit that saves the rows already paid for.
+  the rows outside the selection. A repair is a plain resubmit of the shard. **SIGTERM is meant to
+  save the rows since the last periodic save, and on Quest it never has** (reviewer, 2026-11-19).
+  Jobs 9395248 and 8157895 were `scancel`led, and each shard kept only its last multiple of
+  `--save-every`, with no `calls:` line after the cancel. At least 24 paid rows were lost on
+  2026-11-19. The cause is unestablished: `run_plan.sh` runs python without `exec`, or SIGKILL
+  comes first. Locally the handler works. Until it is settled, plan for losing up to `--save-every`
+  − 1 rows a shard at any stop, and pass `--save-every 1` where rows take minutes.
 - **A reply cut at the cap: called again, then forced — `plan_eval_core.CutRetry`, the user's rule
   of 2026-11-13** ("让他第二次重新跑的时候，不要超出这个思考的上限…如果说他就是不受约束，那就直接回答"),
   on Qwen and Deepseek. A first call that ends at `length` is called again fresh under the runner's
@@ -146,6 +151,18 @@ Needs VAL and `tarski` 0.7.0, which Quest's shared env lacks: **score locally**,
   stored cut row stays in the file until its own call returns an answer. Exits: 1 for an empty row
   or one still cut; **2 for a forced answer that filled its cap or reasoned again**
   (`forced_reasoned`) — read those before scoring.
+- **`--carry-prompt-change` resumes across a reworded ceiling — the user's decision of 2026-11-19,
+  for Qwen's last full-set rows.** A plain resume refuses any config change. With the flag, a stored
+  row whose config differs only in the wording of `prompt_ceiling` or `cut_retry.prompt` is kept,
+  under its own stored config; any other difference is still refused, including a ceiling missing
+  on one side. Only missing and empty rows are called, under the new wording. The set then holds two
+  configs. The health file says so (`configs` 2, `complete` 0), and that is expected. To split the
+  rows, read `config.prompt_ceiling` in the shard files: `_scored.jsonl` drops `config`, so join on
+  `uid`. `plan_eval_core.load_checkpoint`; not with `--limit`, `--force-cut` or `--health-only`.
+  **Every later resubmit of that set needs the flag too.** A plain resume and `--force-cut` both
+  refuse a two-config file. Their refusal says "archive and start clean", and following it would
+  orphan every paid row. A halt's "a plain resubmit is safe" means with the flag here. The flag
+  accepts any non-empty wording, so pin the old wording before using it elsewhere.
 - **Upstream's `results/` and `responses/` under both trees carry no model of ours** — not our numbers.
 
 ## Run order
@@ -165,7 +182,8 @@ five arrays of five **interleaved** shards (`shard_slice`; 3,113–3,114 rows ea
 into `results/`, logs `log_full_<k>.txt` / `.err` so the pilot's `log_<k>` stay. Sized from the
 pilot's summed latency ×10, interleaved: GPT ~7 h, Gemini ~3 h, Gemma ~22 h, Deepseek ~13 h, Qwen
 ~88 h before `CutRetry`'s extra calls and up to ~142 h with them — close to `long`'s 7-day wall; at
-the wall SIGTERM saves the rows and the same command resumes. Before submitting: no `results/` in
+the wall the shard loses the rows since its last periodic save (SIGTERM's save does not happen on
+Quest, see above), and the same command resumes. Before submitting: no `results/` in
 any `PLAN_*` on Quest, 64 files md5-matched (core, both `CutRetry` runners and Qwen's `run_plan.sh`
 transferred). A shard file holding rows of another shard is now refused, not silently pruned.
 
@@ -274,6 +292,21 @@ as billing this time.
 - Expected spend: about 4.0 M prompt and 6.9 M completion tokens, with the obfuscated rows guessed at
   12k each because the run has too few of them. That is about $1.4–2.5.
 
+**Qwen resumed 2026-11-19 14:24, then stopped at 19:19 to change the prompt** (job 9395248, `long`,
+`--open-mode=append`; 64 files md5-matched first).
+- In 4 h 55 m it wrote 194 rows and refilled all 26 empty ones. That is about 40 rows an hour. Nearly
+  every row hit the 8192 cap, was retried, and hit it again.
+- The user then had the ceiling name a budget: reasoning under 4000 tokens, under 2000 on the retry
+  (`PLAN_Qwen_DeepInfra/qwen_di_plan_eval.py`). It applies to the rows still to run, not to a rerun.
+- The last periodic saves left 15,178 rows: 0 empty, 78 `length`, `cut_retry` 3,346, forced 2,370,
+  one config. 16 files md5-pulled. At least 24 rows answered after those saves were lost, because
+  `scancel` did not trigger the final save (above). All of them were obfuscated rows.
+- **All 390 rows left are obfuscated_deceptive_logistics**: 183 of task 1 and all 207 of task 2,
+  outside the by-task table. **So every scored row ran under the original wording**, and Qwen's score
+  is final now, as Deepseek's was at 15,554.
+- The 390 rows are resubmitted with `--carry-prompt-change --save-every 1` (above). The set they
+  finish will hold two configs, and only these two unscored slices carry the new one.
+
 Once topped up, resubmit all five shards on `long` with `--open-mode=append`.
 
 **Pilot submitted 2026-11-11 14:44** (arrays 8157873 GPT, 8157875 Gemini, 8157876 Gemma, 8157877
@@ -283,7 +316,7 @@ Observed in the first 40 minutes: **Gemini finished** all five shards in 15–17
 even.** The mystery_blocksworld shards (shard 3 = mystery only) write long answers — Gemma 692
 tokens, 44 s a call, on a prompt where the 15-row smoke had medians of 1.6 s — and DeepInfra hung
 calls on Gemma and Qwen (`TIMEOUT 1/5`, 240 s / 600 s) that the retry absorbs. A shard that does not
-fit its wall time exits on SIGTERM with its rows saved; resubmit only that index with a longer
+fit its wall time stops at its last periodic save (see above); resubmit only that index with a longer
 limit (`sbatch --array=3 --time=… run_plan.sh`, command-line options override the `#SBATCH` lines).
 
 **Where it ended up, 2026-11-11 22:30.** GPT and Gemini: 1,563 rows each, 0 empty. Gemma: shard 4

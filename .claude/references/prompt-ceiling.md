@@ -18,6 +18,9 @@ Same for output length where `max_tokens` is unavailable or unsafe to set tightl
 - **A request, not a limit.** Verify from `usage.completion_tokens_details.reasoning_tokens`, never
   from how long the answer looks.
 - **It changes the prompt, so it changes the measurement.** Record the wording with the score.
+  PlanBench Qwen's ceiling named no number until 2026-11-19 ("Keep your reasoning short"). For its
+  last rows, the user had it say "under 4000 tokens", and "under 2000" on the retry. Which rows
+  carry which wording: `planbench.md`.
 - **"Answer only" is not a ceiling for a model that deliberates in its answer — it removes the
   reasoning.** PlanBench Qwen, thinking off, 2026-11-13: the cut rows nearly vanished and the
   plan-writing score fell by over two thirds (counts: `planbench.md`, "That rerun's outcome"). Use

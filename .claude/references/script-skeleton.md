@@ -60,6 +60,9 @@ in [evaluation-criteria.md](evaluation-criteria.md) § Per-row fields — tokens
 > **Check for stale checkpoints before every full run.** Resume skips any UID already present, so
 > leftovers from an older code version make a run "succeed" in seconds while emitting old, wrong
 > data. NEG_GPT held 14,280 such rows. Archive to a timestamped directory; never delete outright.
+> The one sanctioned exception is PlanBench's `--carry-prompt-change`, the user's decision for one
+> run: it is explicit, limited to a reworded ceiling, and keeps each row's own config
+> ([planbench.md](benchmarks/transition/planbench.md)).
 >
 > Rows written *empty* are skipped forever by a plain resume too, because `load_checkpoint` adds
 > every uid to the done set regardless of whether its response was usable. Prune before resubmitting.

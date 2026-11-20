@@ -559,6 +559,24 @@ CUT_KEYS = ("forced_answer", "cut_retry")
 USAGE_KEYS = ("prompt_tokens", "completion_tokens", "reasoning_tokens")
 
 
+def without_prompt_text(cfg):
+    """A config with the wording of CutRetry's first two instructions blanked — `prompt_ceiling` and
+    `cut_retry.prompt`, and nothing else. `--carry-prompt-change` accepts a stored row whose config
+    differs from the run's only there (load_checkpoint). Blanked, not removed: a config that has no
+    ceiling at all (a run from before the budget sentence) is a different condition, not a different
+    wording, and must still be refused."""
+    out = json.loads(json.dumps(cfg or {}, sort_keys=True))
+    # An empty wording is no ceiling at all, so it stays as it is and is refused. Any non-empty
+    # wording is accepted (an answer-only instruction too): before reusing this flag, pin the old
+    # wording the runner expects (reviewer, 2026-11-19). Here every stored row has one known config.
+    if isinstance(out.get("prompt_ceiling"), str) and out["prompt_ceiling"].strip():
+        out["prompt_ceiling"] = "<wording>"
+    if (isinstance(out.get("cut_retry"), dict) and isinstance(out["cut_retry"].get("prompt"), str)
+            and out["cut_retry"]["prompt"].strip()):
+        out["cut_retry"]["prompt"] = "<wording>"
+    return out
+
+
 def rearm_call_timeout():
     """Give the next HTTP call inside one `once` its own HARD_CALL_TIMEOUT. call_with_retries arms
     the alarm once per attempt and clears it when `once` returns, so a re-arm cannot outlive it.
@@ -693,9 +711,16 @@ class CutRetry:
         return answer, out
 
 
-def load_checkpoint(path, config, force_cut=False):
+def load_checkpoint(path, config, force_cut=False, carry_prompt=False):
     """Rows already done, keyed by uid — or a refusal if the stored config differs. An EMPTY row is
     not a done row: it is returned for retry, or a plain resume would skip it forever.
+
+    `carry_prompt` (the `--carry-prompt-change` flag, the user's decision of 2026-11-19 for
+    PlanBench Qwen: "现在就用于剩下的 610 行"): a stored row whose config differs from the run's ONLY
+    in the wording of the prompt ceiling or the retry instruction (`without_prompt_text`) is kept as
+    it is, under its OWN stored config, and only the missing and empty rows are called under the new
+    one. Any other difference is still refused. The result set then holds more than one config — the
+    health check still says so (`configs`, `complete` 0), on purpose.
 
     `force_cut` (the `--force-cut` repair, the user's rule of 2026-11-13: call only the rows that
     hit the cap, not the run again): the runner's config now holds a `forced_answer`, and the rows
@@ -708,7 +733,10 @@ def load_checkpoint(path, config, force_cut=False):
         return ({}, {}, False) if force_cut else {}
     want = json.loads(json.dumps(config, sort_keys=True))
     base = {k: v for k, v in want.items() if k not in CUT_KEYS} if force_cut else None
-    done, cut, empty, upgraded = {}, {}, 0, 0
+    if force_cut and carry_prompt:
+        raise SystemExit("--force-cut and --carry-prompt-change do not combine: run them separately")
+    want_text_free = without_prompt_text(want) if carry_prompt else None
+    done, cut, empty, upgraded, carried = {}, {}, 0, 0, 0
     with open(path) as fh:
         for line in fh:
             if not line.strip():
@@ -717,6 +745,9 @@ def load_checkpoint(path, config, force_cut=False):
             if force_cut and r.get("config") == base and base != want:
                 r["config"] = want
                 upgraded += 1
+            elif (carry_prompt and r.get("config") != want
+                    and without_prompt_text(r.get("config")) == want_text_free):
+                carried += 1       # kept under its own config; an empty one is called again below
             elif r.get("config") != want:
                 stored = r.get("config") or {}
                 diff = {k: (want.get(k), stored.get(k)) for k in set(want) | set(stored)
@@ -734,7 +765,9 @@ def load_checkpoint(path, config, force_cut=False):
     if done or empty or cut:
         print(f"  resume {os.path.basename(path)}: {len(done)} done, {empty} empty row(s) to retry"
               + (f", {len(cut)} cut at the cap to force, {upgraded} row(s) from before the forced "
-                 f"answer" if force_cut else ""), flush=True)
+                 f"answer" if force_cut else "")
+              + (f"; {carried} stored row(s) under the earlier prompt wording (an empty one among "
+                 f"them is called again)" if carry_prompt else ""), flush=True)
     return (done, cut, bool(upgraded)) if force_cut else done
 
 
@@ -759,7 +792,7 @@ def archive_before_forced(model_dir, path):
 
 
 def run_rows(model_dir, model, once, config, sample, slices=None, shard=0, total_shards=1,
-             limit=0, save_every=20, sleep=2.0, force_cut=False):
+             limit=0, save_every=20, sleep=2.0, force_cut=False, carry_prompt=False):
     rows = load_rows(sample, slices)
     smoke = bool(limit)
     if smoke:
@@ -780,7 +813,7 @@ def run_rows(model_dir, model, once, config, sample, slices=None, shard=0, total
         if copy_first and not smoke:
             archive_before_forced(model_dir, path)
     else:
-        done, cut = ({} if smoke else load_checkpoint(path, config)), {}
+        done, cut = ({} if smoke else load_checkpoint(path, config, carry_prompt=carry_prompt)), {}
     # A stored row this shard would not call is a file written under other shard boundaries (e.g. a
     # contiguous full-set shard before interleaving). Saving would drop it without a word — the
     # reviewer dropped 2,491 of 3,114 paid rows that way, 2026-11-13 — so refuse instead.
@@ -959,7 +992,14 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
                     help="call only the stored rows that ended at the output cap (and any empty "
                          "one), through the runner's CutRetry from its first call; every other row "
                          "is kept")
+    ap.add_argument("--carry-prompt-change", dest="carry_prompt", action="store_true",
+                    help="resume across a change of the prompt ceiling or retry wording only: stored "
+                         "rows keep their own config, the missing and empty rows are called under "
+                         "the new one; the set is then reported as more than one config")
     args = ap.parse_args()
+    if args.carry_prompt and (args.limit or args.force_cut or args.health_only):
+        raise SystemExit("--carry-prompt-change is for resuming a real run: not with --limit, "
+                         "--force-cut or --health-only")
     smoke = bool(args.limit)
     slices = [s.strip() for s in args.slices.split(",") if s.strip()]
     known = set(SLICES) | {s.split("/")[0] for s in SLICES}
@@ -1011,7 +1051,7 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
                               args.sample, slices=slices, shard=args.shard,
                               total_shards=args.total_shards, limit=args.limit,
                               save_every=args.save_every, sleep=args.sleep,
-                              force_cut=args.force_cut)
+                              force_cut=args.force_cut, carry_prompt=args.carry_prompt)
     finally:
         print(f"\ncalls: {STATS}  elapsed {time.time() - started:.0f}s", flush=True)
     summarise_health(model_dir, args.model, args.sample, smoke)
@@ -1021,16 +1061,24 @@ def run_cli(*, description, default_model, model_dir, client, once, wanted, fixe
     # A runner with a forced answer: no row may be left cut at the cap without one. Checked BEFORE
     # the empty rows, because a plain resubmit retries an empty row but skips a cut row that has
     # text — the advice below would then leave it cut for good (reviewer, 2026-11-13).
+    # A set resumed with --carry-prompt-change holds two configs, so --force-cut and a plain resume
+    # both refuse it ("archive ... start clean" would orphan every paid row): say what does work.
+    again = ("resubmit the shard WITH --carry-prompt-change (it calls empty rows again; do NOT "
+             "archive the results as the refusal text of a plain resume or --force-cut says)"
+             if args.carry_prompt else None)
     still = [r for r in records if is_cut(r)] if "forced_answer" in config else []
     if still:
-        print(f"\n{len(still)} row(s) of this shard are cut at the cap with no forced answer — run "
-              f"the shard again WITH --force-cut (a plain resubmit skips a cut row that has text). "
-              f"First: {still[0]['uid']}", flush=True)
+        print(f"\n{len(still)} row(s) of this shard are cut at the cap with no forced answer — "
+              + (again + ": a cut row with text is kept, so read it first" if again else
+                 "run the shard again WITH --force-cut (a plain resubmit skips a cut row that has "
+                 "text)")
+              + f". First: {still[0]['uid']}", flush=True)
         raise SystemExit(1)
     bad = [r for r in records if r.get("empty") or r.get("finish_reason") in INTERRUPTED_FINISH]
     if bad:
-        print(f"\n{len(bad)} row(s) of this shard are empty or interrupted — resubmit the shard: "
-              f"resume retries exactly those. First: {bad[0]['uid']}", flush=True)
+        print(f"\n{len(bad)} row(s) of this shard are empty or interrupted — "
+              + (again or "resubmit the shard: resume retries exactly those")
+              + f". First: {bad[0]['uid']}", flush=True)
         raise SystemExit(1)
     # A forced answer that reasoned again, or filled its own cap, is not a known complete answer.
     odd = [r for r in records if r.get("forced_answer")
