@@ -22,6 +22,8 @@ What is upstream's and what is ours:
      upstream's denominator, reported beside it.
   4. A VAL output with no recognisable verdict is a `scorer_error`, never a silent "wrong" — upstream
      returned False, so a missing binary scored every plan 0.
+  5. Task 7 (lenient, from v2): the state is the model's final stated answer (`final_state`), and it
+     is compared with the gold as a set; upstream mode keeps the whole-text parse and sorted lists.
 
 `python plan_scorer.py --selftest` re-scores upstream's own stored GPT-4 responses (blocksworld and
 blocksworld_3, all ten tasks) and reports agreement with upstream's stored verdicts, in both
@@ -56,7 +58,11 @@ _spec = importlib.util.spec_from_file_location("pb_text_to_pddl",
 ttp = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(ttp)
 
-SCORER_VERSION = "pb_lenient_v1"
+# v2 (2026-11-22, the user: "这个打分稍微宽松一点 所有的model 的结果都打分"): task 7 reads the model's
+# final stated answer — under an unbracketed "Resulting State:" heading too, its last fact-bearing
+# paragraph, one fact per line or comma-separated — and a fact stated twice counts once
+# (`final_state`). Tasks 1-6 and 8, and upstream mode, score exactly as v1.
+SCORER_VERSION = "pb_lenient_v2"
 EXTRACTION_MODES = ("lenient", "upstream")
 
 
@@ -172,6 +178,10 @@ _THINK = re.compile(r"<\s*think\s*>.*?<\s*/\s*think\s*>", re.S | re.I)
 _ENUM = re.compile(r"^(?:step\s*)?\d{1,3}\s*[.):]\s+", re.I)
 _BULLET = re.compile(r"^(?:[-*•]|#+)\s*")
 _VERDICT = re.compile(r"plan is (in)?valid", re.I)
+# A line that opens with the state heading, markdown allowed around it: what follows is the answer.
+_STATE_HEADING = re.compile(r"(?im)^[ \t>#*_-]*(?:final\s+)?resulting\s+state[ \t*_]*:?[ \t*_]*")
+_MARKER = re.compile(r"\[[A-Z][A-Z0-9 _]*\]")          # the prompts' own markers are upper case
+_NO_LONGER = re.compile(r"\bno\s+longer\b", re.I)
 
 
 def _normalise(text):
@@ -199,7 +209,10 @@ def extract(raw, kind, mode="lenient"):
     2. plans: the LAST `[PLAN]…[PLAN END]` block, or everything before the last `[PLAN END]` when the
        model never re-opened `[PLAN]` (the prompt itself ends on an open `[PLAN]`); no `[PLAN END]`
        at all → the whole answer, as upstream;
-    3. states: what follows the last `[RESULTING STATE]`, up to the next `[` marker;
+    3. states: what follows the last `[RESULTING STATE]`, up to the next `[` marker; with no
+       bracketed marker, what follows the last line that opens with a "Resulting State" heading
+       (`**Resulting State:**`, `Final Resulting State:`, `### Resulting state`) — models that
+       restate the prompt's marker as a heading had their whole reasoning parsed as the state;
     4. markdown, bullets and step numbers stripped (`_normalise`); the verdict phrase lower-cased.
     """
     if mode == "upstream":
@@ -214,7 +227,14 @@ def extract(raw, kind, mode="lenient"):
         start = up.rfind("[RESULTING STATE]")
         if start != -1:
             text = text[start + len("[RESULTING STATE]"):]
-        text = text.split("[", 1)[0]
+        else:
+            headings = list(_STATE_HEADING.finditer(text))
+            if headings:
+                text = text[headings[-1].end():]
+        # Up to the next prompt marker ([PLAN], [STATEMENT], ...), not any `[`: v1 cut at the first
+        # bracket, and a placeholder in the reasoning ("[color]", "[Blue, Orange, Red]") hid the
+        # answer below it — 44 Qwen rows, no other model's (reviewer, 2026-11-22).
+        text = _MARKER.split(text, 1)[0]
     text = _normalise(text)
     if kind == "verification":
         text = _VERDICT.sub(lambda m: m.group(0).lower(), text)
@@ -298,6 +318,32 @@ def verification_verdicts(parsed, gold):
 # ---------------------------------------------------------------- one row
 
 
+def final_state(text, data):
+    """Lenient task 7: the model's final stated answer, not its reasoning — the LAST paragraph of
+    the extracted region that states at least one fact, read with one fact per line as well as
+    comma-separated (upstream's parser splits only on `,` and ` and `, so a bulleted list was one
+    fact). A whole-region parse let prose fragments of the reasoning fill in a fact the final answer
+    left out (reviewer, 2026-11-22: Qwen blocksworld_3 task 7 #60)."""
+    paragraphs = [p for p in re.split(r"\n\s*\n", text) if p.strip()]
+    for p in reversed(paragraphs):
+        state = ttp.text_to_state(_clauses(p), data)
+        if state:
+            return state
+    return []
+
+
+def _clauses(paragraph):
+    """One paragraph as upstream's parser reads it, one clause per chunk. Lines and sentence ends
+    separate clauses as `,` and ` and ` do. A clause saying something "no longer" holds is dropped,
+    as upstream drops one with ' not ' — read as positive it scored true answers wrong and one wrong
+    answer right. A lead-in ending in ':' ("Let's format it clearly:") states no fact."""
+    text = re.sub(r"\s*\n\s*", ", ", paragraph.strip())
+    text = re.sub(r"(?<=[A-Za-z0-9)])\.\s+", ", ", text)
+    chunks = text.replace(" and ", ",").split(",")
+    return ", ".join(c for c in chunks
+                     if c.strip() and not _NO_LONGER.search(c) and not c.strip().endswith(":"))
+
+
 def kind_of(task):
     if task.startswith("task_3"):
         return "verification"
@@ -325,9 +371,14 @@ def score_row(domain, task, instance_id, raw, mode="lenient"):
         plan_file = os.path.join(tmp, "llm_plan")
         try:
             if kind == "state":
-                state = ttp.text_to_state(text, data)
+                state = (final_state(text, data) if mode == "lenient"
+                         else ttp.text_to_state(text, data))
                 out["extracted"] = state
-                out["correct"] = int(sorted(inst["ground_truth_plan"]) == sorted(state))
+                gold = inst["ground_truth_plan"]
+                # lenient: a state is a set of facts, so one stated twice counts once (a model that
+                # describes the state and then restates it in the prompt's format was scored wrong)
+                out["correct"] = int(set(gold) == set(state) if mode == "lenient"
+                                     else sorted(gold) == sorted(state))
                 return out
             actions = action_set(domain_pddl, problem)
             if kind == "verification":

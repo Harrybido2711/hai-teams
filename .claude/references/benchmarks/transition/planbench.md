@@ -78,23 +78,85 @@ no `stop` (upstream sent none to chat models). Rows store `query_sha1`, not the 
 pilot10 = every 10th instance by sorted `instance_id` in every slice (`ceil(n/10)`). Per task,
 pooled: t1 228, t2 170, t3 149 (+10), t4 149, t5 112, t6 149, t7 149, t8_1–t8_3 149 each.
 
-## Scoring — `plan_scorer.py`, scorer `pb_lenient_v1`
+## Scoring — `plan_scorer.py`, scorer `pb_lenient_v2`
 
 | Tasks | Headline (`correct`) | How |
 |---|---|---|
 | 1, 4, 5, 6, 8_1–8_3 | plan valid | upstream text→PDDL parser, then VAL; tasks 4 and 6 against upstream's `new_instance`, task 5 against the generalized instances |
 | 2 | valid **and** optimal length | optimal = length of the shipped ground truth (`astar(lmcut())`, unit-cost domains) — no Fast Downward run |
 | 3 | verdict valid/invalid (binary) | ported `parse_output`; `acc_w_type` and `acc_w_expl` reported beside it |
-| 7 | resulting state equal | upstream `text_to_state`, sorted compare |
+| 7 | resulting state equal | upstream `text_to_state`; lenient compares sets (a fact stated twice counts once), upstream mode sorted lists |
 
 `acc` keeps empty responses in the denominator; `acc_answered` is upstream's denominator. One lenient
 extraction for every model (`extract()`): cut at the first `[STATEMENT]`, take the last
 `[PLAN]…[PLAN END]` block, strip markdown, bullets and step numbers. An empty plan still goes to VAL.
+A task-7 state (lenient, `final_state`) is the model's final stated answer. Take the region after
+the last `[RESULTING STATE]`, or with no bracketed marker after the last line opening with a
+"Resulting State" heading, or else the whole reply. Cut it at the next upper-case prompt marker
+(`[PLAN]`, `[STATEMENT]`), not at any `[`. Within it, read the last paragraph that states a fact.
+Lines and sentence ends separate facts as `,` and ` and ` do. A clause saying something "no longer"
+holds is dropped, as upstream drops one with ` not `, and a lead-in ending in `:` states no fact.
+The state is compared with the gold as a set.
+
+**v2, 2026-11-22, the user's decision** ("这个打分稍微宽松一点 所有的model 的结果都打分"). v1 needed the
+bracketed marker and parsed the whole reasoning without it. It read a bulleted list as one fact, cut
+at a placeholder such as Qwen's "[color]", read "no longer clear" as clear, and compared lists, so a
+restated fact counted twice. Two reviewer passes shaped the rule. A whole-region read credited one
+wrong Qwen answer from prose fragments, and a first last-paragraph rule still lost answers to the
+`[` cut (44 rows, Qwen only), to "no longer" (about 45) and to "clearly:" lead-ins (3). Only task 7
+moved. Full set, by-task table, v1 → v2:
+
+| Model | Task 7 correct | Total |
+|---|--:|--:|
+| Deepseek | 663 → 688 | 0.920 → 0.922 |
+| GPT | 418 → 557 | 0.782 → 0.791 |
+| Gemma | 395 → 468 | 0.551 → 0.556 |
+| Qwen | 19 → 349 | 0.486 → 0.508 |
+| Gemini | 349 → 488 | 0.420 → 0.429 |
+
+- **Two rows went 1 → 0, both Gemini blocksworld.** #278's final answer reads "the red block is the
+  table", and v1's whole-text parse matched it by coincidence. #209 says "the yellow block is no
+  longer clear", where the gold has it clear, so v1's credit was false.
+- **Known residuals, not fixed:**
+  - Upstream's ` not ` filter drops a whole clause. In Gemini bw3/79, "holding the blue block (the
+    hand is not empty)" loses its holding fact.
+  - Capitalised mystery facts are not parsed ("Pain object b"): GPT 6, Gemini 2, Gemma 6, Deepseek
+    6 and Qwen 2 rows.
+  - Explanation fragments (", because the orange block is on top of it") give a malformed fact in a
+    few rows.
+- The rest of the still-wrong rows the reviewer sampled are genuine errors. Qwen omits a clear or
+  on-the-table fact, or calls a held block clear.
+- The pilot recorded on 2026-11-13 was scored by v1, so `record_planbench.py` still asserts v1. The
+  full set is recorded with v2 once the user confirms it.
+
+**749 of task 7's 1,485 rows cannot score for any answer**, under v1 and v2 alike (reviewer,
+2026-11-22). Upstream's own rendering of each gold (`task_utils.get_state_translation`, which wrote
+the few-shot answers), fed back through `text_to_state`, returns the gold in only some instances:
+
+| Domain | Instances that parse back to their gold |
+|---|--:|
+| blocksworld | 500 / 500 |
+| blocksworld_3 | 100 / 100 |
+| mystery_blocksworld | 80 / 500 |
+| mystery_blocksworld_3 | 56 / 100 |
+| logistics | 0 / 285 |
+
+- Mystery: `text_to_pddl.py:320` splits on the template `'{} craves {}'`, which never occurs in
+  text, so "object a craves object b" becomes `craves_a`.
+- Logistics: the parser emits `at_airplane_0_location_1_0`, while the gold has `at_a0_l1-0` plus
+  type facts that are never written.
+- A perfect model scores 736 / 1,485. These rows are zero by construction, like the obfuscated
+  slices, but they sit inside the by-task table. Excluding them or repairing the parsers is the
+  user's call.
 
 **Self-test** (`plan_scorer.py --selftest`): upstream's stored GPT-4 responses, blocksworld and
 blocksworld_3, all 10 tasks. In `upstream` mode it reproduces upstream's stored verdict on **every
 row of 9 tasks**; task 7 differs on 2 of 500 and 2 of 100 (upstream's older state parser, both
-directions). Lenient mode changes one verdict (task 4, in the model's favour). Mystery, logistics and
+directions). Lenient mode changes one task-4 verdict, in the model's favour. From v2 it also
+differs from upstream's stored verdict on 18 task-7 rows (bw 15, bw3 3), all read by hand:
+- 11 go 0 → 1. v1 read "no longer on the table" as on the table, or counted a restated fact twice.
+- 7 go 1 → 0. GPT-4 wrote "X is no longer clear" where the gold has X clear, and upstream's own
+  parser had credited it. Mystery, logistics and
 depots have no upstream fixture — the pilot is their first test.
 
 Needs VAL and `tarski` 0.7.0, which Quest's shared env lacks: **score locally**, after
